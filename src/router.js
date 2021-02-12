@@ -7,6 +7,18 @@ import { connect } from 'react-redux'
 import Layout from 'layouts'
 
 const routes = [
+  // Landing Pages
+  {
+    path: '/browse',
+    Component: lazy(() => import('pages/browse')),
+    exact: true,
+  },
+  // Admin Pages
+  {
+    path: '/admin/dashboard',
+    Component: lazy(() => import('pages/admin/dashboard')),
+    exact: true,
+  },
   // Dashboards
   {
     path: '/dashboard/alpha',

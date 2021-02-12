@@ -7,11 +7,15 @@ import { Helmet } from 'react-helmet'
 import PublicLayout from './Public'
 import AuthLayout from './Auth'
 import MainLayout from './Main'
+import MenuLeftLayout from './MenuLeft'
+import MenuTopLayout from './MenuTop'
 
 const Layouts = {
   public: PublicLayout,
   auth: AuthLayout,
   main: MainLayout,
+  menuLeft: MenuLeftLayout,
+  menuTop: MenuTopLayout,
 }
 
 const mapStateToProps = ({ user }) => ({ user })
@@ -34,6 +38,12 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     if (pathname === '/') {
       return 'public'
     }
+    if (/^\/admin(?=\/|$)/i.test(pathname) || /^\/sensei(?=\/|$)/i.test(pathname)) {
+      return 'menuLeft'
+    }
+    if (/^\/student(?=\/|$)/i.test(pathname)) {
+      return 'menuTop'
+    }
     if (/^\/auth(?=\/|$)/i.test(pathname)) {
       return 'auth'
     }
@@ -50,8 +60,11 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
       return null
     }
-    // redirect to login page if current is not login page and user not authorized
-    if (!isAuthLayout && !isUserAuthorized) {
+    if (
+      (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname)) ||
+      /^\/sensei(?=\/|$)/i.test(pathname) ||
+      /^\/student(?=\/|$)/i.test(pathname)
+    ) {
       return <Redirect to="/auth/login" />
     }
     // in other case render previously set layout

@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Layout } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import Sidebar from 'components/cleanui/layout/Sidebar'
 import SupportChat from 'components/cleanui/layout/SupportChat'
 import style from './style.module.scss'
 
@@ -28,7 +27,6 @@ const AuthLayout = ({
   return (
     <Layout>
       <Layout.Content>
-        <Sidebar />
         <SupportChat />
         <div
           className={classNames(`${style.container}`, {

@@ -7,8 +7,8 @@ import TopBar from 'components/cleanui/layout/TopBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
 import Menu from 'components/cleanui/layout/Menu'
 import Footer from 'components/cleanui/layout/Footer'
-
-import getSenseiMenuData from 'services/senseiMenu'
+import Sidebar from 'components/cleanui/layout/Sidebar'
+import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -21,7 +21,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const MainLayout = ({
+const MenuLeftLayout = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -33,25 +33,16 @@ const MainLayout = ({
   isTopbarFixed,
   isGrayTopbar,
 }) => {
-  const selectMenuLayoutType = () => {
+  const switchMenuLayoutType = () => {
     dispatch({
       type: 'settings/CHANGE_SETTING',
       payload: {
         setting: 'menuLayoutType',
-        value: 'top',
+        value: 'left',
       },
     })
   }
-  const menuData = () => {
-    dispatch({
-      type: 'menu/SET_STATE',
-      payload: {
-        getSenseiMenuData,
-      },
-    })
-  }
-  selectMenuLayoutType()
-  menuData()
+  switchMenuLayoutType()
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
@@ -64,6 +55,7 @@ const MainLayout = ({
           cui__layout__borderless: isBorderless,
         })}
       >
+        <SupportChat />
         <Menu />
         <Layout>
           <Layout.Header
@@ -72,6 +64,7 @@ const MainLayout = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
+            <Sidebar />
             <TopBar />
           </Layout.Header>
           <Breadcrumbs />
@@ -87,4 +80,4 @@ const MainLayout = ({
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MainLayout))
+export default withRouter(connect(mapStateToProps)(MenuLeftLayout))
