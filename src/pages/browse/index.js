@@ -1,13 +1,13 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-const BrowseLandingPage = () => {
+const BrowseHomePage = () => {
   return (
     <div>
-      <Helmet title="LandingPage" />
+      <Helmet title="Homepage" />
       <div className="row" />
     </div>
   )
 }
 
-export default BrowseLandingPage
+export default BrowseHomePage

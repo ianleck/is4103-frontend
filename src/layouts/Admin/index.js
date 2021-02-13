@@ -3,11 +3,10 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import TopBar from 'components/cleanui/layout/TopBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
+import AdminMenuBar from 'components/Admin/AdminMenuBar'
 import Menu from 'components/cleanui/layout/Menu'
 import Footer from 'components/cleanui/layout/Footer'
-import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -44,38 +43,90 @@ const Admin = ({
   const switchToAdminMenu = () => {
     const menuData = [
       {
-        category: true,
-        title: 'Apps & Pages',
-      },
-      {
-        title: 'Admin Sample Menu',
-        key: 'apps',
-        icon: 'fe fe-database',
+        title: 'Users Management',
+        key: 'userManagement',
+        icon: 'fe fe-users',
         children: [
           {
-            title: 'Profile',
-            key: 'appsProfile',
-            url: '/apps/profile',
+            title: 'Users',
+            key: 'userManagement',
+            url: '/admin/userManagement',
           },
           {
-            title: 'Calendar',
-            key: 'appsCalendar',
-            url: '/apps/calendar',
+            title: 'Admin',
+            key: 'adminManagement',
+            url: '/admin/adminManagement',
+          },
+        ],
+      },
+      {
+        title: 'Business Management',
+        key: 'businessManagement',
+        icon: 'fe fe-printer',
+        children: [
+          {
+            title: 'Revenue',
+            key: 'revenue',
+            url: '/admin/revenueManagement',
           },
           {
-            title: 'Gallery',
-            key: 'appsGallery',
-            url: '/apps/gallery',
+            title: 'Profit',
+            key: 'profit',
+            url: '/admin/profit',
           },
           {
-            title: 'Messaging',
-            key: 'appsCart',
-            url: '/apps/messaging',
+            title: 'User Statistics',
+            key: 'userStatistics',
+            url: '/admin/userStatistics',
+          },
+        ],
+      },
+      {
+        title: 'Content Management',
+        key: 'contentManagement',
+        icon: 'fe fe-music',
+        children: [
+          {
+            title: 'Sensei',
+            key: 'senseiContent',
+            url: '/admin/senseiContentManagement',
           },
           {
-            title: 'Mail',
-            key: 'appsMail',
-            url: '/apps/mail',
+            title: 'Courses',
+            key: 'courseContent',
+            url: '/admin/courseContentManagement',
+          },
+          {
+            title: 'Announcements',
+            key: 'announcementContent',
+            url: '/admin/announcementContentManagement',
+          },
+          {
+            title: 'Complaints',
+            key: 'complaintContent',
+            url: '/admin/complaintContentManagement',
+          },
+        ],
+      },
+      {
+        title: 'Finance Management',
+        key: 'financeManagement',
+        icon: 'fe fe-thermometer',
+        children: [
+          {
+            title: 'Withdrawals',
+            key: 'withdrawals',
+            url: '/admin/withdrawals',
+          },
+          {
+            title: 'Refunds',
+            key: 'refunds',
+            url: '/admin/refunds',
+          },
+          {
+            title: 'Transactions',
+            key: 'transactions',
+            url: '/admin/transactions',
           },
         ],
       },
@@ -101,7 +152,6 @@ const Admin = ({
           cui__layout__borderless: isBorderless,
         })}
       >
-        <SupportChat />
         <Menu />
         <Layout>
           <Layout.Header
@@ -110,7 +160,7 @@ const Admin = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <TopBar />
+            <AdminMenuBar />
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>

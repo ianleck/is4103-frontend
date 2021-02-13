@@ -10,6 +10,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+  justify-content: end;
 
   @media (max-width: $sm-max-width) {
     padding: 0 rem(16);

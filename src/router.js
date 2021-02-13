@@ -15,11 +15,21 @@ const routes = [
   },
   // Admin Pages
   {
+    path: '/admin',
+    Component: lazy(() => import('pages/admin/dashboard')),
+    exact: true,
+  },
+  {
     path: '/admin/dashboard',
     Component: lazy(() => import('pages/admin/dashboard')),
     exact: true,
   },
   // Sensei Pages
+  {
+    path: '/sensei',
+    Component: lazy(() => import('pages/sensei/dashboard')),
+    exact: true,
+  },
   {
     path: '/sensei/dashboard',
     Component: lazy(() => import('pages/sensei/dashboard')),
@@ -27,10 +37,22 @@ const routes = [
   },
   // Student Pages
   {
+    path: '/student',
+    Component: lazy(() => import('pages/student/dashboard')),
+    exact: true,
+  },
+  {
     path: '/student/dashboard',
     Component: lazy(() => import('pages/student/dashboard')),
     exact: true,
   },
+  /*
+
+
+  SAMPLE PAGES
+  
+  
+  */
   // Dashboards
   {
     path: '/dashboard/alpha',
