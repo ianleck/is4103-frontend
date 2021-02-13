@@ -49,14 +49,6 @@
 
 // dark theme
 [data-kit-theme='dark'] {
-  .dropdown {
-    color: $dark-gray-2;
-
-    &:hover {
-      color: $primary;
-    }
-  }
-
   .icon {
     color: $dark-gray-2;
   }

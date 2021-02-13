@@ -3,9 +3,8 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import SenseiMenuBar from 'components/SenseiMenuBar'
+import SenseiMenuBar from 'components/Sensei/SenseiMenuBar'
 import Menu from 'components/cleanui/layout/Menu'
-import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -36,42 +35,96 @@ const Sensei = ({
         value: 'left',
       },
     })
+    dispatch({
+      type: 'settings/CHANGE_SETTING',
+      payload: {
+        setting: 'isMenuCollapsed',
+        value: false,
+      },
+    })
   }
   const switchToSenseiMenu = () => {
     const menuData = [
       {
-        category: true,
-        title: 'Appss & Pages',
-      },
-      {
-        title: 'Apps',
-        key: 'apps',
-        icon: 'fe fe-database',
+        title: 'Mentorship',
+        key: 'mentorship',
+        icon: 'fe fe-user',
         children: [
           {
-            title: 'Profile',
-            key: 'appsProfile',
-            url: '/apps/profile',
+            title: 'Review Applications',
+            key: 'reviewApplications',
+            url: '/sensei/reviewApplications',
           },
           {
-            title: 'Calendar',
-            key: 'appsCalendar',
-            url: '/apps/calendar',
+            title: 'Mentee Overview',
+            key: 'menteeOverview',
+            url: '/sensei/menteeOverview',
           },
           {
-            title: 'Gallery',
-            key: 'appsGallery',
-            url: '/apps/gallery',
+            title: 'Tasks',
+            key: 'tasks',
+            url: '/sensei/tasks',
           },
           {
-            title: 'Messaging',
-            key: 'appsCart',
-            url: '/apps/messaging',
+            title: 'Testimonials',
+            key: 'testimonials',
+            url: '/sensei/testimonials',
           },
           {
-            title: 'Mail',
-            key: 'appsMail',
-            url: '/apps/mail',
+            title: 'Chat/Video Call',
+            key: 'chatVideoCall',
+            url: '/sensei/chatVideoCall',
+          },
+        ],
+      },
+      {
+        title: 'Courses',
+        key: 'courses',
+        icon: 'fe fe-layers',
+        children: [
+          {
+            title: 'Courses',
+            key: 'courses',
+            url: '/sensei/courses',
+          },
+          {
+            title: 'Announcements',
+            key: 'announcements',
+            url: '/sensei/announcements',
+          },
+        ],
+      },
+      {
+        title: 'Profile',
+        key: 'profile',
+        icon: 'fe fe-user',
+        children: [
+          {
+            title: 'Mentor Feed',
+            key: 'mentorFeed',
+            url: '/sensei/mentorFeed',
+          },
+          {
+            title: 'My Profile',
+            key: 'myProfile',
+            url: '/sensei/myProfile',
+          },
+        ],
+      },
+      {
+        title: 'Sales',
+        key: 'sales',
+        icon: 'fe fe-shopping-cart',
+        children: [
+          {
+            title: 'Statistics',
+            key: 'statistics',
+            url: '/sensei/statistics',
+          },
+          {
+            title: 'My Wallet',
+            key: 'myWallet',
+            url: '/sensei/myWallet',
           },
         ],
       },
@@ -97,7 +150,6 @@ const Sensei = ({
           cui__layout__borderless: isBorderless,
         })}
       >
-        <SupportChat />
         <Menu />
         <Layout>
           <Layout.Content style={{ height: '100%', position: 'relative' }}>

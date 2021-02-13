@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
-import PublicMenuBar from 'components/PublicMenuBar'
+import PublicMenuBar from 'components/Public/PublicMenuBar'
 import Footer from 'components/cleanui/layout/Footer'
-import CourseCategoryBar from 'components/CategoriesBar'
+import CourseCategoryBar from 'components/Public/CategoriesBar'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -57,7 +57,7 @@ const MainLayout = ({
       {
         title: 'I am a Sensei',
         key: 'senseiAccess',
-        url: '/dashboard/gamma',
+        url: '/sensei/dashboard',
       },
     ]
     dispatch({

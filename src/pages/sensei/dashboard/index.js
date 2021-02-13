@@ -5,9 +5,7 @@ const SenseiDashboard = () => {
   return (
     <div>
       <Helmet title="SenseiDashboard" />
-      <div className="row">
-        <span>Hello</span>
-      </div>
+      <div className="row" />
     </div>
   )
 }
