@@ -19,6 +19,18 @@ const routes = [
     Component: lazy(() => import('pages/admin/dashboard')),
     exact: true,
   },
+  // Sensei Pages
+  {
+    path: '/sensei/dashboard',
+    Component: lazy(() => import('pages/sensei/dashboard')),
+    exact: true,
+  },
+  // Student Pages
+  {
+    path: '/student/dashboard',
+    Component: lazy(() => import('pages/student/dashboard')),
+    exact: true,
+  },
   // Dashboards
   {
     path: '/dashboard/alpha',
@@ -340,7 +352,7 @@ const Router = ({ history, routerAnimation }) => {
                   timeout={routerAnimation === 'none' ? 0 : 300}
                 >
                   <Switch location={location}>
-                    <Route exact path="/" render={() => <Redirect to="/dashboard/alpha" />} />
+                    <Route exact path="/" render={() => <Redirect to="/browse" />} />
                     {routes.map(({ path, Component, exact }) => (
                       <Route
                         path={path}

@@ -2,26 +2,71 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Menu } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
-import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
 import style from './style.module.scss'
 
-const mapStateToProps = ({ menu, settings, user }) => ({
-  menuData: menu.menuData,
+const mapStateToProps = ({ settings, user }) => ({
+  menuData: [
+    {
+      title: 'Development',
+      key: 'development',
+      children: [
+        {
+          title: 'Web Development',
+          key: 'webDevelopment',
+          url: '/courses/development/web-development',
+        },
+        {
+          title: 'Data Science',
+          key: 'dataScience',
+          url: '/courses/development/data-science',
+        },
+        {
+          title: 'Mobile Development',
+          key: 'mobileDevelopment',
+          url: '/courses/development/mobile-development',
+        },
+        {
+          title: 'Programming Languages',
+          key: 'programmingLanguages',
+          url: '/courses/development/programming-languages',
+        },
+      ],
+    },
+    {
+      title: 'Business',
+      key: 'business',
+      children: [
+        {
+          title: 'Entrepreneurship',
+          key: 'entrepreneurship',
+          url: '/courses/business/entrepreneurship',
+        },
+        {
+          title: 'Communications',
+          key: 'communications',
+          url: '/courses/business/communications',
+        },
+        {
+          title: 'Management',
+          key: 'management',
+          url: '/courses/business/management',
+        },
+        {
+          title: 'Sales',
+          key: 'sales',
+          url: '/courses/business/sales',
+        },
+      ],
+    },
+  ],
   logo: settings.logo,
   menuColor: settings.menuColor,
   role: user.role,
 })
 
-const MenuTop = ({
-  menuData = [],
-  location: { pathname },
-
-  menuColor,
-  logo,
-  role,
-}) => {
+const CourseCategoryBar = ({ menuData = [], location: { pathname }, role }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
 
   useEffect(() => {
@@ -122,27 +167,12 @@ const MenuTop = ({
   }
 
   return (
-    <div
-      className={classNames(`${style.menu}`, {
-        [style.white]: menuColor === 'white',
-        [style.gray]: menuColor === 'gray',
-        [style.dark]: menuColor === 'dark',
-      })}
-    >
-      <div className={style.logoContainer}>
-        <div className={style.logo}>
-          <img src="../resources/images/logo.svg" className="mr-2" alt="Clean UI" />
-          <div className={style.name}>{logo}</div>
-          {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
-        </div>
-      </div>
-      <div className={style.navigation}>
-        <Menu onClick={handleClick} selectedKeys={selectedKeys} mode="horizontal">
-          {generateMenuItems()}
-        </Menu>
-      </div>
+    <div className={style.navigation}>
+      <Menu onClick={handleClick} selectedKeys={selectedKeys} mode="horizontal">
+        {generateMenuItems()}
+      </Menu>
     </div>
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MenuTop))
+export default withRouter(connect(mapStateToProps)(CourseCategoryBar))

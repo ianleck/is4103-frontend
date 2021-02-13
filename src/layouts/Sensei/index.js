@@ -3,11 +3,8 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import TopBar from 'components/cleanui/layout/TopBar'
-import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
+import SenseiMenuBar from 'components/SenseiMenuBar'
 import Menu from 'components/cleanui/layout/Menu'
-import Footer from 'components/cleanui/layout/Footer'
-import Sidebar from 'components/cleanui/layout/Sidebar'
 import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
@@ -21,7 +18,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const MenuLeftLayout = ({
+const Sensei = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -30,8 +27,6 @@ const MenuLeftLayout = ({
   isSquaredBorders,
   isCardShadow,
   isBorderless,
-  isTopbarFixed,
-  isGrayTopbar,
 }) => {
   const switchMenuLayoutType = () => {
     dispatch({
@@ -42,7 +37,54 @@ const MenuLeftLayout = ({
       },
     })
   }
+  const switchToSenseiMenu = () => {
+    const menuData = [
+      {
+        category: true,
+        title: 'Appss & Pages',
+      },
+      {
+        title: 'Apps',
+        key: 'apps',
+        icon: 'fe fe-database',
+        children: [
+          {
+            title: 'Profile',
+            key: 'appsProfile',
+            url: '/apps/profile',
+          },
+          {
+            title: 'Calendar',
+            key: 'appsCalendar',
+            url: '/apps/calendar',
+          },
+          {
+            title: 'Gallery',
+            key: 'appsGallery',
+            url: '/apps/gallery',
+          },
+          {
+            title: 'Messaging',
+            key: 'appsCart',
+            url: '/apps/messaging',
+          },
+          {
+            title: 'Mail',
+            key: 'appsMail',
+            url: '/apps/mail',
+          },
+        ],
+      },
+    ]
+    dispatch({
+      type: 'menu/SET_STATE',
+      payload: {
+        menuData,
+      },
+    })
+  }
   switchMenuLayoutType()
+  switchToSenseiMenu()
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
@@ -58,26 +100,14 @@ const MenuLeftLayout = ({
         <SupportChat />
         <Menu />
         <Layout>
-          <Layout.Header
-            className={classNames('cui__layout__header', {
-              cui__layout__fixedHeader: isTopbarFixed,
-              cui__layout__headerGray: isGrayTopbar,
-            })}
-          >
-            <Sidebar />
-            <TopBar />
-          </Layout.Header>
-          <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
+            <SenseiMenuBar />
             <div className="cui__utils__content">{children}</div>
           </Layout.Content>
-          <Layout.Footer>
-            <Footer />
-          </Layout.Footer>
         </Layout>
       </Layout>
     </div>
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MenuLeftLayout))
+export default withRouter(connect(mapStateToProps)(Sensei))

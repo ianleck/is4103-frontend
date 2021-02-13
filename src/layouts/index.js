@@ -7,15 +7,17 @@ import { Helmet } from 'react-helmet'
 import PublicLayout from './Public'
 import AuthLayout from './Auth'
 import MainLayout from './Main'
-import MenuLeftLayout from './MenuLeft'
-import MenuTopLayout from './MenuTop'
+import AdminLayout from './Admin'
+import SenseiLayout from './Sensei'
+import StudentLayout from './Student'
 
 const Layouts = {
   public: PublicLayout,
   auth: AuthLayout,
   main: MainLayout,
-  menuLeft: MenuLeftLayout,
-  menuTop: MenuTopLayout,
+  admin: AdminLayout,
+  sensei: SenseiLayout,
+  student: StudentLayout,
 }
 
 const mapStateToProps = ({ user }) => ({ user })
@@ -38,11 +40,14 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     if (pathname === '/') {
       return 'public'
     }
-    if (/^\/admin(?=\/|$)/i.test(pathname) || /^\/sensei(?=\/|$)/i.test(pathname)) {
-      return 'menuLeft'
+    if (/^\/admin(?=\/|$)/i.test(pathname)) {
+      return 'admin'
+    }
+    if (/^\/sensei(?=\/|$)/i.test(pathname)) {
+      return 'sensei'
     }
     if (/^\/student(?=\/|$)/i.test(pathname)) {
-      return 'menuTop'
+      return 'student'
     }
     if (/^\/auth(?=\/|$)/i.test(pathname)) {
       return 'auth'
@@ -61,9 +66,10 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
       return null
     }
     if (
-      (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname)) ||
-      /^\/sensei(?=\/|$)/i.test(pathname) ||
-      /^\/student(?=\/|$)/i.test(pathname)
+      !isUserAuthorized &&
+      (/^\/admin(?=\/|$)/i.test(pathname) ||
+        /^\/sensei(?=\/|$)/i.test(pathname) ||
+        /^\/student(?=\/|$)/i.test(pathname))
     ) {
       return <Redirect to="/auth/login" />
     }
@@ -73,7 +79,7 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
 
   return (
     <Fragment>
-      <Helmet titleTemplate="Clean UI Pro React | %s" title="React Admin Template" />
+      <Helmet titleTemplate="Digi Dojo | %s" title="Mentorship Platform" />
       {BootstrappedLayout()}
     </Fragment>
   )

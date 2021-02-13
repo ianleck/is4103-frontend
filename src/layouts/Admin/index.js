@@ -7,7 +7,6 @@ import TopBar from 'components/cleanui/layout/TopBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
 import Menu from 'components/cleanui/layout/Menu'
 import Footer from 'components/cleanui/layout/Footer'
-import Sidebar from 'components/cleanui/layout/Sidebar'
 import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
@@ -21,7 +20,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const MenuTopLayout = ({
+const Admin = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -38,11 +37,58 @@ const MenuTopLayout = ({
       type: 'settings/CHANGE_SETTING',
       payload: {
         setting: 'menuLayoutType',
-        value: 'top',
+        value: 'left',
+      },
+    })
+  }
+  const switchToAdminMenu = () => {
+    const menuData = [
+      {
+        category: true,
+        title: 'Apps & Pages',
+      },
+      {
+        title: 'Admin Sample Menu',
+        key: 'apps',
+        icon: 'fe fe-database',
+        children: [
+          {
+            title: 'Profile',
+            key: 'appsProfile',
+            url: '/apps/profile',
+          },
+          {
+            title: 'Calendar',
+            key: 'appsCalendar',
+            url: '/apps/calendar',
+          },
+          {
+            title: 'Gallery',
+            key: 'appsGallery',
+            url: '/apps/gallery',
+          },
+          {
+            title: 'Messaging',
+            key: 'appsCart',
+            url: '/apps/messaging',
+          },
+          {
+            title: 'Mail',
+            key: 'appsMail',
+            url: '/apps/mail',
+          },
+        ],
+      },
+    ]
+    dispatch({
+      type: 'menu/SET_STATE',
+      payload: {
+        menuData,
       },
     })
   }
   switchMenuLayoutType()
+  switchToAdminMenu()
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
@@ -64,7 +110,6 @@ const MenuTopLayout = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <Sidebar />
             <TopBar />
           </Layout.Header>
           <Breadcrumbs />
@@ -80,4 +125,4 @@ const MenuTopLayout = ({
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MenuTopLayout))
+export default withRouter(connect(mapStateToProps)(Admin))
