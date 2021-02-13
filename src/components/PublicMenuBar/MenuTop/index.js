@@ -6,6 +6,8 @@ import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
 import style from './style.module.scss'
+import Search from '../Search'
+import UserMenu from '../UserMenu'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
   menuData: menu.menuData,
@@ -140,6 +142,11 @@ const MenuTop = ({
         <Menu onClick={handleClick} selectedKeys={selectedKeys} mode="horizontal">
           {generateMenuItems()}
         </Menu>
+      </div>
+
+      <div className={style.action}>
+        <Search />
+        <UserMenu />
       </div>
     </div>
   )

@@ -3,10 +3,12 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
+import TopBar from 'components/cleanui/layout/TopBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
-import PublicMenuBar from 'components/PublicMenuBar'
+import Menu from 'components/cleanui/layout/Menu'
 import Footer from 'components/cleanui/layout/Footer'
-import CourseCategoryBar from 'components/CategoriesBar'
+import Sidebar from 'components/cleanui/layout/Sidebar'
+import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -19,7 +21,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const MainLayout = ({
+const Student = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -31,7 +33,7 @@ const MainLayout = ({
   isTopbarFixed,
   isGrayTopbar,
 }) => {
-  const selectMenuLayoutType = () => {
+  const switchMenuLayoutType = () => {
     dispatch({
       type: 'settings/CHANGE_SETTING',
       payload: {
@@ -43,21 +45,40 @@ const MainLayout = ({
   const switchToMainMenu = () => {
     const menuData = [
       {
-        title: 'Mentors',
-        key: 'mentors',
-        icon: 'fa fa-mortar-board',
-        url: '/dashboard/alpha',
+        category: true,
+        title: 'Apps & Pages',
       },
       {
-        title: 'Courses',
-        key: 'courses',
-        icon: 'fa fa-cubes',
-        url: '/dashboard/beta',
-      },
-      {
-        title: 'I am a Sensei',
-        key: 'senseiAccess',
-        url: '/dashboard/gamma',
+        title: 'Student Sample Menu',
+        key: 'apps',
+        icon: 'fe fe-database',
+        children: [
+          {
+            title: 'Profile',
+            key: 'appsProfile',
+            url: '/apps/profile',
+          },
+          {
+            title: 'Calendar',
+            key: 'appsCalendar',
+            url: '/apps/calendar',
+          },
+          {
+            title: 'Gallery',
+            key: 'appsGallery',
+            url: '/apps/gallery',
+          },
+          {
+            title: 'Messaging',
+            key: 'appsCart',
+            url: '/apps/messaging',
+          },
+          {
+            title: 'Mail',
+            key: 'appsMail',
+            url: '/apps/mail',
+          },
+        ],
       },
     ]
     dispatch({
@@ -67,7 +88,7 @@ const MainLayout = ({
       },
     })
   }
-  selectMenuLayoutType()
+  switchMenuLayoutType()
   switchToMainMenu()
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
@@ -81,7 +102,8 @@ const MainLayout = ({
           cui__layout__borderless: isBorderless,
         })}
       >
-        <PublicMenuBar />
+        <SupportChat />
+        <Menu />
         <Layout>
           <Layout.Header
             className={classNames('cui__layout__header', {
@@ -89,7 +111,8 @@ const MainLayout = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <CourseCategoryBar />
+            <Sidebar />
+            <TopBar />
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
@@ -104,4 +127,4 @@ const MainLayout = ({
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MainLayout))
+export default withRouter(connect(mapStateToProps)(Student))
