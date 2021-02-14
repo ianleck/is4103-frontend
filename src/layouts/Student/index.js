@@ -1,14 +1,13 @@
 import React from 'react'
 import { Layout } from 'antd'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
-import TopBar from 'components/cleanui/layout/TopBar'
+import CategoriesBar from 'components/Public/PublicCategoriesBar'
+import StudentDashboardMenuBar from 'components/Student/StudentDashboardSubMenuBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
-import Menu from 'components/cleanui/layout/Menu'
+import StudentMenuBar from 'components/Student/StudentMenuBar'
 import Footer from 'components/cleanui/layout/Footer'
-import Sidebar from 'components/cleanui/layout/Sidebar'
-import SupportChat from 'components/cleanui/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -45,40 +44,21 @@ const Student = ({
   const switchToMainMenu = () => {
     const menuData = [
       {
-        category: true,
-        title: 'Apps & Pages',
+        title: 'Mentors',
+        key: 'mentors',
+        icon: 'fa fa-mortar-board',
+        url: '/student/browse/mentors',
       },
       {
-        title: 'Student Sample Menu',
-        key: 'apps',
-        icon: 'fe fe-database',
-        children: [
-          {
-            title: 'Profile',
-            key: 'appsProfile',
-            url: '/apps/profile',
-          },
-          {
-            title: 'Calendar',
-            key: 'appsCalendar',
-            url: '/apps/calendar',
-          },
-          {
-            title: 'Gallery',
-            key: 'appsGallery',
-            url: '/apps/gallery',
-          },
-          {
-            title: 'Messaging',
-            key: 'appsCart',
-            url: '/apps/messaging',
-          },
-          {
-            title: 'Mail',
-            key: 'appsMail',
-            url: '/apps/mail',
-          },
-        ],
+        title: 'Courses',
+        key: 'courses',
+        icon: 'fa fa-cubes',
+        url: '/student/browse/courses',
+      },
+      {
+        title: 'My Dashboard',
+        key: 'studentAccess',
+        url: '/student/dashboard',
       },
     ]
     dispatch({
@@ -90,6 +70,42 @@ const Student = ({
   }
   switchMenuLayoutType()
   switchToMainMenu()
+  const { pathname } = useLocation()
+  if (pathname === '/student/dashboard' || pathname === '/student/profile') {
+    return (
+      <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
+        <Layout
+          className={classNames({
+            cui__layout__contentMaxWidth: isContentMaxWidth,
+            cui__layout__appMaxWidth: isAppMaxWidth,
+            cui__layout__grayBackground: isGrayBackground,
+            cui__layout__squaredBorders: isSquaredBorders,
+            cui__layout__cardsShadow: isCardShadow,
+            cui__layout__borderless: isBorderless,
+          })}
+        >
+          <StudentMenuBar />
+          <Layout>
+            <Layout.Header
+              className={classNames('cui__layout__header', {
+                cui__layout__fixedHeader: isTopbarFixed,
+                cui__layout__headerGray: isGrayTopbar,
+              })}
+            >
+              <StudentDashboardMenuBar />
+            </Layout.Header>
+            <Breadcrumbs />
+            <Layout.Content style={{ height: '100%', position: 'relative' }}>
+              <div className="cui__utils__content">{children}</div>
+            </Layout.Content>
+            <Layout.Footer>
+              <Footer />
+            </Layout.Footer>
+          </Layout>
+        </Layout>
+      </div>
+    )
+  }
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
@@ -102,8 +118,7 @@ const Student = ({
           cui__layout__borderless: isBorderless,
         })}
       >
-        <SupportChat />
-        <Menu />
+        <StudentMenuBar />
         <Layout>
           <Layout.Header
             className={classNames('cui__layout__header', {
@@ -111,8 +126,7 @@ const Student = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <Sidebar />
-            <TopBar />
+            <CategoriesBar />
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
