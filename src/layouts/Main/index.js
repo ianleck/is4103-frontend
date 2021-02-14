@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
 import PublicMenuBar from 'components/Public/PublicMenuBar'
 import Footer from 'components/cleanui/layout/Footer'
-import CourseCategoryBar from 'components/Public/CategoriesBar'
+import PublicCategoriesBar from 'components/Public/PublicCategoriesBar'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -89,7 +89,7 @@ const MainLayout = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <CourseCategoryBar />
+            <PublicCategoriesBar />
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>

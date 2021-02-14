@@ -1,29 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Menu, Row, Col } from 'antd'
+import { Menu } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
-import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
 import style from './style.module.scss'
-import Search from '../Search'
-import UserMenu from '../UserMenu'
 
-const mapStateToProps = ({ menu, settings, user }) => ({
-  menuData: menu.menuData,
+const mapStateToProps = ({ settings, user }) => ({
+  menuData: [
+    {
+      title: 'Mentor Feed',
+      key: 'mentorFeed',
+      url: '/student/dashboard/mentor-feed',
+    },
+    {
+      title: 'Messages',
+      key: 'messages',
+      url: '/student/dashboard/messages',
+    },
+    {
+      title: 'Consultations',
+      key: 'consultations',
+      url: '/student/dashboard/consultations',
+    },
+    {
+      title: 'Testimonials',
+      key: 'testimonials',
+      url: '/student/dashboard/testimonials',
+    },
+    {
+      title: 'Mentorships',
+      key: 'mentorships',
+      url: '/student/dashboard/mentorships',
+    },
+    {
+      title: 'Courses',
+      key: 'courses',
+      url: '/student/dashboard/courses',
+    },
+    {
+      title: 'Mentorship Applications',
+      key: 'mentorshipApplications',
+      url: '/student/dashboard/mentorship-applications',
+    },
+  ],
   logo: settings.logo,
   menuColor: settings.menuColor,
   role: user.role,
 })
 
-const MenuTop = ({
-  menuData = [],
-  location: { pathname },
-
-  menuColor,
-  logo,
-  role,
-}) => {
+const StudentDashboardMenuBar = ({ menuData = [], location: { pathname }, role }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
 
   useEffect(() => {
@@ -124,35 +150,12 @@ const MenuTop = ({
   }
 
   return (
-    <div
-      className={classNames(`${style.menu}`, {
-        [style.white]: menuColor === 'white',
-        [style.gray]: menuColor === 'gray',
-        [style.dark]: menuColor === 'dark',
-      })}
-    >
-      <div className={style.logoContainer}>
-        <div className={style.logo}>
-          <img src="../resources/images/logo.svg" className="mr-2" alt="Clean UI" />
-          <div className={style.name}>{logo}</div>
-        </div>
-      </div>
-      <div className={style.navigation}>
-        <Menu onClick={handleClick} selectedKeys={selectedKeys} mode="horizontal">
-          {generateMenuItems()}
-        </Menu>
-      </div>
-
-      <Row className={style.action}>
-        <Col className="d-md-none d-lg-block">
-          <Search />
-        </Col>
-        <Col>
-          <UserMenu />
-        </Col>
-      </Row>
+    <div className={style.navigation}>
+      <Menu onClick={handleClick} selectedKeys={selectedKeys} mode="horizontal">
+        {generateMenuItems()}
+      </Menu>
     </div>
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MenuTop))
+export default withRouter(connect(mapStateToProps)(StudentDashboardMenuBar))

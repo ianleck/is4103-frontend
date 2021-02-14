@@ -42,8 +42,28 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/browse',
+    Component: lazy(() => import('pages/student/browse')),
+    exact: true,
+  },
+  {
+    path: '/student/browse/courses',
+    Component: lazy(() => import('pages/student/browse/courses')),
+    exact: true,
+  },
+  {
+    path: '/student/browse/mentors',
+    Component: lazy(() => import('pages/student/browse/mentors')),
+    exact: true,
+  },
+  {
     path: '/student/dashboard',
     Component: lazy(() => import('pages/student/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/student/profile',
+    Component: lazy(() => import('pages/student/profile')),
     exact: true,
   },
   /*
