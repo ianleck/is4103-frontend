@@ -131,13 +131,13 @@ const MenuTop = ({
         [style.dark]: menuColor === 'dark',
       })}
     >
-      <div className={style.logoContainer}>
+      <a href="/" className={style.logoContainer}>
         <div className={style.logo}>
           <img src="../resources/images/logo.svg" className="mr-2" alt="Clean UI" />
           <div className={style.name}>{logo}</div>
           {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
         </div>
-      </div>
+      </a>
       <div className={style.navigation}>
         <Menu onClick={handleClick} selectedKeys={selectedKeys} mode="horizontal">
           {generateMenuItems()}

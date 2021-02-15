@@ -9,6 +9,11 @@ import Layout from 'layouts'
 const routes = [
   // Landing Pages
   {
+    path: '/',
+    Component: lazy(() => import('pages/')),
+    exact: true,
+  },
+  {
     path: '/browse',
     Component: lazy(() => import('pages/browse')),
     exact: true,
@@ -39,21 +44,6 @@ const routes = [
   {
     path: '/student',
     Component: lazy(() => import('pages/student/dashboard')),
-    exact: true,
-  },
-  {
-    path: '/student/browse',
-    Component: lazy(() => import('pages/student/browse')),
-    exact: true,
-  },
-  {
-    path: '/student/browse/courses',
-    Component: lazy(() => import('pages/student/browse/courses')),
-    exact: true,
-  },
-  {
-    path: '/student/browse/mentors',
-    Component: lazy(() => import('pages/student/browse/mentors')),
     exact: true,
   },
   {
@@ -394,7 +384,6 @@ const Router = ({ history, routerAnimation }) => {
                   timeout={routerAnimation === 'none' ? 0 : 300}
                 >
                   <Switch location={location}>
-                    <Route exact path="/" render={() => <Redirect to="/browse" />} />
                     {routes.map(({ path, Component, exact }) => (
                       <Route
                         path={path}

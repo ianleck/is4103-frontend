@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Layout } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import SupportChat from 'components/cleanui/layout/SupportChat'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ settings }) => ({
@@ -27,7 +26,6 @@ const AuthLayout = ({
   return (
     <Layout>
       <Layout.Content>
-        <SupportChat />
         <div
           className={classNames(`${style.container}`, {
             cui__layout__squaredBorders: isSquaredBorders,
@@ -47,11 +45,11 @@ const AuthLayout = ({
             })}
           >
             <div className={style.logoContainer}>
-              <div className={style.logo}>
+              <a href="/" className={style.logo}>
                 <img src="../resources/images/logo.svg" className="mr-2" alt="Clean UI" />
                 <div className={style.name}>{logo}</div>
                 {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
-              </div>
+              </a>
             </div>
             <div className="d-none d-sm-block">
               <span className="mr-2">Don&#39;t have an account?</span>

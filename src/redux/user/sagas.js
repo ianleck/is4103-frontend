@@ -34,7 +34,20 @@ export function* LOGIN({ payload }) {
     yield put({
       type: 'user/LOAD_CURRENT_ACCOUNT',
     })
-    yield history.push('/')
+    const response = yield call(mapAuthProviders[autProviderName].currentAccount)
+    switch (response.role) {
+      case 'admin':
+        yield history.push('/admin')
+        break
+      case 'sensei':
+        yield history.push('/sensei')
+        break
+      case 'student':
+        yield history.push('/student')
+        break
+      default:
+        break
+    }
     notification.success({
       message: 'Logged In',
       description: 'You have successfully logged in!',
