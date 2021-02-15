@@ -19,7 +19,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const Admin = ({
+const AdminLayout = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -175,4 +175,4 @@ const Admin = ({
   )
 }
 
-export default withRouter(connect(mapStateToProps)(Admin))
+export default withRouter(connect(mapStateToProps)(AdminLayout))

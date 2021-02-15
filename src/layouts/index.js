@@ -37,9 +37,6 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
 
   // Layout Rendering
   const getLayout = () => {
-    if (pathname === '/') {
-      return 'public'
-    }
     if (/^\/admin(?=\/|$)/i.test(pathname)) {
       return 'admin'
     }
@@ -52,7 +49,7 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     if (/^\/auth(?=\/|$)/i.test(pathname)) {
       return 'auth'
     }
-    return 'main'
+    return 'public'
   }
 
   const Container = Layouts[getLayout()]

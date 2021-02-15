@@ -40,21 +40,23 @@ const Login = ({ dispatch, user, authProvider, logo }) => {
           <strong>Welcome to {logo}</strong>
         </h1>
         <p>
-          Pluggable enterprise-level application framework.
+          Admin Account - <strong>admin</strong> / <strong>demo123</strong>
           <br />
-          An excellent front-end solution for web applications built upon Ant Design.
+          Sensei Account - <strong>sensei</strong> / <strong>demo123</strong>
           <br />
-          Credentials for testing purposes - <strong>demo@sellpixels.com</strong> /{' '}
-          <strong>demo123</strong>
+          Student Account - <strong>student</strong> / <strong>demo123</strong>
+          <br />
         </p>
       </div>
       <div className={`card ${style.container}`}>
         <div className="text-dark font-size-24 mb-3">
-          <strong>Sign in to your account</strong>
+          <strong>Sign in to your account using JWT</strong>
         </div>
         <div className="mb-4">
           <Radio.Group onChange={e => changeAuthProvider(e.target.value)} value={authProvider}>
-            <Radio value="firebase">Firebase</Radio>
+            <Radio disabled value="firebase">
+              Firebase
+            </Radio>
             <Radio value="jwt">JWT</Radio>
             <Tooltip title="Read Docs Guide">
               <Radio value="Auth0" disabled>
@@ -74,7 +76,7 @@ const Login = ({ dispatch, user, authProvider, logo }) => {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           className="mb-4"
-          initialValues={{ email: 'demo@sellpixels.com', password: 'demo123' }}
+          initialValues={{ email: 'admin', password: 'demo123' }}
         >
           <Form.Item
             name="email"

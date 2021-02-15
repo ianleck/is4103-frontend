@@ -17,7 +17,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const Sensei = ({
+const SenseiLayout = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -162,4 +162,4 @@ const Sensei = ({
   )
 }
 
-export default withRouter(connect(mapStateToProps)(Sensei))
+export default withRouter(connect(mapStateToProps)(SenseiLayout))

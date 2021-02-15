@@ -3,7 +3,7 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
-import CategoriesBar from 'components/Public/PublicCategoriesBar'
+import PublicCategoriesBar from 'components/Public/PublicCategoriesBar'
 import StudentDashboardMenuBar from 'components/Student/StudentDashboardSubMenuBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
 import StudentMenuBar from 'components/Student/StudentMenuBar'
@@ -20,7 +20,7 @@ const mapStateToProps = ({ settings }) => ({
   isGrayTopbar: settings.isGrayTopbar,
 })
 
-const Student = ({
+const StudentLayout = ({
   children,
   dispatch,
   isContentMaxWidth,
@@ -47,13 +47,13 @@ const Student = ({
         title: 'Mentors',
         key: 'mentors',
         icon: 'fa fa-mortar-board',
-        url: '/student/browse/mentors',
+        url: '/browse/mentors',
       },
       {
         title: 'Courses',
         key: 'courses',
         icon: 'fa fa-cubes',
-        url: '/student/browse/courses',
+        url: '/browse/courses',
       },
       {
         title: 'My Dashboard',
@@ -126,7 +126,7 @@ const Student = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <CategoriesBar />
+            <PublicCategoriesBar />
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
@@ -141,4 +141,4 @@ const Student = ({
   )
 }
 
-export default withRouter(connect(mapStateToProps)(Student))
+export default withRouter(connect(mapStateToProps)(StudentLayout))
