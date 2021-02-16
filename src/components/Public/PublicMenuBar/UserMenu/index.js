@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import { Menu, Dropdown, Avatar, Badge } from 'antd'
 import styles from './style.module.scss'
@@ -9,6 +10,14 @@ const mapStateToProps = ({ user }) => ({ user })
 
 const ProfileMenu = ({ dispatch, user }) => {
   const [count, setCount] = useState(7)
+
+  const history = useHistory()
+
+  const redirectToLogin = e => {
+    e.preventDefault()
+    const path = '/auth/login'
+    history.push(path)
+  }
 
   const logout = e => {
     e.preventDefault()
@@ -70,8 +79,32 @@ const ProfileMenu = ({ dispatch, user }) => {
       </Menu.Item>
     </Menu>
   )
+
+  const pendingLogin = (
+    <Menu selectable={false}>
+      <Menu.Item>
+        <a href="#" onClick={redirectToLogin}>
+          <i className="fe fe-user mr-2" />
+          <FormattedMessage id="topBar.profileMenu.login" />
+        </a>
+      </Menu.Item>
+    </Menu>
+  )
+
+  if (user.authorized) {
+    return (
+      <Dropdown overlay={menu} trigger={['click']} onVisibleChange={addCount}>
+        <div className={styles.dropdown}>
+          <Badge count={count}>
+            <Avatar className={styles.avatar} shape="square" size="large" icon={<UserOutlined />} />
+          </Badge>
+        </div>
+      </Dropdown>
+    )
+  }
+
   return (
-    <Dropdown overlay={menu} trigger={['click']} onVisibleChange={addCount}>
+    <Dropdown overlay={pendingLogin} trigger={['click']} onVisibleChange={addCount}>
       <div className={styles.dropdown}>
         <Badge count={count}>
           <Avatar className={styles.avatar} shape="square" size="large" icon={<UserOutlined />} />
