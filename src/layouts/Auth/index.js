@@ -85,8 +85,8 @@ const AuthLayout = ({
               </li>
             </ul>
             <div className="text-center">
-              Copyright © 2017-2020 Mdtk Soft |{' '}
-              <a href="https://www.mediatec.org/privacy" target="_blank" rel="noopener noreferrer">
+              Copyright © 2017-2021 IS4103 Capstone Project - Digi Dojo |{' '}
+              <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
                 Privacy Policy
               </a>
             </div>
