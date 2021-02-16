@@ -13,10 +13,6 @@ These other PRs should be merged or reviewed first
 
 This PR blocks these other PRs
 
-## Description:
-
-_Eg; Fixed router bug_
-
 ## Checklist:
 
 - [ ] Merged latest develop
