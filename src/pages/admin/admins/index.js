@@ -9,16 +9,16 @@ import General2v3 from 'components/kit/widgets/General/2v3'
 import List11 from 'components/kit/widgets/Lists/11'
 import List12 from 'components/kit/widgets/Lists/12'
 import General16 from 'components/kit/widgets/General/16'
-import productsData from './data.json'
+import productsData from '../dashboard/data.json'
 
 const { TabPane } = Tabs
 
-const AdminDashboard = () => {
+const AdminManagement = () => {
   return (
     <div>
-      <Helmet title="Admin Dashboard" />
+      <Helmet title="Admin Management" />
       <div className="cui__utils__heading">
-        <strong>Admin Dashboard</strong>
+        <strong>Admin Management</strong>
       </div>
       <div className="row">
         <div className="col-xl-8 col-lg-12">
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="card">
-            <Tabs className="kit-tabs-bordered pt-2" defaultActiveKey="2">
+            <Tabs className="kit-tabs-bordered pt-2" defaultActiveKey="1">
               <TabPane tab="Bestsellers" key="1" />
               <TabPane tab="Most Viewed" key="2" />
               <TabPane tab="Highest Rated" key="3" />
@@ -95,4 +95,4 @@ const AdminDashboard = () => {
   )
 }
 
-export default AdminDashboard
+export default AdminManagement

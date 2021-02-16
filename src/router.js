@@ -34,6 +34,66 @@ const routes = [
     Component: lazy(() => import('pages/admin/profile')),
     exact: true,
   },
+  {
+    path: '/admin/usermanagement',
+    Component: lazy(() => import('pages/admin/users')),
+    exact: true,
+  },
+  {
+    path: '/admin/adminmanagement',
+    Component: lazy(() => import('pages/admin/admins')),
+    exact: true,
+  },
+  {
+    path: '/admin/revenuemanagement',
+    Component: lazy(() => import('pages/admin/revenue')),
+    exact: true,
+  },
+  {
+    path: '/admin/profit',
+    Component: lazy(() => import('pages/admin/profits')),
+    exact: true,
+  },
+  {
+    path: '/admin/userStatistics',
+    Component: lazy(() => import('pages/admin/userstatistics')),
+    exact: true,
+  },
+  {
+    path: '/admin/senseiContentManagement',
+    Component: lazy(() => import('pages/admin/sensei')),
+    exact: true,
+  },
+  {
+    path: '/admin/courseContentManagement',
+    Component: lazy(() => import('pages/admin/courses')),
+    exact: true,
+  },
+  {
+    path: '/admin/announcementContentManagement',
+    Component: lazy(() => import('pages/admin/announcements')),
+    exact: true,
+  },
+  {
+    path: '/admin/complaintContentManagement',
+    Component: lazy(() => import('pages/admin/complaints')),
+    exact: true,
+  },
+  {
+    path: '/admin/withdrawals',
+    Component: lazy(() => import('pages/admin/withdrawals')),
+    exact: true,
+  },
+  {
+    path: '/admin/refunds',
+    Component: lazy(() => import('pages/admin/refunds')),
+    exact: true,
+  },
+  {
+    path: '/admin/transactions',
+    Component: lazy(() => import('pages/admin/transactions')),
+    exact: true,
+  },
   // Sensei Pages
   {
     path: '/sensei',
