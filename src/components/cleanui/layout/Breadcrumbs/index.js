@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import { reduce } from 'lodash'
 import styles from './style.module.scss'
 
-const mapStateToProps = ({ menu }) => ({
+const mapStateToProps = ({ menu, user }) => ({
   menuData: menu.menuData,
+  role: user.role,
 })
 
 const Breadcrumbs = props => {
@@ -13,6 +14,7 @@ const Breadcrumbs = props => {
   const {
     location: { pathname },
     menuData = [],
+    role,
   } = props
   useEffect(() => {
     setBreadcrumbs(() => getBreadcrumbs())
@@ -74,12 +76,25 @@ const Breadcrumbs = props => {
     )
   }
 
+  const checkHomePath = () => {
+    switch (role) {
+      case 'sensei':
+        return '/sensei'
+      case 'student':
+        return '/student'
+      case 'admin':
+        return '/admin'
+      default:
+        return '/'
+    }
+  }
+
   return (
     breadcrumbs &&
     (breadcrumbs.length ? (
       <div className={styles.breadcrumbs}>
         <div className={styles.path}>
-          <Link to="/dashboard/alpha">Home</Link>
+          <Link to={checkHomePath}>Home</Link>
           {breadcrumbs}
         </div>
       </div>
