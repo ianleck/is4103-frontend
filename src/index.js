@@ -29,7 +29,10 @@ const middlewares = [sagaMiddleware, routeMiddleware]
 // if (process.env.NODE_ENV === 'development') {
 //   middlewares.push(logger)
 // }
-const store = createStore(reducers(history), compose(applyMiddleware(...middlewares)))
+const store = createStore(
+  reducers(history),
+  compose(applyMiddleware(...middlewares), window.devToolsExtension && window.devToolsExtension()),
+)
 sagaMiddleware.run(sagas)
 
 ReactDOM.render(
