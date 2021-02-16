@@ -50,12 +50,12 @@ const AdminLayout = ({
           {
             title: 'Users',
             key: 'userManagement',
-            url: '/admin/userManagement',
+            url: '/admin/user-management',
           },
           {
             title: 'Admin',
             key: 'adminManagement',
-            url: '/admin/adminManagement',
+            url: '/admin/admin-management',
           },
         ],
       },
@@ -67,7 +67,7 @@ const AdminLayout = ({
           {
             title: 'Revenue',
             key: 'revenue',
-            url: '/admin/revenueManagement',
+            url: '/admin/revenue-management',
           },
           {
             title: 'Profit',
@@ -77,7 +77,7 @@ const AdminLayout = ({
           {
             title: 'User Statistics',
             key: 'userStatistics',
-            url: '/admin/userStatistics',
+            url: '/admin/user-statistics',
           },
         ],
       },
@@ -89,22 +89,22 @@ const AdminLayout = ({
           {
             title: 'Sensei',
             key: 'senseiContent',
-            url: '/admin/senseiContentManagement',
+            url: '/admin/sensei-content-management',
           },
           {
             title: 'Courses',
             key: 'courseContent',
-            url: '/admin/courseContentManagement',
+            url: '/admin/course-content-management',
           },
           {
             title: 'Announcements',
             key: 'announcementContent',
-            url: '/admin/announcementContentManagement',
+            url: '/admin/announcement-content-management',
           },
           {
             title: 'Complaints',
             key: 'complaintContent',
-            url: '/admin/complaintContentManagement',
+            url: '/admin/complaint-content-management',
           },
         ],
       },

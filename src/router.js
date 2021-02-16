@@ -61,7 +61,7 @@ const routes = [
   },
   {
     path: '/admin/sensei-content-management',
-    Component: lazy(() => import('pages/admin/senseis')),
+    Component: lazy(() => import('pages/admin/sensei')),
     exact: true,
   },
   {
