@@ -29,6 +29,11 @@ const routes = [
     Component: lazy(() => import('pages/admin/dashboard')),
     exact: true,
   },
+  {
+    path: '/admin/profile',
+    Component: lazy(() => import('pages/admin/profile')),
+    exact: true,
+  },
   // Sensei Pages
   {
     path: '/sensei',
