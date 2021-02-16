@@ -40,6 +40,11 @@ const routes = [
     Component: lazy(() => import('pages/sensei/dashboard')),
     exact: true,
   },
+  {
+    path: '/sensei/register',
+    Component: lazy(() => import('pages/sensei/register')),
+    exact: true,
+  },
   // Student Pages
   {
     path: '/student',

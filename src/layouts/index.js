@@ -37,6 +37,9 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
 
   // Layout Rendering
   const getLayout = () => {
+    if (RegExp('register').test(pathname) || /^\/auth(?=\/|$)/i.test(pathname)) {
+      return 'auth'
+    }
     if (/^\/admin(?=\/|$)/i.test(pathname)) {
       return 'admin'
     }
@@ -45,9 +48,6 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     }
     if (/^\/student(?=\/|$)/i.test(pathname)) {
       return 'student'
-    }
-    if (/^\/auth(?=\/|$)/i.test(pathname)) {
-      return 'auth'
     }
     return 'public'
   }
@@ -63,6 +63,7 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
       return null
     }
     if (
+      !RegExp('register').test(pathname) &&
       !isUserAuthorized &&
       (/^\/admin(?=\/|$)/i.test(pathname) ||
         /^\/sensei(?=\/|$)/i.test(pathname) ||

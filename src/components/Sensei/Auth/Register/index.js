@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link } from 'react-router-dom'
-import style from '../style.module.scss'
+import style from './style.module.scss'
 
 const mapStateToProps = ({ user, dispatch }) => ({ user, dispatch })
 
@@ -22,7 +22,7 @@ const Register = ({ dispatch, user }) => {
     <div>
       <div className={`card ${style.container}`}>
         <div className="text-dark font-size-24 mb-4">
-          <strong>Create your Student account</strong>
+          <strong>Apply for a Sensei account</strong>
         </div>
         <Form
           layout="vertical"
@@ -74,12 +74,6 @@ const Register = ({ dispatch, user }) => {
         <span className="mr-2">Already have an account?</span>
         <Link to="/auth/login" className="kit__utils__link font-size-16">
           Sign in
-        </Link>
-      </div>
-      <div className="text-center pt-2 mb-auto">
-        <span className="mr-2">Interested to be a Mentor or Sensei on Digi Dojo?</span>
-        <Link to="/sensei/register" className="kit__utils__link font-size-16">
-          Apply here
         </Link>
       </div>
     </div>
