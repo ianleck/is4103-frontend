@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Descriptions, Form, Input, Modal } from 'antd'
+import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ user }) => ({
@@ -20,8 +21,12 @@ const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
 }
 
+const shareUrl = 'https://github.com'
+let title = "I'm sharing my Digi Dojo profile with you!"
+
 const EditProfileForm = ({ userData }) => {
   if (userData.userTypeEnum === 'STUDENT') {
+    title = `${userData.firstName} is sharing his Digi Dojo profile with you!`
     return (
       <Form
         layout="vertical"
@@ -81,15 +86,23 @@ const ProfileCard = ({ userData }) => {
   const [showEditProfile, setShowEditProfile] = useState(false)
 
   return (
-    <div className="row justify-content-start">
+    <div className="row justify-content-between">
       <div className="col-auto">
         <div className="kit__utils__avatar kit__utils__avatar--size64 mb-3">
           <img src="../resources/images/avatars/5.jpg" alt="Mary Stanform" />
         </div>
       </div>
-      <div className="col-auto">
+      <div className="col">
         <div className="text-dark font-weight-bold font-size-18">{`${userData.firstName} ${userData.lastName}`}</div>
         <div className="text-uppercase font-size-12 mb-3">{userData.userTypeEnum}</div>
+      </div>
+      <div className="col-auto">
+        <FacebookShareButton url={shareUrl} quote={title}>
+          <FacebookIcon size={32} round />
+        </FacebookShareButton>
+        <LinkedinShareButton url={shareUrl} className="ml-2">
+          <LinkedinIcon size={32} round />
+        </LinkedinShareButton>
       </div>
       <div className="col-12 text-left mt-2">
         <Descriptions
@@ -108,11 +121,6 @@ const ProfileCard = ({ userData }) => {
                   <i className={`${style.btnAddonIcon} fe fe-edit`} />
                 </span>
                 Edit
-              </button>
-              <button type="button" className="btn btn-outline-primary ml-2">
-                <span className={`${style.btnAddon}`}>
-                  <i className={`${style.btnAddonIcon} fe fe-share-2`} />
-                </span>
               </button>
             </div>
           }
