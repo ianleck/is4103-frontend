@@ -24,6 +24,7 @@ const users = [
     email: 'student',
     contactNumber: 90001234,
     status: 'ACTIVE',
+    userTypeEnum: 'STUDENT',
   },
   {
     id: 3,
