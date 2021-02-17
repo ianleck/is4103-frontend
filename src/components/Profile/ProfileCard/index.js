@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Descriptions, Form, Input, Modal } from 'antd'
+import { Descriptions, Form, Input, Modal, Tabs, notification } from 'antd'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import style from './style.module.scss'
+
+const { TabPane } = Tabs
 
 const mapStateToProps = ({ user }) => ({
   userData: {
@@ -82,8 +84,81 @@ const EditProfileForm = ({ userData }) => {
   return <span>Bye</span>
 }
 
+const ChangePasswordForm = () => {
+  return (
+    <Form
+      layout="vertical"
+      hideRequiredMark
+      onFinish={() => console.log('success')}
+      onFinishFailed={onFinishFailed}
+    >
+      <div className="row">
+        <div className="col-12">
+          <Form.Item name="oldPassword" label="Old Password">
+            <Input />
+          </Form.Item>
+        </div>
+        <div className="col-6">
+          <Form.Item name="password" label="New Password">
+            <Input />
+          </Form.Item>
+        </div>
+        <div className="col-6">
+          <Form.Item name="confirmPassword" label="Confirm Password">
+            <Input />
+          </Form.Item>
+        </div>
+      </div>
+    </Form>
+  )
+}
+
+const DeleteAccountButton = () => {
+  return (
+    <div className="row">
+      <div className="col-12">
+        <button type="button" className="btn btn-danger mb-3">
+          Delete Account
+        </button>
+      </div>
+    </div>
+  )
+}
+
 const ProfileCard = ({ userData }) => {
-  const [showEditProfile, setShowEditProfile] = useState(false)
+  const [showEditInformation, setShowEditInformation] = useState(false)
+
+  const [tabKey, setTabKey] = useState('editProfile')
+
+  const changeTab = key => {
+    setTabKey(key)
+  }
+
+  const onFinish = () => {
+    notification.success({
+      message: 'Success',
+      description: 'Action successfully completed!',
+    })
+  }
+
+  const saveFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <button
+          type="button"
+          onClick={() => setShowEditInformation(false)}
+          className="btn btn-outline-default"
+        >
+          Close
+        </button>
+      </div>
+      <div className="col-auto">
+        <button type="button" onClick={onFinish} className="btn btn-primary">
+          Save
+        </button>
+      </div>
+    </div>
+  )
 
   return (
     <div className="row justify-content-between">
@@ -115,7 +190,7 @@ const ProfileCard = ({ userData }) => {
               <button
                 type="button"
                 className={`btn btn-primary ${style.btnWithAddon}`}
-                onClick={() => setShowEditProfile(true)}
+                onClick={() => setShowEditInformation(true)}
               >
                 <span className={`${style.btnAddon}`}>
                   <i className={`${style.btnAddonIcon} fe fe-edit`} />
@@ -131,13 +206,26 @@ const ProfileCard = ({ userData }) => {
         </Descriptions>
       </div>
       <Modal
-        title="Edit Profile"
-        visible={showEditProfile}
-        okText="Save"
-        onOk={() => setShowEditProfile(false)}
-        onCancel={() => setShowEditProfile(false)}
+        title="Edit Information"
+        visible={showEditInformation}
+        cancelText="Close"
+        centered
+        okButtonProps={{ style: { display: 'none' } }}
+        onCancel={() => setShowEditInformation(false)}
+        bodyStyle={{ paddingTop: 0, paddingBottom: 0 }}
+        footer={
+          (tabKey === 'editProfile' && saveFormFooter) ||
+          (tabKey === 'changePassword' && saveFormFooter)
+        }
       >
-        <EditProfileForm userData={userData} />
+        <Tabs activeKey={tabKey} className="mr-auto kit-tabs-bold" onChange={changeTab}>
+          <TabPane tab="Edit Profile" key="editProfile" />
+          <TabPane tab="Change Password" key="changePassword" />
+          <TabPane tab="Delete Account" key="deleteAccount" />
+        </Tabs>
+        {tabKey === 'editProfile' && <EditProfileForm userData={userData} />}
+        {tabKey === 'changePassword' && <ChangePasswordForm />}
+        {tabKey === 'deleteAccount' && <DeleteAccountButton />}
       </Modal>
     </div>
   )
