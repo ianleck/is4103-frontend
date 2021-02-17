@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Tabs, Input, Button, Upload, Form } from 'antd'
-import General1 from 'components/kit/widgets/General/1'
-import General10v1 from 'components/kit/widgets/General/10v1'
-import General12v1 from 'components/kit/widgets/General/12v1'
+import ProfileCard from 'components/Profile/ProfileCard'
 import General14 from 'components/kit/widgets/General/14'
 import General15 from 'components/kit/widgets/General/15'
-import List19 from 'components/kit/widgets/Lists/19'
 
 const { TabPane } = Tabs
 
@@ -24,20 +21,7 @@ const StudentProfile = () => {
         <div className="col-xl-4 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <General10v1 />
-            </div>
-          </div>
-          <div className="card text-white bg-primary">
-            <General12v1 />
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <General1 />
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <List19 />
+              <ProfileCard />
             </div>
           </div>
         </div>
