@@ -115,6 +115,7 @@ export function* LOAD_CURRENT_ACCOUNT() {
       email,
       contactNumber,
       status,
+      userTypeEnum,
     } = response
     yield put({
       type: 'user/SET_STATE',
@@ -132,6 +133,7 @@ export function* LOAD_CURRENT_ACCOUNT() {
         email,
         contactNumber,
         status,
+        userTypeEnum,
       },
     })
   }
