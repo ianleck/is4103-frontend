@@ -5,9 +5,9 @@ import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
+import UserActionGroup from 'components/UserActionGroup'
 import style from './style.module.scss'
 import Search from '../Search'
-import UserMenu from '../UserMenu'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
   menuData: menu.menuData,
@@ -142,13 +142,12 @@ const MenuTop = ({
           {generateMenuItems()}
         </Menu>
       </div>
-
       <Row className={style.action}>
         <Col className="d-md-none d-lg-block">
           <Search />
         </Col>
         <Col>
-          <UserMenu />
+          <UserActionGroup />
         </Col>
       </Row>
     </div>
