@@ -71,6 +71,16 @@ mock.onPost('/api/auth/register').reply(request => {
       name,
       avatar: '',
       role: 'admin',
+      // Add database columns from backend
+      username: 'student',
+      // password: 'demo123',
+      firstName: 'Lawrence',
+      lastName: 'Lim',
+      emailVerified: true,
+      // email: 'student',
+      contactNumber: 90001234,
+      status: 'ACTIVE',
+      userTypeEnum: 'STUDENT',
     }
     users.push(user)
 

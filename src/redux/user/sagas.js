@@ -77,7 +77,12 @@ export function* REGISTER({ payload }) {
     yield put({
       type: 'user/LOAD_CURRENT_ACCOUNT',
     })
-    yield history.push('/')
+    const response = yield call(mapAuthProviders[authProvider].currentAccount)
+    if (response.userTypeEnum === 'STUDENT') {
+      yield history.push('/student/profile')
+    } else {
+      yield history.push('/')
+    }
     notification.success({
       message: 'Succesful Registered',
       description: 'You have successfully registered!',
