@@ -20,12 +20,12 @@ export async function login(email, password) {
     .catch(err => console.log(err))
 }
 
-export async function register(email, password, name) {
+export async function register(username, email, password) {
   return apiClient
     .post('/auth/register', {
+      username,
       email,
       password,
-      name,
     })
     .then(response => {
       if (response) {
@@ -62,6 +62,27 @@ export async function logout() {
     .then(() => {
       store.remove('accessToken')
       return true
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateProfile(id, firstName, lastName, contactNumber) {
+  return apiClient
+    .post('/auth/updateProfile', {
+      id,
+      firstName,
+      lastName,
+      contactNumber,
+    })
+    .then(response => {
+      if (response) {
+        const { accessToken } = response.data
+        if (accessToken) {
+          store.set('accessToken', accessToken)
+        }
+        return response.data
+      }
+      return false
     })
     .catch(err => console.log(err))
 }

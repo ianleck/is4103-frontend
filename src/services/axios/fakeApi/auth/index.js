@@ -60,7 +60,7 @@ mock.onPost('/api/auth/login').reply(request => {
 })
 
 mock.onPost('/api/auth/register').reply(request => {
-  const { email, password, name } = JSON.parse(request.data)
+  const { username, email, password } = JSON.parse(request.data)
   const isAlreadyRegistered = users.find(user => user.email === email)
 
   if (!isAlreadyRegistered) {
@@ -68,17 +68,9 @@ mock.onPost('/api/auth/register').reply(request => {
       id: users.length + 1,
       email,
       password,
-      name,
       avatar: '',
-      role: 'admin',
-      // Add database columns from backend
-      username: 'student',
-      // password: 'demo123',
-      firstName: 'Lawrence',
-      lastName: 'Lim',
-      emailVerified: true,
-      // email: 'student',
-      contactNumber: 90001234,
+      role: 'student',
+      username,
       status: 'ACTIVE',
       userTypeEnum: 'STUDENT',
     }
@@ -117,4 +109,24 @@ mock.onGet('/api/auth/account').reply(request => {
 
 mock.onGet('/api/auth/logout').reply(() => {
   return [200]
+})
+
+mock.onPost('/api/auth/updateProfile').reply(request => {
+  const { id, firstName, lastName, contactNumber } = JSON.parse(request.data)
+  const currentUserIndex = users.findIndex(user => user.id === id)
+
+  if (currentUserIndex !== -1) {
+    users[currentUserIndex].firstName = firstName
+    users[currentUserIndex].lastName = lastName
+    users[currentUserIndex].contactNumber = contactNumber
+
+    const userData = Object.assign({}, users[currentUserIndex])
+    userData.accessToken = jwt.sign({ id: userData.id }, jwtConfig.secret, {
+      expiresIn: jwtConfig.expiresIn,
+    }) // refresh jwt token
+
+    return [200, userData]
+  }
+
+  return [401, 'The current user profile could not be updated.']
 })

@@ -4,6 +4,8 @@ const actions = {
   REGISTER: 'user/REGISTER',
   LOAD_CURRENT_ACCOUNT: 'user/LOAD_CURRENT_ACCOUNT',
   LOGOUT: 'user/LOGOUT',
+  TRIGGER_UPDATE_PROFILE: 'user/TRIGGER_UPDATE_PROFILE',
+  UPDATE_PROFILE: 'user/UPDATE_PROFILE',
 }
 
 export default actions
