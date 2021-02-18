@@ -6,7 +6,7 @@ import Menu from 'components/cleanui/layout/Menu'
 import PublicCategoriesBar from 'components/Public/PublicCategoriesBar'
 import PublicMenuBar from 'components/Public/PublicMenuBar'
 import StudentDashboardSubMenuBar from 'components/Student/StudentDashboardSubMenuBar'
-import SenseiMenuBar from 'components/Sensei/SenseiMenuBar'
+import UserActionGroup from 'components/UserActionGroup'
 import React from 'react'
 import { connect } from 'react-redux'
 import { useLocation, withRouter } from 'react-router-dom'
@@ -50,7 +50,7 @@ const CustomLayout = ({
           >
             {!!isPublic &&
               (showStudentDashboardMenu ? <StudentDashboardSubMenuBar /> : <PublicCategoriesBar />)}
-            {!isPublic && <SenseiMenuBar />}
+            {!isPublic && <UserActionGroup />}
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
