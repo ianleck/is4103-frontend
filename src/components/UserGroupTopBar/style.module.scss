@@ -1,15 +1,8 @@
 @import 'components/mixins.scss';
 
-.userActionGroup {
-  padding: 0 rem(30);
-  min-height: 64px;
-  height: 64px;
-  color: $text;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: flex-end;
+.topbar {
+  border-bottom: 1px solid $border; 
+
 
   @media (max-width: $sm-max-width) {
     padding: 0 rem(16);
