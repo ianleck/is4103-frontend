@@ -1,32 +1,11 @@
 import React from 'react'
-import { Layout } from 'antd'
-import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import classNames from 'classnames'
-import SenseiMenuBar from 'components/Sensei/SenseiMenuBar'
-import Menu from 'components/cleanui/layout/Menu'
+import CustomLayout from 'components/Layout/CustomLayout'
+import { useDispatch } from 'react-redux'
 
-const mapStateToProps = ({ settings }) => ({
-  isContentMaxWidth: settings.isContentMaxWidth,
-  isAppMaxWidth: settings.isAppMaxWidth,
-  isGrayBackground: settings.isGrayBackground,
-  isSquaredBorders: settings.isSquaredBorders,
-  isCardShadow: settings.isCardShadow,
-  isBorderless: settings.isBorderless,
-  isTopbarFixed: settings.isTopbarFixed,
-  isGrayTopbar: settings.isGrayTopbar,
-})
+const SenseiLayout = ({ children }) => {
+  const dispatch = useDispatch()
 
-const SenseiLayout = ({
-  children,
-  dispatch,
-  isContentMaxWidth,
-  isAppMaxWidth,
-  isGrayBackground,
-  isSquaredBorders,
-  isCardShadow,
-  isBorderless,
-}) => {
   const switchMenuLayoutType = () => {
     dispatch({
       type: 'settings/CHANGE_SETTING',
@@ -138,28 +117,8 @@ const SenseiLayout = ({
   }
   switchMenuLayoutType()
   switchToSenseiMenu()
-  return (
-    <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
-      <Layout
-        className={classNames({
-          cui__layout__contentMaxWidth: isContentMaxWidth,
-          cui__layout__appMaxWidth: isAppMaxWidth,
-          cui__layout__grayBackground: isGrayBackground,
-          cui__layout__squaredBorders: isSquaredBorders,
-          cui__layout__cardsShadow: isCardShadow,
-          cui__layout__borderless: isBorderless,
-        })}
-      >
-        <Menu />
-        <Layout>
-          <Layout.Content style={{ height: '100%', position: 'relative' }}>
-            <SenseiMenuBar />
-            <div className="cui__utils__content">{children}</div>
-          </Layout.Content>
-        </Layout>
-      </Layout>
-    </div>
-  )
+
+  return <CustomLayout isPublic={false}>{children}</CustomLayout>
 }
 
-export default withRouter(connect(mapStateToProps)(SenseiLayout))
+export default withRouter(SenseiLayout)
