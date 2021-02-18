@@ -9,7 +9,6 @@ import AuthLayout from './Auth'
 import MainLayout from './Main'
 import AdminLayout from './Admin'
 import SenseiLayout from './Sensei'
-import StudentLayout from './Student'
 
 const Layouts = {
   public: PublicLayout,
@@ -17,7 +16,6 @@ const Layouts = {
   main: MainLayout,
   admin: AdminLayout,
   sensei: SenseiLayout,
-  student: StudentLayout,
 }
 
 const mapStateToProps = ({ user }) => ({ user })
@@ -47,7 +45,7 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
       return 'sensei'
     }
     if (/^\/student(?=\/|$)/i.test(pathname)) {
-      return 'student'
+      return 'public'
     }
     return 'public'
   }
@@ -65,9 +63,7 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     if (
       !RegExp('register').test(pathname) &&
       !isUserAuthorized &&
-      (/^\/admin(?=\/|$)/i.test(pathname) ||
-        /^\/sensei(?=\/|$)/i.test(pathname) ||
-        /^\/student(?=\/|$)/i.test(pathname))
+      (/^\/admin(?=\/|$)/i.test(pathname) || /^\/sensei(?=\/|$)/i.test(pathname))
     ) {
       return <Redirect to="/auth/login" />
     }
