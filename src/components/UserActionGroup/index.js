@@ -3,7 +3,7 @@ import Actions from './Actions'
 import UserMenu from './UserMenu'
 import style from './style.module.scss'
 
-const SenseiMenuBar = () => {
+const UserActionGroup = () => {
   return (
     <div className={style.topbar}>
       <div className="mr-4 d-sm-block">
@@ -16,4 +16,4 @@ const SenseiMenuBar = () => {
   )
 }
 
-export default SenseiMenuBar
+export default UserActionGroup
