@@ -1,11 +1,12 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link } from 'react-router-dom'
 
-const mapStateToProps = ({ user, dispatch }) => ({ user, dispatch })
+const Register = () => {
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
 
-const Register = ({ user, dispatch }) => {
   const onFinishRegister = values => {
     values.isStudent = true
     dispatch({
@@ -13,7 +14,7 @@ const Register = ({ user, dispatch }) => {
       payload: values,
     })
   }
-  const onFinishUpdateProfile = values => {
+  const onUpdateProfile = values => {
     values.id = user.id
     dispatch({
       type: 'user/UPDATE_PROFILE',
@@ -46,7 +47,7 @@ const Register = ({ user, dispatch }) => {
               <Form
                 layout="vertical"
                 hideRequiredMark
-                onFinish={onFinishUpdateProfile}
+                onFinish={onUpdateProfile}
                 onFinishFailed={onFinishFailed}
                 className="mb-4"
               >
@@ -180,4 +181,4 @@ const Register = ({ user, dispatch }) => {
   return signUpCard
 }
 
-export default connect(mapStateToProps)(Register)
+export default Register

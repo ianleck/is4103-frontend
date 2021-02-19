@@ -181,19 +181,7 @@ export function* TRIGGER_UPDATE_PROFILE() {
   yield put({
     type: 'user/SET_STATE',
     payload: {
-      loading: true,
-    },
-  })
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
       requiresProfileUpdate: true,
-    },
-  })
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: false,
     },
   })
 }
@@ -229,14 +217,13 @@ export function* UPDATE_PROFILE({ payload }) {
       message: 'Profile Updated Successfully',
       description: 'Thanks for telling us more about yourself.',
     })
-  } else {
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
-    })
   }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
 }
 
 export default function* rootSaga() {
