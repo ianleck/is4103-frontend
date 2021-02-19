@@ -21,7 +21,6 @@ const mapStateToProps = ({ settings }) => ({
 
 const MainLayout = ({
   children,
-  dispatch,
   isContentMaxWidth,
   isAppMaxWidth,
   isGrayBackground,
@@ -31,44 +30,6 @@ const MainLayout = ({
   isTopbarFixed,
   isGrayTopbar,
 }) => {
-  const selectMenuLayoutType = () => {
-    dispatch({
-      type: 'settings/CHANGE_SETTING',
-      payload: {
-        setting: 'menuLayoutType',
-        value: 'top',
-      },
-    })
-  }
-  const switchToMainMenu = () => {
-    const menuData = [
-      {
-        title: 'Mentors',
-        key: 'mentors',
-        icon: 'fa fa-mortar-board',
-        url: '/dashboard/alpha',
-      },
-      {
-        title: 'Courses',
-        key: 'courses',
-        icon: 'fa fa-cubes',
-        url: '/dashboard/beta',
-      },
-      {
-        title: 'I am a Sensei',
-        key: 'senseiAccess',
-        url: '/sensei/dashboard',
-      },
-    ]
-    dispatch({
-      type: 'menu/SET_STATE',
-      payload: {
-        menuData,
-      },
-    })
-  }
-  selectMenuLayoutType()
-  switchToMainMenu()
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
