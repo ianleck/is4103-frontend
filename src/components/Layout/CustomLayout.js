@@ -1,26 +1,16 @@
-import React from 'react'
 import { Layout } from 'antd'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
-import PublicMenuBar from 'components/Public/PublicMenuBar'
-import Footer from 'components/cleanui/layout/Footer'
+import Menu from 'components/cleanui/layout/Menu'
 import PublicCategoriesBar from 'components/Public/PublicCategoriesBar'
+import PublicMenuBar from 'components/Public/PublicMenuBar'
+import StudentDashboardSubMenuBar from 'components/Student/StudentDashboardSubMenuBar'
+import UserGroupTopBar from 'components/UserGroupTopBar'
+import React from 'react'
+import { connect } from 'react-redux'
+import { useLocation, withRouter } from 'react-router-dom'
 
-const mapStateToProps = ({ settings }) => ({
-  isContentMaxWidth: settings.isContentMaxWidth,
-  isAppMaxWidth: settings.isAppMaxWidth,
-  isGrayBackground: settings.isGrayBackground,
-  isSquaredBorders: settings.isSquaredBorders,
-  isCardShadow: settings.isCardShadow,
-  isBorderless: settings.isBorderless,
-  isTopbarFixed: settings.isTopbarFixed,
-  isGrayTopbar: settings.isGrayTopbar,
-})
-
-const MainLayout = ({
-  children,
+const CustomLayout = ({
   isContentMaxWidth,
   isAppMaxWidth,
   isGrayBackground,
@@ -29,7 +19,14 @@ const MainLayout = ({
   isBorderless,
   isTopbarFixed,
   isGrayTopbar,
+  children,
+  isPublic,
 }) => {
+  const { pathname } = useLocation()
+  let showStudentDashboardMenu = false
+  if (pathname === '/student/dashboard' || pathname === '/student/profile') {
+    showStudentDashboardMenu = true
+  }
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
@@ -42,7 +39,7 @@ const MainLayout = ({
           cui__layout__borderless: isBorderless,
         })}
       >
-        <PublicMenuBar />
+        {isPublic ? <PublicMenuBar /> : <Menu />}
         <Layout>
           <Layout.Header
             className={classNames('cui__layout__header', {
@@ -50,19 +47,30 @@ const MainLayout = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <PublicCategoriesBar />
+            {!!isPublic &&
+              (showStudentDashboardMenu ? <StudentDashboardSubMenuBar /> : <PublicCategoriesBar />)}
+            {!isPublic && <UserGroupTopBar />}
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
             <div className="cui__utils__content">{children}</div>
           </Layout.Content>
-          <Layout.Footer>
-            <Footer />
-          </Layout.Footer>
         </Layout>
       </Layout>
     </div>
   )
 }
 
-export default withRouter(connect(mapStateToProps)(MainLayout))
+const mapStateToProps = ({ settings, user }) => ({
+  isContentMaxWidth: settings.isContentMaxWidth,
+  isAppMaxWidth: settings.isAppMaxWidth,
+  isGrayBackground: settings.isGrayBackground,
+  isSquaredBorders: settings.isSquaredBorders,
+  isCardShadow: settings.isCardShadow,
+  isBorderless: settings.isBorderless,
+  isTopbarFixed: settings.isTopbarFixed,
+  isGrayTopbar: settings.isGrayTopbar,
+  currentUser: user,
+})
+
+export default withRouter(connect(mapStateToProps)(CustomLayout))

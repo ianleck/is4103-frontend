@@ -1,10 +1,9 @@
 @import 'components/mixins.scss';
 
-.topbar {
+.userActionGroup {
   padding: 0 rem(30);
   min-height: 64px;
   height: 64px;
-  border-bottom: 1px solid $border;
   color: $text;
   display: flex;
   flex-direction: row;

@@ -49,7 +49,7 @@ const mapStateToProps = ({ settings, user }) => ({
   role: user.role,
 })
 
-const StudentDashboardMenuBar = ({ menuData = [], location: { pathname }, role }) => {
+const StudentDashboardSubMenuBar = ({ menuData = [], location: { pathname }, role }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
 
   useEffect(() => {
@@ -158,4 +158,4 @@ const StudentDashboardMenuBar = ({ menuData = [], location: { pathname }, role }
   )
 }
 
-export default withRouter(connect(mapStateToProps)(StudentDashboardMenuBar))
+export default withRouter(connect(mapStateToProps)(StudentDashboardSubMenuBar))

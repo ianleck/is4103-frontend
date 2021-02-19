@@ -109,6 +109,9 @@ export function* LOAD_CURRENT_ACCOUNT() {
       loading: true,
     },
   })
+  yield put({
+    type: 'menu/GET_DATA',
+  })
   const { authProvider } = yield select(state => state.settings)
   const response = yield call(mapAuthProviders[authProvider].currentAccount)
   if (response) {
@@ -168,6 +171,9 @@ export function* LOGOUT() {
       authorized: false,
       loading: false,
     },
+  })
+  yield put({
+    type: 'menu/GET_DATA',
   })
 }
 

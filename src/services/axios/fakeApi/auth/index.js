@@ -4,11 +4,19 @@ import mock from '../mock'
 const users = [
   {
     id: 1,
-    email: 'admin',
-    password: 'demo123',
     name: 'Super Admin',
     avatar: '',
     role: 'admin',
+    // Add database columns from backend
+    username: 'admin',
+    password: 'demo123',
+    firstName: 'Yi Bin',
+    lastName: 'Soh',
+    emailVerified: true,
+    email: 'admin',
+    contactNumber: 90001231,
+    status: 'ACTIVE',
+    userTypeEnum: 'ADMIN',
   },
   {
     id: 2,
@@ -22,17 +30,25 @@ const users = [
     lastName: 'Lim',
     emailVerified: true,
     email: 'student',
-    contactNumber: 90001234,
+    contactNumber: 90001232,
     status: 'ACTIVE',
     userTypeEnum: 'STUDENT',
   },
   {
     id: 3,
-    email: 'sensei',
-    password: 'demo123',
     name: 'Sensei',
     avatar: '',
     role: 'sensei',
+    // Add database columns from backend
+    username: 'sensei',
+    password: 'demo123',
+    firstName: 'Natalie',
+    lastName: 'Loke',
+    emailVerified: true,
+    email: 'sensei',
+    contactNumber: 90001233,
+    status: 'ACTIVE',
+    userTypeEnum: 'SENSEI',
   },
 ]
 
