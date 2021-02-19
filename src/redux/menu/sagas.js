@@ -12,16 +12,21 @@ export function* GET_DATA() {
   const userData = yield call(jwt.currentAccount)
   let isMenuTop = false
   let menuData = []
-  if (userData.userTypeEnum === 'SENSEI') {
-    menuData = yield call(getSenseiMenuData)
-  } else if (userData.userTypeEnum === 'ADMIN') {
-    menuData = yield call(getAdminMenuData)
-  } else if (userData.userTypeEnum === 'STUDENT') {
-    isMenuTop = true
-    menuData = yield call(getStudentMenuData)
-  } else {
-    isMenuTop = true
-    menuData = yield call(getPublicMenuData)
+  switch (userData.userTypeEnum) {
+    case 'ADMIN':
+      menuData = yield call(getAdminMenuData)
+      break
+    case 'SENSEI':
+      menuData = yield call(getSenseiMenuData)
+      break
+    case 'STUDENT':
+      isMenuTop = true
+      menuData = yield call(getStudentMenuData)
+      break
+    default:
+      isMenuTop = true
+      menuData = yield call(getPublicMenuData)
+      break
   }
   yield put({
     type: 'menu/SET_STATE',
