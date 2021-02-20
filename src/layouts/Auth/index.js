@@ -36,7 +36,7 @@ const AuthLayout = ({
           })}
           style={{
             backgroundImage:
-              authPagesColor === 'image' ? 'url(resources/images/content/photos/7.jpg)' : '',
+              authPagesColor === 'image' ? 'url(../resources/images/content/photos/7.jpg)' : '',
           }}
         >
           <div
@@ -58,7 +58,7 @@ const AuthLayout = ({
               </Link>
             </div>
           </div>
-          <div className={style.containerInner}>{children}</div>
+          <div className="w-75">{children}</div>
           <div className="mt-auto pb-5 pt-5">
             <ul
               className={`${style.footerNav} list-unstyled d-flex mb-0 flex-wrap justify-content-center`}

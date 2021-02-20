@@ -1,18 +1,32 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Input, Button, Radio, Form, Tooltip } from 'antd'
-import { Link } from 'react-router-dom'
-import style from '../style.module.scss'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Input, Button, Form } from 'antd'
+import { Link, useLocation, Redirect } from 'react-router-dom'
+import LogoWithDescription from '../../../../Public/Logo/LogoWithDescription'
+import { userTypeEnum, userTypeString } from '../../../../../constants'
 
-const mapStateToProps = ({ user, settings, dispatch }) => ({
-  dispatch,
-  user,
-  authProvider: settings.authProvider,
-  logo: settings.logo,
-})
+const Login = () => {
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+  const { pathname } = useLocation()
+  const loginUserType = RegExp('admin').test(pathname) ? userTypeEnum.admin : ''
+  const [currentUserType, setCurrentUserType] = useState(loginUserType)
 
-const Login = ({ dispatch, user, authProvider, logo }) => {
+  if (user.authorized) {
+    switch (user.userTypeEnum) {
+      case userTypeEnum.admin:
+        return <Redirect to="/admin" />
+      case userTypeEnum.sensei:
+        return <Redirect to="/sensei" />
+      case userTypeEnum.student:
+        return <Redirect to="/" />
+      default:
+        return <Redirect to="/" />
+    }
+  }
+
   const onFinish = values => {
+    values.isStudent = currentUserType === userTypeEnum.student
     dispatch({
       type: 'user/LOGIN',
       payload: values,
@@ -23,88 +37,157 @@ const Login = ({ dispatch, user, authProvider, logo }) => {
     console.log('Failed:', errorInfo)
   }
 
-  const changeAuthProvider = value => {
-    dispatch({
-      type: 'settings/CHANGE_SETTING',
-      payload: {
-        setting: 'authProvider',
-        value,
-      },
-    })
-  }
-
-  return (
-    <div>
-      <div className="text-center mb-5">
-        <h1 className="mb-5 px-3">
-          <strong>Welcome to {logo}</strong>
-        </h1>
-        <p>
-          Admin Account - <strong>admin</strong> / <strong>demo123</strong>
-          <br />
-          Sensei Account - <strong>sensei</strong> / <strong>demo123</strong>
-          <br />
-          Student Account - <strong>student</strong> / <strong>demo123</strong>
-          <br />
-        </p>
+  const SelectUserType = (
+    <div
+      style={{
+        display: currentUserType === '' ? 'block' : 'none',
+      }}
+    >
+      <div className="row mb-3 align-items-center">
+        <div className="col-12 text-center">{LogoWithDescription}</div>
       </div>
-      <div className={`card ${style.container}`}>
-        <div className="text-dark font-size-24 mb-3">
-          <strong>Sign in to your account using JWT</strong>
-        </div>
-        <div className="mb-4">
-          <Radio.Group onChange={e => changeAuthProvider(e.target.value)} value={authProvider}>
-            <Radio disabled value="firebase">
-              Firebase
-            </Radio>
-            <Radio value="jwt">JWT</Radio>
-            <Tooltip title="Read Docs Guide">
-              <Radio value="Auth0" disabled>
-                Auth0
-              </Radio>
-            </Tooltip>
-            <Tooltip title="Read Docs Guide">
-              <Radio value="Strapi" disabled>
-                Strapi
-              </Radio>
-            </Tooltip>
-          </Radio.Group>
-        </div>
-        <Form
-          layout="vertical"
-          hideRequiredMark
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          className="mb-4"
-          initialValues={{ email: 'admin', password: 'demo123' }}
-        >
-          <Form.Item
-            name="email"
-            rules={[{ required: true, message: 'Please input your e-mail address' }]}
-          >
-            <Input size="large" placeholder="Email" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: 'Please input your password' }]}
-          >
-            <Input size="large" type="password" placeholder="Password" />
-          </Form.Item>
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-4">
           <Button
+            block
             type="primary"
             size="large"
-            className="text-center w-100"
-            htmlType="submit"
-            loading={user.loading}
+            onClick={() => setCurrentUserType(userTypeEnum.sensei)}
+            className="text-center"
           >
-            <strong>Sign in</strong>
+            <i className="fa fa-graduation-cap" />
+            &nbsp;&nbsp;Login as a {userTypeString.sensei}
           </Button>
-        </Form>
-        <Link to="/auth/forgot-password" className="kit__utils__link font-size-16">
-          Forgot Password?
-        </Link>
+        </div>
+        <div className="col-12 col-md-4 mt-3 mt-md-0">
+          <Button
+            block
+            type="primary"
+            size="large"
+            onClick={() => setCurrentUserType(userTypeEnum.student)}
+            className="text-center"
+          >
+            <i className="fa fa-user" />
+            &nbsp;&nbsp;Login as a {userTypeString.student}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+
+  const SwitchUserTypeButton = () => {
+    return (
+      <Button
+        type="default"
+        size="small"
+        className="text-center"
+        onClick={() =>
+          currentUserType === userTypeEnum.student
+            ? setCurrentUserType(userTypeEnum.sensei)
+            : setCurrentUserType(userTypeEnum.student)
+        }
+      >
+        <span>
+          Login as{' '}
+          {currentUserType === userTypeEnum.student
+            ? userTypeString.sensei
+            : userTypeString.student}
+        </span>
+      </Button>
+    )
+  }
+
+  const LoginForm = () => {
+    return (
+      <Form
+        layout="vertical"
+        hideRequiredMark
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        className="mb-4"
+        initialValues={{ email: currentUserType.toLowerCase(), password: 'demo123' }}
+      >
+        <Form.Item
+          name="email"
+          rules={[{ required: true, message: 'Please input your e-mail address' }]}
+        >
+          <Input size="large" placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: 'Please input your password' }]}
+        >
+          <Input size="large" type="password" placeholder="Password" />
+        </Form.Item>
+        <Button
+          type="primary"
+          size="large"
+          className="text-center w-100"
+          htmlType="submit"
+          loading={user.loading}
+        >
+          <strong>Login</strong>
+        </Button>
+      </Form>
+    )
+  }
+
+  const AdminLoginComponent = (
+    <div className="container">
+      <div className="row justify-content-between align-items-center">
+        <div className="col-12 col-md-6 text-center">{LogoWithDescription}</div>
+        <div className="col-12 col-md-6 mt-3 mt-md-0">
+          <div className="card">
+            <div className="card-body">
+              <div className="text-dark text-center font-size-24 mb-3">
+                <strong>
+                  {userTypeString.admin}
+                  &nbsp;Portal
+                </strong>
+              </div>
+              <LoginForm />
+              <div className="text-center">
+                <Link to="/auth/forgot-password" className="kit__utils__link font-size-16">
+                  Forgot Password?
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const LoginComponent = (
+    <div className="container">
+      {SelectUserType}
+      <div className="row justify-content-between align-items-center">
+        <div className="col-12 col-md-6 text-center">{LogoWithDescription}</div>
+        <div className="col-12 col-md-6 mt-3 mt-md-0">
+          <div className="card">
+            <div className="card-body">
+              <div className="text-dark text-center font-size-24 mb-3">
+                <strong>
+                  {currentUserType === userTypeEnum.student
+                    ? userTypeString.student
+                    : userTypeString.sensei}
+                  &nbsp;Portal
+                </strong>
+              </div>
+              <LoginForm />
+              <div className="text-center">
+                <Link to="/auth/forgot-password" className="kit__utils__link font-size-16">
+                  Forgot Password?
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="text-center pt-2 mb-auto">
+        <div className="text-center mt-3 mb-3">
+          <SwitchUserTypeButton />
+        </div>
         <span className="mr-2">Don&#39;t have an account?</span>
         <Link to="/auth/register" className="kit__utils__link font-size-16">
           Sign up
@@ -112,6 +195,14 @@ const Login = ({ dispatch, user, authProvider, logo }) => {
       </div>
     </div>
   )
+
+  if (currentUserType === userTypeEnum.admin) {
+    return AdminLoginComponent
+  }
+  if (currentUserType !== '') {
+    return LoginComponent
+  }
+  return SelectUserType
 }
 
-export default connect(mapStateToProps)(Login)
+export default Login
