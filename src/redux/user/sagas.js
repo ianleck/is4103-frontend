@@ -104,12 +104,6 @@ export function* REGISTER({ payload }) {
 
 export function* LOAD_CURRENT_ACCOUNT() {
   yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: true,
-    },
-  })
-  yield put({
     type: 'menu/GET_DATA',
   })
   const { authProvider } = yield select(state => state.settings)
@@ -149,12 +143,6 @@ export function* LOAD_CURRENT_ACCOUNT() {
       },
     })
   }
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: false,
-    },
-  })
 }
 
 export function* LOGOUT() {
