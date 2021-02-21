@@ -84,9 +84,9 @@ export async function getAdminMenuData() {
       icon: 'fe fe-music',
       children: [
         {
-          title: 'Sensei',
-          key: 'senseiContent',
-          url: '/admin/sensei-content-management',
+          title: 'Mentorship',
+          key: 'mentorshipContent',
+          url: '/admin/mentorship-content-management',
         },
         {
           title: 'Courses',

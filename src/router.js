@@ -72,12 +72,17 @@ const routes = [
   },
   {
     path: '/admin/profile',
-    Component: lazy(() => import('pages/admin/profile')),
+    Component: lazy(() => import('pages/admin/profiles/AdminProfile')),
     exact: true,
   },
   {
     path: '/admin/user-management',
     Component: lazy(() => import('pages/admin/users')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/verify-mentors',
+    Component: lazy(() => import('pages/admin/verifyMentor/verifyMentors')),
     exact: true,
   },
   {
@@ -101,8 +106,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/sensei-content-management',
-    Component: lazy(() => import('pages/admin/sensei')),
+    path: '/admin/mentorship-content-management',
+    Component: lazy(() => import('pages/admin/mentorship')),
     exact: true,
   },
   {
