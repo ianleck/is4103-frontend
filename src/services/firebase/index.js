@@ -91,3 +91,7 @@ export async function currentAccount() {
 export async function logout() {
   return firebaseAuth.signOut().then(() => true)
 }
+
+export async function updateProfile() {
+  return null
+}

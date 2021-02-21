@@ -11,12 +11,14 @@ const mapAuthProviders = {
     register: firebase.register,
     currentAccount: firebase.currentAccount,
     logout: firebase.logout,
+    updateProfile: firebase.updateProfile,
   },
   jwt: {
     login: jwt.login,
     register: jwt.register,
     currentAccount: jwt.currentAccount,
     logout: jwt.logout,
+    updateProfile: jwt.updateProfile,
   },
 }
 
@@ -64,7 +66,7 @@ export function* LOGIN({ payload }) {
 }
 
 export function* REGISTER({ payload }) {
-  const { email, password, name } = payload
+  const { username, email, password } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -72,12 +74,19 @@ export function* REGISTER({ payload }) {
     },
   })
   const { authProvider } = yield select(state => state.settings)
-  const success = yield call(mapAuthProviders[authProvider].register, email, password, name)
+  const success = yield call(mapAuthProviders[authProvider].register, username, email, password)
   if (success) {
     yield put({
       type: 'user/LOAD_CURRENT_ACCOUNT',
     })
-    yield history.push('/')
+    const response = yield call(mapAuthProviders[authProvider].currentAccount)
+    if (response.userTypeEnum === 'STUDENT') {
+      yield put({
+        type: 'user/TRIGGER_UPDATE_PROFILE',
+      })
+    } else {
+      yield history.push('/')
+    }
     notification.success({
       message: 'Succesful Registered',
       description: 'You have successfully registered!',
@@ -168,12 +177,63 @@ export function* LOGOUT() {
   })
 }
 
+export function* TRIGGER_UPDATE_PROFILE() {
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      requiresProfileUpdate: true,
+    },
+  })
+}
+
+export function* UPDATE_PROFILE({ payload }) {
+  const { id, firstName, lastName, contactNumber } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const { authProvider: autProviderName } = yield select(state => state.settings)
+  const success = yield call(
+    mapAuthProviders[autProviderName].updateProfile,
+    id,
+    firstName,
+    lastName,
+    contactNumber,
+  )
+  if (success) {
+    yield history.push('/')
+    yield put({
+      type: 'user/SET_STATE',
+      payload: {
+        requiresProfileUpdate: false,
+      },
+    })
+    yield put({
+      type: 'user/LOAD_CURRENT_ACCOUNT',
+    })
+    notification.success({
+      message: 'Profile Updated Successfully',
+      description: 'Thanks for telling us more about yourself.',
+    })
+  }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.LOGIN, LOGIN),
     takeEvery(actions.REGISTER, REGISTER),
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
     takeEvery(actions.LOGOUT, LOGOUT),
+    takeEvery(actions.TRIGGER_UPDATE_PROFILE, TRIGGER_UPDATE_PROFILE),
+    takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }

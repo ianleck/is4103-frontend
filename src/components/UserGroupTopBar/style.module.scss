@@ -1,8 +1,7 @@
 @import 'components/mixins.scss';
 
 .topbar {
-  border-bottom: 1px solid $border; 
-
+  border-bottom: 1px solid $border;
 
   @media (max-width: $sm-max-width) {
     padding: 0 rem(16);
