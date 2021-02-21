@@ -86,6 +86,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/admin/user-management/verify-mentors/mentor-page',
+    Component: lazy(() => import('pages/admin/verifyMentor/mentorPage')),
+    exact: true,
+  },
+  {
     path: '/admin/admin-management',
     Component: lazy(() => import('pages/admin/admins')),
     exact: true,
