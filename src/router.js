@@ -413,6 +413,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/auth/admin',
+    Component: lazy(() => import('pages/auth/admin-login')),
+    exact: true,
+  },
+  {
     path: '/auth/forgot-password',
     Component: lazy(() => import('pages/auth/forgot-password')),
     exact: true,

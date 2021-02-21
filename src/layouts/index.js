@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import NProgress from 'nprogress'
 import { Helmet } from 'react-helmet'
 // import Loader from 'components/cleanui/layout/Loader'
@@ -18,10 +18,10 @@ const Layouts = {
   sensei: SenseiLayout,
 }
 
-const mapStateToProps = ({ user }) => ({ user })
 let previousPath = ''
 
-const Layout = ({ user, children, location: { pathname, search } }) => {
+const Layout = ({ children, location: { pathname, search } }) => {
+  const user = useSelector(state => state.user)
   // NProgress & ScrollTop Management
   const currentPath = pathname + search
   if (currentPath !== previousPath) {
@@ -35,7 +35,11 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
 
   // Layout Rendering
   const getLayout = () => {
-    if (RegExp('register').test(pathname) || /^\/auth(?=\/|$)/i.test(pathname)) {
+    if (
+      RegExp('login').test(pathname) ||
+      RegExp('register').test(pathname) ||
+      /^\/auth(?=\/|$)/i.test(pathname)
+    ) {
       return 'auth'
     }
     if (/^\/admin(?=\/|$)/i.test(pathname)) {
@@ -60,10 +64,13 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
     if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
       return null
     }
+    if (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname)) {
+      return <Redirect to="/auth/admin" />
+    }
     if (
       !RegExp('register').test(pathname) &&
       !isUserAuthorized &&
-      (/^\/admin(?=\/|$)/i.test(pathname) || /^\/sensei(?=\/|$)/i.test(pathname))
+      /^\/sensei(?=\/|$)/i.test(pathname)
     ) {
       return <Redirect to="/auth/login" />
     }
@@ -79,4 +86,4 @@ const Layout = ({ user, children, location: { pathname, search } }) => {
   )
 }
 
-export default withRouter(connect(mapStateToProps)(Layout))
+export default withRouter(Layout)
