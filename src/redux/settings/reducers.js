@@ -22,7 +22,7 @@ const initialState = {
     isMenuCollapsed: false,
     menuLayoutType: 'left', // left, top, nomenu
     routerAnimation: 'slide-fadein-up', // none, slide-fadein-up, slide-fadein-right, fadein, zoom-fadein
-    menuColor: 'white', // white, dark, gray
+    menuColor: 'gray', // white, dark, gray
     theme: 'default', // default, dark
     authPagesColor: 'white', // white, gray, image
     primaryColor: '#4b7cf3',

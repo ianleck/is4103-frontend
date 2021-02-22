@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link, useLocation, Redirect } from 'react-router-dom'
-import Fade from 'reactstrap/lib/Fade'
+import FadeIn from 'react-fade-in'
 import LogoWithDescription from 'components/Public/Logo/LogoWithDescription'
 import { USER_TYPE_ENUM, USER_TYPE_STRING } from 'constants/constants'
 
@@ -40,41 +40,43 @@ const Login = () => {
   }
 
   const SelectUserType = (
-    <div
-      style={{
-        display: currentUserType === '' ? 'block' : 'none',
-      }}
-    >
-      <div className="row mb-3 align-items-center">
-        <div className="col-12 text-center">{LogoWithDescription}</div>
-      </div>
-      <div className="row justify-content-center">
-        <div className="col-12 col-md-4">
-          <Button
-            block
-            type="primary"
-            size="large"
-            onClick={() => setCurrentUserType(USER_TYPE_ENUM.SENSEI)}
-            className="text-center"
-          >
-            <i className="fa fa-graduation-cap" />
-            &nbsp;&nbsp;Login as a {USER_TYPE_STRING.SENSEI}
-          </Button>
+    <FadeIn key="2">
+      <div
+        style={{
+          display: currentUserType === '' ? 'block' : 'none',
+        }}
+      >
+        <div className="row mb-3 align-items-center">
+          <div className="col-12 text-center">{LogoWithDescription}</div>
         </div>
-        <div className="col-12 col-md-4 mt-3 mt-md-0">
-          <Button
-            block
-            type="primary"
-            size="large"
-            onClick={() => setCurrentUserType(USER_TYPE_ENUM.STUDENT)}
-            className="text-center"
-          >
-            <i className="fa fa-user" />
-            &nbsp;&nbsp;Login as a {USER_TYPE_STRING.STUDENT}
-          </Button>
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-4">
+            <Button
+              block
+              type="primary"
+              size="large"
+              onClick={() => setCurrentUserType(USER_TYPE_ENUM.SENSEI)}
+              className="text-center"
+            >
+              <i className="fa fa-graduation-cap" />
+              &nbsp;&nbsp;Login as a {USER_TYPE_STRING.SENSEI}
+            </Button>
+          </div>
+          <div className="col-12 col-md-4 mt-3 mt-md-0">
+            <Button
+              block
+              type="primary"
+              size="large"
+              onClick={() => setCurrentUserType(USER_TYPE_ENUM.STUDENT)}
+              className="text-center"
+            >
+              <i className="fa fa-user" />
+              &nbsp;&nbsp;Login as a {USER_TYPE_STRING.STUDENT}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </FadeIn>
   )
 
   const SwitchUserTypeButton = () => {
@@ -96,53 +98,51 @@ const Login = () => {
 
   const LoginForm = () => {
     return (
-      <Fade>
-        <div className="card">
-          <div className="card-body">
-            <div className="text-dark text-center font-size-24 mb-3">
-              <strong>
-                {getPortalName()}
-                &nbsp;Portal
-              </strong>
-            </div>
-            <Form
-              layout="vertical"
-              hideRequiredMark
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              className="mb-4"
-              initialValues={{ email: currentUserType.toLowerCase(), password: 'demo123' }}
+      <div className="card">
+        <div className="card-body">
+          <div className="text-dark text-center font-size-24 mb-3">
+            <strong>
+              {getPortalName()}
+              &nbsp;Portal
+            </strong>
+          </div>
+          <Form
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            className="mb-4"
+            initialValues={{ email: currentUserType.toLowerCase(), password: 'demo123' }}
+          >
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: 'Please input your e-mail address' }]}
             >
-              <Form.Item
-                name="email"
-                rules={[{ required: true, message: 'Please input your e-mail address' }]}
-              >
-                <Input size="large" placeholder="Email" />
-              </Form.Item>
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Please input your password' }]}
-              >
-                <Input size="large" type="password" placeholder="Password" />
-              </Form.Item>
-              <Button
-                type="primary"
-                size="large"
-                className="text-center w-100"
-                htmlType="submit"
-                loading={user.loading}
-              >
-                <strong>Login</strong>
-              </Button>
-            </Form>
-            <div className="text-center">
-              <Link to="/auth/forgot-password" className="kit__utils__link font-size-16">
-                Forgot Password?
-              </Link>
-            </div>
+              <Input size="large" placeholder="Email" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input your password' }]}
+            >
+              <Input size="large" type="password" placeholder="Password" />
+            </Form.Item>
+            <Button
+              type="primary"
+              size="large"
+              className="text-center w-100"
+              htmlType="submit"
+              loading={user.loading}
+            >
+              <strong>Login</strong>
+            </Button>
+          </Form>
+          <div className="text-center">
+            <Link to="/auth/forgot-password" className="kit__utils__link font-size-16">
+              Forgot Password?
+            </Link>
           </div>
         </div>
-      </Fade>
+      </div>
     )
   }
 
@@ -170,16 +170,18 @@ const Login = () => {
   }
 
   const CommonLoginComponent = (
-    <div className="container">
-      {SelectUserType}
-      <div className="row justify-content-between align-items-center">
-        <div className="col-12 col-md-6 text-center">{LogoWithDescription}</div>
-        <div className="col-12 col-md-6 mt-3 mt-md-0">
-          <LoginForm />
+    <FadeIn key="1">
+      <div className="container">
+        {SelectUserType}
+        <div className="row justify-content-between align-items-center">
+          <div className="col-12 col-md-6 text-center">{LogoWithDescription}</div>
+          <div className="col-12 col-md-6 mt-3 mt-md-0">
+            <LoginForm />
+          </div>
         </div>
+        <UserAdditionalActions />
       </div>
-      <UserAdditionalActions />
-    </div>
+    </FadeIn>
   )
 
   if (currentUserType !== '') {
