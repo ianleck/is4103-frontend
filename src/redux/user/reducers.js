@@ -1,11 +1,19 @@
 import actions from './actions'
 
 const initialState = {
-  id: '',
-  name: '',
-  role: '',
+  createdAt: '',
+  updatedAt: '',
+  accountId: '',
+  paypalId: '',
+  username: '',
+  firstName: '',
+  lastName: '',
+  emailVerified: '',
   email: '',
-  avatar: '',
+  contactNumber: '',
+  status: '',
+  userType: '',
+  // frontend specific user attributes
   authorized: process.env.REACT_APP_AUTHENTICATED || false, // false is default value
   loading: false,
   requiresProfileUpdate: false,

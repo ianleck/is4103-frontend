@@ -1,74 +1,94 @@
 import apiClient from 'services/axios'
 import store from 'store'
 
+const resetUser = {
+  accountId: '',
+  contactNumber: '',
+  createdAt: '',
+  email: '',
+  emailVerified: '',
+  firstName: '',
+  lastName: '',
+  paypalId: '',
+  status: '',
+  updatedAt: '',
+  userType: '',
+  username: '',
+  authorized: false,
+  loading: false,
+  requiresProfileUpdate: false,
+}
+
+const allocUserDataToStorage = (accessToken, data) => {
+  store.set('accessToken', accessToken)
+  localStorage.setItem('accessToken', accessToken)
+  data.user.authorized = true
+  localStorage.setItem('user', JSON.stringify(data.user))
+}
+
 export async function login(email, password) {
+  console.log('this email:', email)
+  console.log('this password:', password)
   return apiClient
-    .post('/auth/login', {
+    .post('/user/login', {
       email,
       password,
     })
     .then(response => {
-      if (response) {
+      console.log('loginResponse: ', response)
+      if (response.data) {
         const { accessToken } = response.data
         if (accessToken) {
-          store.set('accessToken', accessToken)
+          allocUserDataToStorage(accessToken, response.data)
         }
-        return response.data
+        return response.data.user
       }
       return false
     })
     .catch(err => console.log(err))
 }
 
-export async function register(username, email, password) {
+export async function register(username, email, password, confirmPassword, isStudent) {
   return apiClient
-    .post('/auth/register', {
-      username,
-      email,
-      password,
+    .post('/user/register', {
+      newUser: {
+        username,
+        email,
+        password,
+        confirmPassword,
+        isStudent,
+      },
     })
     .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
-        }
-        return response.data
-      }
+      console.log('registerResponse: ', response)
+      if (response) return true
       return false
     })
     .catch(err => console.log(err))
 }
 
 export async function currentAccount() {
-  return apiClient
-    .get('/auth/account')
-    .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
-        }
-        return response.data
-      }
-      return false
-    })
-    .catch(err => console.log(err))
+  let user = localStorage.getItem('user')
+  if (user) {
+    user = JSON.parse(user)
+    return user
+  }
+  localStorage.setItem('user', JSON.stringify(resetUser))
+  return resetUser
 }
 
 export async function logout() {
-  return apiClient
-    .get('/auth/logout')
-    .then(() => {
-      store.remove('accessToken')
-      return true
-    })
-    .catch(err => console.log(err))
+  store.remove('accessToken')
+  store.remove('user')
+  store.set('user', resetUser)
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('user')
+  return true
 }
 
 export async function updateProfile(id, firstName, lastName, contactNumber) {
   return apiClient
-    .post('/auth/updateProfile', {
+    .post('/updateProfile', {
       id,
       firstName,
       lastName,

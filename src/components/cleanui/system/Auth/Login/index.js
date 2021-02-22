@@ -13,9 +13,13 @@ const Login = () => {
   const loginUserType = RegExp('admin').test(pathname) ? USER_TYPE_ENUM.ADMIN : ''
   const [currentUserType, setCurrentUserType] = useState(loginUserType)
   const isStudent = currentUserType === USER_TYPE_ENUM.STUDENT
+  // DEV MODE
+  const settings = useSelector(state => state.settings)
+  const [inputEmail, setInputEmail] = useState('')
+  const [inputPassword, setInputPassword] = useState('')
 
   if (user.authorized) {
-    switch (user.userTypeEnum) {
+    switch (user.userType) {
       case USER_TYPE_ENUM.ADMIN:
         return <Redirect to="/admin" />
       case USER_TYPE_ENUM.SENSEI:
@@ -28,7 +32,8 @@ const Login = () => {
   }
 
   const onFinish = values => {
-    values.isStudent = isStudent
+    setInputEmail(values.email)
+    setInputPassword(values.password)
     dispatch({
       type: 'user/LOGIN',
       payload: values,
@@ -112,11 +117,17 @@ const Login = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             className="mb-4"
-            initialValues={{ email: currentUserType.toLowerCase(), password: 'demo123' }}
+            initialValues={{
+              email: settings.isDevMode ? `${currentUserType.toLowerCase()}@digi.dojo` : inputEmail,
+              password: settings.isDevMode ? 'password' : inputPassword,
+            }}
           >
             <Form.Item
               name="email"
-              rules={[{ required: true, message: 'Please input your e-mail address' }]}
+              rules={[
+                { required: true, type: 'email', message: 'Please input a valid e-mail address' },
+              ]}
+              validateTrigger="onSubmit"
             >
               <Input size="large" placeholder="Email" />
             </Form.Item>

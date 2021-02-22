@@ -1,21 +1,47 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Input, Button, Form } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const Register = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
+  const [currentEmail, setCurrentEmail] = useState('')
+  const [currentPassword, setCurrentPassword] = useState('')
 
-  const onFinishRegister = values => {
+  if (user.authorized) {
+    switch (user.userType) {
+      case USER_TYPE_ENUM.ADMIN:
+        return <Redirect to="/admin" />
+      case USER_TYPE_ENUM.SENSEI:
+        return <Redirect to="/sensei" />
+      case USER_TYPE_ENUM.STUDENT:
+        return <Redirect to="/" />
+      default:
+        return <Redirect to="/" />
+    }
+  }
+
+  const onSubmitRegister = values => {
     values.isStudent = true
+    setCurrentEmail(values.email)
+    setCurrentPassword(values.password)
     dispatch({
       type: 'user/REGISTER',
       payload: values,
     })
   }
+
   const onUpdateProfile = values => {
     values.id = user.id
+    dispatch({
+      type: 'user/LOGIN_AFT_REGISTRATION',
+      payload: {
+        email: currentEmail,
+        password: currentPassword,
+      },
+    })
     dispatch({
       type: 'user/UPDATE_PROFILE',
       payload: values,
@@ -120,7 +146,7 @@ const Register = () => {
               <Form
                 layout="vertical"
                 hideRequiredMark
-                onFinish={onFinishRegister}
+                onFinish={onSubmitRegister}
                 onFinishFailed={onFinishFailed}
                 className="mb-4"
               >
@@ -132,7 +158,15 @@ const Register = () => {
                 </Form.Item>
                 <Form.Item
                   name="email"
-                  rules={[{ required: true, message: 'Please input your e-mail address' }]}
+                  rules={[
+                    {
+                      required: true,
+                      type: 'email',
+
+                      message: 'Please enter a valid e-mail address',
+                    },
+                  ]}
+                  validateTrigger="onSubmit"
                 >
                   <Input size="large" placeholder="Email Address" />
                 </Form.Item>
@@ -177,7 +211,9 @@ const Register = () => {
     </div>
   )
 
-  if (user.requiresProfileUpdate) return profileUpdateCard
+  if (user.requiresProfileUpdate) {
+    return profileUpdateCard
+  }
   return signUpCard
 }
 

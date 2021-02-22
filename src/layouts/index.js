@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
-import { withRouter, Redirect } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { withRouter, Redirect } from 'react-router-dom'
 import NProgress from 'nprogress'
 import { Helmet } from 'react-helmet'
 // import Loader from 'components/cleanui/layout/Loader'
@@ -64,13 +64,15 @@ const Layout = ({ children, location: { pathname, search } }) => {
     if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
       return null
     }
+    if (pathname === '/sensei/register') {
+      return <Container>{children}</Container>
+    }
     if (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname)) {
       return <Redirect to="/auth/admin" />
     }
     if (
-      !RegExp('register').test(pathname) &&
       !isUserAuthorized &&
-      /^\/sensei(?=\/|$)/i.test(pathname)
+      (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname))
     ) {
       return <Redirect to="/auth/login" />
     }

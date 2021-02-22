@@ -16,7 +16,7 @@ const users = [
     email: 'admin',
     contactNumber: 90001231,
     status: 'ACTIVE',
-    userTypeEnum: 'ADMIN',
+    userType: 'ADMIN',
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const users = [
     email: 'student',
     contactNumber: 90001232,
     status: 'ACTIVE',
-    userTypeEnum: 'STUDENT',
+    userType: 'STUDENT',
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ const users = [
     email: 'sensei',
     contactNumber: 90001233,
     status: 'ACTIVE',
-    userTypeEnum: 'SENSEI',
+    userType: 'SENSEI',
   },
 ]
 
@@ -88,7 +88,7 @@ mock.onPost('/api/auth/register').reply(request => {
       role: 'student',
       username,
       status: 'ACTIVE',
-      userTypeEnum: 'STUDENT',
+      userType: 'STUDENT',
     }
     users.push(user)
 

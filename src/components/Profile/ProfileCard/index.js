@@ -1,23 +1,11 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Descriptions, Form, Input, Modal, Tabs, notification } from 'antd'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
+import { isNull } from 'lodash'
 import style from './style.module.scss'
 
 const { TabPane } = Tabs
-
-const mapStateToProps = ({ user }) => ({
-  userData: {
-    firstName: user.firstName ? user.firstName : '',
-    lastName: user.lastName ? user.lastName : '',
-    username: user.username ? user.username : '',
-    emailVerified: user.emailVerified ? user.emailVerified : false,
-    email: user.email ? user.email : '',
-    contactNumber: user.contactNumber ? user.contactNumber : '',
-    status: user.status,
-    userTypeEnum: user.userTypeEnum,
-  },
-})
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -26,9 +14,10 @@ const onFinishFailed = errorInfo => {
 const shareUrl = 'https://github.com'
 let title = "I'm sharing my Digi Dojo profile with you!"
 
-const EditProfileForm = ({ userData }) => {
-  if (userData.userTypeEnum === 'STUDENT') {
-    title = `${userData.firstName} is sharing his Digi Dojo profile with you!`
+const EditProfileForm = () => {
+  const user = useSelector(state => state.user)
+  if (user.userType === 'STUDENT') {
+    title = `${user.firstName} is sharing his Digi Dojo profile with you!`
     return (
       <Form
         layout="vertical"
@@ -36,11 +25,11 @@ const EditProfileForm = ({ userData }) => {
         onFinish={() => console.log('success')}
         onFinishFailed={onFinishFailed}
         initialValues={{
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          username: userData.username,
-          email: userData.email,
-          contactNumber: userData.contactNumber,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          email: user.email,
+          contactNumber: user.contactNumber,
         }}
       >
         <div className="row">
@@ -125,7 +114,8 @@ const DeleteAccountButton = () => {
   )
 }
 
-const ProfileCard = ({ userData }) => {
+const ProfileCard = () => {
+  const user = useSelector(state => state.user)
   const [showEditInformation, setShowEditInformation] = useState(false)
 
   const [tabKey, setTabKey] = useState('editProfile')
@@ -168,8 +158,12 @@ const ProfileCard = ({ userData }) => {
         </div>
       </div>
       <div className="col">
-        <div className="text-dark font-weight-bold font-size-18">{`${userData.firstName} ${userData.lastName}`}</div>
-        <div className="text-uppercase font-size-12 mb-3">{userData.userTypeEnum}</div>
+        <div className="text-dark font-weight-bold font-size-18">
+          {`${isNull(user.firstName) ? 'Name' : user.firstName} ${
+            isNull(user.lastName) ? '' : user.lastName
+          }`}
+        </div>
+        <div className="text-uppercase font-size-12 mb-3">{user.userType}</div>
       </div>
       <div className="col-auto">
         <FacebookShareButton url={shareUrl} quote={title}>
@@ -200,9 +194,9 @@ const ProfileCard = ({ userData }) => {
             </div>
           }
         >
-          <Descriptions.Item label="Username">{userData.username}</Descriptions.Item>
-          <Descriptions.Item label="Email">{userData.email}</Descriptions.Item>
-          <Descriptions.Item label="Contact Number">{userData.contactNumber}</Descriptions.Item>
+          <Descriptions.Item label="Username">{user.username}</Descriptions.Item>
+          <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
+          <Descriptions.Item label="Contact Number">{user.contactNumber}</Descriptions.Item>
         </Descriptions>
       </div>
       <Modal
@@ -223,7 +217,7 @@ const ProfileCard = ({ userData }) => {
           <TabPane tab="Change Password" key="changePassword" />
           <TabPane tab="Delete Account" key="deleteAccount" />
         </Tabs>
-        {tabKey === 'editProfile' && <EditProfileForm userData={userData} />}
+        {tabKey === 'editProfile' && <EditProfileForm user={user} />}
         {tabKey === 'changePassword' && <ChangePasswordForm />}
         {tabKey === 'deleteAccount' && <DeleteAccountButton />}
       </Modal>
@@ -231,4 +225,4 @@ const ProfileCard = ({ userData }) => {
   )
 }
 
-export default connect(mapStateToProps)(ProfileCard)
+export default ProfileCard
