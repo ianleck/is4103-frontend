@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Descriptions, Form, Input, Modal, Tabs, notification } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Descriptions, Form, Input, Modal, Tabs } from 'antd'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { isNull } from 'lodash'
 import style from './style.module.scss'
@@ -16,13 +16,24 @@ let title = "I'm sharing my Digi Dojo profile with you!"
 
 const EditProfileForm = () => {
   const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+
+  const onUpdateProfile = values => {
+    values.accountId = user.accountId
+    dispatch({
+      type: 'user/UPDATE_PROFILE',
+      payload: values,
+    })
+  }
+
   if (user.userType === 'STUDENT') {
     title = `${user.firstName} is sharing his Digi Dojo profile with you!`
     return (
       <Form
+        id="updatePersonalInformationForm"
         layout="vertical"
         hideRequiredMark
-        onFinish={() => console.log('success')}
+        onFinish={onUpdateProfile}
         onFinishFailed={onFinishFailed}
         initialValues={{
           firstName: user.firstName,
@@ -124,13 +135,6 @@ const ProfileCard = () => {
     setTabKey(key)
   }
 
-  const onFinish = () => {
-    notification.success({
-      message: 'Success',
-      description: 'Action successfully completed!',
-    })
-  }
-
   const saveFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
@@ -143,9 +147,15 @@ const ProfileCard = () => {
         </button>
       </div>
       <div className="col-auto">
-        <button type="button" onClick={onFinish} className="btn btn-primary">
-          Save
-        </button>
+        <Button
+          type="primary"
+          form="updatePersonalInformationForm"
+          htmlType="submit"
+          size="large"
+          className=""
+        >
+          Submit
+        </Button>
       </div>
     </div>
   )
@@ -159,8 +169,8 @@ const ProfileCard = () => {
       </div>
       <div className="col">
         <div className="text-dark font-weight-bold font-size-18">
-          {`${isNull(user.firstName) ? 'Name' : user.firstName} ${
-            isNull(user.lastName) ? '' : user.lastName
+          {`${user.firstName || !isNull(user.firstName) ? user.firstName : 'Anonymous'} ${
+            user.lastName || !isNull(user.lastName) ? user.lastName : 'Pigeon'
           }`}
         </div>
         <div className="text-uppercase font-size-12 mb-3">{user.userType}</div>

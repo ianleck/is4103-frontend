@@ -6,6 +6,25 @@ import { USER_TYPE_ENUM } from 'constants/constants'
 import actions from './actions'
 import * as selectors from '../selectors'
 
+const createUserObj = response => {
+  return {
+    accountId: response.accountId,
+    adminVerified: response.adminVerified,
+    contactNumber: response.contactNumber,
+    createdAt: response.createdAt,
+    email: response.email,
+    emailVerified: response.emailVerified,
+    firstName: response.firstName,
+    lastName: response.lastName,
+    paypalId: response.paypalId,
+    status: response.status,
+    updatedAt: response.updatedAt,
+    userType: response.userType,
+    username: response.username,
+    authorized: true,
+  }
+}
+
 export function* LOGIN({ payload }) {
   const { email, password } = payload
   yield put({
@@ -16,21 +35,7 @@ export function* LOGIN({ payload }) {
   })
   const response = yield call(jwt.login, email, password)
   if (response) {
-    const currentUser = {
-      accountId: response.accountId,
-      contactNumber: response.contactNumber,
-      createdAt: response.createdAt,
-      email: response.email,
-      emailVerified: response.emailVerified,
-      firstName: response.firstName,
-      lastName: response.lastName,
-      paypalId: response.paypalId,
-      status: response.status,
-      updatedAt: response.updatedAt,
-      userType: response.userType,
-      username: response.username,
-      authorized: true,
-    }
+    const currentUser = createUserObj(response)
     yield put({
       type: 'user/SET_STATE',
       payload: {
@@ -80,17 +85,16 @@ export function* REGISTER({ payload }) {
       loading: true,
     },
   })
-  const registerSuccess = yield call(
-    jwt.register,
-    username,
-    email,
-    password,
-    confirmPassword,
-    isStudent,
-  )
-  if (registerSuccess) {
+  const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
+  if (response) {
+    const currentUser = createUserObj(response)
+    console.log('currentUser', currentUser)
+    currentUser.requiresProfileUpdate = true
     yield put({
-      type: 'user/TRIGGER_UPDATE_PROFILE',
+      type: 'user/SET_STATE',
+      payload: {
+        ...currentUser,
+      },
     })
     notification.success({
       message: 'Account created successfully.',
@@ -112,58 +116,8 @@ export function* REGISTER({ payload }) {
   }
 }
 
-export function* LOGIN_AFT_REGISTRATION({ payload }) {
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: false,
-    },
-  })
-  const { email, password } = payload
-  const response = yield call(jwt.login, email, password)
-  if (response) {
-    const currentUser = {
-      accountId: response.accountId,
-      contactNumber: response.contactNumber,
-      createdAt: response.createdAt,
-      email: response.email,
-      emailVerified: response.emailVerified,
-      firstName: response.firstName,
-      lastName: response.lastName,
-      paypalId: response.paypalId,
-      status: response.status,
-      updatedAt: response.updatedAt,
-      userType: response.userType,
-      username: response.username,
-      authorized: true,
-    }
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        ...currentUser,
-      },
-    })
-    notification.success({
-      message: 'Welcome to Digi Dojo',
-      description: 'Welcome to Digi Dojo, aspiring student.',
-    })
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
-    })
-  }
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: false,
-    },
-  })
-}
-
 export function* LOAD_CURRENT_ACCOUNT() {
-  const user = yield call(jwt.currentAccount)
+  const user = yield call(jwt.getLocalUserData)
   if (user) {
     yield put({
       type: 'user/SET_STATE',
@@ -194,40 +148,48 @@ export function* LOGOUT() {
   window.location.reload()
 }
 
-export function* TRIGGER_UPDATE_PROFILE() {
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      requiresProfileUpdate: true,
-    },
-  })
-}
-
-export function* UPDATE_PROFILE() {
-  // const { id, firstName, lastName, contactNumber } = payload
+export function* UPDATE_PROFILE({ payload }) {
+  const { accountId, firstName, lastName, contactNumber } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  // const success = yield call(jwt.updateProfile, id, firstName, lastName, contactNumber)
-  // if (success) {
-  //   yield history.push('/')
-  //   yield put({
-  //     type: 'user/SET_STATE',
-  //     payload: {
-  //       requiresProfileUpdate: false,
-  //     },
-  //   })
-  //   yield put({
-  //     type: 'user/LOAD_CURRENT_ACCOUNT',
-  //   })
-  //   notification.success({
-  //     message: 'Profile Updated Successfully',
-  //     description: 'Thanks for telling us more about yourself.',
-  //   })
-  // }
+  const response = yield call(jwt.updateProfile, accountId, firstName, lastName, contactNumber)
+  if (response) {
+    const updatedUser = yield call(jwt.getUser, accountId)
+    yield put({
+      type: 'user/SET_STATE',
+      payload: {
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        contactNumber: updatedUser.contactNumber,
+      },
+    })
+    const localUserData = yield select(selectors.user)
+    if (localUserData.requiresProfileUpdate) {
+      yield history.push('/')
+      yield put({
+        type: 'user/SET_STATE',
+        payload: {
+          requiresProfileUpdate: false,
+        },
+      })
+      notification.success({
+        message: 'Profile Updated Successfully',
+        description: 'Thanks for telling us more about yourself.',
+      })
+    } else {
+      notification.success({
+        message: 'Profile Updated Successfully',
+        description: 'We have received your new personal information.',
+      })
+    }
+  }
+  yield put({
+    type: 'menu/GET_DATA',
+  })
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -242,8 +204,6 @@ export default function* rootSaga() {
     takeEvery(actions.REGISTER, REGISTER),
     takeEvery(actions.LOGOUT, LOGOUT),
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
-    takeEvery(actions.LOGIN_AFT_REGISTRATION, LOGIN_AFT_REGISTRATION),
-    takeEvery(actions.TRIGGER_UPDATE_PROFILE, TRIGGER_UPDATE_PROFILE),
     takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])

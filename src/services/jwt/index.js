@@ -1,47 +1,59 @@
 import apiClient from 'services/axios'
 import store from 'store'
+import { resetUser } from 'redux/selectors'
 
-const resetUser = {
-  accountId: '',
-  contactNumber: '',
-  createdAt: '',
-  email: '',
-  emailVerified: '',
-  firstName: '',
-  lastName: '',
-  paypalId: '',
-  status: '',
-  updatedAt: '',
-  userType: '',
-  username: '',
-  authorized: false,
-  loading: false,
-  requiresProfileUpdate: false,
+/*
+All LocalStorage interactions will only happen in this file.
+All other files must use Redux state (and not LocalStorage) 
+to prevent confusion in which copy of user data to access.
+The purpose of LocalStorage usage is to persist the Login status
+of the current user upon refreshing the webpage.
+LocalStorage should not contain heavy data, but only
+the necessary basic user data such as Access Token.
+*/
+const getUserDataFromStorage = () => {
+  return localStorage.getItem('user') === null
+    ? resetUser
+    : JSON.parse(localStorage.getItem('user'))
 }
 
-const allocUserDataToStorage = (accessToken, data) => {
-  store.set('accessToken', accessToken)
+export async function getLocalUserData() {
+  return getUserDataFromStorage()
+}
+
+const addLocalAttributes = (user, isAuthorised, isLoading) => {
+  user.authorized = isAuthorised
+  user.loading = isLoading
+  user.requiresProfileUpdate = false
+  return user
+}
+
+const setLocalAccessToken = accessToken => {
+  localStorage.removeItem('accessToken')
   localStorage.setItem('accessToken', accessToken)
-  data.user.authorized = true
-  localStorage.setItem('user', JSON.stringify(data.user))
+}
+
+const setLocalUserData = user => {
+  user = addLocalAttributes(user, true, false)
+  localStorage.removeItem('user')
+  localStorage.setItem('user', JSON.stringify(user))
 }
 
 export async function login(email, password) {
-  console.log('this email:', email)
-  console.log('this password:', password)
   return apiClient
     .post('/user/login', {
       email,
       password,
     })
     .then(response => {
-      console.log('loginResponse: ', response)
-      if (response.data) {
+      if (response) {
         const { accessToken } = response.data
+        const { user } = response.data
         if (accessToken) {
-          allocUserDataToStorage(accessToken, response.data)
+          setLocalAccessToken(accessToken)
+          setLocalUserData(user)
         }
-        return response.data.user
+        return user
       }
       return false
     })
@@ -60,47 +72,57 @@ export async function register(username, email, password, confirmPassword, isStu
       },
     })
     .then(response => {
-      console.log('registerResponse: ', response)
-      if (response) return true
+      if (response) {
+        const { accessToken } = response.data
+        const { user } = response.data
+        if (accessToken) {
+          setLocalAccessToken(accessToken)
+          setLocalUserData(user)
+        }
+        return user
+      }
       return false
     })
     .catch(err => console.log(err))
 }
 
-export async function currentAccount() {
-  let user = localStorage.getItem('user')
-  if (user) {
-    user = JSON.parse(user)
-    return user
-  }
-  localStorage.setItem('user', JSON.stringify(resetUser))
-  return resetUser
+export async function getUser(accountId) {
+  return apiClient
+    .get(`/user/${accountId}`)
+    .then(response => {
+      if (response) return response.data.user
+      return false
+    })
+    .catch(err => console.log(err))
 }
 
 export async function logout() {
-  store.remove('accessToken')
-  store.remove('user')
-  store.set('user', resetUser)
   localStorage.removeItem('accessToken')
-  localStorage.removeItem('user')
+  localStorage.setItem('user', JSON.stringify(resetUser))
   return true
 }
 
-export async function updateProfile(id, firstName, lastName, contactNumber) {
+export async function updateProfile(accountId, firstName, lastName, contactNumber) {
   return apiClient
-    .post('/updateProfile', {
-      id,
-      firstName,
-      lastName,
-      contactNumber,
-    })
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          firstName,
+          lastName,
+          contactNumber,
+        },
+      },
+      { withCredentials: true },
+    )
     .then(response => {
       if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
-        }
-        return response.data
+        const currentUser = store.get('user')
+        currentUser.firstName = firstName
+        currentUser.lastName = lastName
+        currentUser.contactNumber = contactNumber
+        setLocalUserData(currentUser)
+        return true
       }
       return false
     })

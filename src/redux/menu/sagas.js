@@ -1,4 +1,4 @@
-import { all, takeEvery, put, call } from 'redux-saga/effects'
+import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import {
   getPublicMenuData,
   getStudentMenuData,
@@ -7,31 +7,10 @@ import {
 } from 'services/menu'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import actions from './actions'
+import * as selectors from '../selectors'
 
 export function* GET_DATA() {
-  let user = localStorage.getItem('user')
-  if (user) {
-    user = JSON.parse(user)
-  }
-  if (!user.authorized) {
-    user = {
-      createdAt: '',
-      updatedAt: '',
-      accountId: '',
-      paypalId: '',
-      username: '',
-      firstName: '',
-      lastName: '',
-      emailVerified: '',
-      email: '',
-      contactNumber: '',
-      status: '',
-      userType: '',
-      authorized: false,
-      loading: false,
-      requiresProfileUpdate: false,
-    }
-  }
+  const user = yield select(selectors.user)
   let isMenuTop = false
   let menuData = []
   switch (user.userType) {

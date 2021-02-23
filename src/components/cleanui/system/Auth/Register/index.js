@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link, Redirect } from 'react-router-dom'
@@ -7,10 +7,8 @@ import { USER_TYPE_ENUM } from 'constants/constants'
 const Register = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
-  const [currentEmail, setCurrentEmail] = useState('')
-  const [currentPassword, setCurrentPassword] = useState('')
 
-  if (user.authorized) {
+  if (user.authorized && !user.requiresProfileUpdate) {
     switch (user.userType) {
       case USER_TYPE_ENUM.ADMIN:
         return <Redirect to="/admin" />
@@ -25,8 +23,6 @@ const Register = () => {
 
   const onSubmitRegister = values => {
     values.isStudent = true
-    setCurrentEmail(values.email)
-    setCurrentPassword(values.password)
     dispatch({
       type: 'user/REGISTER',
       payload: values,
@@ -34,14 +30,7 @@ const Register = () => {
   }
 
   const onUpdateProfile = values => {
-    values.id = user.id
-    dispatch({
-      type: 'user/LOGIN_AFT_REGISTRATION',
-      payload: {
-        email: currentEmail,
-        password: currentPassword,
-      },
-    })
+    values.accountId = user.accountId
     dispatch({
       type: 'user/UPDATE_PROFILE',
       payload: values,

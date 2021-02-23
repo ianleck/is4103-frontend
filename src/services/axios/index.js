@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import store from 'store'
 import { notification } from 'antd'
 
 const apiClient = axios.create({
@@ -14,14 +13,14 @@ const apiClient = axios.create({
   // headers: { 'X-Custom-Header': 'foobar' }
 })
 
-// apiClient.interceptors.request.use(request => {
-//   const accessToken = store.get('accessToken')
-//   if (accessToken) {
-//     request.headers.Authorization = `Bearer ${accessToken}`
-//     request.headers.AccessToken = accessToken
-//   }
-//   return request
-// })
+apiClient.interceptors.request.use(request => {
+  if (localStorage.getItem('accessToken') !== null) {
+    const accessToken = localStorage.get('accessToken')
+    request.headers.Authorization = `Bearer ${accessToken}`
+    // request.headers.AccessToken = accessToken
+  }
+  return request
+})
 
 apiClient.interceptors.response.use(undefined, error => {
   // Errors handling
