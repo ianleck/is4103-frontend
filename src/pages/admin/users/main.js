@@ -28,8 +28,13 @@ const UsersManagement = () => {
       <div className="row">
         <div className="col-xl-12 col-lg-12">
           <div className="col-xl-3 col-lg-12" style={{ float: 'right' }}>
-            <div className="card bg-primary">
-              <Button onClick={verifyNewMentor} icon={<UserAddOutlined />}>
+            <div className="card">
+              <Button
+                type="primary"
+                shape="round"
+                onClick={verifyNewMentor}
+                icon={<UserAddOutlined />}
+              >
                 Verify new mentor
               </Button>
             </div>
@@ -68,23 +73,11 @@ const UsersManagement = () => {
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <div className="card">
-            <UserTable />
-          </div>
-
-          {/* <div className="card">
-            <Tabs className="kit-tabs-bordered pt-2" defaultActiveKey="1">
-              <TabPane tab="Bestsellers" key="1" />
-              <TabPane tab="Most Viewed" key="2" />
-              <TabPane tab="Highest Rated" key="3" />
-            </Tabs>
-          </div> */}
+          <UserTable />
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <div className="card">
-            <BannedTable />
-          </div>
+          <BannedTable />
         </div>
       </div>
     </div>

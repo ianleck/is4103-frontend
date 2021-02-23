@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import NewMentorTable from '../../../components/Admin/VerifyMentors/newMentorTable'
+import NewMentorTable from '../../../components/Admin/VerifyMentors/NewMentorTable'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
@@ -44,9 +44,7 @@ const verifyMentors = () => {
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <div className="card">
-            <NewMentorTable />
-          </div>
+          <NewMentorTable />
         </div>
       </div>
     </div>
