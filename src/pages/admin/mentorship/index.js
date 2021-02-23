@@ -14,10 +14,8 @@ const MentorshipContentManagement = () => {
         <div className="col-xl-4 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <h4 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Widget
-              </h4>
-              <h6 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
+              <h6 className="d-flex align-items-center justify-content-center">
                 Number of Mentorship Listings
               </h6>
             </div>
@@ -27,10 +25,8 @@ const MentorshipContentManagement = () => {
         <div className="col-xl-4 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <h4 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Widget
-              </h4>
-              <h6 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
+              <h6 className="d-flex align-items-center justify-content-center">
                 Number of Mentorship Applications
               </h6>
             </div>
@@ -40,10 +36,8 @@ const MentorshipContentManagement = () => {
         <div className="col-xl-4 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <h4 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Widget
-              </h4>
-              <h6 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
+              <h6 className="d-flex align-items-center justify-content-center">
                 Number of Mentorship Contracts
               </h6>
             </div>

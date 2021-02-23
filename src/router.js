@@ -72,27 +72,37 @@ const routes = [
   },
   {
     path: '/admin/profile',
-    Component: lazy(() => import('pages/admin/profiles/AdminProfile')),
+    Component: lazy(() => import('pages/admin/profiles/admin-profile')),
     exact: true,
   },
   {
     path: '/admin/user-management',
-    Component: lazy(() => import('pages/admin/users')),
+    Component: lazy(() => import('pages/admin/users/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/user/:userId',
+    Component: lazy(() => import('pages/admin/users/user-profile')),
     exact: true,
   },
   {
     path: '/admin/user-management/verify-mentors',
-    Component: lazy(() => import('pages/admin/verifyMentor/verifyMentors')),
+    Component: lazy(() => import('pages/admin/verify-mentor/verify-mentors')),
     exact: true,
   },
   {
-    path: '/admin/user-management/verify-mentors/mentor-page',
-    Component: lazy(() => import('pages/admin/verifyMentor/mentorPage')),
+    path: '/admin/user-management/verify-mentors/:mentorId',
+    Component: lazy(() => import('pages/admin/verify-mentor/mentor-page')),
     exact: true,
   },
   {
     path: '/admin/admin-management',
-    Component: lazy(() => import('pages/admin/admins')),
+    Component: lazy(() => import('pages/admin/admins/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/admin-management/add-admin',
+    Component: lazy(() => import('pages/admin/admins/add-new-admin')),
     exact: true,
   },
   {
