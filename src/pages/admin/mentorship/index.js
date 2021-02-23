@@ -45,9 +45,7 @@ const MentorshipContentManagement = () => {
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <div className="card">
-            <MentorshipTable />
-          </div>
+          <MentorshipTable />
         </div>
       </div>
     </div>

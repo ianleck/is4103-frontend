@@ -29,8 +29,13 @@ const AdminsManagement = () => {
         <div className="row">
           <div className="col-xl-12 col-lg-12">
             <div className="col-xl-3 col-lg-12" style={{ float: 'right' }}>
-              <div className="card bg-primary">
-                <Button onClick={addNewAdmin} icon={<UserAddOutlined />}>
+              <div className="card">
+                <Button
+                  type="primary"
+                  shape="round"
+                  onClick={addNewAdmin}
+                  icon={<UserAddOutlined />}
+                >
                   Add new Admin
                 </Button>
               </div>
@@ -71,9 +76,7 @@ const AdminsManagement = () => {
           </div>
 
           <div className="col-xl-12 col-lg-12">
-            <div className="card">
-              <AdminTable />
-            </div>
+            <AdminTable />
           </div>
         </div>
       ) : (
