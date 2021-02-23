@@ -1,11 +1,22 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import { Button } from 'antd'
+import { UserAddOutlined } from '@ant-design/icons'
 import NewMentorTable from '../../../components/Admin/VerifyMentors/NewMentorTable'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
 
-const verifyMentors = () => {
+const VerifyMentors = () => {
+  const history = useHistory()
+
+  const getMentor = e => {
+    e.preventDefault()
+    const path = '/admin/user-management/verify-mentors/1'
+    history.push(path)
+  }
+
   return (
     <div>
       <Helmet title="Verify new Mentor" />
@@ -14,6 +25,16 @@ const verifyMentors = () => {
       </div>
 
       <div className="row">
+        <div className="col-xl-12 col-lg-12">
+          <div className="col-xl-3 col-lg-12" style={{ float: 'right' }}>
+            <div className="card">
+              <Button type="primary" shape="round" onClick={getMentor} icon={<UserAddOutlined />}>
+                Verify mentor 1
+              </Button>
+            </div>
+          </div>
+        </div>
+
         <div className="col-xl-4 col-lg-12">
           <div className="card">
             <div className="card-body">
@@ -51,4 +72,4 @@ const verifyMentors = () => {
   )
 }
 
-export default verifyMentors
+export default VerifyMentors
