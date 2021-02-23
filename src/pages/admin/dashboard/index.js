@@ -1,10 +1,8 @@
 import React from 'react'
-import { Tabs } from 'antd'
 import { Helmet } from 'react-helmet'
-import StudentGrowthChart from '../../../components/Admin/AdminDashboard/StudentGrowthChart'
-import SenseiGrowthChart from '../../../components/Admin/AdminDashboard/SenseiGrowthChart'
-
-const { TabPane } = Tabs
+import Charting from '../../../components/Admin/AdminDashboard/Charting'
+import Table1 from '../../../components/Admin/AdminDashboard/Table1'
+import Table2 from '../../../components/Admin/AdminDashboard/Table2'
 
 const AdminDashboard = () => {
   return (
@@ -82,52 +80,15 @@ const AdminDashboard = () => {
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <div className="card">
-            <Tabs className="kit-tabs-bordered pt-2" defaultActiveKey="1">
-              <TabPane tab="Students" key="1">
-                <div className="card-body">
-                  <StudentGrowthChart />
-                </div>
-              </TabPane>
-              <TabPane tab="Senseis" key="2">
-                <div className="card-body">
-                  <SenseiGrowthChart />
-                </div>
-              </TabPane>
-            </Tabs>
-          </div>
+          <Charting />
         </div>
 
-        <div className="col-xl-6 col-lg-12">
-          <div className="card">
-            <Tabs className="kit-tabs-bordered pt-2" defaultActiveKey="1">
-              <TabPane tab="Top Rated Senseis" key="1">
-                <div className="card-body">Sensei table</div>
-              </TabPane>
-              <TabPane tab="Top Rated Courses" key="2">
-                <div className="card-body">Course Table</div>
-              </TabPane>
-              <TabPane tab="Top Rated Subjects" key="3">
-                <div className="card-body">Subject Table</div>
-              </TabPane>
-            </Tabs>
-          </div>
+        <div className="col-xl-12 col-lg-12">
+          <Table1 />
         </div>
 
-        <div className="col-xl-6 col-lg-12">
-          <div className="card">
-            <Tabs className="kit-tabs-bordered pt-2" defaultActiveKey="1">
-              <TabPane tab="Support Requests" key="1">
-                <div className="card-body">Support Requests Table</div>
-              </TabPane>
-              <TabPane tab="Complaints" key="2">
-                <div className="card-body">Complaint Table</div>
-              </TabPane>
-              <TabPane tab="Chats" key="3">
-                <div className="card-body">Chats</div>
-              </TabPane>
-            </Tabs>
-          </div>
+        <div className="col-xl-12 col-lg-12">
+          <Table2 />
         </div>
       </div>
     </div>
