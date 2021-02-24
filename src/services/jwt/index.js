@@ -1,24 +1,10 @@
 import apiClient from 'services/axios'
-import store from 'store'
 import { resetUser } from 'redux/selectors'
 
-/*
-All LocalStorage interactions will only happen in this file.
-All other files must use Redux state (and not LocalStorage) 
-to prevent confusion in which copy of user data to access.
-The purpose of LocalStorage usage is to persist the Login status
-of the current user upon refreshing the webpage.
-LocalStorage should not contain heavy data, but only
-the necessary basic user data such as Access Token.
-*/
-const getUserDataFromStorage = () => {
+export async function getLocalUserData() {
   return localStorage.getItem('user') === null
     ? resetUser
     : JSON.parse(localStorage.getItem('user'))
-}
-
-export async function getLocalUserData() {
-  return getUserDataFromStorage()
 }
 
 const addLocalAttributes = (user, isAuthorised, isLoading) => {
@@ -37,6 +23,12 @@ const setLocalUserData = user => {
   user = addLocalAttributes(user, true, false)
   localStorage.removeItem('user')
   localStorage.setItem('user', JSON.stringify(user))
+}
+
+export async function updateLocalUserData(user) {
+  localStorage.removeItem('user')
+  localStorage.setItem('user', JSON.stringify(user))
+  return true
 }
 
 export async function login(email, password) {
@@ -77,7 +69,6 @@ export async function register(username, email, password, confirmPassword, isStu
         const { user } = response.data
         if (accessToken) {
           setLocalAccessToken(accessToken)
-          setLocalUserData(user)
         }
         return user
       }
@@ -102,7 +93,7 @@ export async function logout() {
   return true
 }
 
-export async function updateProfile(accountId, firstName, lastName, contactNumber) {
+export async function updateProfile(accountId, firstName, lastName, contactNumber, isStudent) {
   return apiClient
     .put(
       `/user/${accountId}`,
@@ -117,12 +108,8 @@ export async function updateProfile(accountId, firstName, lastName, contactNumbe
     )
     .then(response => {
       if (response) {
-        const currentUser = store.get('user')
-        currentUser.firstName = firstName
-        currentUser.lastName = lastName
-        currentUser.contactNumber = contactNumber
-        setLocalUserData(currentUser)
-        return true
+        if (isStudent) return response.data.student
+        return response.data.sensei
       }
       return false
     })

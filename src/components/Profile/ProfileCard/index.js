@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Descriptions, Form, Input, Modal, Tabs } from 'antd'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { isNull } from 'lodash'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import style from './style.module.scss'
 
 const { TabPane } = Tabs
@@ -20,6 +21,7 @@ const EditProfileForm = () => {
 
   const onUpdateProfile = values => {
     values.accountId = user.accountId
+    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     dispatch({
       type: 'user/UPDATE_PROFILE',
       payload: values,

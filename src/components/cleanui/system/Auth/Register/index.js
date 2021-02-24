@@ -31,6 +31,7 @@ const Register = () => {
 
   const onUpdateProfile = values => {
     values.accountId = user.accountId
+    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     dispatch({
       type: 'user/UPDATE_PROFILE',
       payload: values,

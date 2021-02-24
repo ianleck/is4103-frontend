@@ -6,22 +6,24 @@ import { USER_TYPE_ENUM } from 'constants/constants'
 import actions from './actions'
 import * as selectors from '../selectors'
 
-const createUserObj = response => {
+const createUserObj = (user, isResponse) => {
   return {
-    accountId: response.accountId,
-    adminVerified: response.adminVerified,
-    contactNumber: response.contactNumber,
-    createdAt: response.createdAt,
-    email: response.email,
-    emailVerified: response.emailVerified,
-    firstName: response.firstName,
-    lastName: response.lastName,
-    paypalId: response.paypalId,
-    status: response.status,
-    updatedAt: response.updatedAt,
-    userType: response.userType,
-    username: response.username,
-    authorized: true,
+    accountId: user.accountId,
+    adminVerified: user.adminVerified,
+    contactNumber: user.contactNumber,
+    createdAt: user.createdAt,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    paypalId: user.paypalId,
+    status: user.status,
+    updatedAt: user.updatedAt,
+    userType: user.userType,
+    username: user.username,
+    authorized: isResponse ? true : user.authorized,
+    loading: isResponse ? false : user.loading,
+    requiresProfileUpdate: isResponse ? false : user.requiresProfileUpdate,
   }
 }
 
@@ -35,13 +37,14 @@ export function* LOGIN({ payload }) {
   })
   const response = yield call(jwt.login, email, password)
   if (response) {
-    const currentUser = createUserObj(response)
+    const currentUser = createUserObj(response, true)
     yield put({
       type: 'user/SET_STATE',
       payload: {
         ...currentUser,
       },
     })
+    yield call(jwt.updateLocalUserData, currentUser)
   }
   const user = yield select(selectors.user)
   if (response) {
@@ -61,7 +64,7 @@ export function* LOGIN({ payload }) {
     }
     notification.success({
       message: 'Logged In',
-      description: 'Welcome to Digi Dojo, aspiring student.',
+      description: `Welcome to Digi Dojo, ${user.firstName} ${user.lastName}.`,
     })
     yield put({
       type: 'menu/GET_DATA',
@@ -87,8 +90,7 @@ export function* REGISTER({ payload }) {
   })
   const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
   if (response) {
-    const currentUser = createUserObj(response)
-    console.log('currentUser', currentUser)
+    const currentUser = createUserObj(response, true)
     currentUser.requiresProfileUpdate = true
     yield put({
       type: 'user/SET_STATE',
@@ -96,6 +98,7 @@ export function* REGISTER({ payload }) {
         ...currentUser,
       },
     })
+    yield call(jwt.updateLocalUserData, currentUser)
     notification.success({
       message: 'Account created successfully.',
       description: 'Let us know more about you!',
@@ -119,23 +122,10 @@ export function* REGISTER({ payload }) {
 export function* LOAD_CURRENT_ACCOUNT() {
   const user = yield call(jwt.getLocalUserData)
   if (user) {
+    const currentUser = createUserObj(user, false)
     yield put({
       type: 'user/SET_STATE',
-      payload: {
-        accountId: user.accountId,
-        contactNumber: user.contactNumber,
-        createdAt: user.createdAt,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        paypalId: user.paypalId,
-        status: user.status,
-        updatedAt: user.updatedAt,
-        userType: user.userType,
-        username: user.username,
-        authorized: user.authorized,
-      },
+      payload: currentUser,
     })
   }
   yield put({
@@ -149,33 +139,43 @@ export function* LOGOUT() {
 }
 
 export function* UPDATE_PROFILE({ payload }) {
-  const { accountId, firstName, lastName, contactNumber } = payload
+  const { accountId, firstName, lastName, contactNumber, isStudent } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwt.updateProfile, accountId, firstName, lastName, contactNumber)
+  const response = yield call(
+    jwt.updateProfile,
+    accountId,
+    firstName,
+    lastName,
+    contactNumber,
+    isStudent,
+  )
   if (response) {
-    const updatedUser = yield call(jwt.getUser, accountId)
+    console.log('async yield response: ', response)
     yield put({
       type: 'user/SET_STATE',
       payload: {
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
-        contactNumber: updatedUser.contactNumber,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        contactNumber: response.contactNumber,
       },
     })
-    const localUserData = yield select(selectors.user)
-    if (localUserData.requiresProfileUpdate) {
-      yield history.push('/')
+    yield call(jwt.updateLocalUserData, response)
+    const currentUser = yield select(selectors.user)
+    if (currentUser.requiresProfileUpdate) {
+      currentUser.requiresProfileUpdate = false
+      yield call(jwt.updateLocalUserData, currentUser)
       yield put({
         type: 'user/SET_STATE',
         payload: {
           requiresProfileUpdate: false,
         },
       })
+      yield history.push('/')
       notification.success({
         message: 'Profile Updated Successfully',
         description: 'Thanks for telling us more about yourself.',
