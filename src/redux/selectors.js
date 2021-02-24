@@ -8,8 +8,8 @@ export const user = state => {
     createdAt: state.user.createdAt,
     email: state.user.email,
     emailVerified: state.user.emailVerified,
-    firstName: isNil(state.user.firstName) ? 'Anonymous' : state.user.firstName,
-    lastName: isNil(state.user.lastName) ? 'Pigeon' : state.user.lastName,
+    firstName: state.user.firstName,
+    lastName: state.user.lastName,
     paypalId: state.user.paypalId,
     status: state.user.status,
     updatedAt: state.user.updatedAt,
@@ -40,4 +40,25 @@ export const resetUser = {
   authorized: false,
   loading: false,
   requiresProfileUpdate: false,
+}
+
+export const createUserObj = (currentUser, isResponse) => {
+  return {
+    accountId: currentUser.accountId,
+    adminVerified: currentUser.adminVerified,
+    contactNumber: currentUser.contactNumber,
+    createdAt: currentUser.createdAt,
+    email: currentUser.email,
+    emailVerified: currentUser.emailVerified,
+    firstName: isNil(currentUser.firstName) ? 'Anonymous' : currentUser.firstName,
+    lastName: isNil(currentUser.lastName) ? 'Pigeon' : currentUser.lastName,
+    paypalId: currentUser.paypalId,
+    status: currentUser.status,
+    updatedAt: currentUser.updatedAt,
+    userType: currentUser.userType,
+    username: currentUser.username,
+    authorized: isResponse ? true : currentUser.authorized,
+    loading: isResponse ? false : currentUser.loading,
+    requiresProfileUpdate: isResponse ? false : currentUser.requiresProfileUpdate,
+  }
 }

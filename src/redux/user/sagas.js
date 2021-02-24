@@ -1,31 +1,10 @@
 import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import { notification } from 'antd'
 import { history } from 'index'
-import * as jwt from 'services/jwt'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import * as jwt from 'services/jwt'
 import actions from './actions'
 import * as selectors from '../selectors'
-
-const createUserObj = (user, isResponse) => {
-  return {
-    accountId: user.accountId,
-    adminVerified: user.adminVerified,
-    contactNumber: user.contactNumber,
-    createdAt: user.createdAt,
-    email: user.email,
-    emailVerified: user.emailVerified,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    paypalId: user.paypalId,
-    status: user.status,
-    updatedAt: user.updatedAt,
-    userType: user.userType,
-    username: user.username,
-    authorized: isResponse ? true : user.authorized,
-    loading: isResponse ? false : user.loading,
-    requiresProfileUpdate: isResponse ? false : user.requiresProfileUpdate,
-  }
-}
 
 export function* LOGIN({ payload }) {
   const { email, password } = payload
@@ -37,7 +16,7 @@ export function* LOGIN({ payload }) {
   })
   const response = yield call(jwt.login, email, password)
   if (response) {
-    const currentUser = createUserObj(response, true)
+    const currentUser = selectors.createUserObj(response, true)
     yield put({
       type: 'user/SET_STATE',
       payload: {
@@ -45,10 +24,7 @@ export function* LOGIN({ payload }) {
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
-  }
-  const user = yield select(selectors.user)
-  if (response) {
-    switch (user.userType) {
+    switch (currentUser.userType) {
       case USER_TYPE_ENUM.ADMIN:
         yield history.push('/admin')
         break
@@ -64,20 +40,18 @@ export function* LOGIN({ payload }) {
     }
     notification.success({
       message: 'Logged In',
-      description: `Welcome to Digi Dojo, ${user.firstName} ${user.lastName}.`,
-    })
-    yield put({
-      type: 'menu/GET_DATA',
+      description: `Welcome to Digi Dojo, ${currentUser.firstName} ${currentUser.lastName}.`,
     })
   }
-  if (!response) {
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
-    })
-  }
+  yield put({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
 }
 
 export function* REGISTER({ payload }) {
@@ -90,7 +64,7 @@ export function* REGISTER({ payload }) {
   })
   const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
   if (response) {
-    const currentUser = createUserObj(response, true)
+    const currentUser = selectors.createUserObj(response, true)
     currentUser.requiresProfileUpdate = true
     yield put({
       type: 'user/SET_STATE',
@@ -103,26 +77,22 @@ export function* REGISTER({ payload }) {
       message: 'Account created successfully.',
       description: 'Let us know more about you!',
     })
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
-    })
-  } else {
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
-    })
   }
+  yield put({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
 }
 
 export function* LOAD_CURRENT_ACCOUNT() {
   const user = yield call(jwt.getLocalUserData)
   if (user) {
-    const currentUser = createUserObj(user, false)
+    const currentUser = selectors.createUserObj(user, false)
     yield put({
       type: 'user/SET_STATE',
       payload: currentUser,

@@ -8,6 +8,17 @@ const Register = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
+  if (user.requiresProfileUpdate) {
+    switch (user.userType) {
+      case USER_TYPE_ENUM.SENSEI:
+        return <Redirect to="/sensei/profile" />
+      case USER_TYPE_ENUM.STUDENT:
+        return <Redirect to="/student/profile" />
+      default:
+        return <Redirect to="/" />
+    }
+  }
+
   if (user.authorized && !user.requiresProfileUpdate) {
     switch (user.userType) {
       case USER_TYPE_ENUM.ADMIN:
@@ -29,78 +40,9 @@ const Register = () => {
     })
   }
 
-  const onUpdateProfile = values => {
-    values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
-    dispatch({
-      type: 'user/UPDATE_PROFILE',
-      payload: values,
-    })
-  }
-
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo)
   }
-
-  const profileUpdateCard = (
-    <div>
-      <div className="card">
-        <div className="card-body">
-          <div className="row">
-            <div className="col-12 text-center mt-4">
-              <img src="../resources/images/digidojo_logo.svg" alt="Digi Dojo Logo" />
-            </div>
-            <div className="col-12">
-              <div className="text-center mt-4 mb-4">
-                <h5>
-                  <strong>Let&apos;s get to know each other.</strong>
-                </h5>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <Form
-                layout="vertical"
-                hideRequiredMark
-                onFinish={onUpdateProfile}
-                onFinishFailed={onFinishFailed}
-                className="mb-4"
-              >
-                <Form.Item
-                  name="firstName"
-                  rules={[{ required: true, message: 'Please input your first name' }]}
-                >
-                  <Input size="large" placeholder="First Name" />
-                </Form.Item>
-                <Form.Item
-                  name="lastName"
-                  rules={[{ required: true, message: 'Please input your last name' }]}
-                >
-                  <Input size="large" placeholder="Last Name" />
-                </Form.Item>
-                <Form.Item
-                  name="contactNumber"
-                  rules={[{ required: true, message: 'Please input your contact number' }]}
-                >
-                  <Input size="large" placeholder="Contact Number" />
-                </Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  size="large"
-                  className="text-center w-100"
-                  loading={user.loading}
-                >
-                  <strong>Complete Profile</strong>
-                </Button>
-              </Form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
 
   const signUpCard = (
     <div>
@@ -201,9 +143,6 @@ const Register = () => {
     </div>
   )
 
-  if (user.requiresProfileUpdate) {
-    return profileUpdateCard
-  }
   return signUpCard
 }
 
