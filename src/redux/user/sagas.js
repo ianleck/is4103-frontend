@@ -2,6 +2,7 @@ import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import { notification } from 'antd'
 import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import { isNil } from 'lodash'
 import * as jwt from 'services/jwt'
 import actions from './actions'
 import * as selectors from '../selectors'
@@ -38,6 +39,8 @@ export function* LOGIN({ payload }) {
         yield history.push('/')
         break
     }
+    if (isNil(currentUser.firstName)) currentUser.firstName = 'Anonymous'
+    if (isNil(currentUser.lastName)) currentUser.lastName = 'Pigeon'
     notification.success({
       message: 'Logged In',
       description: `Welcome to Digi Dojo, ${currentUser.firstName} ${currentUser.lastName}.`,

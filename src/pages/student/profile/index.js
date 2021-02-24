@@ -1,22 +1,31 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Helmet } from 'react-helmet'
-import { Tabs, Input, Button, Upload, Form } from 'antd'
+import { useSelector } from 'react-redux'
+import { Alert, Button } from 'antd'
 import ProfileCard from 'components/Profile/ProfileCard'
-import General14 from 'components/kit/widgets/General/14'
-import General15 from 'components/kit/widgets/General/15'
 
-const { TabPane } = Tabs
+const UpdateProfileNotice = () => {
+  return (
+    <div className="row mb-3">
+      <div className="col-12">
+        <Alert
+          message="Profile requires update."
+          description="Your profile is incomplete. A complete profile is required to perform actions on Digi Dojo."
+          type="info"
+          showIcon
+        />
+      </div>
+    </div>
+  )
+}
 
 const StudentProfile = () => {
-  const [tabKey, setTabKey] = useState('1')
-
-  const changeTab = key => {
-    setTabKey(key)
-  }
+  const user = useSelector(state => state.user)
 
   return (
     <div>
       <Helmet title="Profile" />
+      {user.requiresProfileUpdate && <UpdateProfileNotice />}
       <div className="row">
         <div className="col-xl-4 col-lg-12">
           <div className="card">
@@ -27,102 +36,54 @@ const StudentProfile = () => {
         </div>
         <div className="col-xl-8 col-lg-12">
           <div className="card">
-            <div className="card-header card-header-flex flex-column">
-              <div className="d-flex flex-wrap border-bottom pt-3 pb-4 mb-3">
-                <div className="mr-5">
-                  <div className="text-dark font-size-18 font-weight-bold">David Beckham</div>
-                  <div className="text-gray-6">@david100</div>
-                </div>
-                <div className="mr-5 text-center">
-                  <div className="text-dark font-size-18 font-weight-bold">100</div>
-                  <div className="text-gray-6">Posts</div>
-                </div>
-                <div className="mr-5 text-center">
-                  <div className="text-dark font-size-18 font-weight-bold">17,256</div>
-                  <div className="text-gray-6">Followers</div>
-                </div>
-              </div>
-              <Tabs activeKey={tabKey} className="mr-auto kit-tabs-bold" onChange={changeTab}>
-                <TabPane tab="Agent Wall" key="1" />
-                <TabPane tab="Messages" key="2" />
-                <TabPane tab="Settings" key="3" />
-              </Tabs>
+            <div className="card-header pb-1">
+              <div className="h3 font-weight-bold text-dark">About</div>
             </div>
             <div className="card-body">
-              {tabKey === '1' && (
-                <div>
-                  <General15 />
-                  <General15 />
+              <div className="row align-items-center justify-content-between">
+                <div className="col-auto">
+                  <span className="h4 text-dark">Headliner</span>
                 </div>
-              )}
-              {tabKey === '2' && <General14 />}
-              {tabKey === '3' && (
-                <Form layout="vertical" className="login-form">
-                  <h5 className="text-black mt-4">
-                    <strong>Personal Information</strong>
-                  </h5>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <Form.Item name="userName" label="Username">
-                        <Input placeholder="Username" />
-                      </Form.Item>
-                    </div>
-                    <div className="col-lg-6">
-                      <Form.Item name="email" label="Email">
-                        <Input placeholder="Email" />
-                      </Form.Item>
+                <div className="col-auto">
+                  <Button
+                    type="primary"
+                    shape="round"
+                    icon={<i className="fe fe-edit-3" />}
+                    size="small"
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="col-12 mt-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <span>Headliner body</span>
                     </div>
                   </div>
-                  <h5 className="text-black mt-4">
-                    <strong>New Password</strong>
-                  </h5>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <Form.Item label="Password">
-                        <Input placeholder="New password" />
-                      </Form.Item>
-                    </div>
-                    <div className="col-lg-6">
-                      <Form.Item name="confirmpassword" label="Confirm Password">
-                        <Input placeholder="Confirm password" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <h5 className="text-black mt-4 mb-3">
-                        <strong>Profile Avatar</strong>
-                      </h5>
-                      <Upload>
-                        <Button>
-                          <i className="fe fe-upload mr-2" /> Click to Upload
-                        </Button>
-                      </Upload>
-                    </div>
-                    <div className="col-lg-6">
-                      <h5 className="text-black mt-4 mb-3">
-                        <strong>Profile Background</strong>
-                      </h5>
-                      <Upload>
-                        <Button>
-                          <i className="fe fe-upload mr-2" /> Click to Upload
-                        </Button>
-                      </Upload>
+                </div>
+              </div>
+              <div className="row align-items-center justify-content-between">
+                <div className="col-auto">
+                  <span className="h4 text-dark">Description</span>
+                </div>
+                <div className="col-auto">
+                  <Button
+                    type="primary"
+                    shape="round"
+                    icon={<i className="fe fe-edit-3" />}
+                    size="small"
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="col-12 mt-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <span>Description body</span>
                     </div>
                   </div>
-                  <div className="form-actions">
-                    <Button
-                      style={{ width: 200 }}
-                      type="primary"
-                      htmlType="submit"
-                      className="mr-3"
-                    >
-                      Submit
-                    </Button>
-                    <Button htmlType="submit">Cancel</Button>
-                  </div>
-                </Form>
-              )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

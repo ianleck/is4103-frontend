@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Descriptions, Form, Input, Modal, Tabs } from 'antd'
+import { Button, Descriptions, Form, Input, Modal } from 'antd'
+import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import style from './style.module.scss'
-
-const { TabPane } = Tabs
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -27,84 +26,52 @@ const EditProfileForm = () => {
     })
   }
 
-  if (user.userType === 'STUDENT') {
-    return (
-      <Form
-        id="updatePersonalInformationForm"
-        layout="vertical"
-        hideRequiredMark
-        onFinish={onUpdateProfile}
-        onFinishFailed={onFinishFailed}
-        initialValues={{
-          firstName: user.firstName,
-          lastName: user.lastName,
-          username: user.username,
-          email: user.email,
-          contactNumber: user.contactNumber,
-        }}
-      >
-        <div className="row">
-          <div className="col-6">
-            <Form.Item name="username" label="Username">
-              <Input disabled />
-            </Form.Item>
-          </div>
-          <div className="col-6">
-            <Form.Item name="email" label="Email">
-              <Input disabled />
-            </Form.Item>
-          </div>
-          <div className="col-md-6">
-            <Form.Item
-              name="firstName"
-              label="First Name"
-              rules={[{ required: true, message: 'Please input your First Name' }]}
-            >
-              <Input />
-            </Form.Item>
-          </div>
-          <div className="col-md-6">
-            <Form.Item
-              name="lastName"
-              label="Last Name"
-              rules={[{ required: true, message: 'Please input your Last Name' }]}
-            >
-              <Input />
-            </Form.Item>
-          </div>
-          <div className="col-12">
-            <Form.Item name="contactNumber" label="Contact Number">
-              <Input />
-            </Form.Item>
-          </div>
-        </div>
-      </Form>
-    )
-  }
-  return <span>Bye</span>
-}
-
-const ChangePasswordForm = () => {
   return (
     <Form
+      id="updatePersonalInformationForm"
       layout="vertical"
       hideRequiredMark
-      onFinish={() => console.log('success')}
+      onFinish={onUpdateProfile}
       onFinishFailed={onFinishFailed}
+      initialValues={{
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        contactNumber: user.contactNumber,
+      }}
     >
       <div className="row">
+        <div className="col-6">
+          <Form.Item name="username" label="Username">
+            <Input disabled />
+          </Form.Item>
+        </div>
+        <div className="col-6">
+          <Form.Item name="email" label="Email">
+            <Input disabled />
+          </Form.Item>
+        </div>
+        <div className="col-md-6">
+          <Form.Item
+            name="firstName"
+            label="First Name"
+            rules={[{ required: true, message: 'Please input your First Name' }]}
+          >
+            <Input />
+          </Form.Item>
+        </div>
+        <div className="col-md-6">
+          <Form.Item
+            name="lastName"
+            label="Last Name"
+            rules={[{ required: true, message: 'Please input your Last Name' }]}
+          >
+            <Input />
+          </Form.Item>
+        </div>
         <div className="col-12">
-          <Form.Item name="oldPassword" label="Old Password">
-            <Input />
-          </Form.Item>
-        </div>
-        <div className="col-6">
-          <Form.Item name="password" label="New Password">
-            <Input />
-          </Form.Item>
-        </div>
-        <div className="col-6">
-          <Form.Item name="confirmPassword" label="Confirm Password">
+          <Form.Item name="contactNumber" label="Contact Number">
             <Input />
           </Form.Item>
         </div>
@@ -113,14 +80,12 @@ const ChangePasswordForm = () => {
   )
 }
 
-const DeleteAccountButton = () => {
+const VerifyEmailLink = () => {
   return (
-    <div className="row">
-      <div className="col-12">
-        <button type="button" className="btn btn-danger mb-3">
-          Delete Account
-        </button>
-      </div>
+    <div>
+      <a href="#" className="btn-link">
+        Verify Email
+      </a>
     </div>
   )
 }
@@ -128,12 +93,6 @@ const DeleteAccountButton = () => {
 const ProfileCard = () => {
   const user = useSelector(state => state.user)
   const [showEditInformation, setShowEditInformation] = useState(false)
-
-  const [tabKey, setTabKey] = useState('editProfile')
-
-  const changeTab = key => {
-    setTabKey(key)
-  }
   title = `${user.firstName} is sharing his Digi Dojo profile with you!`
 
   const saveFormFooter = (
@@ -168,12 +127,6 @@ const ProfileCard = () => {
           <img src="../resources/images/avatars/5.jpg" alt="Mary Stanform" />
         </div>
       </div>
-      <div className="col">
-        <div className="text-dark font-weight-bold font-size-18">
-          {`${user.firstName} ${user.lastName}`}
-        </div>
-        <div className="text-uppercase font-size-12 mb-3">{user.userType}</div>
-      </div>
       <div className="col-auto">
         <FacebookShareButton url={shareUrl} quote={title}>
           <FacebookIcon size={32} round />
@@ -181,6 +134,21 @@ const ProfileCard = () => {
         <LinkedinShareButton url={shareUrl} className="ml-2">
           <LinkedinIcon size={32} round />
         </LinkedinShareButton>
+      </div>
+      <div className="col-12">
+        <div
+          className={`${
+            isNil(user.firstName) || isNil(user.lastName) ? 'text-danger' : 'text-dark'
+          } h5 font-weight-bold`}
+        >
+          {`${isNil(user.firstName) ? 'Anonymous' : user.firstName} ${
+            isNil(user.lastName) ? 'Pigeon' : user.lastName
+          }`}{' '}
+          {(isNil(user.firstName) || isNil(user.lastName)) && <small>*Update required</small>}
+        </div>
+      </div>
+      <div className="col-12">
+        <div className="text-uppercase font-size-12">{user.userType}</div>
       </div>
       <div className="col-12 text-left mt-2">
         <Descriptions
@@ -204,7 +172,10 @@ const ProfileCard = () => {
           }
         >
           <Descriptions.Item label="Username">{user.username}</Descriptions.Item>
-          <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
+          <Descriptions.Item label="Email">
+            {user.email}
+            {!user.emailVerified && <VerifyEmailLink />}
+          </Descriptions.Item>
           <Descriptions.Item label="Contact Number">{user.contactNumber}</Descriptions.Item>
         </Descriptions>
       </div>
@@ -215,20 +186,9 @@ const ProfileCard = () => {
         centered
         okButtonProps={{ style: { display: 'none' } }}
         onCancel={() => setShowEditInformation(false)}
-        bodyStyle={{ paddingTop: 0, paddingBottom: 0 }}
-        footer={
-          (tabKey === 'editProfile' && saveFormFooter) ||
-          (tabKey === 'changePassword' && saveFormFooter)
-        }
+        footer={saveFormFooter}
       >
-        <Tabs activeKey={tabKey} className="mr-auto kit-tabs-bold" onChange={changeTab}>
-          <TabPane tab="Edit Profile" key="editProfile" />
-          <TabPane tab="Change Password" key="changePassword" />
-          <TabPane tab="Delete Account" key="deleteAccount" />
-        </Tabs>
-        {tabKey === 'editProfile' && <EditProfileForm user={user} />}
-        {tabKey === 'changePassword' && <ChangePasswordForm />}
-        {tabKey === 'deleteAccount' && <DeleteAccountButton />}
+        <EditProfileForm user={user} />
       </Modal>
     </div>
   )

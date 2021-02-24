@@ -50,8 +50,8 @@ export const createUserObj = (currentUser, isResponse) => {
     createdAt: currentUser.createdAt,
     email: currentUser.email,
     emailVerified: currentUser.emailVerified,
-    firstName: isNil(currentUser.firstName) ? 'Anonymous' : currentUser.firstName,
-    lastName: isNil(currentUser.lastName) ? 'Pigeon' : currentUser.lastName,
+    firstName: currentUser.firstName,
+    lastName: currentUser.lastName,
     paypalId: currentUser.paypalId,
     status: currentUser.status,
     updatedAt: currentUser.updatedAt,
@@ -59,6 +59,9 @@ export const createUserObj = (currentUser, isResponse) => {
     username: currentUser.username,
     authorized: isResponse ? true : currentUser.authorized,
     loading: isResponse ? false : currentUser.loading,
-    requiresProfileUpdate: isResponse ? false : currentUser.requiresProfileUpdate,
+    requiresProfileUpdate:
+      isNil(currentUser.firstName) || isNil(currentUser.lastName)
+        ? true
+        : currentUser.requiresProfileUpdate,
   }
 }
