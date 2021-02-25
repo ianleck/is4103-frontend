@@ -13,9 +13,11 @@ const onFinishFailed = errorInfo => {
 const shareUrl = 'https://github.com'
 let title = "I'm sharing my Digi Dojo profile with you!"
 
-const EditProfileForm = () => {
+const PersonalInformationCard = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
+  const [showEditInformation, setShowEditInformation] = useState(false)
+  title = `${user.firstName} is sharing his Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
     values.accountId = user.accountId
@@ -24,80 +26,8 @@ const EditProfileForm = () => {
       type: 'user/UPDATE_PROFILE',
       payload: values,
     })
+    setShowEditInformation(false)
   }
-
-  return (
-    <Form
-      id="updatePersonalInformationForm"
-      layout="vertical"
-      hideRequiredMark
-      onFinish={onUpdateProfile}
-      onFinishFailed={onFinishFailed}
-      initialValues={{
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        contactNumber: user.contactNumber,
-      }}
-    >
-      <div className="row">
-        <div className="col-6">
-          <Form.Item name="username" label="Username">
-            <Input disabled />
-          </Form.Item>
-        </div>
-        <div className="col-6">
-          <Form.Item name="email" label="Email">
-            <Input disabled />
-          </Form.Item>
-        </div>
-        <div className="col-md-6">
-          <Form.Item
-            name="firstName"
-            label="First Name"
-            rules={[{ required: true, message: 'Please input your First Name' }]}
-          >
-            <Input />
-          </Form.Item>
-        </div>
-        <div className="col-md-6">
-          <Form.Item
-            name="lastName"
-            label="Last Name"
-            rules={[{ required: true, message: 'Please input your Last Name' }]}
-          >
-            <Input />
-          </Form.Item>
-        </div>
-        <div className="col-12">
-          <Form.Item
-            name="contactNumber"
-            label="Contact Number"
-            rules={[{ required: true, message: 'Please input a valid Contact Number' }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-        </div>
-      </div>
-    </Form>
-  )
-}
-
-const VerifyEmailLink = () => {
-  return (
-    <div>
-      <a href="#" className="btn-link">
-        Verify Email
-      </a>
-    </div>
-  )
-}
-
-const PersonalInformationCard = () => {
-  const user = useSelector(state => state.user)
-  const [showEditInformation, setShowEditInformation] = useState(false)
-  title = `${user.firstName} is sharing his Digi Dojo profile with you!`
 
   const saveFormFooter = (
     <div className="row justify-content-between">
@@ -194,10 +124,73 @@ const PersonalInformationCard = () => {
             onCancel={() => setShowEditInformation(false)}
             footer={saveFormFooter}
           >
-            <EditProfileForm user={user} />
+            <Form
+              id="updatePersonalInformationForm"
+              layout="vertical"
+              hideRequiredMark
+              onFinish={onUpdateProfile}
+              onFinishFailed={onFinishFailed}
+              initialValues={{
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                email: user.email,
+                contactNumber: user.contactNumber,
+              }}
+            >
+              <div className="row">
+                <div className="col-6">
+                  <Form.Item name="username" label="Username">
+                    <Input disabled />
+                  </Form.Item>
+                </div>
+                <div className="col-6">
+                  <Form.Item name="email" label="Email">
+                    <Input disabled />
+                  </Form.Item>
+                </div>
+                <div className="col-md-6">
+                  <Form.Item
+                    name="firstName"
+                    label="First Name"
+                    rules={[{ required: true, message: 'Please input your First Name' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+                <div className="col-md-6">
+                  <Form.Item
+                    name="lastName"
+                    label="Last Name"
+                    rules={[{ required: true, message: 'Please input your Last Name' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+                <div className="col-12">
+                  <Form.Item
+                    name="contactNumber"
+                    label="Contact Number"
+                    rules={[{ required: true, message: 'Please input a valid Contact Number' }]}
+                  >
+                    <Input type="number" />
+                  </Form.Item>
+                </div>
+              </div>
+            </Form>
           </Modal>
         </div>
       </div>
+    </div>
+  )
+}
+
+const VerifyEmailLink = () => {
+  return (
+    <div>
+      <a href="#" className="btn-link">
+        Verify Email
+      </a>
     </div>
   )
 }

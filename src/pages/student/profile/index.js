@@ -26,7 +26,7 @@ const StudentProfile = () => {
   return (
     <div>
       <Helmet title="Profile" />
-      {user.requiresProfileUpdate && <UpdateProfileNotice />}
+      {!!user.requiresProfileUpdate && <UpdateProfileNotice />}
       <div className="row">
         <div className="col-xl-4 col-lg-12">
           <ProfilePersonalInfoCard />

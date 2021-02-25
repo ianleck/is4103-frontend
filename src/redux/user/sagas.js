@@ -4,6 +4,7 @@ import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import { isNil } from 'lodash'
 import * as jwt from 'services/jwt'
+import { createUserObj, resetUser } from 'components/utils'
 import actions from './actions'
 import * as selectors from '../selectors'
 
@@ -17,7 +18,9 @@ export function* LOGIN({ payload }) {
   })
   const response = yield call(jwt.login, email, password, isAdmin)
   if (response) {
-    const currentUser = selectors.createUserObj(response, true)
+    const isProfileUpdateRqd =
+      isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber)
+    const currentUser = createUserObj(response, true, false, isProfileUpdateRqd)
     yield put({
       type: 'user/SET_STATE',
       payload: {
@@ -45,10 +48,10 @@ export function* LOGIN({ payload }) {
       message: 'Logged In',
       description: `Welcome to Digi Dojo, ${currentUser.firstName} ${currentUser.lastName}.`,
     })
+    yield put({
+      type: 'menu/GET_DATA',
+    })
   }
-  yield put({
-    type: 'menu/GET_DATA',
-  })
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -67,8 +70,7 @@ export function* REGISTER({ payload }) {
   })
   const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
   if (response) {
-    const currentUser = selectors.createUserObj(response, true)
-    currentUser.requiresProfileUpdate = true
+    const currentUser = createUserObj(response, true, false, true)
     yield put({
       type: 'user/SET_STATE',
       payload: {
@@ -95,7 +97,12 @@ export function* REGISTER({ payload }) {
 export function* LOAD_CURRENT_ACCOUNT() {
   const user = yield call(jwt.getLocalUserData)
   if (user) {
-    const currentUser = selectors.createUserObj(user, false)
+    const currentUser = createUserObj(
+      user,
+      user.authorized,
+      user.loading,
+      user.requiresProfileUpdate,
+    )
     yield put({
       type: 'user/SET_STATE',
       payload: currentUser,
@@ -108,6 +115,10 @@ export function* LOAD_CURRENT_ACCOUNT() {
 
 export function* LOGOUT() {
   yield call(jwt.logout)
+  yield put({
+    type: 'user/SET_STATE',
+    payload: resetUser,
+  })
   window.location.reload()
 }
 
@@ -128,7 +139,7 @@ export function* UPDATE_PROFILE({ payload }) {
     isStudent,
   )
   if (response) {
-    let currentUser = selectors.createUserObj(response, true)
+    let currentUser = createUserObj(response, true, false, false)
     yield put({
       type: 'user/SET_STATE',
       payload: {
@@ -148,7 +159,6 @@ export function* UPDATE_PROFILE({ payload }) {
           requiresProfileUpdate: false,
         },
       })
-      yield history.push('/')
       notification.success({
         message: 'Profile Updated Successfully',
         description: 'Thanks for telling us more about yourself.',

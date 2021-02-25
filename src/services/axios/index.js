@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { notification } from 'antd'
+import { isNil } from 'lodash'
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -14,24 +15,29 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use(request => {
-  if (localStorage.getItem('accessToken') !== null) {
-    const accessToken = localStorage.getItem('accessToken')
+  const accessToken = localStorage.getItem('accessToken')
+  if (!isNil(accessToken)) {
     request.headers.Authorization = `Bearer ${accessToken}`
     // request.headers.AccessToken = accessToken
   }
   return request
 })
 
-apiClient.interceptors.response.use(undefined, error => {
-  // Errors handling
-  const { response } = error
-  const { data } = response
-  if (data) {
-    notification.warning({
-      message: data.error.message,
-    })
+apiClient.interceptors.response.use(undefined, apiResponse => {
+  if (!isNil(apiResponse.response.data)) {
+    if (!isNil(apiResponse.response.data.error)) {
+      if (!isNil(apiResponse.response.data.error.message)) {
+        notification.warning({
+          message: apiResponse.response.data.error.message,
+        })
+      }
+    } else {
+      notification.warning({
+        message: apiResponse.response.data,
+      })
+    }
   }
-  return data
+  return { success: false }
 })
 
 export default apiClient

@@ -1,10 +1,9 @@
 import apiClient from 'services/axios'
-import { resetUser, createUserObj, createAdminObj } from 'redux/selectors'
+import { resetUser, createUserObj, createAdminObj } from 'components/utils'
+import { isNil } from 'lodash'
 
 export function getLocalUserData() {
-  return localStorage.getItem('user') === null
-    ? resetUser
-    : JSON.parse(localStorage.getItem('user'))
+  return isNil(localStorage.getItem('user')) ? resetUser : JSON.parse(localStorage.getItem('user'))
 }
 
 const setLocalAccessToken = accessToken => {
@@ -36,14 +35,17 @@ export async function login(email, password, isAdmin) {
       password,
     })
     .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        const { user } = response.data
-        if (accessToken) {
+      if (!isNil(response.success)) {
+        return response.success
+      }
+      if (response && !isNil(response.data)) {
+        const { accessToken, user } = response.data
+        if (user && accessToken) {
           setLocalAccessToken(accessToken)
           setLocalUserData(user)
+          return user
         }
-        return user
+        return false
       }
       return false
     })
@@ -62,24 +64,18 @@ export async function register(username, email, password, confirmPassword, isStu
       },
     })
     .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        const { user } = response.data
-        if (accessToken) {
-          setLocalAccessToken(accessToken)
-        }
-        return user
+      if (!isNil(response.success)) {
+        return response.success
       }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function getUser(accountId) {
-  return apiClient
-    .get(`/user/${accountId}`)
-    .then(response => {
-      if (response) return response.data.user
+      if (response && !isNil(response.data)) {
+        const { accessToken, user } = response.data
+        if (user && accessToken) {
+          setLocalAccessToken(accessToken)
+          setLocalUserData(user)
+          return user
+        }
+        return false
+      }
       return false
     })
     .catch(err => console.log(err))
@@ -105,9 +101,13 @@ export async function updateProfile(accountId, firstName, lastName, contactNumbe
       { withCredentials: true },
     )
     .then(response => {
-      if (response) {
-        if (isStudent) return response.data.student
-        return response.data.sensei
+      if (!isNil(response.success)) {
+        return response.success
+      }
+      if (response && !isNil(response.data)) {
+        if (isStudent && !isNil(response.data.student)) return response.data.student
+        if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
       }
       return false
     })

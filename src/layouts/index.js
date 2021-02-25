@@ -61,25 +61,61 @@ const Layout = ({ children, location: { pathname, search } }) => {
   const isAuthLayout = getLayout() === 'auth'
 
   const BootstrappedLayout = () => {
-    if (isUserAuthorized) {
+    /*
+    Cases:
+    1. No auth -> Go to /auth/login
+    2. No auth but tries to go /admin -> Go to /auth/admin
+    3. No auth but tries to go /auth/login -> Load <Container>{children}</Container>
+    Auth:
+    4A. Student tries to go /admin or /sensei -> Go to /auth/login (helper to redirect)
+    4B. Sensei tries to go /admin or /student -> Go to /auth/login (helper to redirect)
+    4C. Admin tries to go /sensei or /student -> Go to /auth/login (helper to redirect)
+    */
+    if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
+      return null
+    }
+
+    if (
+      !isUserAuthorized ||
+      (user.userType !== USER_TYPE_ENUM.SENSEI && /^\/sensei(?=\/|$)/i.test(pathname)) ||
+      (user.userType !== USER_TYPE_ENUM.ADMIN && /^\/admin(?=\/|$)/i.test(pathname))
+    ) {
       if (
-        (/^\/admin(?=\/|$)/i.test(pathname) && user.userType !== USER_TYPE_ENUM.ADMIN) ||
-        (/^\/sensei(?=\/|$)/i.test(pathname) && user.userType !== USER_TYPE_ENUM.SENSEI)
+        isUserAuthorized ||
+        (!isUserAuthorized &&
+          (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname)))
       )
         return <Redirect to="/auth/login" />
-    } else {
-      if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
-        // show loader when user in check authorization process, not authorized yet and not on login pages
-        return null
-      }
-      if (/^\/admin(?=\/|$)/i.test(pathname)) {
+      if (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname))
         return <Redirect to="/auth/admin" />
-      }
-      if (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname)) {
-        return <Redirect to="/auth/login" />
-      }
     }
+
     return <Container>{children}</Container>
+
+    /* 
+    This is the old version of the redirecting that also works.
+    It should be more readable but of course, the redirect part is repeated.
+    */
+    // if (isUserAuthorized) {
+    //   if (
+    //     (/^\/admin(?=\/|$)/i.test(pathname) && user.userType !== USER_TYPE_ENUM.ADMIN) ||
+    //     (/^\/sensei(?=\/|$)/i.test(pathname) && user.userType !== USER_TYPE_ENUM.SENSEI)
+    //   ) {
+    //     return <Redirect to="/auth/login" />
+    //   }
+    // } else {
+    //   if (isUserLoading && !isAuthLayout) {
+    //     // show loader when user in check authorization process, not authorized yet and not on login pages
+    //     return null
+    //   }
+    //   if (/^\/admin(?=\/|$)/i.test(pathname)) {
+    //     return <Redirect to="/auth/admin" />
+    //   }
+    //   if (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname)) {
+    //     return <Redirect to="/auth/login" />
+    //   }
+    // }
+    // return <Container>{children}</Container>
   }
 
   return (
