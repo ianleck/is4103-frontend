@@ -129,16 +129,17 @@ export function* UPDATE_PROFILE({ payload }) {
   )
   if (response) {
     console.log('async yield response: ', response)
+    let currentUser = selectors.createUserObj(response, true)
     yield put({
       type: 'user/SET_STATE',
       payload: {
-        firstName: response.firstName,
-        lastName: response.lastName,
-        contactNumber: response.contactNumber,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        contactNumber: currentUser.contactNumber,
       },
     })
-    yield call(jwt.updateLocalUserData, response)
-    const currentUser = yield select(selectors.user)
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
     if (currentUser.requiresProfileUpdate) {
       currentUser.requiresProfileUpdate = false
       yield call(jwt.updateLocalUserData, currentUser)

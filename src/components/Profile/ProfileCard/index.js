@@ -71,8 +71,12 @@ const EditProfileForm = () => {
           </Form.Item>
         </div>
         <div className="col-12">
-          <Form.Item name="contactNumber" label="Contact Number">
-            <Input />
+          <Form.Item
+            name="contactNumber"
+            label="Contact Number"
+            rules={[{ required: true, message: 'Please input a valid Contact Number' }]}
+          >
+            <Input type="number" />
           </Form.Item>
         </div>
       </div>
