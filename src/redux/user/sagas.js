@@ -128,7 +128,6 @@ export function* UPDATE_PROFILE({ payload }) {
     isStudent,
   )
   if (response) {
-    console.log('async yield response: ', response)
     let currentUser = selectors.createUserObj(response, true)
     yield put({
       type: 'user/SET_STATE',
