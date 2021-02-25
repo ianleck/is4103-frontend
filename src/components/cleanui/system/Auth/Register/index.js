@@ -136,7 +136,7 @@ const Register = () => {
       </div>
       <div className="text-center pt-2 mb-auto">
         <span className="mr-2">Interested to be a Mentor or Sensei on Digi Dojo?</span>
-        <Link to="/sensei/register" className="kit__utils__link font-size-16">
+        <Link to="/auth/register-sensei" className="kit__utils__link font-size-16">
           Apply here
         </Link>
       </div>

@@ -4,6 +4,7 @@ import { withRouter, Redirect } from 'react-router-dom'
 import NProgress from 'nprogress'
 import { Helmet } from 'react-helmet'
 // import Loader from 'components/cleanui/layout/Loader'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import PublicLayout from './Public'
 import AuthLayout from './Auth'
 import MainLayout from './Main'
@@ -60,23 +61,25 @@ const Layout = ({ children, location: { pathname, search } }) => {
   const isAuthLayout = getLayout() === 'auth'
 
   const BootstrappedLayout = () => {
-    // show loader when user in check authorization process, not authorized yet and not on login pages
-    if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
-      return null
+    if (isUserAuthorized) {
+      if (
+        (/^\/admin(?=\/|$)/i.test(pathname) && user.userType !== USER_TYPE_ENUM.ADMIN) ||
+        (/^\/sensei(?=\/|$)/i.test(pathname) && user.userType !== USER_TYPE_ENUM.SENSEI)
+      )
+        return <Redirect to="/auth/login" />
+    } else {
+      if (isUserLoading && !isUserAuthorized && !isAuthLayout) {
+        // show loader when user in check authorization process, not authorized yet and not on login pages
+        return null
+      }
+      if (/^\/admin(?=\/|$)/i.test(pathname)) {
+        return <Redirect to="/auth/admin" />
+      }
+      if (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname)) {
+        return <Redirect to="/auth/login" />
+      }
     }
-    if (pathname === '/sensei/register') {
-      return <Container>{children}</Container>
-    }
-    if (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname)) {
-      return <Redirect to="/auth/admin" />
-    }
-    if (
-      !isUserAuthorized &&
-      (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname))
-    ) {
-      return <Redirect to="/auth/login" />
-    }
-    // in other case render previously set layout
+    console.log('we are here')
     return <Container>{children}</Container>
   }
 
