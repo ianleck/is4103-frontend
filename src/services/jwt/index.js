@@ -1,7 +1,7 @@
 import apiClient from 'services/axios'
 import { resetUser } from 'redux/selectors'
 
-export async function getLocalUserData() {
+export function getLocalUserData() {
   return localStorage.getItem('user') === null
     ? resetUser
     : JSON.parse(localStorage.getItem('user'))
@@ -25,7 +25,7 @@ const setLocalUserData = user => {
   localStorage.setItem('user', JSON.stringify(user))
 }
 
-export async function updateLocalUserData(user) {
+export function updateLocalUserData(user) {
   localStorage.removeItem('user')
   localStorage.setItem('user', JSON.stringify(user))
   return true
