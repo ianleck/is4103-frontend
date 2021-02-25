@@ -79,7 +79,6 @@ const Layout = ({ children, location: { pathname, search } }) => {
         return <Redirect to="/auth/login" />
       }
     }
-    console.log('we are here')
     return <Container>{children}</Container>
   }
 

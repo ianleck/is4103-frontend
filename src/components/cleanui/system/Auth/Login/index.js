@@ -34,6 +34,9 @@ const Login = () => {
   const onFinish = values => {
     setInputEmail(values.email)
     setInputPassword(values.password)
+    if (pathname === '/auth/admin') {
+      values.isAdmin = true
+    }
     dispatch({
       type: 'user/LOGIN',
       payload: values,
@@ -101,6 +104,12 @@ const Login = () => {
     )
   }
 
+  const generateLoginEmail = () => {
+    if (currentUserType === USER_TYPE_ENUM.ADMIN) return 'superadmin@gmail.com'
+    if (currentUserType === USER_TYPE_ENUM.SENSEI) return 'sensei@digi.dojo'
+    return 'student@digi.dojo'
+  }
+
   const LoginForm = () => {
     return (
       <div className="card">
@@ -118,7 +127,7 @@ const Login = () => {
             onFinishFailed={onFinishFailed}
             className="mb-4"
             initialValues={{
-              email: settings.isDevMode ? `${currentUserType.toLowerCase()}@digi.dojo` : inputEmail,
+              email: settings.isDevMode ? generateLoginEmail() : inputEmail,
               password: settings.isDevMode ? 'password' : inputPassword,
             }}
           >

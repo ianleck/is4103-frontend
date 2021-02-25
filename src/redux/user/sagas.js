@@ -8,14 +8,14 @@ import actions from './actions'
 import * as selectors from '../selectors'
 
 export function* LOGIN({ payload }) {
-  const { email, password } = payload
+  const { email, password, isAdmin } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwt.login, email, password)
+  const response = yield call(jwt.login, email, password, isAdmin)
   if (response) {
     const currentUser = selectors.createUserObj(response, true)
     yield put({

@@ -1,5 +1,5 @@
 import apiClient from 'services/axios'
-import { resetUser } from 'redux/selectors'
+import { resetUser, createUserObj, createAdminObj } from 'redux/selectors'
 
 export function getLocalUserData() {
   return localStorage.getItem('user') === null
@@ -7,20 +7,17 @@ export function getLocalUserData() {
     : JSON.parse(localStorage.getItem('user'))
 }
 
-const addLocalAttributes = (user, isAuthorised, isLoading) => {
-  user.authorized = isAuthorised
-  user.loading = isLoading
-  user.requiresProfileUpdate = false
-  return user
-}
-
 const setLocalAccessToken = accessToken => {
   localStorage.removeItem('accessToken')
   localStorage.setItem('accessToken', accessToken)
 }
 
-const setLocalUserData = user => {
-  user = addLocalAttributes(user, true, false)
+const setLocalUserData = (user, isAdmin) => {
+  if (isAdmin) {
+    user = createAdminObj(user, true)
+  } else {
+    user = createUserObj(user, true)
+  }
   localStorage.removeItem('user')
   localStorage.setItem('user', JSON.stringify(user))
 }
@@ -31,9 +28,10 @@ export function updateLocalUserData(user) {
   return true
 }
 
-export async function login(email, password) {
+export async function login(email, password, isAdmin) {
+  const url = isAdmin ? '/admin/login' : '/user/login'
   return apiClient
-    .post('/user/login', {
+    .post(url, {
       email,
       password,
     })
@@ -89,7 +87,7 @@ export async function getUser(accountId) {
 
 export async function logout() {
   localStorage.removeItem('accessToken')
-  localStorage.setItem('user', JSON.stringify(resetUser))
+  localStorage.removeItem('user')
   return true
 }
 
