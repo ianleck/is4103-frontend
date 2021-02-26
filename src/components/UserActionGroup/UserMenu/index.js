@@ -4,18 +4,25 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import { Menu, Dropdown, Avatar, Badge } from 'antd'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import styles from './style.module.scss'
 
-const ProfileMenu = () => {
+const UserMenu = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const [count, setCount] = useState(7)
   const history = useHistory()
 
-  const { firstName, lastName, email, contactNumber, userType } = user
+  const { username, userType } = user
 
-  const redirectToLogin = e => {
+  const redirectToLogin = isStudent => e => {
     e.preventDefault()
+    dispatch({
+      type: 'user/SET_STATE',
+      payload: {
+        loginType: isStudent ? USER_TYPE_ENUM.STUDENT : USER_TYPE_ENUM.SENSEI,
+      },
+    })
     const path = '/auth/login'
     history.push(path)
   }
@@ -27,9 +34,15 @@ const ProfileMenu = () => {
     })
   }
 
-  const editProfile = e => {
+  const viewProfile = e => {
     e.preventDefault()
     const path = `/${userType.toLowerCase()}/profile`
+    history.push(path)
+  }
+
+  const viewSettings = e => {
+    e.preventDefault()
+    const path = `/${userType.toLowerCase()}/settings`
     history.push(path)
   }
 
@@ -39,46 +52,30 @@ const ProfileMenu = () => {
 
   const menu = (
     <Menu selectable={false}>
-      <Menu.Item>
-        <strong>
-          <FormattedMessage id="topBar.profileMenu.hello" />,{' '}
-          {`${firstName} ${lastName}` || 'Anonymous'}
-        </strong>
-        <div>
-          <strong className="mr-1">
-            <FormattedMessage id="topBar.profileMenu.billingPlan" />:{' '}
-          </strong>
-          From the SENSEI menu bar
-        </div>
-        <div>
-          <strong>
-            <FormattedMessage id="topBar.profileMenu.role" />:{' '}
-          </strong>
-          {userType || '—'}
+      <Menu.Item className="pt-2 pb-2 pl-3 pr-5">
+        <div className="row">
+          <div className="col-12">
+            <span className="mb-5">Signed in as</span>
+          </div>
+          <div className="mt-2 col-12 font-size-18">
+            <span className="font-weight-bold">{username}</span>
+          </div>
         </div>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item>
-        <div>
-          <strong>
-            <FormattedMessage id="topBar.profileMenu.email" />:{' '}
-          </strong>
-          {email || '—'}
-          <br />
-          <strong>
-            <FormattedMessage id="topBar.profileMenu.phone" />:{' '}
-          </strong>
-          {contactNumber || '—'}
-        </div>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item>
-        <a href="#" onClick={editProfile}>
+        <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
-          <FormattedMessage id="topBar.profileMenu.editProfile" />
+          Your profile
         </a>
       </Menu.Item>
       <Menu.Divider />
+      <Menu.Item>
+        <a href="#" onClick={viewSettings}>
+          <i className="fe fe-settings mr-2" />
+          Settings
+        </a>
+      </Menu.Item>
       <Menu.Item>
         <a href="#" onClick={logout}>
           <i className="fe fe-log-out mr-2" />
@@ -88,16 +85,31 @@ const ProfileMenu = () => {
     </Menu>
   )
 
-  const pendingLogin = (
+  const pendingLoginSubMenu = (
     <Menu selectable={false}>
       <Menu.Item>
-        <a href="#" onClick={redirectToLogin}>
+        <a href="#" onClick={redirectToLogin(false)}>
           <i className="fe fe-user mr-2" />
-          <FormattedMessage id="topBar.profileMenu.login" />
+          Login as Sensei
+        </a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item>
+        <a href="/auth/register">
+          <i className="fe fe-user mr-2" />
+          Sign Up
         </a>
       </Menu.Item>
     </Menu>
   )
+
+  const PendingLoginMenu = () => {
+    return (
+      <Dropdown.Button overlay={pendingLoginSubMenu} onClick={redirectToLogin(true)}>
+        Login
+      </Dropdown.Button>
+    )
+  }
 
   if (user.authorized) {
     return (
@@ -111,15 +123,7 @@ const ProfileMenu = () => {
     )
   }
 
-  return (
-    <Dropdown overlay={pendingLogin} trigger={['click']} onVisibleChange={addCount}>
-      <div className={styles.dropdown}>
-        <Badge count={count}>
-          <Avatar className={styles.avatar} shape="square" size="large" icon={<UserOutlined />} />
-        </Badge>
-      </div>
-    </Dropdown>
-  )
+  return <PendingLoginMenu />
 }
 
-export default ProfileMenu
+export default UserMenu
