@@ -15,7 +15,7 @@ const setLocalUserData = (user, accessToken, isAdmin) => {
   if (isAdmin) {
     user = createAdminObj(user, accessToken, true)
   } else {
-    user = createUserObj(user, accessToken, true)
+    user = createUserObj(user, accessToken, true, false)
   }
   localStorage.removeItem('user')
   localStorage.setItem('user', JSON.stringify(user))
