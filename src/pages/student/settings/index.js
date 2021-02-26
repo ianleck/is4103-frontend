@@ -2,16 +2,22 @@ import { Button, Divider, Form, Input } from 'antd'
 import { LockOutlined, RedoOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import FadeIn from 'react-fade-in'
 
 const StudentSettings = () => {
-  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState('security')
-  console.log(user)
 
   const onChangePassword = values => {
-    console.log(values)
+    dispatch({
+      type: 'user/CHANGE_PASSWORD',
+      payload: {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+        confirmPassword: values.confirmPassword,
+      },
+    })
   }
 
   const changeActiveTab = tabKey => {
@@ -36,6 +42,7 @@ const StudentSettings = () => {
                 <hr />
                 <Form
                   {...formItemLayout}
+                  hideRequiredMark
                   name="changePasswordForm"
                   layout="vertical"
                   initialValues={{ remember: true }}
@@ -49,7 +56,7 @@ const StudentSettings = () => {
                     <Input
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="Old password"
+                      placeholder=""
                     />
                   </Form.Item>
                   <Form.Item
@@ -60,7 +67,7 @@ const StudentSettings = () => {
                     <Input
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="New password"
+                      placeholder=""
                     />
                   </Form.Item>
                   <Form.Item
@@ -71,7 +78,7 @@ const StudentSettings = () => {
                     <Input
                       prefix={<RedoOutlined className="site-form-item-icon" />}
                       type="password"
-                      placeholder="Confirm new password"
+                      placeholder=""
                     />
                   </Form.Item>
                   <Form.Item>

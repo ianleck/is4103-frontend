@@ -100,6 +100,28 @@ export function* REGISTER({ payload }) {
   })
 }
 
+export function* CHANGE_PASSWORD({ payload }) {
+  const { oldPassword, newPassword, confirmPassword } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(jwt.changePassword, oldPassword, newPassword, confirmPassword)
+  if (response) {
+    notification.success({
+      message: 'Password changed successfully.',
+    })
+  }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* LOAD_CURRENT_ACCOUNT() {
   const user = yield call(jwt.getLocalUserData)
   if (user) {
@@ -192,6 +214,7 @@ export default function* rootSaga() {
     takeEvery(actions.LOGIN, LOGIN),
     takeEvery(actions.REGISTER, REGISTER),
     takeEvery(actions.LOGOUT, LOGOUT),
+    takeEvery(actions.CHANGE_PASSWORD, CHANGE_PASSWORD),
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
     takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth

@@ -53,6 +53,24 @@ export async function login(email, password, isAdmin) {
     .catch(err => console.log(err))
 }
 
+export async function changePassword(oldPassword, newPassword, confirmPassword) {
+  return apiClient
+    .put('/user/change-password', {
+      oldPassword,
+      newPassword,
+      confirmPassword,
+    })
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data.success
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function register(username, email, password, confirmPassword, isStudent) {
   return apiClient
     .post('/user/register', {
