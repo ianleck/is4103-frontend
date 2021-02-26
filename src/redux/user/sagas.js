@@ -4,7 +4,7 @@ import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import { isNil } from 'lodash'
 import * as jwt from 'services/jwt'
-import { createUserObj, resetUser } from 'components/utils'
+import { createAdminObj, createUserObj, resetUser } from 'components/utils'
 import actions from './actions'
 import * as selectors from '../selectors'
 
@@ -18,9 +18,15 @@ export function* LOGIN({ payload }) {
   })
   const response = yield call(jwt.login, email, password, isAdmin)
   if (response) {
-    const isProfileUpdateRqd =
-      isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber)
-    const currentUser = createUserObj(response, true, false, isProfileUpdateRqd)
+    const currentUser = isAdmin
+      ? createAdminObj(response, true, false)
+      : createUserObj(
+          response,
+          true,
+          false,
+          isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber),
+        )
+
     yield put({
       type: 'user/SET_STATE',
       payload: {

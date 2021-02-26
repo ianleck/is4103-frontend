@@ -1,5 +1,6 @@
 export const resetUser = {
   // Local Attributes
+  accessToken: '',
   authorized: false,
   loading: false,
   requiresProfileUpdate: false,
@@ -7,6 +8,7 @@ export const resetUser = {
 
 export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpdateRqd) => {
   return {
+    accessToken: currentUser.accessToken,
     accountId: currentUser.accountId,
     adminVerified: currentUser.adminVerified,
     contactNumber: currentUser.contactNumber,
@@ -28,6 +30,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
 
 export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
   return {
+    accessToken: currentAdmin.accessToken,
     accountId: currentAdmin.accountId,
     contactNumber: currentAdmin.contactNumber,
     createdAt: currentAdmin.createdAt,
