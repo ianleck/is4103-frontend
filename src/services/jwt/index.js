@@ -11,11 +11,11 @@ const setLocalAccessToken = accessToken => {
   localStorage.setItem('accessToken', accessToken)
 }
 
-const setLocalUserData = (user, isAdmin) => {
+const setLocalUserData = (user, accessToken, isAdmin) => {
   if (isAdmin) {
-    user = createAdminObj(user, true)
+    user = createAdminObj(user, accessToken, true)
   } else {
-    user = createUserObj(user, true)
+    user = createUserObj(user, accessToken, true)
   }
   localStorage.removeItem('user')
   localStorage.setItem('user', JSON.stringify(user))
@@ -41,8 +41,9 @@ export async function login(email, password, isAdmin) {
       if (response && !isNil(response.data)) {
         const { accessToken, user } = response.data
         if (user && accessToken) {
+          user.accessToken = accessToken
           setLocalAccessToken(accessToken)
-          setLocalUserData(user)
+          setLocalUserData(user, accessToken, isAdmin)
           return user
         }
         return false
@@ -70,8 +71,9 @@ export async function register(username, email, password, confirmPassword, isStu
       if (response && !isNil(response.data)) {
         const { accessToken, user } = response.data
         if (user && accessToken) {
+          user.accessToken = accessToken
           setLocalAccessToken(accessToken)
-          setLocalUserData(user)
+          setLocalUserData(user, accessToken, false)
           return user
         }
         return false
