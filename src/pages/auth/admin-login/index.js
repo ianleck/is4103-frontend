@@ -7,7 +7,7 @@ import { USER_TYPE_ENUM } from 'constants/constants'
 
 const AdminLogin = () => {
   const user = useSelector(state => state.user)
-  if (user.authorized && user.userTypeEnum === USER_TYPE_ENUM.ADMIN) {
+  if (user.authorized && user.userType === USER_TYPE_ENUM.ADMIN) {
     return <Redirect to="/admin" />
   }
   return (

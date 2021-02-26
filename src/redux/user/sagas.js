@@ -1,211 +1,178 @@
 import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import { notification } from 'antd'
 import { history } from 'index'
-import * as firebase from 'services/firebase'
+import { USER_TYPE_ENUM } from 'constants/constants'
+import { isNil } from 'lodash'
 import * as jwt from 'services/jwt'
+import { createUserObj, resetUser } from 'components/utils'
 import actions from './actions'
-
-const mapAuthProviders = {
-  firebase: {
-    login: firebase.login,
-    register: firebase.register,
-    currentAccount: firebase.currentAccount,
-    logout: firebase.logout,
-    updateProfile: firebase.updateProfile,
-  },
-  jwt: {
-    login: jwt.login,
-    register: jwt.register,
-    currentAccount: jwt.currentAccount,
-    logout: jwt.logout,
-    updateProfile: jwt.updateProfile,
-  },
-}
+import * as selectors from '../selectors'
 
 export function* LOGIN({ payload }) {
-  const { email, password } = payload
+  const { email, password, isAdmin } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const { authProvider: autProviderName } = yield select(state => state.settings)
-  const success = yield call(mapAuthProviders[autProviderName].login, email, password)
-  if (success) {
+  const response = yield call(jwt.login, email, password, isAdmin)
+  if (response) {
+    const isProfileUpdateRqd =
+      isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber)
+    const currentUser = createUserObj(response, true, false, isProfileUpdateRqd)
     yield put({
-      type: 'user/LOAD_CURRENT_ACCOUNT',
+      type: 'user/SET_STATE',
+      payload: {
+        ...currentUser,
+      },
     })
-    const response = yield call(mapAuthProviders[autProviderName].currentAccount)
-    switch (response.role) {
-      case 'admin':
+    yield call(jwt.updateLocalUserData, currentUser)
+    switch (currentUser.userType) {
+      case USER_TYPE_ENUM.ADMIN:
         yield history.push('/admin')
         break
-      case 'sensei':
+      case USER_TYPE_ENUM.SENSEI:
         yield history.push('/sensei')
         break
-      case 'student':
-        yield history.push('/student')
+      case USER_TYPE_ENUM.STUDENT:
+        yield history.push('/')
         break
       default:
+        yield history.push('/')
         break
     }
+    if (isNil(currentUser.firstName)) currentUser.firstName = 'Anonymous'
+    if (isNil(currentUser.lastName)) currentUser.lastName = 'Pigeon'
     notification.success({
       message: 'Logged In',
-      description: 'You have successfully logged in!',
+      description: `Welcome to Digi Dojo, ${currentUser.firstName} ${currentUser.lastName}.`,
     })
-  }
-  if (!success) {
     yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
+      type: 'menu/GET_DATA',
     })
   }
-}
-
-export function* REGISTER({ payload }) {
-  const { username, email, password } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
-      loading: true,
-    },
-  })
-  const { authProvider } = yield select(state => state.settings)
-  const success = yield call(mapAuthProviders[authProvider].register, username, email, password)
-  if (success) {
-    yield put({
-      type: 'user/LOAD_CURRENT_ACCOUNT',
-    })
-    const response = yield call(mapAuthProviders[authProvider].currentAccount)
-    if (response.userTypeEnum === 'STUDENT') {
-      yield put({
-        type: 'user/TRIGGER_UPDATE_PROFILE',
-      })
-    } else {
-      yield history.push('/')
-    }
-    notification.success({
-      message: 'Succesful Registered',
-      description: 'You have successfully registered!',
-    })
-  }
-  if (!success) {
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        loading: false,
-      },
-    })
-  }
-}
-
-export function* LOAD_CURRENT_ACCOUNT() {
-  yield put({
-    type: 'menu/GET_DATA',
-  })
-  const { authProvider } = yield select(state => state.settings)
-  const response = yield call(mapAuthProviders[authProvider].currentAccount)
-  if (response) {
-    const {
-      id,
-      name,
-      avatar,
-      role,
-      username,
-      firstName,
-      lastName,
-      emailVerified,
-      email,
-      contactNumber,
-      status,
-      userTypeEnum,
-    } = response
-    yield put({
-      type: 'user/SET_STATE',
-      payload: {
-        id,
-        name,
-        avatar,
-        role,
-        authorized: true,
-        // Add attributes from backend
-        username,
-        firstName,
-        lastName,
-        emailVerified,
-        email,
-        contactNumber,
-        status,
-        userTypeEnum,
-      },
-    })
-  }
-}
-
-export function* LOGOUT() {
-  const { authProvider } = yield select(state => state.settings)
-  yield call(mapAuthProviders[authProvider].logout)
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      id: '',
-      name: '',
-      role: '',
-      email: '',
-      avatar: '',
-      authorized: false,
       loading: false,
     },
   })
-  yield put({
-    type: 'menu/GET_DATA',
-  })
 }
 
-export function* TRIGGER_UPDATE_PROFILE() {
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      requiresProfileUpdate: true,
-    },
-  })
-}
-
-export function* UPDATE_PROFILE({ payload }) {
-  const { id, firstName, lastName, contactNumber } = payload
+export function* REGISTER({ payload }) {
+  const { username, email, password, confirmPassword, isStudent } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const { authProvider: autProviderName } = yield select(state => state.settings)
-  const success = yield call(
-    mapAuthProviders[autProviderName].updateProfile,
-    id,
-    firstName,
-    lastName,
-    contactNumber,
-  )
-  if (success) {
-    yield history.push('/')
+  const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
+  if (response) {
+    const currentUser = createUserObj(response, true, false, true)
     yield put({
       type: 'user/SET_STATE',
       payload: {
-        requiresProfileUpdate: false,
+        ...currentUser,
       },
     })
-    yield put({
-      type: 'user/LOAD_CURRENT_ACCOUNT',
-    })
+    yield call(jwt.updateLocalUserData, currentUser)
     notification.success({
-      message: 'Profile Updated Successfully',
-      description: 'Thanks for telling us more about yourself.',
+      message: 'Account created successfully.',
+      description: 'Let us know more about you!',
     })
   }
+  yield put({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* LOAD_CURRENT_ACCOUNT() {
+  const user = yield call(jwt.getLocalUserData)
+  if (user) {
+    const currentUser = createUserObj(
+      user,
+      user.authorized,
+      user.loading,
+      user.requiresProfileUpdate,
+    )
+    yield put({
+      type: 'user/SET_STATE',
+      payload: currentUser,
+    })
+  }
+  yield put({
+    type: 'menu/GET_DATA',
+  })
+}
+
+export function* LOGOUT() {
+  yield call(jwt.logout)
+  yield put({
+    type: 'user/SET_STATE',
+    payload: resetUser,
+  })
+  window.location.reload()
+}
+
+export function* UPDATE_PROFILE({ payload }) {
+  const { accountId, firstName, lastName, contactNumber, isStudent } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(
+    jwt.updateProfile,
+    accountId,
+    firstName,
+    lastName,
+    contactNumber,
+    isStudent,
+  )
+  if (response) {
+    let currentUser = createUserObj(response, true, false, false)
+    yield put({
+      type: 'user/SET_STATE',
+      payload: {
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        contactNumber: currentUser.contactNumber,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    if (currentUser.requiresProfileUpdate) {
+      currentUser.requiresProfileUpdate = false
+      yield call(jwt.updateLocalUserData, currentUser)
+      yield put({
+        type: 'user/SET_STATE',
+        payload: {
+          requiresProfileUpdate: false,
+        },
+      })
+      notification.success({
+        message: 'Profile Updated Successfully',
+        description: 'Thanks for telling us more about yourself.',
+      })
+    } else {
+      notification.success({
+        message: 'Profile Updated Successfully',
+        description: 'We have received your new personal information.',
+      })
+    }
+  }
+  yield put({
+    type: 'menu/GET_DATA',
+  })
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -218,9 +185,8 @@ export default function* rootSaga() {
   yield all([
     takeEvery(actions.LOGIN, LOGIN),
     takeEvery(actions.REGISTER, REGISTER),
-    takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
     takeEvery(actions.LOGOUT, LOGOUT),
-    takeEvery(actions.TRIGGER_UPDATE_PROFILE, TRIGGER_UPDATE_PROFILE),
+    takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
     takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])

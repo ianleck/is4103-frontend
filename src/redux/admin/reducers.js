@@ -2,21 +2,15 @@ import actions from './actions'
 
 const initialState = {
   accountId: '',
-  adminVerified: false,
-  bio: '',
   contactNumber: '',
   createdAt: '',
   deletedAt: '',
   email: '',
-  emailNotification: '',
   emailVerified: false,
   firstName: '',
-  headline: '',
-  industry: '',
   lastName: '',
   paypalId: '',
-  personality: '',
-  privacy: '',
+  permission: '',
   status: '',
   updatedAt: '',
   userType: '',
@@ -27,7 +21,7 @@ const initialState = {
   requiresProfileUpdate: false,
 }
 
-export default function userReducer(state = initialState, action) {
+export default function adminReducer(state = initialState, action) {
   switch (action.type) {
     case actions.SET_STATE:
       return { ...state, ...action.payload }

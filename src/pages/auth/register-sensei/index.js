@@ -1,8 +1,8 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import Register from 'components/Sensei/Auth/Register'
+import Register from 'components/cleanui/system/Auth/Register'
 
-const SenseiRegister = () => {
+const RegisterSensei = () => {
   return (
     <div>
       <Helmet title="Register" />
@@ -11,4 +11,4 @@ const SenseiRegister = () => {
   )
 }
 
-export default SenseiRegister
+export default RegisterSensei

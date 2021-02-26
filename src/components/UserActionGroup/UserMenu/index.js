@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import { Menu, Dropdown, Avatar, Badge } from 'antd'
 import styles from './style.module.scss'
 
-const mapStateToProps = ({ user }) => ({ user })
-
-const ProfileMenu = ({ dispatch, user }) => {
+const ProfileMenu = () => {
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const [count, setCount] = useState(7)
   const history = useHistory()
 
-  const { role, email, phone, name } = user
+  const { firstName, lastName, email, contactNumber, userType } = user
 
   const redirectToLogin = e => {
     e.preventDefault()
@@ -29,7 +29,7 @@ const ProfileMenu = ({ dispatch, user }) => {
 
   const editProfile = e => {
     e.preventDefault()
-    const path = `/${role}/profile`
+    const path = `/${userType.toLowerCase()}/profile`
     history.push(path)
   }
 
@@ -41,7 +41,8 @@ const ProfileMenu = ({ dispatch, user }) => {
     <Menu selectable={false}>
       <Menu.Item>
         <strong>
-          <FormattedMessage id="topBar.profileMenu.hello" />, {name || 'Anonymous'}
+          <FormattedMessage id="topBar.profileMenu.hello" />,{' '}
+          {`${firstName} ${lastName}` || 'Anonymous'}
         </strong>
         <div>
           <strong className="mr-1">
@@ -53,7 +54,7 @@ const ProfileMenu = ({ dispatch, user }) => {
           <strong>
             <FormattedMessage id="topBar.profileMenu.role" />:{' '}
           </strong>
-          {role || '—'}
+          {userType || '—'}
         </div>
       </Menu.Item>
       <Menu.Divider />
@@ -67,7 +68,7 @@ const ProfileMenu = ({ dispatch, user }) => {
           <strong>
             <FormattedMessage id="topBar.profileMenu.phone" />:{' '}
           </strong>
-          {phone || '—'}
+          {contactNumber || '—'}
         </div>
       </Menu.Item>
       <Menu.Divider />
@@ -121,4 +122,4 @@ const ProfileMenu = ({ dispatch, user }) => {
   )
 }
 
-export default connect(mapStateToProps)(ProfileMenu)
+export default ProfileMenu

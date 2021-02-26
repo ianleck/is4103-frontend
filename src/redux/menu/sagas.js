@@ -1,25 +1,26 @@
-import { all, takeEvery, put, call } from 'redux-saga/effects'
-import * as jwt from 'services/jwt'
+import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import {
   getPublicMenuData,
   getStudentMenuData,
   getAdminMenuData,
   getSenseiMenuData,
 } from 'services/menu'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import actions from './actions'
+import * as selectors from '../selectors'
 
 export function* GET_DATA() {
-  const userData = yield call(jwt.currentAccount)
+  const user = yield select(selectors.user)
   let isMenuTop = false
   let menuData = []
-  switch (userData.userTypeEnum) {
-    case 'ADMIN':
+  switch (user.userType) {
+    case USER_TYPE_ENUM.ADMIN:
       menuData = yield call(getAdminMenuData)
       break
-    case 'SENSEI':
+    case USER_TYPE_ENUM.SENSEI:
       menuData = yield call(getSenseiMenuData)
       break
-    case 'STUDENT':
+    case USER_TYPE_ENUM.STUDENT:
       isMenuTop = true
       menuData = yield call(getStudentMenuData)
       break
