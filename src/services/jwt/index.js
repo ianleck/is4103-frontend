@@ -1,55 +1,82 @@
 import apiClient from 'services/axios'
-import store from 'store'
+import { resetUser, createUserObj, createAdminObj } from 'components/utils'
+import { isNil } from 'lodash'
 
-export async function login(email, password) {
+export function getLocalUserData() {
+  return isNil(localStorage.getItem('user')) ? resetUser : JSON.parse(localStorage.getItem('user'))
+}
+
+const setLocalAccessToken = accessToken => {
+  localStorage.removeItem('accessToken')
+  localStorage.setItem('accessToken', accessToken)
+}
+
+const setLocalUserData = (user, accessToken, isAdmin) => {
+  if (isAdmin) {
+    user = createAdminObj(user, accessToken, true)
+  } else {
+    user = createUserObj(user, accessToken, true, false)
+  }
+  localStorage.removeItem('user')
+  localStorage.setItem('user', JSON.stringify(user))
+}
+
+export function updateLocalUserData(user) {
+  localStorage.removeItem('user')
+  localStorage.setItem('user', JSON.stringify(user))
+  return true
+}
+
+export async function login(email, password, isAdmin) {
+  const url = isAdmin ? '/admin/login' : '/user/login'
   return apiClient
-    .post('/auth/login', {
+    .post(url, {
       email,
       password,
     })
     .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
+      if (!isNil(response.success)) {
+        return response.success
+      }
+      if (response && !isNil(response.data)) {
+        const { accessToken, user } = response.data
+        if (user && accessToken) {
+          user.accessToken = accessToken
+          setLocalAccessToken(accessToken)
+          setLocalUserData(user, accessToken, isAdmin)
+          return user
         }
-        return response.data
+        return false
       }
       return false
     })
     .catch(err => console.log(err))
 }
 
-export async function register(username, email, password) {
+export async function register(username, email, password, confirmPassword, isStudent) {
   return apiClient
-    .post('/auth/register', {
-      username,
-      email,
-      password,
+    .post('/user/register', {
+      newUser: {
+        username,
+        email,
+        password,
+        confirmPassword,
+        isStudent,
+      },
     })
     .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
-        }
-        return response.data
+      if (!isNil(response.success)) {
+        return response.success
       }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function currentAccount() {
-  return apiClient
-    .get('/auth/account')
-    .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
+      if (response && !isNil(response.data)) {
+        const { accessToken, user } = response.data
+        if (user && accessToken) {
+          user.accessToken = accessToken
+          setLocalAccessToken(accessToken)
+          setLocalUserData(user, accessToken, false)
+          return user
         }
-        return response.data
+        return false
       }
       return false
     })
@@ -57,30 +84,32 @@ export async function currentAccount() {
 }
 
 export async function logout() {
-  return apiClient
-    .get('/auth/logout')
-    .then(() => {
-      store.remove('accessToken')
-      return true
-    })
-    .catch(err => console.log(err))
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('user')
+  return true
 }
 
-export async function updateProfile(id, firstName, lastName, contactNumber) {
+export async function updateProfile(accountId, firstName, lastName, contactNumber, isStudent) {
   return apiClient
-    .post('/auth/updateProfile', {
-      id,
-      firstName,
-      lastName,
-      contactNumber,
-    })
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          firstName,
+          lastName,
+          contactNumber,
+        },
+      },
+      { withCredentials: true },
+    )
     .then(response => {
-      if (response) {
-        const { accessToken } = response.data
-        if (accessToken) {
-          store.set('accessToken', accessToken)
-        }
-        return response.data
+      if (!isNil(response.success)) {
+        return response.success
+      }
+      if (response && !isNil(response.data)) {
+        if (isStudent && !isNil(response.data.student)) return response.data.student
+        if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
       }
       return false
     })

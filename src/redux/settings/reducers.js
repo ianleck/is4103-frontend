@@ -12,7 +12,6 @@ const STORED_SETTINGS = storedSettings => {
 
 const initialState = {
   ...STORED_SETTINGS({
-    authProvider: 'jwt', // firebase, jwt
     logo: 'Digi Dojo',
     locale: 'en-US',
     isSidebarOpen: false,
@@ -20,7 +19,7 @@ const initialState = {
     isMobileView: false,
     isMobileMenuOpen: false,
     isMenuCollapsed: false,
-    menuLayoutType: 'left', // left, top, nomenu
+    menuLayoutType: 'top', // left, top, nomenu
     routerAnimation: 'slide-fadein-up', // none, slide-fadein-up, slide-fadein-right, fadein, zoom-fadein
     menuColor: 'gray', // white, dark, gray
     theme: 'default', // default, dark
@@ -37,6 +36,7 @@ const initialState = {
     isCardShadow: true,
     isSquaredBorders: false,
     isBorderless: false,
+    isDevMode: true,
   }),
 }
 

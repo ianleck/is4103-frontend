@@ -18,6 +18,47 @@ const routes = [
     Component: lazy(() => import('pages/browse')),
     exact: true,
   },
+  // Auth Pages
+  {
+    path: '/auth/login',
+    Component: lazy(() => import('pages/auth/login')),
+    exact: true,
+  },
+  {
+    path: '/auth/admin',
+    Component: lazy(() => import('pages/auth/admin-login')),
+    exact: true,
+  },
+  {
+    path: '/auth/forgot-password',
+    Component: lazy(() => import('pages/auth/forgot-password')),
+    exact: true,
+  },
+  {
+    path: '/auth/register',
+    Component: lazy(() => import('pages/auth/register')),
+    exact: true,
+  },
+  {
+    path: '/auth/register-sensei',
+    Component: lazy(() => import('pages/auth/register-sensei')),
+    exact: true,
+  },
+  {
+    path: '/auth/lockscreen',
+    Component: lazy(() => import('pages/auth/lockscreen')),
+    exact: true,
+  },
+  {
+    path: '/auth/404',
+    Component: lazy(() => import('pages/auth/404')),
+    exact: true,
+  },
+  {
+    path: '/auth/500',
+    Component: lazy(() => import('pages/auth/500')),
+    exact: true,
+  },
   // Admin Pages
   {
     path: '/admin',
@@ -105,11 +146,7 @@ const routes = [
     Component: lazy(() => import('pages/sensei/dashboard')),
     exact: true,
   },
-  {
-    path: '/sensei/register',
-    Component: lazy(() => import('pages/sensei/register')),
-    exact: true,
-  },
+
   {
     path: '/sensei/profile',
     Component: lazy(() => import('pages/sensei/profile')),
@@ -409,42 +446,6 @@ const routes = [
   {
     path: '/advanced/colors',
     Component: lazy(() => import('pages/advanced/colors')),
-    exact: true,
-  },
-  // Auth Pages
-  {
-    path: '/auth/login',
-    Component: lazy(() => import('pages/auth/login')),
-    exact: true,
-  },
-  {
-    path: '/auth/admin',
-    Component: lazy(() => import('pages/auth/admin-login')),
-    exact: true,
-  },
-  {
-    path: '/auth/forgot-password',
-    Component: lazy(() => import('pages/auth/forgot-password')),
-    exact: true,
-  },
-  {
-    path: '/auth/register',
-    Component: lazy(() => import('pages/auth/register')),
-    exact: true,
-  },
-  {
-    path: '/auth/lockscreen',
-    Component: lazy(() => import('pages/auth/lockscreen')),
-    exact: true,
-  },
-  {
-    path: '/auth/404',
-    Component: lazy(() => import('pages/auth/404')),
-    exact: true,
-  },
-  {
-    path: '/auth/500',
-    Component: lazy(() => import('pages/auth/500')),
     exact: true,
   },
 ]
