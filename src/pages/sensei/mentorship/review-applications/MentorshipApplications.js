@@ -123,12 +123,23 @@ const showApplications = (applicationStatus, dataSource, columns) => {
       <Empty />
     </div>
   )
+  const renderStyledStatus = status => {
+    let textStyle = ''
+    if (status === 'rejected') {
+      textStyle = 'text-danger'
+    }
+    if (status === 'approved') {
+      textStyle = 'text-success'
+    }
+    return <span className={`${textStyle} font-weight-bold`}>{status}</span>
+  }
   return (
     <div>
       <div className="row justify-content-between align-items-center mb-3">
         <div className="col-auto">
           <div>
-            You currently have {numApplications} {applicationStatus} mentorship applications.
+            You currently have {numApplications} {renderStyledStatus(applicationStatus)} mentorship{' '}
+            {numApplications === 1 ? 'application' : 'applications'}.
           </div>
         </div>
       </div>
@@ -148,7 +159,6 @@ const ViewPersonalStatementButton = values => {
   }
 
   const handleOk = () => {
-    // dispatch action to create new mentorship listing
     setIsViewStatementModalVisible(false)
   }
 
@@ -161,8 +171,12 @@ const ViewPersonalStatementButton = values => {
       <Modal
         title="View Personal Statement"
         visible={isViewStatementModalVisible}
-        onOk={handleOk}
         onCancel={handleCancel}
+        footer={[
+          <Button key="OK" type="primary" onClick={handleOk}>
+            OK
+          </Button>,
+        ]}
       >
         {record.personalStatement}
       </Modal>
