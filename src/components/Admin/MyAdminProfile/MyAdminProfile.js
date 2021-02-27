@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Button, Descriptions, Modal } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Descriptions, Modal, Form, Input, notification } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 
 const MyAdminProfile = () => {
   // const accessToken = useSelector(state => state.accessToken)
   const user = useSelector(state => state.user)
   const [showEditInformation, setShowEditInformation] = useState(false)
-  console.log(user)
+  const [showChangePassword, setshowChangePassword] = useState(false)
+  const dispatch = useDispatch()
+  // console.log(user)
 
   const saveFormFooter = (
     <div className="row justify-content-between">
@@ -34,8 +36,63 @@ const MyAdminProfile = () => {
     </div>
   )
 
+  const passwordFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <button
+          type="button"
+          onClick={() => setshowChangePassword(false)}
+          className="btn btn-outline-default"
+        >
+          Cancel
+        </button>
+      </div>
+      <div className="col-auto">
+        <Button
+          type="primary"
+          form="updatePasswordForm"
+          htmlType="submit"
+          size="large"
+          className=""
+        >
+          Change Password
+        </Button>
+      </div>
+    </div>
+  )
+
   const convertDateFromSystem = date => {
     return date.substring(0, 10)
+  }
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const onUpdateProfile = values => {
+    values.accountId = user.accountId
+    dispatch({
+      type: 'admin/UPDATE_PROFILE',
+      payload: values,
+    })
+    setShowEditInformation(false)
+  }
+
+  const onChangePassword = values => {
+    values.accountId = user.accountId
+
+    if (values.newPassword === values.confirmPassword) {
+      dispatch({
+        type: 'admin/CHANGE_PASSWORD',
+        payload: values,
+      })
+      setshowChangePassword(false)
+    } else {
+      notification.warn({
+        message: 'Passwords do not match',
+        description: 'Please ensure both passwords entered match',
+      })
+    }
   }
 
   return (
@@ -43,7 +100,7 @@ const MyAdminProfile = () => {
       <div className="col-xl-8 col-lg-12">
         <div className="card">
           <div className="card-body">
-            <Descriptions title="User's Information" bordered column={2}>
+            <Descriptions title="Admin's Information" bordered column={2}>
               <Descriptions.Item label="Account ID">
                 {user.accountId ? user.accountId : '-'}
               </Descriptions.Item>
@@ -56,18 +113,18 @@ const MyAdminProfile = () => {
               <Descriptions.Item label="Last Name">
                 {user.lastName ? user.lastName : '-'}
               </Descriptions.Item>
-              <Descriptions.Item label="Paypal ID">
-                {user.paypalId ? user.paypalId : '-'}
-              </Descriptions.Item>
-              <Descriptions.Item label="CreatedAt">
+              <Descriptions.Item label="Created At">
                 {user.createdAt ? convertDateFromSystem(user.createdAt) : '-'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Updated At">
+                {user.updatedAt ? convertDateFromSystem(user.updatedAt) : '-'}
               </Descriptions.Item>
               <Descriptions.Item label="Email">{user.email ? user.email : '-'}</Descriptions.Item>
               <Descriptions.Item label="Email Verified">
                 {user.emailVerified ? 'TRUE' : 'FALSE'}
               </Descriptions.Item>
-              <Descriptions.Item label="Admin Verified">
-                {user.adminVerified ? 'TRUE' : 'FALSE'}
+              <Descriptions.Item label="Admin Permission">
+                {user.permission ? user.permission : '-'}
               </Descriptions.Item>
               <Descriptions.Item label="Status">
                 {user.status ? user.status : '-'}
@@ -101,7 +158,12 @@ const MyAdminProfile = () => {
             Edit Account
           </Button>
           <br />
-          <Button type="primary" shape="round" icon={<EditOutlined />}>
+          <Button
+            type="primary"
+            shape="round"
+            icon={<EditOutlined />}
+            onClick={() => setshowChangePassword(true)}
+          >
             Change Password
           </Button>
         </div>
@@ -109,7 +171,7 @@ const MyAdminProfile = () => {
 
       <div className="col-xl-4 col-lg-12">
         <Modal
-          title="Edit Information"
+          title="Edit Account"
           visible={showEditInformation}
           cancelText="Close"
           centered
@@ -117,7 +179,107 @@ const MyAdminProfile = () => {
           onCancel={() => setShowEditInformation(false)}
           footer={saveFormFooter}
         >
-          Hi
+          <Form
+            id="updatePersonalInformationForm"
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onUpdateProfile}
+            onFinishFailed={onFinishFailed}
+            initialValues={{
+              firstName: user.firstName,
+              lastName: user.lastName,
+              username: user.username,
+              email: user.email,
+            }}
+          >
+            <div className="row">
+              <div className="col-6">
+                <Form.Item name="username" label="Username">
+                  <Input disabled />
+                </Form.Item>
+              </div>
+              <div className="col-6">
+                <Form.Item name="email" label="Email">
+                  <Input disabled />
+                </Form.Item>
+              </div>
+              <div className="col-md-6">
+                <Form.Item
+                  name="firstName"
+                  label="First Name"
+                  rules={[{ required: true, message: 'Please input your First Name' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+              <div className="col-md-6">
+                <Form.Item
+                  name="lastName"
+                  label="Last Name"
+                  rules={[{ required: true, message: 'Please input your Last Name' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Change My Password"
+          visible={showChangePassword}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setshowChangePassword(false)}
+          footer={passwordFormFooter}
+        >
+          <Form
+            id="updatePasswordForm"
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onChangePassword}
+            onFinishFailed={onFinishFailed}
+            initialValues={{
+              newPassword: '',
+              confirmPassword: '',
+              username: user.username,
+              email: user.email,
+            }}
+          >
+            <div className="row">
+              <div className="col-6">
+                <Form.Item name="username" label="Username">
+                  <Input disabled />
+                </Form.Item>
+              </div>
+              <div className="col-6">
+                <Form.Item name="email" label="Email">
+                  <Input disabled />
+                </Form.Item>
+              </div>
+              <div className="col-md-6">
+                <Form.Item
+                  name="newPassword"
+                  label="Password"
+                  rules={[{ required: true, message: 'Please input your Password' }]}
+                >
+                  <Input type="password" />
+                </Form.Item>
+              </div>
+              <div className="col-md-6">
+                <Form.Item
+                  name="confirmPassword"
+                  label="Re-enter your password"
+                  rules={[{ required: true, message: 'Please confirm your Password' }]}
+                >
+                  <Input type="password" />
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
         </Modal>
       </div>
     </div>
