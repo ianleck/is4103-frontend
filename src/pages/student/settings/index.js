@@ -1,13 +1,30 @@
-import { Button, Divider, Form, Input } from 'antd'
+import { Button, Divider, Form, Input, Popconfirm } from 'antd'
 import { LockOutlined, RedoOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FadeIn from 'react-fade-in'
 
 const StudentSettings = () => {
   const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  const isLoading = user.loading
   const [activeTab, setActiveTab] = useState('security')
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false)
+
+  const changeActiveTab = tabKey => {
+    setActiveTab(tabKey)
+  }
+
+  const showPopconfirm = () => {
+    setIsConfirmDelete(true)
+  }
+
+  const handleCancel = () => {
+    setIsConfirmDelete(false)
+  }
+
+  const formItemLayout = { labelCol: { span: 12 }, wrapperCol: { span: 12 } }
 
   const onChangePassword = values => {
     dispatch({
@@ -20,96 +37,122 @@ const StudentSettings = () => {
     })
   }
 
-  const changeActiveTab = tabKey => {
-    setActiveTab(tabKey)
+  const onConfirmDelete = () => {
+    dispatch({
+      type: 'user/DELETE_ACCOUNT',
+      payload: {
+        accountId: user.accountId,
+      },
+    })
   }
-
-  const formItemLayout = { labelCol: { span: 12 }, wrapperCol: { span: 12 } }
 
   const SecurityCard = () => {
     return (
-      <FadeIn>
-        <div className="card">
-          <div className="card-body">
-            <div className="row">
-              <div className="col-auto">
-                <h4 className="text-dark font-weight-bold">Security</h4>
-              </div>
+      <div className="card">
+        <div className="card-body">
+          <div className="row">
+            <div className="col-auto">
+              <h4 className="text-dark font-weight-bold">Security</h4>
             </div>
-            <div className="row mt-4">
-              <div className="col-12">
-                <span className="h6 text-dark font-weight-bold">Change Password</span>
-                <hr />
-                <Form
-                  {...formItemLayout}
-                  hideRequiredMark
-                  name="changePasswordForm"
-                  layout="vertical"
-                  initialValues={{ remember: true }}
-                  onFinish={onChangePassword}
+          </div>
+          <div className="row mt-4">
+            <div className="col-12">
+              <span className="h6 text-dark font-weight-bold">Change Password</span>
+              <hr />
+              <Form
+                {...formItemLayout}
+                hideRequiredMark
+                name="changePasswordForm"
+                layout="vertical"
+                onFinish={onChangePassword}
+              >
+                <Form.Item
+                  name="oldPassword"
+                  label="Old password"
+                  rules={[{ required: true, message: 'Please input your old password.' }]}
                 >
-                  <Form.Item
-                    name="oldPassword"
-                    label="Old password"
-                    rules={[{ required: true, message: 'Please input your old password.' }]}
-                  >
-                    <Input
-                      prefix={<LockOutlined className="site-form-item-icon" />}
-                      type="password"
-                      placeholder=""
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="newPassword"
-                    label="New password"
-                    rules={[{ required: true, message: 'Please input your new password.' }]}
-                  >
-                    <Input
-                      prefix={<LockOutlined className="site-form-item-icon" />}
-                      type="password"
-                      placeholder=""
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="confirmPassword"
-                    label="Confirm new password"
-                    rules={[{ required: true, message: 'Please input your new password again.' }]}
-                  >
-                    <Input
-                      prefix={<RedoOutlined className="site-form-item-icon" />}
-                      type="password"
-                      placeholder=""
-                    />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      Update password
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
-              <div className="col-12 mt-4">
-                <span className="h6 text-dark font-weight-bold">Delete Account</span>
-                <hr />
-                <Button type="danger">Delete your account</Button>
-                <div className="mt-2">
-                  <small className="text-dark">
-                    Once you delete your account, there is no going back. Please be certain.
-                  </small>
-                </div>
+                  <Input
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    type="password"
+                    placeholder=""
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="newPassword"
+                  label="New password"
+                  rules={[{ required: true, message: 'Please input your new password.' }]}
+                >
+                  <Input
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    type="password"
+                    placeholder=""
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="confirmPassword"
+                  label="Confirm new password"
+                  rules={[{ required: true, message: 'Please input your new password again.' }]}
+                >
+                  <Input
+                    prefix={<RedoOutlined className="site-form-item-icon" />}
+                    type="password"
+                    placeholder=""
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" loading={isLoading} htmlType="submit">
+                    Update password
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+            <div className="col-12 mt-4">
+              <span className="h6 text-dark font-weight-bold">Delete Account</span>
+              <hr />
+              <ConfirmDeleteButton />
+              <div className="mt-2">
+                <small className="text-dark">
+                  Once you delete your account, there is no going back. Please be certain.
+                </small>
               </div>
             </div>
           </div>
         </div>
-      </FadeIn>
+      </div>
+    )
+  }
+
+  const ConfirmDeleteButton = () => {
+    return (
+      <Popconfirm
+        title="Do you wish to delete your account?"
+        visible={isConfirmDelete}
+        onConfirm={onConfirmDelete}
+        okText="Delete"
+        okType="danger"
+        okButtonProps={{ loading: isLoading }}
+        onCancel={handleCancel}
+      >
+        <Button type="danger" onClick={showPopconfirm}>
+          Delete your account
+        </Button>
+      </Popconfirm>
     )
   }
 
   const PrivacyCard = () => {
-    return <span>Hi</span>
+    return (
+      <FadeIn>
+        <span>Hi</span>
+      </FadeIn>
+    )
   }
   const NotificationsCard = () => {
-    return <span>Hi</span>
+    return (
+      <FadeIn>
+        <span>Hi</span>
+      </FadeIn>
+    )
   }
 
   return (
@@ -145,9 +188,11 @@ const StudentSettings = () => {
         </div>
 
         <div className="col-12 col-md-9 mt-4 mt-md-0">
-          {activeTab === 'security' && <SecurityCard />}
-          {activeTab === 'privacy' && <PrivacyCard />}
-          {activeTab === 'notifications' && <NotificationsCard />}
+          <FadeIn key="1">
+            {activeTab === 'security' && <SecurityCard />}
+            {activeTab === 'privacy' && <PrivacyCard />}
+            {activeTab === 'notifications' && <NotificationsCard />}
+          </FadeIn>
         </div>
       </div>
     </div>

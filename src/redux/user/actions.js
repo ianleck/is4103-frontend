@@ -6,6 +6,7 @@ const actions = {
   CHANGE_PASSWORD: 'user/CHANGE_PASSWORD',
   LOAD_CURRENT_ACCOUNT: 'user/LOAD_CURRENT_ACCOUNT',
   UPDATE_PROFILE: 'user/UPDATE_PROFILE',
+  DELETE_ACCOUNT: 'user/DELETE_ACCOUNT',
 }
 
 export default actions

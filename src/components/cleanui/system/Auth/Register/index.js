@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link, Redirect, useLocation } from 'react-router-dom'
@@ -8,6 +8,9 @@ const Register = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const { pathname } = useLocation()
+  const [inputUsername, setInputUsername] = useState('')
+  const [inputEmailAddr, setInputEmailAddr] = useState('')
+
   let isStudent = true
 
   if (pathname === '/auth/register-sensei') isStudent = false
@@ -38,6 +41,9 @@ const Register = () => {
 
   const onSubmitRegister = values => {
     values.isStudent = isStudent
+    setInputUsername(values.username)
+    setInputEmailAddr(values.email)
+    console.log(inputUsername)
     dispatch({
       type: 'user/REGISTER',
       payload: values,
@@ -161,13 +167,15 @@ const Register = () => {
         hideRequiredMark
         onFinish={onSubmitRegister}
         onFinishFailed={onFinishFailed}
+        initialValues={{ username: inputUsername, email: inputEmailAddr }}
         className="mb-4"
       >
         <Form.Item
           name="username"
+          preserve
           rules={[{ required: true, message: 'Please input your username' }]}
         >
-          <Input size="large" placeholder="Username" />
+          <Input size="large" placeholder="Username" value={inputUsername} />
         </Form.Item>
         <Form.Item
           name="email"
@@ -175,13 +183,12 @@ const Register = () => {
             {
               required: true,
               type: 'email',
-
               message: 'Please enter a valid e-mail address',
             },
           ]}
           validateTrigger="onSubmit"
         >
-          <Input size="large" placeholder="Email Address" />
+          <Input size="large" placeholder="Email Address" value={inputEmailAddr} />
         </Form.Item>
         <Form.Item
           name="password"
