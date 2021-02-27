@@ -35,3 +35,16 @@ export async function updateAdminPassword(accountId, newPassword, confirmPasswor
     { withCredentials: true },
   )
 }
+
+export async function getAllAdmins() {
+  return apiClient
+    .get(`/admin/`, { withCredentials: true })
+    .then(response => {
+      console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

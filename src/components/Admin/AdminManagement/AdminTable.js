@@ -1,17 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs } from 'antd'
+import * as jwtAdmin from 'services/jwt/admin'
 
 const { TabPane } = Tabs
+// const { Column, ColumnGroup } = Table
 
 const AdminTable = () => {
   const [tabKey, setTabKey] = useState('1')
+  const [admins, setAdmins] = useState([])
+
+  useEffect(() => {
+    populateAdmin()
+  }, [])
+
+  const populateAdmin = async () => {
+    const response = await jwtAdmin.getAllAdmins()
+    setAdmins([response.admins])
+  }
 
   const changeTab = key => {
     setTabKey(key)
   }
 
   const showAdmins = () => {
-    return <div>Admin Charts</div>
+    console.log(admins)
+    return <div>Hello</div>
   }
 
   return (
