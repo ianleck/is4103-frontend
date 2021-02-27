@@ -1,16 +1,25 @@
-import { Button, Divider, Form, Input, Popconfirm } from 'antd'
+import { Button, Divider, Form, Input, Popconfirm, Select, Switch } from 'antd'
 import { LockOutlined, RedoOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import FadeIn from 'react-fade-in'
+import { PRIVACY_PERMISSIONS_ENUM } from 'constants/constants'
 
 const StudentSettings = () => {
+  const { Option, OptGroup } = Select
+
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   const isLoading = user.loading
-  const [activeTab, setActiveTab] = useState('security')
+  const isPrivateUser = user.privacy === PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY
+  const isInAppNotifOn = false
+  const isEmailNotifOn = false
+  const [activeTab, setActiveTab] = useState('privacy')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
+  const [togglePrivacy, setTogglePrivacy] = useState(isPrivateUser)
+  const [toggleInAppNotif, setToggleInAppNotif] = useState(isInAppNotifOn)
+  const [toggleEmailNotif, setToggleEmailNotif] = useState(isEmailNotifOn)
 
   const changeActiveTab = tabKey => {
     setActiveTab(tabKey)
@@ -44,6 +53,53 @@ const StudentSettings = () => {
         accountId: user.accountId,
       },
     })
+  }
+
+  const onChangePrivacy = () => {
+    setTogglePrivacy(!togglePrivacy)
+  }
+
+  const onChangeInAppNotif = () => {
+    setToggleInAppNotif(!toggleInAppNotif)
+  }
+
+  const onChangeEmailNotif = () => {
+    setToggleEmailNotif(!toggleEmailNotif)
+  }
+
+  const PrivateProfileToggleMsg = () => {
+    if (togglePrivacy)
+      return (
+        <small>
+          You are currently using a <strong>Private</strong> Profile. Only approved followers will
+          be able to see your profile.
+        </small>
+      )
+    return (
+      <small>
+        You are currently using a <strong>Public</strong> Profile. Anyone will be able to see your
+        profile and follow you without approval.
+      </small>
+    )
+  }
+
+  const HasInAppNotifMsg = () => {
+    if (toggleInAppNotif)
+      return <small>You will receive notifications in your Digi Dojo notification drawer.</small>
+    return (
+      <small>
+        You will <strong>not</strong> receive notifications in your Digi Dojo notification drawer.
+      </small>
+    )
+  }
+
+  const HasEmailNotifMsg = () => {
+    if (toggleEmailNotif) return <small>You will receive notifications via email.</small>
+    return (
+      <small>
+        You will <strong>not</strong> receive notifications via email.
+      </small>
+    )
   }
 
   const SecurityCard = () => {
@@ -142,16 +198,77 @@ const StudentSettings = () => {
 
   const PrivacyCard = () => {
     return (
-      <FadeIn>
-        <span>Hi</span>
-      </FadeIn>
+      <div className="card">
+        <div className="card-body">
+          <div className="row">
+            <div className="col-auto">
+              <h4 className="text-dark font-weight-bold">Privacy</h4>
+            </div>
+          </div>
+          <div className="row mt-4">
+            <div className="col-12">
+              <span className="h6 text-dark font-weight-bold">Profile Privacy</span>
+              <hr />
+              <Switch checked={togglePrivacy} onChange={onChangePrivacy} />
+              <span>&nbsp;&nbsp;Private Profile</span>
+              <div className="mt-2">
+                <PrivateProfileToggleMsg />
+              </div>
+            </div>
+          </div>
+          <div className="row mt-4">
+            <div className="col-12 mt-4">
+              <span className="h6 text-dark font-weight-bold">Toggle Message Privileges</span>
+              <hr />
+              <Select defaultValue="1" style={{ width: 200 }} onChange={() => console.log('shiok')}>
+                <OptGroup label="Social">
+                  <Option value="1">Everyone</Option>
+                  <Option value="2">Only people I am following</Option>
+                </OptGroup>
+                <OptGroup label="Anti-social">
+                  <Option value="3">No one</Option>
+                </OptGroup>
+              </Select>
+              <div className="mt-2">
+                <small>You can receive messages from everyone.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
   const NotificationsCard = () => {
     return (
-      <FadeIn>
-        <span>Hi</span>
-      </FadeIn>
+      <div className="card">
+        <div className="card-body">
+          <div className="row">
+            <div className="col-auto">
+              <h4 className="text-dark font-weight-bold">Notifications</h4>
+            </div>
+          </div>
+          <div className="row mt-4">
+            <div className="col-12">
+              <span className="h6 text-dark font-weight-bold">Delivery Methods</span>
+              <hr />
+              <div>
+                <Switch checked={toggleInAppNotif} onChange={onChangeInAppNotif} />
+                <span>&nbsp;&nbsp;In-app Notifications</span>
+                <div className="mt-2">
+                  <HasInAppNotifMsg />
+                </div>
+              </div>
+              <div className="mt-4">
+                <Switch checked={toggleEmailNotif} onChange={onChangeEmailNotif} />
+                <span>&nbsp;&nbsp;Email Notifications</span>
+                <div className="mt-2">
+                  <HasEmailNotifMsg />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
