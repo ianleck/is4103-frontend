@@ -103,12 +103,12 @@ export function* REGISTER({ payload }) {
 export function* LOAD_CURRENT_ACCOUNT() {
   const user = yield call(jwt.getLocalUserData)
   if (user) {
-    const currentUser = createUserObj(
-      user,
-      user.authorized,
-      user.loading,
-      user.requiresProfileUpdate,
-    )
+    let currentUser = resetUser
+    if (user.userType === USER_TYPE_ENUM.ADMIN) {
+      currentUser = createAdminObj(user, user.authorized, user.loading)
+    } else {
+      currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
+    }
     yield put({
       type: 'user/SET_STATE',
       payload: currentUser,
