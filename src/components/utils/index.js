@@ -1,4 +1,26 @@
 export const resetUser = {
+  accountId: '',
+  adminVerified: '',
+  bio: '',
+  contactNumber: '',
+  createdAt: '',
+  deletedAt: '',
+  email: '',
+  emailNotification: '',
+  emailVerified: '',
+  firstName: '',
+  headline: '',
+  industry: '',
+  lastName: '',
+  occupation: '',
+  paypalId: '',
+  permission: '',
+  personality: '',
+  privacy: '',
+  status: '',
+  updatedAt: '',
+  userType: '',
+  username: '',
   // Local Attributes
   accessToken: '',
   authorized: false,
@@ -8,20 +30,28 @@ export const resetUser = {
 
 export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpdateRqd) => {
   return {
-    accessToken: currentUser.accessToken,
     accountId: currentUser.accountId,
     adminVerified: currentUser.adminVerified,
+    bio: currentUser.bio,
     contactNumber: currentUser.contactNumber,
     createdAt: currentUser.createdAt,
+    deletedAt: currentUser.deletedAt,
     email: currentUser.email,
+    emailNotification: currentUser.emailNotification,
     emailVerified: currentUser.emailVerified,
     firstName: currentUser.firstName,
+    headline: currentUser.headline,
+    industry: currentUser.industry,
     lastName: currentUser.lastName,
+    occupation: currentUser.occupation,
     paypalId: currentUser.paypalId,
+    personality: currentUser.personality,
     status: currentUser.status,
     updatedAt: currentUser.updatedAt,
     userType: currentUser.userType,
     username: currentUser.username,
+    // Local Attributes
+    accessToken: currentUser.accessToken,
     authorized: isAuthorized,
     loading: isLoading,
     requiresProfileUpdate: isProfileUpdateRqd,
@@ -30,7 +60,6 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
 
 export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
   return {
-    accessToken: currentAdmin.accessToken,
     accountId: currentAdmin.accountId,
     contactNumber: currentAdmin.contactNumber,
     createdAt: currentAdmin.createdAt,
@@ -46,6 +75,7 @@ export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
     userType: currentAdmin.userType,
     username: currentAdmin.username,
     // Local Attributes
+    accessToken: currentAdmin.accessToken,
     authorized: isAuthorized,
     loading: isLoading,
   }
