@@ -1,14 +1,19 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Button } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
 import { Helmet } from 'react-helmet'
 import AdminTable from '../../../components/Admin/AdminManagement/AdminTable'
+import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveAdminWidget'
+import SuperAdminWidget from '../../../components/Admin/AdminManagement/SuperAdminWidget'
+import InactiveAdminWidget from '../../../components/Admin/AdminManagement/InactiveAdminWidget'
 
 // const { TabPane } = Tabs
 
 const AdminsManagement = () => {
-  const isSuperAdmin = true
+  const user = useSelector(state => state.user)
+  const isSuperAdmin = user.permission === 'SUPERADMIN'
 
   const history = useHistory()
 
@@ -43,36 +48,15 @@ const AdminsManagement = () => {
           </div>
 
           <div className="col-xl-4 col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-                <h6 className="d-flex align-items-center justify-content-center">
-                  Number of Active Admin Accounts
-                </h6>
-              </div>
-            </div>
+            <ActiveAdminWidget />
           </div>
 
           <div className="col-xl-4 col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-                <h6 className="d-flex align-items-center justify-content-center">
-                  Number of Super Admin Accounts
-                </h6>
-              </div>
-            </div>
+            <SuperAdminWidget />
           </div>
 
           <div className="col-xl-4 col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-                <h6 className="d-flex align-items-center justify-content-center">
-                  Number of Inactive Admin Accounts
-                </h6>
-              </div>
-            </div>
+            <InactiveAdminWidget />
           </div>
 
           <div className="col-xl-12 col-lg-12">

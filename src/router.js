@@ -106,6 +106,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/admin/admin-management/admin/:adminId',
+    Component: lazy(() => import('pages/admin/admins/another-admin-profile')),
+    exact: true,
+  },
+  {
     path: '/admin/revenue-management',
     Component: lazy(() => import('pages/admin/revenue')),
     exact: true,
