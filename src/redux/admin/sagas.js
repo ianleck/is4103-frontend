@@ -1,10 +1,8 @@
-import { all, takeEvery, put, call, select } from 'redux-saga/effects'
+import { all, takeEvery, put, putResolve, call } from 'redux-saga/effects'
 import { notification } from 'antd'
-import { createAdminObj } from 'components/utils'
 import * as jwt from 'services/jwt'
 import * as jwtAdmin from 'services/jwt/admin'
 import actions from './actions'
-import * as selectors from '../selectors'
 
 export function* UPDATE_PROFILE({ payload }) {
   const { accountId, firstName, lastName, contactNumber } = payload
@@ -26,9 +24,11 @@ export function* UPDATE_PROFILE({ payload }) {
     // console.log(response)
     // console.log('payload')
     // console.log(payload)
-
-    let currentUser = createAdminObj(payload, true, false)
-    yield put({
+    const currentUser = yield call(jwt.getLocalUserData)
+    currentUser.firstName = firstName
+    currentUser.lastName = lastName
+    currentUser.contactNumber = contactNumber
+    yield putResolve({
       type: 'user/SET_STATE',
       payload: {
         firstName: currentUser.firstName,
@@ -37,28 +37,12 @@ export function* UPDATE_PROFILE({ payload }) {
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.admin)
-    if (currentUser.requiresProfileUpdate) {
-      currentUser.requiresProfileUpdate = false
-      yield call(jwt.updateLocalUserData, currentUser)
-      yield put({
-        type: 'user/SET_STATE',
-        payload: {
-          requiresProfileUpdate: false,
-        },
-      })
-      notification.success({
-        message: 'Profile Updated Successfully',
-        description: 'Thanks for telling us more about yourself.',
-      })
-    } else {
-      notification.success({
-        message: 'Profile Updated Successfully',
-        description: 'We have received your new personal information.',
-      })
-    }
+    notification.success({
+      message: 'Profile Updated Successfully',
+      description: 'Thanks for telling us more about yourself.',
+    })
   }
-  yield put({
+  yield putResolve({
     type: 'menu/GET_DATA',
   })
   yield put({
