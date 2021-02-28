@@ -11,7 +11,7 @@ const OccupationCard = () => {
   const dispatch = useDispatch()
 
   const [currentOccupation, setCurrentOccupation] = useState(user.occupation)
-  const [showOccupation, setShowOccupation] = useState(isNil(user.occupation))
+  const [showOccupation, setShowOccupation] = useState(!isNil(user.occupation))
   const [editOccupationMode, setEditOccupationMode] = useState(false)
 
   const onChangeOccupation = values => {
@@ -20,7 +20,7 @@ const OccupationCard = () => {
 
   const activateEditOccupation = activate => {
     if (activate) {
-      setShowOccupation(false)
+      setShowOccupation(true)
       setEditOccupationMode(true)
     } else {
       setShowOccupation(true)
@@ -52,7 +52,7 @@ const OccupationCard = () => {
       type: 'user/UPDATE_WORK_DETAILS',
       payload: values,
     })
-    setShowOccupation(false)
+    setShowOccupation(true)
     setCurrentOccupation(values.occupation)
     if (isNil(values.occupation)) {
       setShowOccupation(true)
@@ -147,8 +147,8 @@ const OccupationCard = () => {
         <div className="row align-items-center justify-content-between">
           <div className="col-12">
             <span className="text-dark h3">
-              {!editOccupationMode && showOccupation && <Empty />}
-              {!editOccupationMode && !showOccupation && user.occupation}
+              {!editOccupationMode && !showOccupation && <Empty />}
+              {!editOccupationMode && showOccupation && user.occupation}
               {editOccupationMode && <SelectOccupationDropdown />}
             </span>
           </div>

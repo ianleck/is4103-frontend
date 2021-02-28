@@ -243,7 +243,7 @@ export function* UPDATE_ABOUT({ payload }) {
 }
 
 export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
-  const { accountId, isStudent, privacy, emailNotification } = payload
+  const { accountId, isStudent, isPrivateProfile, emailNotification, chatPrivacy } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -254,16 +254,18 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
     jwt.updateAccountSettings,
     accountId,
     isStudent,
-    privacy,
+    isPrivateProfile,
     emailNotification,
+    chatPrivacy,
   )
   if (response) {
     let currentUser = createUserObj(response, true, false, false)
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        privacy: currentUser.privacy,
+        isPrivateProfile: currentUser.isPrivateProfile,
         emailNotification: currentUser.emailNotification,
+        chatPrivacy: currentUser.chatPrivacy,
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
@@ -331,6 +333,39 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
   })
 }
 
+export function* ADD_EXPERIENCE({ payload }) {
+  const { accountId, role, dateStart, dateEnd, description, companyName, companyUrl } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(
+    jwt.addExperience,
+    accountId,
+    role,
+    dateStart,
+    dateEnd,
+    description,
+    companyName,
+    companyUrl,
+  )
+  if (response) {
+    const currentUser = createUserObj(response, true, false, false)
+    console.log(currentUser)
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* DELETE_ACCOUNT({ payload }) {
   const { accountId } = payload
   yield put({
@@ -374,6 +409,7 @@ export default function* rootSaga() {
     takeEvery(actions.UPDATE_ACCOUNT_SETTINGS, UPDATE_ACCOUNT_SETTINGS),
     takeEvery(actions.UPDATE_ABOUT, UPDATE_ABOUT),
     takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
+    takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }

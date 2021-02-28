@@ -107,7 +107,6 @@ const AboutCard = () => {
               ]}
             >
               <TextArea
-                showCount
                 maxLength={255}
                 placeholder="Edit Headline"
                 bordered={false}

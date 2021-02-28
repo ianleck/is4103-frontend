@@ -7,15 +7,16 @@ import FadeIn from 'react-fade-in'
 import { PRIVACY_PERMISSIONS_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 
 const StudentSettings = () => {
-  const { Option, OptGroup } = Select
+  const { Option } = Select
 
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   const isLoading = user.loading
-  let isPrivateUser = user.privacy === PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY
+  let isPrivateUser = user.isPrivateProfile
   let isEmailNotifOn = !!user.emailNotification
+  let currentMessagePriv = user.chatPrivacy
 
-  const [activeTab, setActiveTab] = useState('notifications')
+  const [activeTab, setActiveTab] = useState('privacy')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
   const [togglePrivacy, setTogglePrivacy] = useState(isPrivateUser)
   const [toggleEmailNotif, setToggleEmailNotif] = useState(isEmailNotifOn)
@@ -60,10 +61,9 @@ const StudentSettings = () => {
       payload: {
         accountId: user.accountId,
         isStudent: user.userType === USER_TYPE_ENUM.STUDENT,
-        privacy: isPrivateUser
-          ? PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY
-          : PRIVACY_PERMISSIONS_ENUM.ALL,
+        isPrivateProfile: isPrivateUser,
         emailNotification: isEmailNotifOn,
+        chatPrivacy: currentMessagePriv,
       },
     })
   }
@@ -71,12 +71,18 @@ const StudentSettings = () => {
   const onChangePrivacy = () => {
     setTogglePrivacy(!togglePrivacy)
     isPrivateUser = !isPrivateUser
+    console.log('privacy', isPrivateUser)
     onAccSettingsChange()
   }
 
   const onChangeEmailNotif = () => {
     setToggleEmailNotif(!toggleEmailNotif)
     isEmailNotifOn = !isEmailNotifOn
+    onAccSettingsChange()
+  }
+
+  const onChangeMsgPrivileges = value => {
+    currentMessagePriv = value
     onAccSettingsChange()
   }
 
@@ -223,17 +229,23 @@ const StudentSettings = () => {
             <div className="col-12 mt-4">
               <span className="h6 text-dark font-weight-bold">Toggle Message Privileges</span>
               <hr />
-              <Select defaultValue="1" style={{ width: 200 }} onChange={() => console.log('shiok')}>
-                <OptGroup label="Social">
-                  <Option value="1">Everyone</Option>
-                  <Option value="2">Only people I am following</Option>
-                </OptGroup>
-                <OptGroup label="Anti-social">
-                  <Option value="3">No one</Option>
-                </OptGroup>
-              </Select>
-              <div className="mt-2">
-                <small>You can receive messages from everyone.</small>
+              <div className="row">
+                <div className="col-12 col-md-5">
+                  <Select
+                    defaultValue={currentMessagePriv}
+                    className="w-100"
+                    onChange={onChangeMsgPrivileges}
+                  >
+                    <Option value={PRIVACY_PERMISSIONS_ENUM.ALL}>Everyone</Option>
+                    <Option value={PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY}>
+                      Only people I am following
+                    </Option>
+                    <Option value={PRIVACY_PERMISSIONS_ENUM.NONE}>No one</Option>
+                  </Select>
+                  <div className="mt-2">
+                    <small>You can receive messages from everyone.</small>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

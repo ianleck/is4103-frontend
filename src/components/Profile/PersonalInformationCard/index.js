@@ -31,13 +31,15 @@ const PersonalInformationCard = () => {
   const saveFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <button
-          type="button"
+        <Button
+          ghost
+          type="primary"
+          size="large"
           onClick={() => setShowEditInformation(false)}
-          className="btn btn-outline-default"
+          className=""
         >
           Close
-        </button>
+        </Button>
       </div>
       <div className="col-auto">
         <Button

@@ -125,14 +125,21 @@ export async function updateProfile(accountId, firstName, lastName, contactNumbe
     .catch(err => console.log(err))
 }
 
-export async function updateAccountSettings(accountId, isStudent, privacy, emailNotification) {
+export async function updateAccountSettings(
+  accountId,
+  isStudent,
+  isPrivateProfile,
+  emailNotification,
+  chatPrivacy,
+) {
   return apiClient
     .put(
       `/user/${accountId}`,
       {
         user: {
-          privacy,
+          isPrivateProfile,
           emailNotification,
+          chatPrivacy,
         },
       },
       { withCredentials: true },
@@ -193,6 +200,41 @@ export async function updateWorkDetails(accountId, isStudent, isIndustry, indust
       if (!isNil(response.data)) {
         if (isStudent && !isNil(response.data.student)) return response.data.student
         if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function addExperience(
+  accountId,
+  role,
+  dateStart,
+  dateEnd,
+  description,
+  companyName,
+  companyUrl,
+) {
+  return apiClient
+    .post(
+      `/user/experience/${accountId}`,
+      {
+        experience: {
+          role,
+          dateStart,
+          dateEnd,
+          description,
+          companyName,
+          companyUrl,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
         return false
       }
       return false
