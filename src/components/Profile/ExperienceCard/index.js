@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
+import moment from 'moment'
+import { isNil } from 'lodash'
 
 const ExperienceCard = () => {
   const user = useSelector(state => state.user)
+  const isExperienceEmpty = user.Experience.length === 0
   const dispatch = useDispatch()
   const [showAddExperience, setShowAddExperience] = useState(false)
 
@@ -12,12 +15,55 @@ const ExperienceCard = () => {
   }
 
   const onAddExperience = values => {
-    console.log(values)
     values.accountId = user.accountId
     dispatch({
       type: 'user/ADD_EXPERIENCE',
       payload: values,
     })
+  }
+
+  const UserExperiences = () => {
+    return user.Experience.map(item => (
+      <div className="card" key={item.experienceId}>
+        <div className="card-body">
+          <div className="row justify-content-between align-items-center text-dark">
+            <div className="col-auto">
+              <span>
+                {moment(item.dateStart).format('DD MMM YYYY')}
+                {' to '}
+                {moment(item.dateEnd).format('DD MMM YYYY')}
+              </span>
+            </div>
+            <div className="col-auto">
+              <Button type="default" icon={<i className="fe fe-edit" />}>
+                &nbsp;&nbsp;Edit
+              </Button>
+            </div>
+          </div>
+          <div className="row text-dark align-items-center">
+            <div className="col-12 h4 font-weight-bold">
+              <a
+                className="text-dark align-items-center"
+                href={!isNil(item.companyUrl) ? `https\://${item.companyUrl}` : '#'}
+              >
+                {item.companyName}&nbsp;&nbsp;
+                {!isNil(item.companyUrl) ? (
+                  <span className="badge badge-pill badge-dark align-top">View</span>
+                ) : (
+                  ''
+                )}
+              </a>
+            </div>
+            <div className="col-12 mt-3 h5 font-weight-bold">
+              <span>{item.role}</span>
+            </div>
+            <div className="col-12">
+              <span>{item.description}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
   }
 
   const saveFormFooter = (
@@ -63,7 +109,8 @@ const ExperienceCard = () => {
         </div>
       </div>
       <div className="card-body">
-        <Empty />
+        {isExperienceEmpty && <Empty />}
+        {!isExperienceEmpty && <UserExperiences />}
       </div>
       <Modal
         title="Add an experience"
