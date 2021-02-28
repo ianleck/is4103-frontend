@@ -5,18 +5,18 @@ const StudentWidget = () => {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    populateAdmin()
+    populateStudent()
   }, [])
 
-  const populateAdmin = async () => {
+  const populateStudent = async () => {
     // change endpoint
-    const response = await jwtAdmin.getAllAdmins()
+    const response = await jwtAdmin.getAllStudents()
     let counter = 0
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
         // console.log(response[i])
-        if (response[i].permission === 'ADMIN') {
+        if (response[i].userType === 'STUDENT') {
           counter += 1
         }
       }

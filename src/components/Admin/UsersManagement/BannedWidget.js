@@ -5,22 +5,32 @@ const BannedWidget = () => {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    populateAdmin()
+    populateBanned()
   }, [])
 
-  const populateAdmin = async () => {
+  const populateBanned = async () => {
     // change endpoint
-    const response = await jwtAdmin.getAllAdmins()
+    const response1 = await jwtAdmin.getAllStudents()
+    const response2 = await jwtAdmin.getAllSenseis()
     let counter = 0
 
-    if (response.length > 0) {
-      for (let i = 0; i < response.length; i += 1) {
+    if (response1.length > 0) {
+      for (let i = 0; i < response1.length; i += 1) {
         // console.log(response[i])
-        if (response[i].permission === 'ADMIN') {
+        if (response1[i].status === 'DEACTIVATED') {
           counter += 1
         }
       }
     }
+    if (response2.length > 0) {
+      for (let i = 0; i < response2.length; i += 1) {
+        // console.log(response[i])
+        if (response2[i].status === 'DEACTIVATED') {
+          counter += 1
+        }
+      }
+    }
+
     setCount(counter)
   }
 

@@ -123,13 +123,71 @@ export async function deleteAdmin(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function getAllStudents() {
+export async function verifySensei(accountId, sensei) {
   return apiClient
-    .get(`/user/student`, { withCredentials: true })
+    .put(
+      `/admin/verify-senseis/${accountId}`,
+      {
+        sensei,
+      },
+      { withCredentials: true },
+    )
     .then(response => {
       // console.log(response)
       if (response && !isNil(response.data)) {
-        if (response.data.success) return response.data.admins
+        if (response.data.success) return response.data.sensei
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getAllStudents() {
+  return apiClient
+    .get(`/user/all/student`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.students
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getAllSenseis() {
+  return apiClient
+    .get(`/user/all/sensei`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.senseis
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getSensei(accountId) {
+  return apiClient
+    .get(`/user/${accountId}`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.user
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getStudent(accountId) {
+  return apiClient
+    .get(`/user/${accountId}`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.user
       }
       return false
     })

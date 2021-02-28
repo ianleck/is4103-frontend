@@ -17,7 +17,7 @@ const UsersManagement = () => {
 
   const verifyNewMentor = e => {
     e.preventDefault()
-    const path = '/admin/user-management/verify-mentors'
+    const path = '/admin/user-management/verify-senseis'
     history.push(path)
   }
 
@@ -38,7 +38,7 @@ const UsersManagement = () => {
                 onClick={verifyNewMentor}
                 icon={<UserAddOutlined />}
               >
-                Verify new mentor
+                Verify New Senseis
               </Button>
             </div>
           </div>

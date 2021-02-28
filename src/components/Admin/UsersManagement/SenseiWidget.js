@@ -5,18 +5,18 @@ const SenseiWidget = () => {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    populateAdmin()
+    populateSensei()
   }, [])
 
-  const populateAdmin = async () => {
+  const populateSensei = async () => {
     // change endpoint
-    const response = await jwtAdmin.getAllAdmins()
+    const response = await jwtAdmin.getAllSenseis()
     let counter = 0
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
         // console.log(response[i])
-        if (response[i].permission === 'ADMIN') {
+        if (response[i].userType === 'SENSEI') {
           counter += 1
         }
       }
