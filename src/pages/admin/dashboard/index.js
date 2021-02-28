@@ -3,6 +3,9 @@ import { Helmet } from 'react-helmet'
 import Charting from '../../../components/Admin/AdminDashboard/Charting'
 import Table1 from '../../../components/Admin/AdminDashboard/Table1'
 import Table2 from '../../../components/Admin/AdminDashboard/Table2'
+import StudentWidget from '../../../components/Admin/UsersManagement/StudentWidget'
+import SenseiWidget from '../../../components/Admin/UsersManagement/SenseiWidget'
+import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveAdminWidget'
 
 const AdminDashboard = () => {
   return (
@@ -14,36 +17,15 @@ const AdminDashboard = () => {
 
       <div className="row">
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">
-                Number of Student Accounts
-              </h6>
-            </div>
-          </div>
+          <StudentWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">
-                Number of Sensei Accounts
-              </h6>
-            </div>
-          </div>
+          <SenseiWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">
-                Number of Admin Accounts
-              </h6>
-            </div>
-          </div>
+          <ActiveAdminWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">

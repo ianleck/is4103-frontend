@@ -194,6 +194,19 @@ export async function getStudent(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function getAllMentorshipListings() {
+  return apiClient
+    .get(`/mentorship/listing/`, { withCredentials: true })
+    .then(response => {
+      // console.log('Here', response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.mentorshipListings
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getMentorMentorshipListings(accountId) {
   return apiClient
     .get(`/mentorship/listing/sensei/${accountId}`, { withCredentials: true })
@@ -201,6 +214,19 @@ export async function getMentorMentorshipListings(accountId) {
       // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.mentorshipListings
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getAllMentorshipContracts() {
+  return apiClient
+    .get(`/mentorship/contract/`, { withCredentials: true })
+    .then(response => {
+      // console.log('Here', response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.mentorshipContracts
       }
       return false
     })
