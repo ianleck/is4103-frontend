@@ -2,7 +2,7 @@ import { all, takeEvery, put, call, select, putResolve } from 'redux-saga/effect
 import { notification } from 'antd'
 import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import * as jwt from 'services/jwt'
 import { createAdminObj, createUserObj, resetUser } from 'components/utils'
 import actions from './actions'
@@ -123,13 +123,30 @@ export function* CHANGE_PASSWORD({ payload }) {
 }
 
 export function* LOAD_CURRENT_ACCOUNT() {
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
   const user = yield call(jwt.getLocalUserData)
   if (user) {
     let currentUser = resetUser
     if (user.userType === USER_TYPE_ENUM.ADMIN) {
       currentUser = createAdminObj(user, user.authorized, user.loading)
     } else {
-      currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
+      let userFromAPI = resetUser
+      if (!isEmpty(user.accountId)) {
+        userFromAPI = yield call(jwt.getProfile, user.accountId)
+        currentUser = createUserObj(
+          userFromAPI,
+          user.authorized,
+          user.loading,
+          user.requiresProfileUpdate,
+        )
+      } else {
+        currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
+      }
     }
     yield putResolve({
       type: 'user/SET_STATE',
@@ -138,6 +155,12 @@ export function* LOAD_CURRENT_ACCOUNT() {
   }
   yield putResolve({
     type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
   })
 }
 
@@ -341,6 +364,7 @@ export function* ADD_EXPERIENCE({ payload }) {
       loading: true,
     },
   })
+  console.log(accountId, role, dateStart, dateEnd, description, companyName, companyUrl)
   const response = yield call(
     jwt.addExperience,
     accountId,
@@ -352,12 +376,23 @@ export function* ADD_EXPERIENCE({ payload }) {
     companyUrl,
   )
   if (response) {
-    const currentUser = createUserObj(response, true, false, false)
-    console.log(currentUser)
+    if (response.experience) {
+      const currentUser = yield select(selectors.user)
+      const experiences = currentUser.Experience
+      experiences.push(response.experience)
+      yield putResolve({
+        type: 'user/SET_STATE',
+        payload: {
+          Experience: experiences,
+        },
+      })
+      yield call(jwt.updateLocalUserData, currentUser)
+      console.log('curr user', currentUser)
+      notification.success({
+        message: 'New experience added',
+      })
+    }
   }
-  yield putResolve({
-    type: 'menu/GET_DATA',
-  })
   yield put({
     type: 'user/SET_STATE',
     payload: {

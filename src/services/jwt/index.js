@@ -101,6 +101,20 @@ export async function logout() {
   return true
 }
 
+export async function getProfile(accountId) {
+  return apiClient
+    .get(`/user/${accountId}`)
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.user)) return response.data.user
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function updateProfile(accountId, firstName, lastName, contactNumber, isStudent) {
   return apiClient
     .put(

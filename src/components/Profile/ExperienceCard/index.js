@@ -1,13 +1,23 @@
 import React, { useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal } from 'antd'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const ExperienceCard = () => {
   const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const [showAddExperience, setShowAddExperience] = useState(false)
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo)
+  }
+
+  const onAddExperience = values => {
+    console.log(values)
+    values.accountId = user.accountId
+    dispatch({
+      type: 'user/ADD_EXPERIENCE',
+      payload: values,
+    })
   }
 
   const saveFormFooter = (
@@ -68,14 +78,13 @@ const ExperienceCard = () => {
           id="addExperienceForm"
           layout="vertical"
           hideRequiredMark
-          onFinish={() => console.log('hi')}
+          onFinish={onAddExperience}
           onFinishFailed={onFinishFailed}
           initialValues={{
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            email: user.email,
-            contactNumber: user.contactNumber,
+            role: 'I am Leticia',
+            description: 'Leticia is me',
+            companyName: 'Helpers Incorporated.',
+            companyUrl: 'meowmeow',
           }}
         >
           <div className="row">
