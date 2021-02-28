@@ -44,7 +44,7 @@ const MentorProfile = () => {
             </h4>
             <img
               style={{ width: '100%' }}
-              src="../resources/images/avatars/administrator.png"
+              src="/resources/images/avatars/sensei.png"
               alt="Mary Stanform"
             />
           </div>

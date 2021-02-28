@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet'
 import AdminTable from '../../../components/Admin/AdminManagement/AdminTable'
 import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveAdminWidget'
 import SuperAdminWidget from '../../../components/Admin/AdminManagement/SuperAdminWidget'
-import InactiveAdminWidget from '../../../components/Admin/AdminManagement/InactiveAdminWidget'
+import NormalAdminWidget from '../../../components/Admin/AdminManagement/NormalAdminWidget'
 
 // const { TabPane } = Tabs
 
@@ -48,7 +48,7 @@ const AdminsManagement = () => {
           </div>
 
           <div className="col-xl-4 col-lg-12">
-            <ActiveAdminWidget />
+            <NormalAdminWidget />
           </div>
 
           <div className="col-xl-4 col-lg-12">
@@ -56,7 +56,7 @@ const AdminsManagement = () => {
           </div>
 
           <div className="col-xl-4 col-lg-12">
-            <InactiveAdminWidget />
+            <ActiveAdminWidget />
           </div>
 
           <div className="col-xl-12 col-lg-12">

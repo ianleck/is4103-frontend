@@ -161,6 +161,18 @@ const AdminProfile = () => {
     }
   }
 
+  const onDelete = async () => {
+    // console.log('Account Id', admin.accountId)
+    const response = await jwtAdmin.deleteAdmin(admin.accountId)
+    // console.log(response)
+
+    if (response) {
+      notification.success({ message: 'Success', description: 'Admin Deleted' })
+      const path = '/admin/admin-management'
+      history.push(path)
+    }
+  }
+
   return (
     <div className="row">
       <div className="col-xl-8 col-lg-12">
@@ -239,12 +251,7 @@ const AdminProfile = () => {
             Change Password
           </Button>
           <br />
-          <Button
-            type="danger"
-            shape="round"
-            icon={<DeleteOutlined />}
-            onClick={() => setshowChangePassword(true)}
-          >
+          <Button danger shape="round" icon={<DeleteOutlined />} onClick={() => onDelete()}>
             Delete Account
           </Button>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import * as jwtAdmin from 'services/jwt/admin'
 
-const InactiveAdminWidget = () => {
+const VerifiedWidget = () => {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -9,13 +9,14 @@ const InactiveAdminWidget = () => {
   }, [])
 
   const populateAdmin = async () => {
+    // change endpoint
     const response = await jwtAdmin.getAllAdmins()
     let counter = 0
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
         // console.log(response[i])
-        if (response[i].status === 'INACTIVE') {
+        if (response[i].permission === 'ADMIN') {
           counter += 1
         }
       }
@@ -27,12 +28,10 @@ const InactiveAdminWidget = () => {
     <div className="card">
       <div className="card-body">
         <h4 className="d-flex align-items-center justify-content-center">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center">
-          Number of Inactive Admin Accounts
-        </h6>
+        <h6 className="d-flex align-items-center justify-content-center">Verified Mentors</h6>
       </div>
     </div>
   )
 }
 
-export default InactiveAdminWidget
+export default VerifiedWidget

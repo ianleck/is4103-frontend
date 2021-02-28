@@ -49,6 +49,8 @@ const NewAdmin = () => {
           message: 'Success',
           description: 'New Admin Account created',
         })
+        const path = '/admin/admin-management'
+        history.push(path)
       }
 
       // if (response1 !== false) {

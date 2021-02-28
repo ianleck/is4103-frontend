@@ -109,3 +109,29 @@ export async function getAllAdmins() {
     })
     .catch(err => console.log(err))
 }
+
+export async function deleteAdmin(accountId) {
+  return apiClient
+    .delete(`/admin/${accountId}`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.success
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getAllStudents() {
+  return apiClient
+    .get(`/user/student`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.admins
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

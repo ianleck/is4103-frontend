@@ -5,6 +5,9 @@ import { UserAddOutlined } from '@ant-design/icons'
 import { Helmet } from 'react-helmet'
 import UserTable from '../../../components/Admin/UsersManagement/UserTable'
 import BannedTable from '../../../components/Admin/UsersManagement/BannedTable'
+import StudentWidget from '../../../components/Admin/UsersManagement/StudentWidget'
+import SenseiWidget from '../../../components/Admin/UsersManagement/SenseiWidget'
+import BannedWidget from '../../../components/Admin/UsersManagement/BannedWidget'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
@@ -42,34 +45,15 @@ const UsersManagement = () => {
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">
-                Number of Student Accounts
-              </h6>
-            </div>
-          </div>
+          <StudentWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">
-                Number of Sensei Accounts
-              </h6>
-            </div>
-          </div>
+          <SenseiWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">Banned Accounts</h6>
-            </div>
-          </div>
+          <BannedWidget />
         </div>
 
         <div className="col-xl-12 col-lg-12">

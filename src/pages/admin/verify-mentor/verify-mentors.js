@@ -4,6 +4,9 @@ import { Helmet } from 'react-helmet'
 import { Button } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
 import NewMentorTable from '../../../components/Admin/VerifyMentors/NewMentorTable'
+import UnverifiedWidget from '../../../components/Admin/VerifyMentors/UnverifiedWidget'
+import VerifiedWidget from '../../../components/Admin/VerifyMentors/VerifiedWidget'
+import TotalSenseiWidget from '../../../components/Admin/VerifyMentors/TotalSenseiWidget'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
@@ -36,32 +39,15 @@ const VerifyMentors = () => {
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">
-                Unverified Mentors
-              </h6>
-            </div>
-          </div>
+          <UnverifiedWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">Verified Mentors</h6>
-            </div>
-          </div>
+          <VerifiedWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center">Widget</h4>
-              <h6 className="d-flex align-items-center justify-content-center">Total Senseis</h6>
-            </div>
-          </div>
+          <TotalSenseiWidget />
         </div>
 
         <div className="col-xl-12 col-lg-12">
