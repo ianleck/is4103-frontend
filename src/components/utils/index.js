@@ -46,6 +46,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     occupation: currentUser.occupation,
     paypalId: currentUser.paypalId,
     personality: currentUser.personality,
+    privacy: currentUser.privacy,
     status: currentUser.status,
     updatedAt: currentUser.updatedAt,
     userType: currentUser.userType,

@@ -13,6 +13,7 @@ export const user = state => {
     headline: state.user.headline,
     industry: state.user.industry,
     lastName: state.user.lastName,
+    occupation: state.user.occupation,
     paypalId: state.user.paypalId,
     personality: state.user.personality,
     privacy: state.user.privacy,

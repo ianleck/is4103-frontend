@@ -190,14 +190,133 @@ export function* UPDATE_PROFILE({ payload }) {
           requiresProfileUpdate: false,
         },
       })
+    }
+    notification.success({
+      message: 'Profile Updated Successfully',
+      description: 'We have received your new personal information.',
+    })
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_ABOUT({ payload }) {
+  const { accountId, isStudent, updateHeadline, headline, bio } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(jwt.updateAbout, accountId, isStudent, updateHeadline, headline, bio)
+  if (response) {
+    let currentUser = createUserObj(response, true, false, false)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        headline: currentUser.headline,
+        bio: currentUser.bio,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    notification.success({
+      message: 'Profile Updated',
+    })
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
+  const { accountId, isStudent, privacy, emailNotification } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(
+    jwt.updateAccountSettings,
+    accountId,
+    isStudent,
+    privacy,
+    emailNotification,
+  )
+  if (response) {
+    let currentUser = createUserObj(response, true, false, false)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        privacy: currentUser.privacy,
+        emailNotification: currentUser.emailNotification,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    notification.success({
+      message: 'Account Settings Updated',
+    })
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_WORK_DETAILS({ payload }) {
+  const { accountId, isStudent, isIndustry, industry, occupation } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(
+    jwt.updateWorkDetails,
+    accountId,
+    isStudent,
+    isIndustry,
+    industry,
+    occupation,
+  )
+  if (response) {
+    let currentUser = createUserObj(response, true, false, false)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        industry: currentUser.industry,
+        occupation: currentUser.occupation,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    if (isIndustry) {
       notification.success({
-        message: 'Profile Updated Successfully',
-        description: 'Thanks for telling us more about yourself.',
+        message: 'Industry Details Updated',
       })
     } else {
       notification.success({
-        message: 'Profile Updated Successfully',
-        description: 'We have received your new personal information.',
+        message: 'Occupation Details Updated',
       })
     }
   }
@@ -252,6 +371,9 @@ export default function* rootSaga() {
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
     takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     takeEvery(actions.DELETE_ACCOUNT, DELETE_ACCOUNT),
+    takeEvery(actions.UPDATE_ACCOUNT_SETTINGS, UPDATE_ACCOUNT_SETTINGS),
+    takeEvery(actions.UPDATE_ABOUT, UPDATE_ABOUT),
+    takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }

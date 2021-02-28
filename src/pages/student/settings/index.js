@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import FadeIn from 'react-fade-in'
-import { PRIVACY_PERMISSIONS_ENUM } from 'constants/constants'
+import { PRIVACY_PERMISSIONS_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 
 const StudentSettings = () => {
   const { Option, OptGroup } = Select
@@ -12,13 +12,12 @@ const StudentSettings = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   const isLoading = user.loading
-  const isPrivateUser = user.privacy === PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY
-  const isInAppNotifOn = false
-  const isEmailNotifOn = false
-  const [activeTab, setActiveTab] = useState('privacy')
+  let isPrivateUser = user.privacy === PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY
+  let isEmailNotifOn = !!user.emailNotification
+
+  const [activeTab, setActiveTab] = useState('notifications')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
   const [togglePrivacy, setTogglePrivacy] = useState(isPrivateUser)
-  const [toggleInAppNotif, setToggleInAppNotif] = useState(isInAppNotifOn)
   const [toggleEmailNotif, setToggleEmailNotif] = useState(isEmailNotifOn)
 
   const changeActiveTab = tabKey => {
@@ -55,16 +54,30 @@ const StudentSettings = () => {
     })
   }
 
-  const onChangePrivacy = () => {
-    setTogglePrivacy(!togglePrivacy)
+  const onAccSettingsChange = () => {
+    dispatch({
+      type: 'user/UPDATE_ACCOUNT_SETTINGS',
+      payload: {
+        accountId: user.accountId,
+        isStudent: user.userType === USER_TYPE_ENUM.STUDENT,
+        privacy: isPrivateUser
+          ? PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY
+          : PRIVACY_PERMISSIONS_ENUM.ALL,
+        emailNotification: isEmailNotifOn,
+      },
+    })
   }
 
-  const onChangeInAppNotif = () => {
-    setToggleInAppNotif(!toggleInAppNotif)
+  const onChangePrivacy = () => {
+    setTogglePrivacy(!togglePrivacy)
+    isPrivateUser = !isPrivateUser
+    onAccSettingsChange()
   }
 
   const onChangeEmailNotif = () => {
     setToggleEmailNotif(!toggleEmailNotif)
+    isEmailNotifOn = !isEmailNotifOn
+    onAccSettingsChange()
   }
 
   const PrivateProfileToggleMsg = () => {
@@ -79,16 +92,6 @@ const StudentSettings = () => {
       <small>
         You are currently using a <strong>Public</strong> Profile. Anyone will be able to see your
         profile and follow you without approval.
-      </small>
-    )
-  }
-
-  const HasInAppNotifMsg = () => {
-    if (toggleInAppNotif)
-      return <small>You will receive notifications in your Digi Dojo notification drawer.</small>
-    return (
-      <small>
-        You will <strong>not</strong> receive notifications in your Digi Dojo notification drawer.
       </small>
     )
   }
@@ -251,13 +254,6 @@ const StudentSettings = () => {
             <div className="col-12">
               <span className="h6 text-dark font-weight-bold">Delivery Methods</span>
               <hr />
-              <div>
-                <Switch checked={toggleInAppNotif} onChange={onChangeInAppNotif} />
-                <span>&nbsp;&nbsp;In-app Notifications</span>
-                <div className="mt-2">
-                  <HasInAppNotifMsg />
-                </div>
-              </div>
               <div className="mt-4">
                 <Switch checked={toggleEmailNotif} onChange={onChangeEmailNotif} />
                 <span>&nbsp;&nbsp;Email Notifications</span>

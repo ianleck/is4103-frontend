@@ -4,7 +4,6 @@ import { Button, Descriptions, Form, Input, Modal } from 'antd'
 import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import style from './style.module.scss'
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -75,7 +74,7 @@ const PersonalInformationCard = () => {
             <div
               className={`${
                 isNil(user.firstName) || isNil(user.lastName) ? 'text-danger' : 'text-dark'
-              } h5 font-weight-bold`}
+              } h3 font-weight-bold`}
             >
               {`${isNil(user.firstName) ? 'Anonymous' : user.firstName} ${
                 isNil(user.lastName) ? 'Pigeon' : user.lastName
@@ -84,7 +83,7 @@ const PersonalInformationCard = () => {
             </div>
           </div>
           <div className="col-12">
-            <div className="text-uppercase font-size-12">{user.userType}</div>
+            <div className="h5 text-dark text-uppercase">{user.userType}</div>
           </div>
           <div className="col-12 text-left mt-2">
             <Descriptions
@@ -93,18 +92,16 @@ const PersonalInformationCard = () => {
               size="small"
               column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
               extra={
-                <div>
-                  <button
-                    type="button"
-                    className={`btn btn-primary ${style.btnWithAddon}`}
-                    onClick={() => setShowEditInformation(true)}
-                  >
-                    <span className={`${style.btnAddon}`}>
-                      <i className={`${style.btnAddonIcon} fe fe-edit`} />
-                    </span>
-                    Edit
-                  </button>
-                </div>
+                <Button
+                  ghost
+                  type="primary"
+                  shape="round"
+                  icon={<i className="fe fe-edit-3" />}
+                  size="large"
+                  onClick={() => setShowEditInformation(true)}
+                >
+                  &nbsp;&nbsp;Edit
+                </Button>
               }
             >
               <Descriptions.Item label="Username">{user.username}</Descriptions.Item>

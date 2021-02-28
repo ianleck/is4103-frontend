@@ -125,6 +125,81 @@ export async function updateProfile(accountId, firstName, lastName, contactNumbe
     .catch(err => console.log(err))
 }
 
+export async function updateAccountSettings(accountId, isStudent, privacy, emailNotification) {
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          privacy,
+          emailNotification,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (isStudent && !isNil(response.data.student)) return response.data.student
+        if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateAbout(accountId, isStudent, updateHeadline, headline, bio) {
+  let user = {}
+  if (updateHeadline) {
+    user = { headline }
+  } else {
+    user = { bio }
+  }
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user,
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (isStudent && !isNil(response.data.student)) return response.data.student
+        if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateWorkDetails(accountId, isStudent, isIndustry, industry, occupation) {
+  let user = {}
+  if (isIndustry) {
+    user = { industry }
+  } else {
+    user = { occupation }
+  }
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user,
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (isStudent && !isNil(response.data.student)) return response.data.student
+        if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function deleteAccount(accountId) {
   return apiClient
     .delete(`/user/${accountId}`, { withCredentials: true })
