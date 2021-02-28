@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Button, Descriptions, Modal, Form, Input, notification, Select } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
 const { Option } = Select
 
@@ -37,7 +37,7 @@ const AdminProfile = () => {
   }, [])
 
   const checkSuperAdmin = () => {
-    console.log(user)
+    // console.log(user)
     if (user.permission !== 'SUPERADMIN') {
       const path = '/admin'
       history.push(path)
@@ -115,6 +115,7 @@ const AdminProfile = () => {
       values.accountId,
       values.firstName,
       values.lastName,
+      values.contactNumber,
     )
     const response2 = await jwtAdmin.updatePermission(values.accountId, values.permission)
 
@@ -184,6 +185,12 @@ const AdminProfile = () => {
               <Descriptions.Item label="Updated At">
                 {admin.updatedAt ? convertDateFromSystem(admin.updatedAt) : '-'}
               </Descriptions.Item>
+              <Descriptions.Item label="Deleted At">
+                {admin.deletedAt ? convertDateFromSystem(admin.deletedAt) : '-'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Contact Number">
+                {admin.contactNumber ? admin.contactNumber : '-'}
+              </Descriptions.Item>
               <Descriptions.Item label="Email">{admin.email ? admin.email : '-'}</Descriptions.Item>
               <Descriptions.Item label="Email Verified">
                 {admin.emailVerified ? 'TRUE' : 'FALSE'}
@@ -231,6 +238,15 @@ const AdminProfile = () => {
           >
             Change Password
           </Button>
+          <br />
+          <Button
+            type="danger"
+            shape="round"
+            icon={<DeleteOutlined />}
+            onClick={() => setshowChangePassword(true)}
+          >
+            Delete Account
+          </Button>
         </div>
       </div>
 
@@ -255,6 +271,7 @@ const AdminProfile = () => {
               lastName: admin.lastName,
               username: admin.username,
               email: admin.email,
+              contactNumber: admin.contactNumber,
               permission: admin.permission,
             }}
           >
@@ -273,7 +290,7 @@ const AdminProfile = () => {
                 <Form.Item
                   name="firstName"
                   label="First Name"
-                  rules={[{ required: true, message: 'Please input your First Name' }]}
+                  rules={[{ required: true, message: 'Please input First Name' }]}
                 >
                   <Input />
                 </Form.Item>
@@ -282,7 +299,16 @@ const AdminProfile = () => {
                 <Form.Item
                   name="lastName"
                   label="Last Name"
-                  rules={[{ required: true, message: 'Please input your Last Name' }]}
+                  rules={[{ required: true, message: 'Please input Last Name' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+              <div className="col-md-6">
+                <Form.Item
+                  name="contactNumber"
+                  label="Contact Number"
+                  rules={[{ required: true, message: 'Please input Contact Number' }]}
                 >
                   <Input />
                 </Form.Item>

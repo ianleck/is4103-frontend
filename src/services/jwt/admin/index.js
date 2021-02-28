@@ -1,6 +1,25 @@
 import apiClient from 'services/axios'
 import { isNil } from 'lodash'
 
+export async function createAdmin(newAdmin) {
+  return apiClient
+    .post(
+      `/admin/register-admin`,
+      {
+        newAdmin,
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function updateAdminProfile(accountId, firstName, lastName, contactNumber) {
   return apiClient
     .put(
