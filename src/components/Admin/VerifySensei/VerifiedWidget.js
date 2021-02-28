@@ -28,7 +28,7 @@ const VerifiedWidget = () => {
     <div className="card">
       <div className="card-body">
         <h4 className="d-flex align-items-center justify-content-center">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center">Verified Mentors</h6>
+        <h6 className="d-flex align-items-center justify-content-center">Verified Senseis</h6>
       </div>
     </div>
   )

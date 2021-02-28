@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import NewMentorTable from '../../../components/Admin/VerifyMentors/NewMentorTable'
-import UnverifiedWidget from '../../../components/Admin/VerifyMentors/UnverifiedWidget'
-import VerifiedWidget from '../../../components/Admin/VerifyMentors/VerifiedWidget'
-import TotalSenseiWidget from '../../../components/Admin/VerifyMentors/TotalSenseiWidget'
+import NewMentorTable from '../../../components/Admin/VerifySensei/NewSenseiTable'
+import UnverifiedWidget from '../../../components/Admin/VerifySensei/UnverifiedWidget'
+import VerifiedWidget from '../../../components/Admin/VerifySensei/VerifiedWidget'
+import TotalSenseiWidget from '../../../components/Admin/VerifySensei/TotalSenseiWidget'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })

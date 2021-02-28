@@ -54,7 +54,7 @@ const UserTable = () => {
         <Column title="Email" dataIndex="email" key="email" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
         <Column title="Admin Verified" dataIndex="adminVerified" key="adminVerified" />
-        <Column title="Privacy" dataIndex="privacy" key="privacy" />
+        <Column title="Chat Privacy" dataIndex="chatPrivacy" key="chatPrivacy" />
         <Column title="Status" dataIndex="status" key="status" />
         <Column
           title="Details"
@@ -80,7 +80,7 @@ const UserTable = () => {
         <Column title="Email" dataIndex="email" key="email" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
         <Column title="Admin Verified" dataIndex="adminVerified" key="adminVerified" />
-        <Column title="Privacy" dataIndex="privacy" key="privacy" />
+        <Column title="Chat Privacy" dataIndex="chatPrivacy" key="chatPrivacy" />
         <Column title="Status" dataIndex="status" key="status" />
         <Column
           title="Details"
