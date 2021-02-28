@@ -5,15 +5,16 @@ import {
   Empty,
   Form,
   Input,
-  InputNumber,
   Modal,
+  Select,
   Space,
   Switch,
   Table,
   Tabs,
+  Tag,
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
-import { size } from 'lodash'
+import { isNil, keyBy, map, size } from 'lodash'
 import React, { useState } from 'react'
 
 const MentorshipListings = () => {
@@ -24,25 +25,27 @@ const MentorshipListings = () => {
     setTabKey(key)
   }
 
+  const categoryMapping = [
+    { id: '001', categoryName: 'Finance' },
+    { id: '002', categoryName: 'IT' },
+    { id: '003', categoryName: 'Health' },
+  ]
+  const categoryMappingWithKeys = keyBy(categoryMapping, 'id')
   // for table
   // TO DO: get from state eventually
   const data = [
     {
       key: '1',
       mentorshipListingId: 'MENT001',
-      category: 'Finance',
+      categories: ['001', '002'],
       title: 'Becoming a financial consultant',
-      duration: '3',
-      quota: '2',
       description: 'blah blah blah',
     },
     {
       key: '2',
       mentorshipListingId: 'MENT002',
-      category: 'Digital Illustration',
+      categories: ['003'],
       title: 'Thriving in graphics design industry',
-      duration: '6',
-      quota: '3',
       description: 'blah blah blah',
     },
   ]
@@ -55,28 +58,34 @@ const MentorshipListings = () => {
       dataIndex: 'mentorshipListingId',
       key: 'mentorshipListingId',
     },
-    {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      responsive: ['sm'],
-    },
+
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      responsive: ['md'],
+      responsive: ['sm'],
     },
     {
-      title: 'Duration (months)',
-      dataIndex: 'duration',
-      key: 'duration',
+      title: 'Categories',
+      key: 'categories',
+      dataIndex: 'categories',
       responsive: ['md'],
+      render: categories => (
+        <>
+          {categories.map(categoryId => {
+            return (
+              <Tag color="geekblue" key={categoryId}>
+                {categoryMappingWithKeys[categoryId].categoryName}
+              </Tag>
+            )
+          })}
+        </>
+      ),
     },
     {
-      title: 'Quota',
-      dataIndex: 'quota',
-      key: 'quota',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
       responsive: ['lg'],
     },
     {
@@ -85,7 +94,7 @@ const MentorshipListings = () => {
       render: record => (
         <Space size="large">
           <div>
-            <UpdateListingButton record={record} />
+            <ListingButton data={record} />
           </div>
           <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
         </Space>
@@ -140,7 +149,7 @@ const showListingSection = (dataSource, columns) => {
 
         <div className="col-auto">
           <div>
-            <AddNewListingButton />
+            <ListingButton data={null} />
           </div>
         </div>
       </div>
@@ -151,130 +160,115 @@ const showListingSection = (dataSource, columns) => {
   )
 }
 
-const AddNewListingButton = () => {
-  const [isNewListingModalVisible, setIsNewListingModalVisible] = useState(false)
-  const showModal = () => {
-    setIsNewListingModalVisible(true)
-  }
+const ListingButton = data => {
+  const listingRecord = data.data
+  const isUpdate = !isNil(listingRecord)
 
-  const handleOk = () => {
-    // dispatch action to create new mentorship listing
-    setIsNewListingModalVisible(false)
-  }
+  const [visible, setVisible] = useState(false)
 
-  const handleCancel = () => {
-    setIsNewListingModalVisible(false)
-  }
-  return (
-    <div>
-      <Button type="primary" shape="round" icon={<PlusOutlined />} onClick={showModal}>
-        New Listing
-      </Button>
-      <Modal
-        title="Add New Mentorship Listing"
-        visible={isNewListingModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        {showListingForm()}
-      </Modal>
-    </div>
-  )
-}
-
-const UpdateListingButton = values => {
-  const { record } = values
-  const [isUpdateListingModalVisible, setIsUpdateListingModalVisible] = useState(false)
-
-  const showModal = () => {
-    setIsUpdateListingModalVisible(true)
-  }
-
-  const handleOk = () => {
-    // dispatch action to create new mentorship listing
-    setIsUpdateListingModalVisible(false)
-  }
-
-  const handleCancel = () => {
-    setIsUpdateListingModalVisible(false)
+  const onSubmit = values => {
+    console.log('Received values of form: ', values)
+    setVisible(false)
   }
   return (
     <div>
       <Button
         type="primary"
-        shape="circle"
-        icon={<EditOutlined />}
-        onClick={() => showModal(record)}
-      />
-      <Modal
-        title="Update Mentorship Listing"
-        visible={isUpdateListingModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        shape={isUpdate ? 'circle' : 'round'}
+        icon={isUpdate ? <EditOutlined /> : <PlusOutlined />}
+        onClick={() => setVisible(true)}
       >
-        {showListingForm(record)}
-      </Modal>
+        {!isUpdate && 'New Listing'}
+      </Button>
+      <ListingForm
+        visible={visible}
+        onSubmit={onSubmit}
+        onCancel={() => setVisible(false)}
+        record={isUpdate && listingRecord}
+      />
     </div>
   )
 }
 
-const showListingForm = record => {
-  return (
-    <Form
-      layout="vertical"
-      hideRequiredMark
-      onFinish={() => console.log('success - added new listing')}
-      onFinishFailed={() => console.log('failed')}
-      initialValues={
-        !!record && {
-          title: record.title,
-          description: record.description,
-          quota: record.quota,
-          duration: record.duration,
-          category: record.category,
-        }
-      }
-    >
-      <Form.Item
-        label="Title"
-        name="title"
-        rules={[{ required: true, message: 'Please input a title!' }]}
-      >
-        <Input />
-      </Form.Item>
+const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
+  const [form] = Form.useForm()
+  const { Option } = Select
+  const categories = [
+    { id: '001', categoryName: 'Finance' },
+    { id: '002', categoryName: 'IT' },
+    { id: '003', categoryName: 'Health' },
+  ]
 
-      <Form.Item
-        label="Description"
-        name="description"
-        rules={[{ required: true, message: 'Please input a description!' }]}
+  return (
+    <Modal
+      visible={visible}
+      title={record ? 'Update mentorship listing' : 'Create a new mentorship listing'}
+      okText={record ? 'Update' : 'Create'}
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then(values => {
+            form.resetFields()
+            onSubmit(values)
+          })
+          .catch(info => {
+            console.log('Validate Failed:', info)
+          })
+      }}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        hideRequiredMark
+        onFinish={() => console.log('success - added new listing')}
+        onFinishFailed={() => console.log('failed')}
+        initialValues={
+          !!record && {
+            title: record.title,
+            description: record.description,
+            categories: record.categories,
+          }
+        }
       >
-        <TextArea
-          placeholder="Tell us more about what the mentorship entails"
-          autoSize={{ minRows: 2, maxRows: 6 }}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Category"
-        name="category"
-        rules={[{ required: true, message: 'Please input a category!' }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="Quota"
-        name="quota"
-        rules={[{ required: true, message: 'Please input a numerical value!' }]}
-      >
-        <InputNumber min={1} />
-      </Form.Item>
-      <Form.Item
-        label="Duration (months)"
-        name="duration"
-        rules={[{ required: true, message: 'Please input a numerical value!' }]}
-      >
-        <InputNumber min={1} />
-      </Form.Item>
-    </Form>
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[{ required: true, message: 'Please input a title!' }]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[{ required: true, message: 'Please input a description!' }]}
+        >
+          <TextArea
+            placeholder="Tell us more about what the mentorship entails"
+            autoSize={{ minRows: 2, maxRows: 6 }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="categories"
+          label="Categories"
+          rules={[{ required: true, message: 'Please select at least 1 category!', type: 'array' }]}
+        >
+          <Select mode="multiple" placeholder="Select at least 1 relevant category">
+            {map(categories, category => {
+              const { id, categoryName } = category
+              return (
+                <Option key={id} value={id}>
+                  {categoryName}
+                </Option>
+              )
+            })}
+          </Select>
+        </Form.Item>
+      </Form>
+    </Modal>
   )
 }
 
