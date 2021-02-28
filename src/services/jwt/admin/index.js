@@ -193,3 +193,16 @@ export async function getStudent(accountId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getMentorMentorshipListings(accountId) {
+  return apiClient
+    .get(`/mentorship/listing/sensei/${accountId}`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.mentorshipListings
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

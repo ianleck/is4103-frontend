@@ -32,7 +32,8 @@ const SenseiProfileComponent = () => {
     userType: '',
     username: '',
   })
-  const mentorshipListing = []
+  const [mentorshipListings, setMentorshipListings] = useState()
+
   const [tabKey, setTabKey] = useState('1')
   const changeTab = key => {
     setTabKey(key)
@@ -40,12 +41,19 @@ const SenseiProfileComponent = () => {
 
   useEffect(() => {
     getSensei()
+    getListings()
   }, [])
 
   const getSensei = async () => {
     const response = await jwtAdmin.getSensei(userId)
     // console.log(response)
     setSensei(response)
+  }
+
+  const getListings = async () => {
+    const response = await jwtAdmin.getMentorMentorshipListings(userId)
+    // console.log('Listings response', response)
+    setMentorshipListings(response)
   }
 
   const convertDateFromSystem = date => {
@@ -60,15 +68,18 @@ const SenseiProfileComponent = () => {
 
   const showMentorshipListings = () => {
     return (
-      <Table bordered="true" dataSource={mentorshipListing} rowKey="accountId">
-        <Column title="Account Id" dataIndex="accountId" key="accountId" />
-        <Column title="First Name" dataIndex="firstName" key="firstName" />
-        <Column title="Last Name" dataIndex="lastName" key="lastName" />
-        <Column title="Email" dataIndex="email" key="email" />
+      <Table bordered="true" dataSource={mentorshipListings} rowKey="accountId">
+        <Column
+          title="Mentorship Listing Id"
+          dataIndex="mentorshipListingId"
+          key="mentorshipListingId"
+        />
+        <Column title="Name" dataIndex="name" key="name" />
+        <Column title="Description" dataIndex="description" key="description" />
+        <Column title="Rating" dataIndex="rating" key="rating" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
-        <Column title="Admin Verified" dataIndex="adminVerified" key="adminVerified" />
-        <Column title="Privacy" dataIndex="privacy" key="privacy" />
-        <Column title="Status" dataIndex="status" key="status" />
+        <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
+        <Column title="Deleted At" dataIndex="deletedAt" key="deletedAt" />
       </Table>
     )
   }
@@ -152,7 +163,7 @@ const SenseiProfileComponent = () => {
             </h4>
             <img
               style={{ width: '100%' }}
-              src="/resources/images/avatars/graduate.png"
+              src="/resources/images/avatars/sensei.png"
               alt="https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown_1-512.png"
             />
           </div>
