@@ -1,9 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import Fade from 'reactstrap/lib/Fade'
-import { Button, Input, Form, Select } from 'antd'
-
-const { Option } = Select
+import { Button, Input, Form } from 'antd'
 
 const NewAdmin = () => {
   const handleCancel = e => {
@@ -77,16 +75,6 @@ const NewAdmin = () => {
                 rules={[{ required: true, message: 'Please input Contact Number' }]}
               >
                 <Input placeholder="Contact Number" />
-              </Form.Item>
-
-              <Form.Item
-                name="permissions"
-                rules={[{ required: true, message: 'Please select admin permission' }]}
-              >
-                <Select defaultValue="admin">
-                  <Option value="admin">Admin</Option>
-                  <Option value="superAdmin"> Super Admin</Option>
-                </Select>
               </Form.Item>
 
               <Button type="primary" htmlType="submit">

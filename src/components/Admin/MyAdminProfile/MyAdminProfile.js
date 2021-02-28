@@ -119,6 +119,12 @@ const MyAdminProfile = () => {
               <Descriptions.Item label="Updated At">
                 {user.updatedAt ? convertDateFromSystem(user.updatedAt) : '-'}
               </Descriptions.Item>
+              <Descriptions.Item label="Deleted At">
+                {user.deletedAt ? convertDateFromSystem(user.deletedAt) : '-'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Contact Number">
+                {user.contactNumber ? user.contactNumber : '-'}
+              </Descriptions.Item>
               <Descriptions.Item label="Email">{user.email ? user.email : '-'}</Descriptions.Item>
               <Descriptions.Item label="Email Verified">
                 {user.emailVerified ? 'TRUE' : 'FALSE'}
@@ -190,6 +196,7 @@ const MyAdminProfile = () => {
               lastName: user.lastName,
               username: user.username,
               email: user.email,
+              contactNumber: user.contactNumber,
             }}
           >
             <div className="row">
@@ -217,6 +224,15 @@ const MyAdminProfile = () => {
                   name="lastName"
                   label="Last Name"
                   rules={[{ required: true, message: 'Please input your Last Name' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+              <div className="col-md-6">
+                <Form.Item
+                  name="contactNumber"
+                  label="Contact Number"
+                  rules={[{ required: true, message: 'Please input your ContactNumber' }]}
                 >
                   <Input />
                 </Form.Item>

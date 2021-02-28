@@ -1,7 +1,7 @@
 import apiClient from 'services/axios'
 import { isNil } from 'lodash'
 
-export async function updateAdminProfile(accountId, firstName, lastName) {
+export async function updateAdminProfile(accountId, firstName, lastName, contactNumber) {
   return apiClient
     .put(
       `/admin/${accountId}`,
@@ -9,6 +9,7 @@ export async function updateAdminProfile(accountId, firstName, lastName) {
         admin: {
           firstName,
           lastName,
+          contactNumber,
         },
       },
       { withCredentials: true },

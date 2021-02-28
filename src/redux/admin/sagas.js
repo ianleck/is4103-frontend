@@ -7,14 +7,20 @@ import actions from './actions'
 import * as selectors from '../selectors'
 
 export function* UPDATE_PROFILE({ payload }) {
-  const { accountId, firstName, lastName } = payload
+  const { accountId, firstName, lastName, contactNumber } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwtAdmin.updateAdminProfile, accountId, firstName, lastName)
+  const response = yield call(
+    jwtAdmin.updateAdminProfile,
+    accountId,
+    firstName,
+    lastName,
+    contactNumber,
+  )
   if (response) {
     // console.log('From sagas')
     // console.log(response)
@@ -31,7 +37,7 @@ export function* UPDATE_PROFILE({ payload }) {
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
+    currentUser = yield select(selectors.admin)
     if (currentUser.requiresProfileUpdate) {
       currentUser.requiresProfileUpdate = false
       yield call(jwt.updateLocalUserData, currentUser)
