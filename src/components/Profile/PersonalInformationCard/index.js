@@ -22,7 +22,7 @@ const PersonalInformationCard = () => {
     values.accountId = user.accountId
     values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     dispatch({
-      type: 'user/UPDATE_PROFILE',
+      type: 'user/UPDATE_PERSONAL_INFO',
       payload: values,
     })
     setShowEditInformation(false)

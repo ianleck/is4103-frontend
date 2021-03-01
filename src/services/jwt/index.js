@@ -115,7 +115,7 @@ export async function getProfile(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function updateProfile(accountId, firstName, lastName, contactNumber, isStudent) {
+export async function updatePersonalInfo(accountId, firstName, lastName, contactNumber, isStudent) {
   return apiClient
     .put(
       `/user/${accountId}`,
@@ -207,6 +207,28 @@ export async function updateWorkDetails(accountId, isStudent, isIndustry, indust
       `/user/${accountId}`,
       {
         user,
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (isStudent && !isNil(response.data.student)) return response.data.student
+        if (!isNil(response.data.sensei)) return response.data.sensei
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updatePersonality(accountId, isStudent, personality) {
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          personality,
+        },
       },
       { withCredentials: true },
     )

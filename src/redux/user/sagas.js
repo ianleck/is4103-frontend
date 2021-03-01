@@ -77,7 +77,7 @@ export function* REGISTER({ payload }) {
   const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
   if (response) {
     const currentUser = createUserObj(response, true, false, true)
-    yield put({
+    yield putResolve({
       type: 'user/SET_STATE',
       payload: {
         ...currentUser,
@@ -176,7 +176,7 @@ export function* LOGOUT() {
   yield history.push('/')
 }
 
-export function* UPDATE_PROFILE({ payload }) {
+export function* UPDATE_PERSONAL_INFO({ payload }) {
   const { accountId, firstName, lastName, contactNumber, isStudent } = payload
   yield put({
     type: 'user/SET_STATE',
@@ -185,7 +185,7 @@ export function* UPDATE_PROFILE({ payload }) {
     },
   })
   const response = yield call(
-    jwt.updateProfile,
+    jwt.updatePersonalInfo,
     accountId,
     firstName,
     lastName,
@@ -344,6 +344,40 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
         message: 'Occupation Details Updated',
       })
     }
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_PERSONALITY({ payload }) {
+  const { accountId, isStudent, personality } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(jwt.updatePersonality, accountId, isStudent, personality)
+  if (response) {
+    let currentUser = createUserObj(response, true, false, false)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        personality,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    notification.success({
+      message: 'Personality Updated',
+    })
   }
   yield putResolve({
     type: 'menu/GET_DATA',
@@ -528,11 +562,12 @@ export default function* rootSaga() {
     takeEvery(actions.LOGOUT, LOGOUT),
     takeEvery(actions.CHANGE_PASSWORD, CHANGE_PASSWORD),
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
-    takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     takeEvery(actions.DELETE_ACCOUNT, DELETE_ACCOUNT),
+    takeEvery(actions.UPDATE_PERSONAL_INFO, UPDATE_PERSONAL_INFO),
     takeEvery(actions.UPDATE_ACCOUNT_SETTINGS, UPDATE_ACCOUNT_SETTINGS),
     takeEvery(actions.UPDATE_ABOUT, UPDATE_ABOUT),
     takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
+    takeEvery(actions.UPDATE_PERSONALITY, UPDATE_PERSONALITY),
     takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
     takeEvery(actions.EDIT_EXPERIENCE, EDIT_EXPERIENCE),
     takeEvery(actions.DELETE_EXPERIENCE, DELETE_EXPERIENCE),
