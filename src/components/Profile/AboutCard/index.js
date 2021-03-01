@@ -180,7 +180,7 @@ const AboutCard = () => {
       <div className="card-body">
         <div className="row align-items-center justify-content-between mb-2">
           <div className="col-auto">
-            <span className="h4 text-dark">Headliner</span>
+            <span className="h4 text-dark">Headline</span>
           </div>
           <div className="col-auto">
             {!editHeadlineMode && (
