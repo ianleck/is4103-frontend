@@ -40,21 +40,20 @@ const SenseiProfileComponent = () => {
   }
 
   useEffect(() => {
+    const getSensei = async () => {
+      const response = await jwtAdmin.getSensei(userId)
+      // console.log(response)
+      setSensei(response)
+    }
+
+    const getListings = async () => {
+      const response = await jwtAdmin.getMentorMentorshipListings(userId)
+      // console.log('Listings response', response)
+      setMentorshipListings(response)
+    }
     getSensei()
     getListings()
-  }, [])
-
-  const getSensei = async () => {
-    const response = await jwtAdmin.getSensei(userId)
-    // console.log(response)
-    setSensei(response)
-  }
-
-  const getListings = async () => {
-    const response = await jwtAdmin.getMentorMentorshipListings(userId)
-    // console.log('Listings response', response)
-    setMentorshipListings(response)
-  }
+  }, [userId])
 
   const convertDateFromSystem = date => {
     return date.substring(0, 10)
