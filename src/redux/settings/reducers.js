@@ -30,7 +30,7 @@ const initialState = {
     isMenuShadow: false,
     isTopbarFixed: false,
     isGrayTopbar: false,
-    isContentMaxWidth: false,
+    isContentMaxWidth: true,
     isAppMaxWidth: false,
     isGrayBackground: false,
     isCardShadow: true,

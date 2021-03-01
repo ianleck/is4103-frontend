@@ -293,6 +293,20 @@ export async function editExperience(
     .catch(err => console.log(err))
 }
 
+export async function deleteExperience(accountId, experienceId) {
+  return apiClient
+    .delete(`/user/experience/${accountId}/${experienceId}`, { withCredentials: true })
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function deleteAccount(accountId) {
   return apiClient
     .delete(`/user/${accountId}`, { withCredentials: true })

@@ -25,8 +25,11 @@ const AboutCard = () => {
     if (activate) {
       setShowHeadline(false)
       setEditHeadlineMode(true)
-    } else {
+    } else if (!isNil(currentHeadline)) {
       setShowHeadline(false)
+      setEditHeadlineMode(false)
+    } else {
+      setShowHeadline(true)
       setEditHeadlineMode(false)
     }
   }
@@ -51,8 +54,11 @@ const AboutCard = () => {
     if (activate) {
       setShowBio(false)
       setEditBioMode(true)
-    } else {
+    } else if (!isNil(currentBio)) {
       setShowBio(false)
+      setEditBioMode(false)
+    } else {
+      setShowBio(true)
       setEditBioMode(false)
     }
   }

@@ -455,6 +455,41 @@ export function* EDIT_EXPERIENCE({ payload }) {
   })
 }
 
+export function* DELETE_EXPERIENCE({ payload }) {
+  const { accountId, experienceId } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(jwt.deleteExperience, accountId, experienceId)
+  if (response) {
+    console.log('response', response)
+    const currentUser = yield select(selectors.user)
+    const experiences = currentUser.Experience
+    const updatedExperiences = experiences.filter(obj => {
+      return obj.experienceId !== experienceId
+    })
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        Experience: updatedExperiences,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    notification.success({
+      message: 'Your experience was deleted successfully.',
+    })
+  }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* DELETE_ACCOUNT({ payload }) {
   const { accountId } = payload
   yield put({
@@ -500,6 +535,7 @@ export default function* rootSaga() {
     takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
     takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
     takeEvery(actions.EDIT_EXPERIENCE, EDIT_EXPERIENCE),
+    takeEvery(actions.DELETE_EXPERIENCE, DELETE_EXPERIENCE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }

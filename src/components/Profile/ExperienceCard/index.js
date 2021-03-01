@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, DatePicker, Empty, Form, Input, Modal } from 'antd'
+import { Button, DatePicker, Empty, Form, Input, Modal, Popconfirm } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import * as jwt from 'services/jwt'
 import moment from 'moment'
@@ -15,6 +15,7 @@ const ExperienceCard = () => {
   const [showAddExperience, setShowAddExperience] = useState(false)
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false)
 
   useEffect(() => {
     const getProfile = async () => {
@@ -45,6 +46,7 @@ const ExperienceCard = () => {
       type: 'user/ADD_EXPERIENCE',
       payload: values,
     })
+    setShowAddExperience(false)
   }
 
   const onEditExperience = values => {
@@ -54,11 +56,33 @@ const ExperienceCard = () => {
       type: 'user/EDIT_EXPERIENCE',
       payload: values,
     })
+    setShowEditExperience(false)
+  }
+
+  const onDeleteExperience = () => {
+    if (!isNil(user.accountId) && !isNil(currentEditExpObj.experienceId)) {
+      dispatch({
+        type: 'user/DELETE_EXPERIENCE',
+        payload: {
+          accountId: user.accountId,
+          experienceId: currentEditExpObj.experienceId,
+        },
+      })
+      setShowEditExperience(false)
+      setIsConfirmDelete(false)
+    }
+  }
+
+  const showPopconfirm = () => {
+    setIsConfirmDelete(true)
+  }
+
+  const handleCancel = () => {
+    setIsConfirmDelete(false)
   }
 
   const showEditExperienceModal = experience => {
     setCurrentEditExpObj(experience)
-    console.log('experience', experience)
     setShowEditExperience(true)
   }
 
@@ -88,101 +112,6 @@ const ExperienceCard = () => {
       </div>
     </div>
   )
-
-  const EditExperienceModal = () => {
-    return (
-      <Modal
-        title="Edit experience"
-        visible={showEditExperience}
-        cancelText="Close"
-        centered
-        okButtonProps={{ style: { display: 'none' } }}
-        onCancel={() => setShowEditExperience(false)}
-        footer={editExpFormFooter}
-      >
-        <Form
-          id="editExperienceForm"
-          layout="vertical"
-          hideRequiredMark
-          onFinish={onEditExperience}
-          onFinishFailed={onFinishFailed}
-          initialValues={{
-            role: currentEditExpObj.role,
-            description: currentEditExpObj.description,
-            dateStart: moment(currentEditExpObj.dateStart),
-            dateEnd: moment(currentEditExpObj.dateEnd),
-            companyName: currentEditExpObj.companyName,
-            companyUrl: currentEditExpObj.companyUrl,
-          }}
-        >
-          <div className="row">
-            <div className="col-12">
-              <Form.Item
-                name="role"
-                label="Role"
-                rules={[{ required: true, message: 'Please input your role at your experience.' }]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-            <div className="col-6">
-              <Form.Item
-                name="dateStart"
-                label="Date Start"
-                rules={[{ required: true, message: 'Start date of experience is required.' }]}
-              >
-                <DatePicker
-                  renderExtraFooter={() => 'Enter the date you started your experience.'}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-6">
-              <Form.Item
-                name="dateEnd"
-                label="Date Ended"
-                rules={[{ required: true, message: 'End date of experience is required.' }]}
-              >
-                <DatePicker
-                  renderExtraFooter={() => 'Enter the date you end/will end your experience.'}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-12">
-              <Form.Item
-                name="description"
-                label="Description"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please provide a short description about your experience.',
-                  },
-                ]}
-              >
-                <TextArea />
-              </Form.Item>
-            </div>
-            <div className="col-12">
-              <Form.Item name="companyName" label="Company Name">
-                <Input />
-              </Form.Item>
-            </div>
-            <div className="col-12">
-              <Form.Item name="companyUrl" label="Link to Company Portfolio">
-                <Input />
-              </Form.Item>
-            </div>
-            <div className="col-12">
-              <Form.Item className="mb-1">
-                <Button block type="danger">
-                  Delete experience
-                </Button>
-              </Form.Item>
-            </div>
-          </div>
-        </Form>
-      </Modal>
-    )
-  }
 
   const UserExperiences = () => {
     return sortExperienceByDate.map(item => (
@@ -368,7 +297,106 @@ const ExperienceCard = () => {
           </div>
         </Form>
       </Modal>
-      <EditExperienceModal />
+      <Modal
+        title="Edit experience"
+        visible={showEditExperience}
+        cancelText="Close"
+        centered
+        okButtonProps={{ style: { display: 'none' } }}
+        onCancel={() => setShowEditExperience(false)}
+        footer={editExpFormFooter}
+      >
+        <Form
+          id="editExperienceForm"
+          layout="vertical"
+          hideRequiredMark
+          onFinish={onEditExperience}
+          onFinishFailed={onFinishFailed}
+          initialValues={{
+            role: currentEditExpObj.role,
+            description: currentEditExpObj.description,
+            dateStart: moment(currentEditExpObj.dateStart),
+            dateEnd: moment(currentEditExpObj.dateEnd),
+            companyName: currentEditExpObj.companyName,
+            companyUrl: currentEditExpObj.companyUrl,
+          }}
+        >
+          <div className="row">
+            <div className="col-12">
+              <Form.Item
+                name="role"
+                label="Role"
+                rules={[{ required: true, message: 'Please input your role at your experience.' }]}
+              >
+                <Input />
+              </Form.Item>
+            </div>
+            <div className="col-6">
+              <Form.Item
+                name="dateStart"
+                label="Date Start"
+                rules={[{ required: true, message: 'Start date of experience is required.' }]}
+              >
+                <DatePicker
+                  renderExtraFooter={() => 'Enter the date you started your experience.'}
+                />
+              </Form.Item>
+            </div>
+            <div className="col-6">
+              <Form.Item
+                name="dateEnd"
+                label="Date Ended"
+                rules={[{ required: true, message: 'End date of experience is required.' }]}
+              >
+                <DatePicker
+                  renderExtraFooter={() => 'Enter the date you end/will end your experience.'}
+                />
+              </Form.Item>
+            </div>
+            <div className="col-12">
+              <Form.Item
+                name="description"
+                label="Description"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please provide a short description about your experience.',
+                  },
+                ]}
+              >
+                <TextArea />
+              </Form.Item>
+            </div>
+            <div className="col-12">
+              <Form.Item name="companyName" label="Company Name">
+                <Input />
+              </Form.Item>
+            </div>
+            <div className="col-12">
+              <Form.Item name="companyUrl" label="Link to Company Portfolio">
+                <Input />
+              </Form.Item>
+            </div>
+            <div className="col-12">
+              <Form.Item className="mb-1">
+                <Popconfirm
+                  title="Do you wish to delete your account?"
+                  visible={isConfirmDelete}
+                  onConfirm={onDeleteExperience}
+                  okText="Delete"
+                  okType="danger"
+                  okButtonProps={{ loading: user.loading }}
+                  onCancel={handleCancel}
+                >
+                  <Button block type="danger" onClick={showPopconfirm}>
+                    Delete experience
+                  </Button>
+                </Popconfirm>
+              </Form.Item>
+            </div>
+          </div>
+        </Form>
+      </Modal>
     </div>
   )
 }
