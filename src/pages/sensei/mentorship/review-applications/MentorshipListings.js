@@ -14,41 +14,62 @@ import {
   Tag,
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
-import { isNil, keyBy, map, size } from 'lodash'
-import React, { useState } from 'react'
+import { indexOf, isNil, map, size } from 'lodash'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getSenseiMentorshipListings } from 'services/mentorshipListing'
 
 const MentorshipListings = () => {
-  const { TabPane } = Tabs
+  const user = useSelector(state => state.user)
+  const mentorships = useSelector(state => state.mentorships.mentorshipListings)
+
+  const [mentorshipListings, setMentorshipListings] = useState(mentorships)
+  const { accountId } = user
+
+  const getListings = useCallback(async () => {
+    const result = await getSenseiMentorshipListings(accountId)
+    const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
+    console.log('listingRecords is ', listingRecords)
+    setMentorshipListings(listingRecords)
+  }, [accountId])
+
+  useEffect(() => {
+    console.log('inside useEffect')
+    getListings()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const [tabKey, setTabKey] = useState('listing')
 
+  const { TabPane } = Tabs
   const changeTab = key => {
     setTabKey(key)
   }
 
-  const categoryMapping = [
-    { id: '001', categoryName: 'Finance' },
-    { id: '002', categoryName: 'IT' },
-    { id: '003', categoryName: 'Health' },
-  ]
-  const categoryMappingWithKeys = keyBy(categoryMapping, 'id')
+  // const categoryMapping = [
+  //   { id: '001', categoryName: 'Finance' },
+  //   { id: '002', categoryName: 'IT' },
+  //   { id: '003', categoryName: 'Health' },
+  // ]
+  // const categoryMappingWithKeys = keyBy(categoryMapping, 'id')
   // for table
   // TO DO: get from state eventually
-  const data = [
-    {
-      key: '1',
-      mentorshipListingId: 'MENT001',
-      categories: ['001', '002'],
-      title: 'Becoming a financial consultant',
-      description: 'blah blah blah',
-    },
-    {
-      key: '2',
-      mentorshipListingId: 'MENT002',
-      categories: ['003'],
-      title: 'Thriving in graphics design industry',
-      description: 'blah blah blah',
-    },
-  ]
+  // const data = [
+  //   {
+  //     key: '1',
+  //     mentorshipListingId: 'MENT001',
+  //     categories: ['001', '002'],
+  //     title: 'Becoming a financial consultant',
+  //     description: 'blah blah blah',
+  //   },
+  //   {
+  //     key: '2',
+  //     mentorshipListingId: 'MENT002',
+  //     categories: ['003'],
+  //     title: 'Thriving in graphics design industry',
+  //     description: 'blah blah blah',
+  //   },
+  // ]
 
   // const emptyData = []
 
@@ -60,22 +81,23 @@ const MentorshipListings = () => {
     },
 
     {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
       responsive: ['sm'],
     },
     {
       title: 'Categories',
-      key: 'categories',
-      dataIndex: 'categories',
+      key: 'Categories',
+      dataIndex: 'Categories',
       responsive: ['md'],
       render: categories => (
         <>
-          {categories.map(categoryId => {
+          {categories.map(category => {
+            const { name, categoryId } = category
             return (
               <Tag color="geekblue" key={categoryId}>
-                {categoryMappingWithKeys[categoryId].categoryName}
+                {name}
               </Tag>
             )
           })}
@@ -115,7 +137,7 @@ const MentorshipListings = () => {
       </div>
       <div className="card-body">
         {tabKey === 'about' && showAboutSection()}
-        {tabKey === 'listing' && showListingSection(data, tableColumns)}
+        {tabKey === 'listing' && showListingSection(mentorshipListings, tableColumns)}
       </div>
     </div>
   )
@@ -161,13 +183,16 @@ const showListingSection = (dataSource, columns) => {
 }
 
 const ListingButton = data => {
+  const dispatch = useDispatch()
   const listingRecord = data.data
   const isUpdate = !isNil(listingRecord)
-
   const [visible, setVisible] = useState(false)
 
   const onSubmit = values => {
     console.log('Received values of form: ', values)
+    if (!isUpdate) {
+      dispatch({ type: 'mentorship/CREATE_LISTING', payload: values })
+    }
     setVisible(false)
   }
   return (
@@ -191,14 +216,10 @@ const ListingButton = data => {
 }
 
 const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
+  const categories = useSelector(state => state.categories)
   const [form] = Form.useForm()
   const { Option } = Select
-  const categories = [
-    { id: '001', categoryName: 'Finance' },
-    { id: '002', categoryName: 'IT' },
-    { id: '003', categoryName: 'Health' },
-  ]
-
+  console.log('record passed in is ', record)
   return (
     <Modal
       visible={visible}
@@ -226,16 +247,16 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
         onFinishFailed={() => console.log('failed')}
         initialValues={
           !!record && {
-            title: record.title,
+            name: record.name,
             description: record.description,
             categories: record.categories,
           }
         }
       >
         <Form.Item
-          label="Title"
-          name="title"
-          rules={[{ required: true, message: 'Please input a title!' }]}
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: 'Please input a name for your mentorship listing!' }]}
         >
           <Input />
         </Form.Item>
@@ -258,10 +279,10 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
         >
           <Select mode="multiple" placeholder="Select at least 1 relevant category">
             {map(categories, category => {
-              const { id, categoryName } = category
+              const { categoryId, name } = category
               return (
-                <Option key={id} value={id}>
-                  {categoryName}
+                <Option key={categoryId} value={categoryId}>
+                  {name}
                 </Option>
               )
             })}
