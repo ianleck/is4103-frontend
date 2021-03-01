@@ -4,6 +4,7 @@ import admin from './admin/reducers'
 import user from './user/reducers'
 import menu from './menu/reducers'
 import settings from './settings/reducers'
+import categories from './categories/reducers'
 
 export default history =>
   combineReducers({
@@ -12,4 +13,5 @@ export default history =>
     user,
     menu,
     settings,
+    categories,
   })
