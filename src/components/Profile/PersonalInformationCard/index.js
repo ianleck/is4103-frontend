@@ -1,22 +1,26 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Descriptions, Form, Input, Modal } from 'antd'
+import { Button, Descriptions, Form, Input, Modal, Typography } from 'antd'
+import QRCode from 'react-qr-code'
 import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import { QrcodeOutlined } from '@ant-design/icons'
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
 }
 
-const shareUrl = 'https://github.com'
-let title = "I'm sharing my Digi Dojo profile with you!"
-
 const PersonalInformationCard = () => {
+  const { Paragraph } = Typography
+
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const [showEditInformation, setShowEditInformation] = useState(false)
-  title = `${user.firstName} is sharing his Digi Dojo profile with you!`
+  const [showQRCode, setShowQRCode] = useState(false)
+
+  const shareUrl = `http://digi.dojo/profile/${user.accountId}`
+  const title = `${user.firstName} is sharing his Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
     values.accountId = user.accountId
@@ -64,13 +68,22 @@ const PersonalInformationCard = () => {
               <img src="../resources/images/avatars/5.jpg" alt="Mary Stanform" />
             </div>
           </div>
-          <div className="col-auto">
-            <FacebookShareButton url={shareUrl} quote={title}>
-              <FacebookIcon size={32} round />
-            </FacebookShareButton>
-            <LinkedinShareButton url={shareUrl} className="ml-2">
-              <LinkedinIcon size={32} round />
-            </LinkedinShareButton>
+          <div className="col-auto d-flex justify-content-center mt-2">
+            <Button
+              type="primary"
+              shape="round"
+              icon={<QrcodeOutlined />}
+              size="middle"
+              onClick={() => setShowQRCode(true)}
+            />
+            <div>
+              <FacebookShareButton className="ml-3" url={shareUrl} quote={title} hashtag="DigiDojo">
+                <FacebookIcon size={32} round />
+              </FacebookShareButton>
+              <LinkedinShareButton url={shareUrl} className="ml-2">
+                <LinkedinIcon size={32} round />
+              </LinkedinShareButton>
+            </div>
           </div>
           <div className="col-12">
             <div
@@ -177,6 +190,25 @@ const PersonalInformationCard = () => {
                 </div>
               </div>
             </Form>
+          </Modal>
+          <Modal
+            title="View QR"
+            visible={showQRCode}
+            cancelText="Close"
+            centered
+            okButtonProps={{ style: { display: 'none' } }}
+            onCancel={() => setShowQRCode(false)}
+          >
+            <div className="row mt-3">
+              <div className="col-12 text-center">
+                <QRCode value={`http://localhost:3000/profile/${user.accountId}`} />
+                <div className="mt-3">
+                  <Paragraph copyable={{ text: `http://localhost:3000/profile/${user.accountId}` }}>
+                    Share Link
+                  </Paragraph>
+                </div>
+              </div>
+            </div>
           </Modal>
         </div>
       </div>
