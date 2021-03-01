@@ -6,25 +6,24 @@ import { Button, Input, Form, notification } from 'antd'
 
 const NewAdmin = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
 
   useEffect(() => {
-    checkSuperAdmin()
-  }, [])
-
-  const checkSuperAdmin = () => {
-    // console.log(user)
-    if (user.permission !== 'SUPERADMIN') {
-      const path = '/admin'
-      history.push(path)
+    const checkSuperAdmin = () => {
+      // console.log(user)
+      if (user.permission !== 'SUPERADMIN') {
+        const path = '/admin'
+        history.push(path)
+      }
     }
-  }
+    checkSuperAdmin()
+  }, [history, user.permission])
 
   const handleCancel = e => {
     e.preventDefault()
     const path = '/admin/admin-management/'
     history.push(path)
   }
-  const history = useHistory()
 
   // const sleep = milliseconds => {
   //   return new Promise(resolve => setTimeout(resolve, milliseconds))
