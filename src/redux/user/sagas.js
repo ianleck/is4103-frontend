@@ -27,7 +27,7 @@ export function* LOGIN({ payload }) {
           isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber),
         )
 
-    yield put({
+    yield putResolve({
       type: 'user/SET_STATE',
       payload: {
         ...currentUser,
