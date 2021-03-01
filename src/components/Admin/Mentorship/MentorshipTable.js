@@ -12,10 +12,12 @@ const MentorshipTable = () => {
   }
 
   const [listings, setListings] = useState()
+  const [applications, setApplications] = useState()
   const [contracts, setContracts] = useState()
 
   useEffect(() => {
     populateListings()
+    populateApplications()
     populateContracts()
   }, [])
 
@@ -24,9 +26,31 @@ const MentorshipTable = () => {
     setListings(response)
   }
 
+  const populateApplications = async () => {
+    const response = await jwtAdmin.getAllMentorshipContracts()
+    let app = []
+
+    for (let i = 0; i < response.length; i += 1) {
+      if (response[i].senseiApproval === 'PENDING') {
+        app = [...app, response[i]]
+      }
+    }
+
+    setApplications(app)
+  }
+
   const populateContracts = async () => {
     const response = await jwtAdmin.getAllMentorshipContracts()
-    setContracts(response)
+
+    let con = []
+
+    for (let i = 0; i < response.length; i += 1) {
+      if (response[i].senseiApproval === 'ACCEPTED') {
+        con = [...con, response[i]]
+      }
+    }
+
+    setContracts(con)
   }
 
   const showListings = () => {
@@ -43,13 +67,31 @@ const MentorshipTable = () => {
         <Column title="Owner Id" dataIndex="accountId" key="accountId" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
         <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
-        <Column title="Deleted At" dataIndex="deletedAt" key="deletedAt" />
       </Table>
     )
   }
 
   const showApplications = () => {
-    return <div>Mentorship Application Chart</div>
+    return (
+      <Table bordered="true" dataSource={applications} rowKey="accountId">
+        <Column
+          title="Mentorship Contract Id"
+          dataIndex="mentorshipContractId"
+          key="mentorshipContractId"
+        />
+        <Column
+          title="Mentorship Listing Id"
+          dataIndex="mentorshipListingId"
+          key="mentorshipListingId"
+        />
+        <Column title="Name" dataIndex="name" key="name" />
+        <Column title="Statement" dataIndex="statement" key="statement" />
+        <Column title="Rating" dataIndex="rating" key="rating" />
+        <Column title="Owner Id" dataIndex="accountId" key="accountId" />
+        <Column title="Created At" dataIndex="createdAt" key="createdAt" />
+        <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
+      </Table>
+    )
   }
 
   const showContracts = () => {
@@ -66,12 +108,11 @@ const MentorshipTable = () => {
           key="mentorshipListingId"
         />
         <Column title="Name" dataIndex="name" key="name" />
-        <Column title="Description" dataIndex="description" key="description" />
+        <Column title="Statement" dataIndex="statement" key="statement" />
         <Column title="Rating" dataIndex="rating" key="rating" />
         <Column title="Owner Id" dataIndex="accountId" key="accountId" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
         <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
-        <Column title="Deleted At" dataIndex="deletedAt" key="deletedAt" />
       </Table>
     )
   }

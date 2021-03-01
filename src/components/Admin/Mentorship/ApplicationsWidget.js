@@ -9,9 +9,18 @@ const ApplicationsWidget = () => {
   }, [])
 
   const populateApplications = async () => {
-    // Update this end point
     const response = await jwtAdmin.getAllMentorshipContracts()
-    setCount(response.length)
+    let counter = 0
+
+    if (response.length > 0) {
+      for (let i = 0; i < response.length; i += 1) {
+        // console.log(response[i])
+        if (response[i].senseiApproval === 'PENDING') {
+          counter += 1
+        }
+      }
+    }
+    setCount(counter)
   }
 
   return (
@@ -19,7 +28,7 @@ const ApplicationsWidget = () => {
       <div className="card-body">
         <h4 className="d-flex align-items-center justify-content-center">{count}</h4>
         <h6 className="d-flex align-items-center justify-content-center">
-          Number of Mentorship Applications (Needs Update)
+          Number of Mentorship Applications
         </h6>
       </div>
     </div>

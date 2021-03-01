@@ -10,7 +10,17 @@ const ContractsWidget = () => {
 
   const populateContracts = async () => {
     const response = await jwtAdmin.getAllMentorshipContracts()
-    setCount(response.length)
+    let counter = 0
+
+    if (response.length > 0) {
+      for (let i = 0; i < response.length; i += 1) {
+        // console.log(response[i])
+        if (response[i].senseiApproval === 'ACCEPTED') {
+          counter += 1
+        }
+      }
+    }
+    setCount(counter)
   }
 
   return (
