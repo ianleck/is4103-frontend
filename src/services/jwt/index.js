@@ -28,7 +28,7 @@ export function updateLocalUserData(user) {
 }
 
 export async function login(email, password, isAdmin) {
-  const url = isAdmin ? '/admin/login' : '/user/login'
+  const url = isAdmin ? '/admin/login' : '/auth/login'
   return apiClient
     .post(url, {
       email,
@@ -52,7 +52,7 @@ export async function login(email, password, isAdmin) {
 
 export async function changePassword(oldPassword, newPassword, confirmPassword) {
   return apiClient
-    .put('/user/change-password', {
+    .put('/auth/change-password', {
       oldPassword,
       newPassword,
       confirmPassword,
@@ -70,7 +70,7 @@ export async function changePassword(oldPassword, newPassword, confirmPassword) 
 
 export async function register(username, email, password, confirmPassword, isStudent) {
   return apiClient
-    .post('/user/register', {
+    .post('/auth/register', {
       newUser: {
         username,
         email,

@@ -17,6 +17,8 @@ const ExperienceCard = () => {
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
 
+  const [editExperienceForm] = Form.useForm()
+
   useEffect(() => {
     const getProfile = async () => {
       if (!isNil(user.accountId)) {
@@ -83,6 +85,14 @@ const ExperienceCard = () => {
 
   const showEditExperienceModal = experience => {
     setCurrentEditExpObj(experience)
+    editExperienceForm.setFieldsValue({
+      role: experience.role,
+      description: experience.description,
+      dateStart: moment(experience.dateStart),
+      dateEnd: moment(experience.dateEnd),
+      companyName: experience.companyName,
+      companyUrl: experience.companyUrl,
+    })
     setShowEditExperience(true)
   }
 
@@ -307,6 +317,7 @@ const ExperienceCard = () => {
         footer={editExpFormFooter}
       >
         <Form
+          form={editExperienceForm}
           id="editExperienceForm"
           layout="vertical"
           hideRequiredMark

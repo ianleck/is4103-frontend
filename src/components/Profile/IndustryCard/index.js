@@ -58,7 +58,7 @@ const IndustryCard = () => {
     })
     setShowIndustry(false)
     setCurrentIndustry(values.industry)
-    if (isNil(user.industry)) {
+    if (isNil(values.industry)) {
       setShowIndustry(true)
     }
     setEditIndustryMode(false)

@@ -58,7 +58,7 @@ const OccupationCard = () => {
     })
     setShowOccupation(false)
     setCurrentOccupation(values.occupation)
-    if (isNil(user.occupation)) {
+    if (isNil(values.occupation)) {
       setShowOccupation(true)
     }
     setEditOccupationMode(false)

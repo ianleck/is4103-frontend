@@ -499,7 +499,6 @@ export function* DELETE_EXPERIENCE({ payload }) {
   })
   const response = yield call(jwt.deleteExperience, accountId, experienceId)
   if (response) {
-    console.log('response', response)
     const currentUser = yield select(selectors.user)
     const experiences = currentUser.Experience
     const updatedExperiences = experiences.filter(obj => {
