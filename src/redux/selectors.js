@@ -31,27 +31,5 @@ export const user = state => {
   }
 }
 
-export const admin = state => {
-  return {
-    accountId: state.admin.accountId,
-    contactNumber: state.admin.contactNumber,
-    createdAt: state.admin.createdAt,
-    deletedAt: state.admin.deletedAt,
-    email: state.admin.email,
-    emailVerified: state.admin.emailVerified,
-    firstName: state.admin.firstName,
-    lastName: state.admin.lastName,
-    paypalId: state.admin.paypalId,
-    permission: state.admin.permission,
-    status: state.admin.status,
-    updatedAt: state.admin.updatedAt,
-    userType: state.admin.adminType,
-    username: state.admin.adminname,
-    // Local Attributes
-    authorized: state.admin.authorized,
-    loading: state.admin.loading,
-  }
-}
-
 export const settings = state => state.settings
 export const accessToken = state => state.accessToken
