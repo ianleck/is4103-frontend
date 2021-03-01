@@ -72,17 +72,47 @@ const routes = [
   },
   {
     path: '/admin/profile',
-    Component: lazy(() => import('pages/admin/profile')),
+    Component: lazy(() => import('pages/admin/profiles/admin-profile')),
     exact: true,
   },
   {
     path: '/admin/user-management',
-    Component: lazy(() => import('pages/admin/users')),
+    Component: lazy(() => import('pages/admin/users/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/student/:userId',
+    Component: lazy(() => import('pages/admin/users/student-profile')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/sensei/:userId',
+    Component: lazy(() => import('pages/admin/users/sensei-profile')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/verify-senseis',
+    Component: lazy(() => import('pages/admin/verify-sensei/verify-senseis')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/verify-senseis/:mentorId',
+    Component: lazy(() => import('pages/admin/verify-sensei/sensei-page')),
     exact: true,
   },
   {
     path: '/admin/admin-management',
-    Component: lazy(() => import('pages/admin/admins')),
+    Component: lazy(() => import('pages/admin/admins/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/admin-management/add-admin',
+    Component: lazy(() => import('pages/admin/admins/add-new-admin')),
+    exact: true,
+  },
+  {
+    path: '/admin/admin-management/admin/:adminId',
+    Component: lazy(() => import('pages/admin/admins/another-admin-profile')),
     exact: true,
   },
   {
@@ -101,8 +131,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/sensei-content-management',
-    Component: lazy(() => import('pages/admin/sensei')),
+    path: '/admin/mentorship-content-management',
+    Component: lazy(() => import('pages/admin/mentorship/main')),
     exact: true,
   },
   {
