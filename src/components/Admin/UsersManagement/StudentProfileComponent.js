@@ -31,14 +31,13 @@ const StudentProfileComponent = () => {
   })
 
   useEffect(() => {
+    const getStudent = async () => {
+      const response = await jwtAdmin.getStudent(userId)
+      // console.log(response)
+      setStudent(response)
+    }
     getStudent()
-  }, [])
-
-  const getStudent = async () => {
-    const response = await jwtAdmin.getStudent(userId)
-    // console.log(response)
-    setStudent(response)
-  }
+  }, [userId])
 
   const convertDateFromSystem = date => {
     return date.substring(0, 10)
