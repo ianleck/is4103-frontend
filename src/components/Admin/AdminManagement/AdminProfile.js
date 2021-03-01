@@ -31,25 +31,30 @@ const AdminProfile = () => {
     username: '',
   })
 
-  useEffect(() => {
-    checkSuperAdmin()
-    getAdmin()
-  }, [])
-
-  const checkSuperAdmin = () => {
-    // console.log(user)
-    if (user.permission !== 'SUPERADMIN') {
-      const path = '/admin'
-      history.push(path)
-    }
-  }
-
   const getAdmin = async () => {
     const response = await jwtAdmin.getAdmin(adminId)
     // console.log('response')
     // console.log(response)
     setAdmin(response)
   }
+
+  useEffect(() => {
+    const checkSuperAdminEffect = () => {
+      // console.log(user)
+      if (user.permission !== 'SUPERADMIN') {
+        const path = '/admin'
+        history.push(path)
+      }
+    }
+    const getAdminEffect = async () => {
+      const response = await jwtAdmin.getAdmin(adminId)
+      // console.log('response')
+      // console.log(response)
+      setAdmin(response)
+    }
+    checkSuperAdminEffect()
+    getAdminEffect()
+  }, [adminId, history, user.permission])
 
   const saveFormFooter = (
     <div className="row justify-content-between">

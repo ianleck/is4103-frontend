@@ -8,16 +8,15 @@ const NewAdmin = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    checkSuperAdmin()
-  }, [])
-
-  const checkSuperAdmin = () => {
-    // console.log(user)
-    if (user.permission !== 'SUPERADMIN') {
-      const path = '/admin'
-      history.push(path)
+    const checkSuperAdmin = () => {
+      // console.log(user)
+      if (user.permission !== 'SUPERADMIN') {
+        const path = '/admin'
+        history.push(path)
+      }
     }
-  }
+    checkSuperAdmin()
+  }, [history, user.permission])
 
   const handleCancel = e => {
     e.preventDefault()
