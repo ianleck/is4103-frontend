@@ -9,3 +9,9 @@ export const USER_TYPE_STRING = {
   STUDENT: 'Student',
   SENSEI: 'Sensei',
 }
+
+export const PRIVACY_PERMISSIONS_ENUM = {
+  FOLLOWING_ONLY: 'FOLLOWING_ONLY',
+  ALL: 'ALL',
+  NONE: 'NONE',
+}

@@ -12,11 +12,6 @@ export async function getPublicMenuData() {
       icon: 'fa fa-cubes',
       url: '/browse/courses',
     },
-    {
-      title: 'I am a Sensei',
-      key: 'senseiAccess',
-      url: '/sensei',
-    },
   ]
 }
 
