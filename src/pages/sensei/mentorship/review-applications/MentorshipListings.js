@@ -1,4 +1,9 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
 import {
   Button,
   ConfigProvider,
@@ -6,6 +11,7 @@ import {
   Form,
   Input,
   Modal,
+  Popconfirm,
   Select,
   Space,
   Switch,
@@ -34,7 +40,7 @@ const MentorshipListings = () => {
     getListings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  const dispatch = useDispatch()
   const [tabKey, setTabKey] = useState('listing')
 
   const { TabPane } = Tabs
@@ -42,6 +48,12 @@ const MentorshipListings = () => {
     setTabKey(key)
   }
 
+  const deleteListing = mentorshipListingId => {
+    dispatch({
+      type: 'mentorship/DELETE_LISTING',
+      payload: mentorshipListingId,
+    })
+  }
   // const categoryMapping = [
   //   { id: '001', categoryName: 'Finance' },
   //   { id: '002', categoryName: 'IT' },
@@ -112,7 +124,14 @@ const MentorshipListings = () => {
           <div>
             <ListingButton data={record} />
           </div>
-          <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+          <Popconfirm
+            title="Are you sure to delete？"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            onConfirm={() => deleteListing(record)}
+          >
+            <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+          </Popconfirm>
+          ,
         </Space>
       ),
     },
@@ -185,6 +204,8 @@ const ListingButton = data => {
   const onSubmit = values => {
     if (!isUpdate) {
       dispatch({ type: 'mentorship/CREATE_LISTING', payload: values })
+    } else {
+      dispatch({ type: 'mentorship/UPDATE_LISTING', payload: values })
     }
     setVisible(false)
   }
@@ -225,7 +246,14 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
           .validateFields()
           .then(values => {
             form.resetFields()
-            onSubmit(values)
+            let payload = values
+            if (record) {
+              payload = {
+                mentorshipListingId: record.mentorshipListingId,
+                ...payload,
+              }
+            }
+            onSubmit(payload)
           })
           .catch(info => {
             console.log('Validate Failed:', info)
@@ -242,7 +270,7 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
           !!record && {
             name: record.name,
             description: record.description,
-            categories: record.categories,
+            categories: record.Categories.map(c => c.categoryId),
           }
         }
       >
