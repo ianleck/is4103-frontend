@@ -21,20 +21,16 @@ import { getSenseiMentorshipListings } from 'services/mentorshipListing'
 
 const MentorshipListings = () => {
   const user = useSelector(state => state.user)
-  const mentorships = useSelector(state => state.mentorships.mentorshipListings)
-
-  const [mentorshipListings, setMentorshipListings] = useState(mentorships)
+  const [mentorshipListings, setMentorshipListings] = useState([])
   const { accountId } = user
 
   const getListings = useCallback(async () => {
     const result = await getSenseiMentorshipListings(accountId)
     const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
-    console.log('listingRecords is ', listingRecords)
     setMentorshipListings(listingRecords)
   }, [accountId])
 
   useEffect(() => {
-    console.log('inside useEffect')
     getListings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -70,8 +66,6 @@ const MentorshipListings = () => {
   //     description: 'blah blah blah',
   //   },
   // ]
-
-  // const emptyData = []
 
   const tableColumns = [
     {
@@ -189,7 +183,6 @@ const ListingButton = data => {
   const [visible, setVisible] = useState(false)
 
   const onSubmit = values => {
-    console.log('Received values of form: ', values)
     if (!isUpdate) {
       dispatch({ type: 'mentorship/CREATE_LISTING', payload: values })
     }
@@ -219,7 +212,7 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
   const categories = useSelector(state => state.categories)
   const [form] = Form.useForm()
   const { Option } = Select
-  console.log('record passed in is ', record)
+
   return (
     <Modal
       visible={visible}
