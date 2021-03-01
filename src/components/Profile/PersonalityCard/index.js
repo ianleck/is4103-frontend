@@ -3,7 +3,6 @@ import { Button, Empty, Form, Select } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { personalities } from 'constants/information'
 import { isNil } from 'lodash'
-import { USER_TYPE_ENUM } from 'constants/constants'
 
 const PersonalityCard = () => {
   const { Option } = Select
@@ -50,14 +49,13 @@ const PersonalityCard = () => {
 
   const onSavePersonality = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     dispatch({
       type: 'user/UPDATE_PERSONALITY',
       payload: values,
     })
     setShowPersonality(false)
     setCurrentPersonality(values.personality)
-    if (isNil(user.personality)) {
+    if (isNil(values.personality)) {
       setShowPersonality(true)
     }
     setEditPersonalityMode(false)

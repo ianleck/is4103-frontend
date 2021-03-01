@@ -3,7 +3,6 @@ import { Button, Empty, Form, Select } from 'antd'
 import { occupations } from 'constants/information'
 import { useDispatch, useSelector } from 'react-redux'
 import { isNil } from 'lodash'
-import { USER_TYPE_ENUM } from 'constants/constants'
 
 const OccupationCard = () => {
   const { Option } = Select
@@ -50,7 +49,6 @@ const OccupationCard = () => {
 
   const onSaveOccupation = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     values.isIndustry = false
     dispatch({
       type: 'user/UPDATE_WORK_DETAILS',

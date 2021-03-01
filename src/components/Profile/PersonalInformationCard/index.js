@@ -4,7 +4,6 @@ import { Button, Descriptions, Form, Input, Modal, Typography } from 'antd'
 import QRCode from 'react-qr-code'
 import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
-import { USER_TYPE_ENUM } from 'constants/constants'
 import { QrcodeOutlined } from '@ant-design/icons'
 
 const onFinishFailed = errorInfo => {
@@ -24,12 +23,21 @@ const PersonalInformationCard = () => {
 
   const onUpdateProfile = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     dispatch({
       type: 'user/UPDATE_PERSONAL_INFO',
       payload: values,
     })
     setShowEditInformation(false)
+  }
+
+  const VerifyEmailLink = () => {
+    return (
+      <div>
+        <a href="#" className="btn-link">
+          Verify Email
+        </a>
+      </div>
+    )
   }
 
   const saveFormFooter = (
@@ -212,16 +220,6 @@ const PersonalInformationCard = () => {
           </Modal>
         </div>
       </div>
-    </div>
-  )
-}
-
-const VerifyEmailLink = () => {
-  return (
-    <div>
-      <a href="#" className="btn-link">
-        Verify Email
-      </a>
     </div>
   )
 }

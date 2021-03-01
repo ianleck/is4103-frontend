@@ -115,7 +115,7 @@ export async function getProfile(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function updatePersonalInfo(accountId, firstName, lastName, contactNumber, isStudent) {
+export async function updatePersonalInfo(accountId, firstName, lastName, contactNumber) {
   return apiClient
     .put(
       `/user/${accountId}`,
@@ -130,8 +130,7 @@ export async function updatePersonalInfo(accountId, firstName, lastName, contact
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -141,7 +140,6 @@ export async function updatePersonalInfo(accountId, firstName, lastName, contact
 
 export async function updateAccountSettings(
   accountId,
-  isStudent,
   isPrivateProfile,
   emailNotification,
   chatPrivacy,
@@ -160,8 +158,7 @@ export async function updateAccountSettings(
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -169,7 +166,7 @@ export async function updateAccountSettings(
     .catch(err => console.log(err))
 }
 
-export async function updateAbout(accountId, isStudent, updateHeadline, headline, bio) {
+export async function updateAbout(accountId, updateHeadline, headline, bio) {
   let user = {}
   if (updateHeadline) {
     user = { headline }
@@ -186,8 +183,7 @@ export async function updateAbout(accountId, isStudent, updateHeadline, headline
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -195,7 +191,7 @@ export async function updateAbout(accountId, isStudent, updateHeadline, headline
     .catch(err => console.log(err))
 }
 
-export async function updateWorkDetails(accountId, isStudent, isIndustry, industry, occupation) {
+export async function updateWorkDetails(accountId, isIndustry, industry, occupation) {
   let user = {}
   if (isIndustry) {
     user = { industry }
@@ -212,8 +208,7 @@ export async function updateWorkDetails(accountId, isStudent, isIndustry, indust
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -221,7 +216,7 @@ export async function updateWorkDetails(accountId, isStudent, isIndustry, indust
     .catch(err => console.log(err))
 }
 
-export async function updatePersonality(accountId, isStudent, personality) {
+export async function updatePersonality(accountId, personality) {
   return apiClient
     .put(
       `/user/${accountId}`,
@@ -234,8 +229,28 @@ export async function updatePersonality(accountId, isStudent, personality) {
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateAdminVerified(accountId, adminVerified) {
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          adminVerified,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false

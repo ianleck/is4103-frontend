@@ -177,21 +177,14 @@ export function* LOGOUT() {
 }
 
 export function* UPDATE_PERSONAL_INFO({ payload }) {
-  const { accountId, firstName, lastName, contactNumber, isStudent } = payload
+  const { accountId, firstName, lastName, contactNumber } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(
-    jwt.updatePersonalInfo,
-    accountId,
-    firstName,
-    lastName,
-    contactNumber,
-    isStudent,
-  )
+  const response = yield call(jwt.updatePersonalInfo, accountId, firstName, lastName, contactNumber)
   if (response) {
     let currentUser = createUserObj(response, true, false, false)
     yield putResolve({
@@ -231,14 +224,14 @@ export function* UPDATE_PERSONAL_INFO({ payload }) {
 }
 
 export function* UPDATE_ABOUT({ payload }) {
-  const { accountId, isStudent, updateHeadline, headline, bio } = payload
+  const { accountId, updateHeadline, headline, bio } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwt.updateAbout, accountId, isStudent, updateHeadline, headline, bio)
+  const response = yield call(jwt.updateAbout, accountId, updateHeadline, headline, bio)
   if (response) {
     let currentUser = createUserObj(response, true, false, false)
     yield putResolve({
@@ -266,7 +259,7 @@ export function* UPDATE_ABOUT({ payload }) {
 }
 
 export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
-  const { accountId, isStudent, isPrivateProfile, emailNotification, chatPrivacy } = payload
+  const { accountId, isPrivateProfile, emailNotification, chatPrivacy } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -276,7 +269,6 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
   const response = yield call(
     jwt.updateAccountSettings,
     accountId,
-    isStudent,
     isPrivateProfile,
     emailNotification,
     chatPrivacy,
@@ -309,21 +301,14 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
 }
 
 export function* UPDATE_WORK_DETAILS({ payload }) {
-  const { accountId, isStudent, isIndustry, industry, occupation } = payload
+  const { accountId, isIndustry, industry, occupation } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(
-    jwt.updateWorkDetails,
-    accountId,
-    isStudent,
-    isIndustry,
-    industry,
-    occupation,
-  )
+  const response = yield call(jwt.updateWorkDetails, accountId, isIndustry, industry, occupation)
   if (response) {
     let currentUser = createUserObj(response, true, false, false)
     yield putResolve({
@@ -357,14 +342,14 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
 }
 
 export function* UPDATE_PERSONALITY({ payload }) {
-  const { accountId, isStudent, personality } = payload
+  const { accountId, personality } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwt.updatePersonality, accountId, isStudent, personality)
+  const response = yield call(jwt.updatePersonality, accountId, personality)
   if (response) {
     let currentUser = createUserObj(response, true, false, false)
     yield putResolve({
@@ -382,6 +367,37 @@ export function* UPDATE_PERSONALITY({ payload }) {
   yield putResolve({
     type: 'menu/GET_DATA',
   })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_ADMIN_VERIFIED({ payload }) {
+  const { accountId, adminVerified } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(jwt.updateAdminVerified, accountId, adminVerified)
+  if (response) {
+    let currentUser = createUserObj(response, true, false, false)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        adminVerified,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    notification.success({
+      message: 'Your profile was submitted for verification.',
+    })
+  }
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -567,6 +583,7 @@ export default function* rootSaga() {
     takeEvery(actions.UPDATE_ABOUT, UPDATE_ABOUT),
     takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
     takeEvery(actions.UPDATE_PERSONALITY, UPDATE_PERSONALITY),
+    takeEvery(actions.UPDATE_ADMIN_VERIFIED, UPDATE_ADMIN_VERIFIED),
     takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
     takeEvery(actions.EDIT_EXPERIENCE, EDIT_EXPERIENCE),
     takeEvery(actions.DELETE_EXPERIENCE, DELETE_EXPERIENCE),
