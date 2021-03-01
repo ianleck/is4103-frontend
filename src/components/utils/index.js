@@ -1,3 +1,5 @@
+import { isNil } from 'lodash'
+
 export const resetUser = {
   accountId: '',
   adminVerified: '',
@@ -42,7 +44,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     email: currentUser.email,
     emailNotification: currentUser.emailNotification,
     emailVerified: currentUser.emailVerified,
-    Experience: currentUser.Experience,
+    Experience: isNil(currentUser.Experience) ? [] : currentUser.Experience,
     firstName: currentUser.firstName,
     headline: currentUser.headline,
     industry: currentUser.industry,

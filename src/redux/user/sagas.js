@@ -364,7 +364,6 @@ export function* ADD_EXPERIENCE({ payload }) {
       loading: true,
     },
   })
-  console.log(accountId, role, dateStart, dateEnd, description, companyName, companyUrl)
   const response = yield call(
     jwt.addExperience,
     accountId,
@@ -387,7 +386,6 @@ export function* ADD_EXPERIENCE({ payload }) {
         },
       })
       yield call(jwt.updateLocalUserData, currentUser)
-      console.log('curr user', currentUser)
       notification.success({
         message: 'New experience added',
       })

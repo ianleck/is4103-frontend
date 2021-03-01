@@ -7,7 +7,7 @@ const PersonalityCard = () => {
       <div className="card-header pb-1">
         <div className="row align-items-center justify-content-between mb-2">
           <div className="col-auto">
-            <span className="h3 font-weight-bold text-dark">My Experience</span>
+            <span className="h3 font-weight-bold text-dark">My Personality</span>
           </div>
           <div className="col-auto">
             <Button
