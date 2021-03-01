@@ -6,6 +6,7 @@ import { Button, Input, Form, notification } from 'antd'
 
 const NewAdmin = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
 
   useEffect(() => {
     const checkSuperAdmin = () => {
@@ -23,7 +24,6 @@ const NewAdmin = () => {
     const path = '/admin/admin-management/'
     history.push(path)
   }
-  const history = useHistory()
 
   // const sleep = milliseconds => {
   //   return new Promise(resolve => setTimeout(resolve, milliseconds))
