@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import store from 'store'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { find } from 'lodash'
+import UserMenu from 'components/UserActionGroup/UserMenu'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
@@ -207,6 +208,11 @@ const MenuLeft = ({
           >
             {generateMenuItems()}
           </Menu>
+          <div className="row justify-content-center mt-2">
+            <div className="col-6 text-center">
+              <UserMenu />
+            </div>
+          </div>
         </PerfectScrollbar>
       </div>
     </Layout.Sider>

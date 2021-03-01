@@ -5,12 +5,14 @@ import { Link, useLocation, Redirect } from 'react-router-dom'
 import FadeIn from 'react-fade-in'
 import LogoWithDescription from 'components/Public/Logo/LogoWithDescription'
 import { USER_TYPE_ENUM, USER_TYPE_STRING } from 'constants/constants'
+import { isNil } from 'lodash'
 
 const Login = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const { pathname } = useLocation()
-  const loginUserType = RegExp('admin').test(pathname) ? USER_TYPE_ENUM.ADMIN : ''
+  const loginType = isNil(user.loginType) ? '' : user.loginType
+  const loginUserType = RegExp('admin').test(pathname) ? USER_TYPE_ENUM.ADMIN : loginType
   const [currentUserType, setCurrentUserType] = useState(loginUserType)
   const isStudent = currentUserType === USER_TYPE_ENUM.STUDENT
   // DEV MODE
