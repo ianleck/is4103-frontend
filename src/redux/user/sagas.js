@@ -399,6 +399,62 @@ export function* ADD_EXPERIENCE({ payload }) {
   })
 }
 
+export function* EDIT_EXPERIENCE({ payload }) {
+  const {
+    accountId,
+    experienceId,
+    role,
+    dateStart,
+    dateEnd,
+    description,
+    companyName,
+    companyUrl,
+  } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(
+    jwt.editExperience,
+    accountId,
+    experienceId,
+    role,
+    dateStart,
+    dateEnd,
+    description,
+    companyName,
+    companyUrl,
+  )
+  if (response) {
+    if (response.experience) {
+      const currentUser = yield select(selectors.user)
+      const experiences = currentUser.Experience
+      const updatedExperiences = experiences.filter(obj => {
+        return obj.experienceId !== experienceId
+      })
+      updatedExperiences.push(response.experience)
+      yield putResolve({
+        type: 'user/SET_STATE',
+        payload: {
+          Experience: updatedExperiences,
+        },
+      })
+      yield call(jwt.updateLocalUserData, currentUser)
+      notification.success({
+        message: 'Your experience was updated successfully.',
+      })
+    }
+  }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* DELETE_ACCOUNT({ payload }) {
   const { accountId } = payload
   yield put({
@@ -443,6 +499,7 @@ export default function* rootSaga() {
     takeEvery(actions.UPDATE_ABOUT, UPDATE_ABOUT),
     takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
     takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
+    takeEvery(actions.EDIT_EXPERIENCE, EDIT_EXPERIENCE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }

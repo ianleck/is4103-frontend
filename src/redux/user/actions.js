@@ -12,6 +12,7 @@ const actions = {
   UPDATE_ABOUT: 'user/UPDATE_ABOUT',
   UPDATE_WORK_DETAILS: 'user/UPDATE_WORK_DETAILS',
   ADD_EXPERIENCE: 'user/ADD_EXPERIENCE',
+  EDIT_EXPERIENCE: 'user/EDIT_EXPERIENCE',
 }
 
 export default actions

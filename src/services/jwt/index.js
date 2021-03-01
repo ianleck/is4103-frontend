@@ -256,6 +256,43 @@ export async function addExperience(
     .catch(err => console.log(err))
 }
 
+export async function editExperience(
+  accountId,
+  experienceId,
+  role,
+  dateStart,
+  dateEnd,
+  description,
+  companyName,
+  companyUrl,
+) {
+  return apiClient
+    .put(
+      `/user/experience/${accountId}`,
+      {
+        experience: {
+          experienceId,
+          role,
+          dateStart,
+          dateEnd,
+          description,
+          companyName,
+          companyUrl,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function deleteAccount(accountId) {
   return apiClient
     .delete(`/user/${accountId}`, { withCredentials: true })

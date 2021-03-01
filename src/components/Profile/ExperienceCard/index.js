@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
+import * as jwt from 'services/jwt'
 import moment from 'moment'
 import { isNil } from 'lodash'
 
@@ -14,6 +15,21 @@ const ExperienceCard = () => {
   const [showAddExperience, setShowAddExperience] = useState(false)
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
+
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!isNil(user.accountId)) {
+        const userRsp = await jwt.getProfile(user.accountId)
+        dispatch({
+          type: 'user/SET_STATE',
+          payload: {
+            Experience: userRsp.Experience,
+          },
+        })
+      }
+    }
+    getProfile()
+  }, [dispatch, user.accountId])
 
   const sortExperienceByDate = user.Experience.sort(
     (a, b) => new Date(b.dateStart).getTime() - new Date(a.dateStart).getTime(),
@@ -31,8 +47,18 @@ const ExperienceCard = () => {
     })
   }
 
+  const onEditExperience = values => {
+    values.accountId = user.accountId
+    values.experienceId = currentEditExpObj.experienceId
+    dispatch({
+      type: 'user/EDIT_EXPERIENCE',
+      payload: values,
+    })
+  }
+
   const showEditExperienceModal = experience => {
     setCurrentEditExpObj(experience)
+    console.log('experience', experience)
     setShowEditExperience(true)
   }
 
@@ -43,14 +69,20 @@ const ExperienceCard = () => {
           ghost
           type="primary"
           size="large"
-          onClick={() => setShowAddExperience(false)}
+          onClick={() => setShowEditExperience(false)}
           className=""
         >
           Close
         </Button>
       </div>
       <div className="col-auto">
-        <Button type="primary" form="addExperienceForm" htmlType="submit" size="large" className="">
+        <Button
+          type="primary"
+          form="editExperienceForm"
+          htmlType="submit"
+          size="large"
+          className=""
+        >
           Update
         </Button>
       </div>
@@ -69,10 +101,10 @@ const ExperienceCard = () => {
         footer={editExpFormFooter}
       >
         <Form
-          id="addExperienceForm"
+          id="editExperienceForm"
           layout="vertical"
           hideRequiredMark
-          onFinish={onAddExperience}
+          onFinish={onEditExperience}
           onFinishFailed={onFinishFailed}
           initialValues={{
             role: currentEditExpObj.role,
@@ -131,12 +163,12 @@ const ExperienceCard = () => {
             </div>
             <div className="col-12">
               <Form.Item name="companyName" label="Company Name">
-                <Input disabled />
+                <Input />
               </Form.Item>
             </div>
             <div className="col-12">
               <Form.Item name="companyUrl" label="Link to Company Portfolio">
-                <Input disabled />
+                <Input />
               </Form.Item>
             </div>
             <div className="col-12">
