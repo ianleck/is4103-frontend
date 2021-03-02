@@ -3,7 +3,7 @@ import { notification } from 'antd'
 import { isNil } from 'lodash'
 
 const apiClient = axios.create({
-  baseURL: 'http://192.168.50.254:5000/api',
+  baseURL: 'http://localhost:5000/api',
   /* 
   For external device support (e.g. Mobile Phone)
   Set local IP address instead of calling localhost:

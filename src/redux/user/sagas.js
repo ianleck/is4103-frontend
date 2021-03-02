@@ -138,13 +138,15 @@ export function* LOAD_CURRENT_ACCOUNT() {
       let userFromAPI = resetUser
       if (!isEmpty(user.accountId)) {
         userFromAPI = yield call(jwt.getProfile, user.accountId)
-        userFromAPI.accessToken = user.accessToken
-        currentUser = createUserObj(
-          userFromAPI,
-          user.authorized,
-          user.loading,
-          user.requiresProfileUpdate,
-        )
+        if (userFromAPI) {
+          userFromAPI.accessToken = user.accessToken
+          currentUser = createUserObj(
+            userFromAPI,
+            user.authorized,
+            user.loading,
+            user.requiresProfileUpdate,
+          )
+        }
       } else {
         currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
       }
