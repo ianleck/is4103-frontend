@@ -15,9 +15,9 @@ import {
   Table,
   Tabs,
 } from 'antd'
-import React, { useState, useEffect } from 'react'
+import { filter, size } from 'lodash'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { indexOf, filter, isNil, map, size } from 'lodash'
 import {
   acceptMentorshipApplication,
   getSenseiMentorshipApplications,
