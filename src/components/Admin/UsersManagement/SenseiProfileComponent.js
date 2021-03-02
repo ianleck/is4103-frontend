@@ -48,7 +48,7 @@ const SenseiProfileComponent = () => {
 
     const getListings = async () => {
       const response = await jwtAdmin.getMentorMentorshipListings(userId)
-      // console.log('Listings response', response)
+      console.log('Listings response', response)
       setMentorshipListings(response)
     }
     getSensei()
@@ -67,7 +67,7 @@ const SenseiProfileComponent = () => {
 
   const showMentorshipListings = () => {
     return (
-      <Table bordered="true" dataSource={mentorshipListings} rowKey="accountId">
+      <Table bordered="true" dataSource={mentorshipListings} rowKey="mentorshipListingId">
         <Column
           title="Mentorship Listing Id"
           dataIndex="mentorshipListingId"

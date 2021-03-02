@@ -60,7 +60,7 @@ const MentorshipTable = () => {
 
   const showListings = () => {
     return (
-      <Table bordered="true" dataSource={listings} rowKey="accountId">
+      <Table bordered="true" dataSource={listings} rowKey="mentorshipListingId">
         <Column
           title="Mentorship Listing Id"
           dataIndex="mentorshipListingId"
@@ -78,7 +78,7 @@ const MentorshipTable = () => {
 
   const showApplications = () => {
     return (
-      <Table bordered="true" dataSource={applications} rowKey="accountId">
+      <Table bordered="true" dataSource={applications} rowKey="mentorshipContractId">
         <Column
           title="Mentorship Contract Id"
           dataIndex="mentorshipContractId"
@@ -101,7 +101,7 @@ const MentorshipTable = () => {
 
   const showContracts = () => {
     return (
-      <Table bordered="true" dataSource={contracts} rowKey="accountId">
+      <Table bordered="true" dataSource={contracts} rowKey="mentorshipContractId">
         <Column
           title="Mentorship Contract Id"
           dataIndex="mentorshipContractId"
