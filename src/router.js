@@ -217,6 +217,11 @@ const routes = [
     Component: lazy(() => import('pages/student/settings')),
     exact: true,
   },
+  {
+    path: '/student/dashboard/mentorship-applications',
+    Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
+    exact: true,
+  },
   /*
 
 
