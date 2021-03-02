@@ -1,4 +1,9 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
 import {
   Button,
   ConfigProvider,
@@ -6,6 +11,8 @@ import {
   Form,
   Input,
   Modal,
+  notification,
+  Popconfirm,
   Select,
   Space,
   Switch,
@@ -15,26 +22,36 @@ import {
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { indexOf, isNil, map, size } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getSenseiMentorshipListings } from 'services/mentorshipListing'
+import {
+  createMentorshipListing,
+  deleteMentorshipListing,
+  getSenseiMentorshipListings,
+  updateMentorshipListing,
+} from 'services/mentorshipListing'
 
 const MentorshipListings = () => {
   const user = useSelector(state => state.user)
   const [mentorshipListings, setMentorshipListings] = useState([])
   const { accountId } = user
 
-  const getListings = useCallback(async () => {
+  const getListings = async () => {
     const result = await getSenseiMentorshipListings(accountId)
     const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
     setMentorshipListings(listingRecords)
-  }, [accountId])
+  }
+  // const getListings = useCallback(async () => {
+  //   const result = await getSenseiMentorshipListings(accountId)
+  //   const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
+  //   setMentorshipListings(listingRecords)
+  // }, [accountId])
 
   useEffect(() => {
     getListings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  const dispatch = useDispatch()
   const [tabKey, setTabKey] = useState('listing')
 
   const { TabPane } = Tabs
@@ -42,6 +59,18 @@ const MentorshipListings = () => {
     setTabKey(key)
   }
 
+  const deleteListing = mentorshipListingId => {
+    deleteMentorshipListing(mentorshipListingId).then(_data => {
+      if (_data) {
+        notification.success({ message: 'success', description: _data.message })
+        getListings()
+      }
+    })
+    // dispatch({
+    //   type: 'mentorship/DELETE_LISTING',
+    //   payload: mentorshipListingId,
+    // })
+  }
   // const categoryMapping = [
   //   { id: '001', categoryName: 'Finance' },
   //   { id: '002', categoryName: 'IT' },
@@ -110,9 +139,16 @@ const MentorshipListings = () => {
       render: record => (
         <Space size="large">
           <div>
-            <ListingButton data={record} />
+            <ListingButton data={record} getListings={getListings} />
           </div>
-          <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+          <Popconfirm
+            title="Are you sure to delete？"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            onConfirm={() => deleteListing(record.mentorshipListingId)}
+          >
+            <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+          </Popconfirm>
+          ,
         </Space>
       ),
     },
@@ -176,15 +212,30 @@ const showListingSection = (dataSource, columns) => {
   )
 }
 
-const ListingButton = data => {
+const ListingButton = ({ data, getListings }) => {
   const dispatch = useDispatch()
-  const listingRecord = data.data
+  const listingRecord = data
   const isUpdate = !isNil(listingRecord)
   const [visible, setVisible] = useState(false)
 
   const onSubmit = values => {
     if (!isUpdate) {
-      dispatch({ type: 'mentorship/CREATE_LISTING', payload: values })
+      createMentorshipListing(...values).then(_data => {
+        if (_data) {
+          notification.success({ message: _data.message })
+          getListings()
+        }
+      })
+
+      // dispatch({ type: 'mentorship/CREATE_LISTING', payload: values })
+    } else {
+      updateMentorshipListing(values).then(_data => {
+        if (_data) {
+          notification.success({ message: _data.message })
+          getListings()
+        }
+      })
+      // dispatch({ type: 'mentorship/UPDATE_LISTING', payload: values })
     }
     setVisible(false)
   }
@@ -225,7 +276,14 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
           .validateFields()
           .then(values => {
             form.resetFields()
-            onSubmit(values)
+            let payload = values
+            if (record) {
+              payload = {
+                mentorshipListingId: record.mentorshipListingId,
+                ...payload,
+              }
+            }
+            onSubmit(payload)
           })
           .catch(info => {
             console.log('Validate Failed:', info)
@@ -236,13 +294,11 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
         form={form}
         layout="vertical"
         hideRequiredMark
-        onFinish={() => console.log('success - added new listing')}
-        onFinishFailed={() => console.log('failed')}
         initialValues={
           !!record && {
             name: record.name,
             description: record.description,
-            categories: record.categories,
+            categories: record.Categories.map(c => c.categoryId),
           }
         }
       >
