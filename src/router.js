@@ -40,6 +40,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/auth/reset-password',
+    Component: lazy(() => import('pages/auth/reset-password')),
+    exact: true,
+  },
+  {
     path: '/auth/register',
     Component: lazy(() => import('pages/auth/register')),
     exact: true,
@@ -187,6 +192,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/sensei/settings',
+    Component: lazy(() => import('pages/sensei/settings')),
+    exact: true,
+  },
+  {
     path: '/sensei/mentorship/review-applications',
     Component: lazy(() => import('pages/sensei/mentorship/review-applications')),
     exact: true,
@@ -212,11 +222,15 @@ const routes = [
     Component: lazy(() => import('pages/student/settings')),
     exact: true,
   },
+  {
+    path: '/student/dashboard/mentorship-applications',
+    Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
+    exact: true,
+  },
   // Common Pages
   {
     path: '/mentorship/apply/:id',
     Component: lazy(() => import('pages/mentorships/ApplyListing')),
-    exact: true,
   },
   /*
 

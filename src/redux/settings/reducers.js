@@ -30,13 +30,13 @@ const initialState = {
     isMenuShadow: false,
     isTopbarFixed: false,
     isGrayTopbar: false,
-    isContentMaxWidth: false,
+    isContentMaxWidth: true,
     isAppMaxWidth: false,
     isGrayBackground: false,
     isCardShadow: true,
     isSquaredBorders: false,
     isBorderless: false,
-    isDevMode: true,
+    isDevMode: false,
   }),
 }
 

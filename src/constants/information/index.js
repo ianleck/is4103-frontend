@@ -1992,6 +1992,115 @@ export const occupations = [
   },
 ]
 
+export const personalities = [
+  {
+    personalityId: 1,
+    personalityName: 'INTJ',
+    personalityTraits: 'Analyst',
+    personalityDescription: 'Imaginative and strategic thinkers, with a plan for everything',
+  },
+  {
+    personalityId: 2,
+    personalityName: 'INTP',
+    personalityTraits: 'Analyst',
+    personalityDescription: 'Innovative inventors with an unquenchable thirst for knowledge.',
+  },
+  {
+    personalityId: 3,
+    personalityName: 'ENTJ',
+    personalityTraits: 'Analyst',
+    personalityDescription:
+      'Bold, imaginative and strong-willed leaders, always finding a way – or making one.',
+  },
+  {
+    personalityId: 4,
+    personalityName: 'ENTP',
+    personalityTraits: 'Analyst',
+    personalityDescription:
+      'Smart and curious thinkers who cannot resist an intellectual challenge.',
+  },
+  {
+    personalityId: 5,
+    personalityName: 'INFJ',
+    personalityTraits: 'Diplomat',
+    personalityDescription: 'Quiet and mystical, yet very inspiring and tireless idealists.',
+  },
+  {
+    personalityId: 6,
+    personalityName: 'INFP',
+    personalityTraits: 'Diplomat',
+    personalityDescription:
+      'Poetic, kind and altruistic people, always eager to help a good cause.',
+  },
+  {
+    personalityId: 7,
+    personalityName: 'ENFJ',
+    personalityTraits: 'Diplomat',
+    personalityDescription: 'Charismatic and inspiring leaders, able to mesmerize their listeners.',
+  },
+  {
+    personalityId: 8,
+    personalityName: 'ENFP',
+    personalityTraits: 'Diplomat',
+    personalityDescription:
+      'Enthusiastic, creative and sociable free spirits, who can always find a reason to smile.',
+  },
+  {
+    personalityId: 9,
+    personalityName: 'ISTJ',
+    personalityTraits: 'Sentinels',
+    personalityDescription:
+      'Practical and fact-minded individuals, whose reliability cannot be doubted.',
+  },
+  {
+    personalityId: 10,
+    personalityName: 'ISFJ',
+    personalityTraits: 'Sentinels',
+    personalityDescription:
+      'Very dedicated and warm protectors, always ready to defend their loved ones.',
+  },
+  {
+    personalityId: 11,
+    personalityName: 'ESTJ',
+    personalityTraits: 'Sentinels',
+    personalityDescription: 'Excellent administrators, unsurpassed at managing things – or people.',
+  },
+  {
+    personalityId: 12,
+    personalityName: 'ESFJ',
+    personalityTraits: 'Sentinels',
+    personalityDescription:
+      'Extraordinarily caring, social and popular people, always eager to help.',
+  },
+  {
+    personalityId: 13,
+    personalityName: 'ISTP',
+    personalityTraits: 'Explorers',
+    personalityDescription: 'Bold and practical experimenters, masters of all kinds of tools.',
+  },
+  {
+    personalityId: 14,
+    personalityName: 'ISFP',
+    personalityTraits: 'Explorers',
+    personalityDescription:
+      'Flexible and charming artists, always ready to explore and experience something new.',
+  },
+  {
+    personalityId: 15,
+    personalityName: 'ESTP',
+    personalityTraits: 'Explorers',
+    personalityDescription:
+      'Smart, energetic and very perceptive people, who truly enjoy living on the edge.',
+  },
+  {
+    personalityId: 16,
+    personalityName: 'ESFP',
+    personalityTraits: 'Explorers',
+    personalityDescription:
+      'Spontaneous, energetic and enthusiastic people – life is never boring around them.',
+  },
+]
+
 export const categories = {
   development: {
     categoryName: 'Development',

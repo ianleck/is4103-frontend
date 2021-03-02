@@ -1,6 +1,5 @@
 import { Layout } from 'antd'
 import classNames from 'classnames'
-import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
 import Menu from 'components/cleanui/layout/Menu'
 import PublicCategoriesBar from 'components/Public/PublicCategoriesBar'
 import PublicMenuBar from 'components/Public/PublicMenuBar'
@@ -24,7 +23,7 @@ const CustomLayout = ({
 }) => {
   const { pathname } = useLocation()
   let showStudentDashboardMenu = false
-  if (pathname === '/student/dashboard' || pathname === '/student/profile') {
+  if (pathname.includes('/student/dashboard') || pathname === '/student/profile') {
     showStudentDashboardMenu = true
   }
   return (
@@ -51,7 +50,6 @@ const CustomLayout = ({
               (showStudentDashboardMenu ? <StudentDashboardSubMenuBar /> : <PublicCategoriesBar />)}
             {!isPublic && <UserGroupTopBar />}
           </Layout.Header>
-          <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
             <div className="cui__utils__content">{children}</div>
           </Layout.Content>

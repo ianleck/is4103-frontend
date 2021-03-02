@@ -6,7 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import NewMentorTable from '../../../components/Admin/VerifySensei/NewSenseiTable'
 import UnverifiedWidget from '../../../components/Admin/VerifySensei/UnverifiedWidget'
 import VerifiedWidget from '../../../components/Admin/VerifySensei/VerifiedWidget'
-import TotalSenseiWidget from '../../../components/Admin/VerifySensei/TotalSenseiWidget'
+import RejectedSenseiWidget from '../../../components/Admin/VerifySensei/RejectedSenseiWidget'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
@@ -22,20 +22,33 @@ const VerifyMentors = () => {
 
   return (
     <div>
-      <Helmet title="Verify new Mentor" />
-      <div className="cui__utils__heading">
-        <strong>Verify Senseis</strong>
+      <div className="row">
+        <Helmet title="User Management" />
+        <div className="col-auto">
+          <div className="text-dark text-uppercase h3">
+            <strong>Verify Senseis</strong>
+          </div>
+        </div>
       </div>
 
-      <div className="row">
-        <div className="col-xl-12 col-lg-12">
-          <div className="col-xl-2 col-lg-12">
-            <div className="card">
-              <Button type="primary" shape="round" onClick={onBack} icon={<ArrowLeftOutlined />}>
-                Back
-              </Button>
-            </div>
-          </div>
+      <div className="row mt-4">
+        <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+          <Button
+            block
+            type="primary"
+            size="large"
+            shape="round"
+            onClick={onBack}
+            icon={<ArrowLeftOutlined />}
+          >
+            Back
+          </Button>
+        </div>
+      </div>
+
+      <div className="row mt-4">
+        <div className="col-xl-4 col-lg-12">
+          <VerifiedWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
@@ -43,11 +56,7 @@ const VerifyMentors = () => {
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <VerifiedWidget />
-        </div>
-
-        <div className="col-xl-4 col-lg-12">
-          <TotalSenseiWidget />
+          <RejectedSenseiWidget />
         </div>
 
         <div className="col-xl-12 col-lg-12">

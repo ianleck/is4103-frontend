@@ -8,6 +8,64 @@ import { createAdminObj, createUserObj, resetUser } from 'components/utils'
 import actions from './actions'
 import * as selectors from '../selectors'
 
+function checkProfileUpdateRqd(user) {
+  user.requiresProfileUpdate =
+    user.headline === '' ||
+    isNil(user.headline) ||
+    user.bio === '' ||
+    isNil(user.bio) ||
+    user.firstName === '' ||
+    isNil(user.firstName) ||
+    user.lastName === '' ||
+    isNil(user.lastName) ||
+    user.contactNumber === '' ||
+    isNil(user.contactNumber)
+
+  return user.requiresProfileUpdate
+}
+
+export function* LOAD_CURRENT_ACCOUNT() {
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  let currentUser = resetUser
+  const user = yield call(jwt.getLocalUserData)
+  if (user) {
+    if (user.userType === USER_TYPE_ENUM.ADMIN) {
+      currentUser = createAdminObj(user, user.authorized, user.loading)
+    } else if (!isEmpty(user.accountId)) {
+      const userFromAPI = yield call(jwt.getProfile, user.accountId)
+      if (userFromAPI) {
+        userFromAPI.accessToken = user.accessToken
+        currentUser = createUserObj(
+          userFromAPI,
+          user.authorized,
+          user.loading,
+          checkProfileUpdateRqd(userFromAPI),
+        )
+      }
+    } else {
+      currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
+    }
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: currentUser,
+    })
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* LOGIN({ payload }) {
   const { email, password, isAdmin } = payload
   yield put({
@@ -20,13 +78,7 @@ export function* LOGIN({ payload }) {
   if (response) {
     const currentUser = isAdmin
       ? createAdminObj(response, true, false)
-      : createUserObj(
-          response,
-          true,
-          false,
-          isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber),
-        )
-
+      : createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -77,7 +129,7 @@ export function* REGISTER({ payload }) {
   const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
   if (response) {
     const currentUser = createUserObj(response, true, false, true)
-    yield put({
+    yield putResolve({
       type: 'user/SET_STATE',
       payload: {
         ...currentUser,
@@ -122,48 +174,6 @@ export function* CHANGE_PASSWORD({ payload }) {
   })
 }
 
-export function* LOAD_CURRENT_ACCOUNT() {
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: true,
-    },
-  })
-  const user = yield call(jwt.getLocalUserData)
-  if (user) {
-    let currentUser = resetUser
-    if (user.userType === USER_TYPE_ENUM.ADMIN) {
-      currentUser = createAdminObj(user, user.authorized, user.loading)
-    } else {
-      let userFromAPI = resetUser
-      if (!isEmpty(user.accountId)) {
-        userFromAPI = yield call(jwt.getProfile, user.accountId)
-        currentUser = createUserObj(
-          userFromAPI,
-          user.authorized,
-          user.loading,
-          user.requiresProfileUpdate,
-        )
-      } else {
-        currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
-      }
-    }
-    yield putResolve({
-      type: 'user/SET_STATE',
-      payload: currentUser,
-    })
-  }
-  yield putResolve({
-    type: 'menu/GET_DATA',
-  })
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: false,
-    },
-  })
-}
-
 export function* LOGOUT() {
   yield call(jwt.logout)
   yield putResolve({
@@ -176,24 +186,18 @@ export function* LOGOUT() {
   yield history.push('/')
 }
 
-export function* UPDATE_PROFILE({ payload }) {
-  const { accountId, firstName, lastName, contactNumber, isStudent } = payload
+export function* UPDATE_PERSONAL_INFO({ payload }) {
+  const { accountId, firstName, lastName, contactNumber } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(
-    jwt.updateProfile,
-    accountId,
-    firstName,
-    lastName,
-    contactNumber,
-    isStudent,
-  )
+  const user = yield call(jwt.getLocalUserData)
+  const response = yield call(jwt.updatePersonalInfo, accountId, firstName, lastName, contactNumber)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -202,18 +206,16 @@ export function* UPDATE_PROFILE({ payload }) {
         contactNumber: currentUser.contactNumber,
       },
     })
-    yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
-    if (currentUser.requiresProfileUpdate) {
-      currentUser.requiresProfileUpdate = false
-      yield call(jwt.updateLocalUserData, currentUser)
-      yield putResolve({
-        type: 'user/SET_STATE',
-        payload: {
-          requiresProfileUpdate: false,
-        },
-      })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
     }
+    yield call(jwt.updateLocalUserData, currentUser)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        requiresProfileUpdate: currentUser.requiresProfileUpdate,
+      },
+    })
     notification.success({
       message: 'Profile Updated Successfully',
       description: 'We have received your new personal information.',
@@ -231,16 +233,17 @@ export function* UPDATE_PROFILE({ payload }) {
 }
 
 export function* UPDATE_ABOUT({ payload }) {
-  const { accountId, isStudent, updateHeadline, headline, bio } = payload
+  const { accountId, updateHeadline, headline, bio } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwt.updateAbout, accountId, isStudent, updateHeadline, headline, bio)
+  const user = yield call(jwt.getLocalUserData)
+  const response = yield call(jwt.updateAbout, accountId, updateHeadline, headline, bio)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -248,8 +251,16 @@ export function* UPDATE_ABOUT({ payload }) {
         bio: currentUser.bio,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        requiresProfileUpdate: currentUser.requiresProfileUpdate,
+      },
+    })
     notification.success({
       message: 'Profile Updated',
     })
@@ -266,23 +277,23 @@ export function* UPDATE_ABOUT({ payload }) {
 }
 
 export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
-  const { accountId, isStudent, isPrivateProfile, emailNotification, chatPrivacy } = payload
+  const { accountId, isPrivateProfile, emailNotification, chatPrivacy } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(
     jwt.updateAccountSettings,
     accountId,
-    isStudent,
     isPrivateProfile,
     emailNotification,
     chatPrivacy,
   )
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    let currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -291,6 +302,9 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
         chatPrivacy: currentUser.chatPrivacy,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
     currentUser = yield select(selectors.user)
     notification.success({
@@ -309,23 +323,17 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
 }
 
 export function* UPDATE_WORK_DETAILS({ payload }) {
-  const { accountId, isStudent, isIndustry, industry, occupation } = payload
+  const { accountId, isIndustry, industry, occupation } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(
-    jwt.updateWorkDetails,
-    accountId,
-    isStudent,
-    isIndustry,
-    industry,
-    occupation,
-  )
+  const user = yield call(jwt.getLocalUserData)
+  const response = yield call(jwt.updateWorkDetails, accountId, isIndustry, industry, occupation)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -333,8 +341,10 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
         occupation: currentUser.occupation,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
     if (isIndustry) {
       notification.success({
         message: 'Industry Details Updated',
@@ -348,6 +358,78 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
   yield putResolve({
     type: 'menu/GET_DATA',
   })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_PERSONALITY({ payload }) {
+  const { accountId, personality } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const user = yield call(jwt.getLocalUserData)
+  const response = yield call(jwt.updatePersonality, accountId, personality)
+  if (response) {
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        personality: currentUser.personality,
+      },
+    })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
+    yield call(jwt.updateLocalUserData, currentUser)
+    notification.success({
+      message: 'Personality Updated',
+    })
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* UPDATE_ADMIN_VERIFIED({ payload }) {
+  const { accountId, adminVerified } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const user = yield call(jwt.getLocalUserData)
+  const response = yield call(jwt.updateAdminVerified, accountId, adminVerified)
+  if (response) {
+    let currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        adminVerified: currentUser.adminVerified,
+      },
+    })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
+    yield call(jwt.updateLocalUserData, currentUser)
+    currentUser = yield select(selectors.user)
+    notification.success({
+      message: 'Your profile was submitted for verification.',
+    })
+  }
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -399,6 +481,96 @@ export function* ADD_EXPERIENCE({ payload }) {
   })
 }
 
+export function* EDIT_EXPERIENCE({ payload }) {
+  const {
+    accountId,
+    experienceId,
+    role,
+    dateStart,
+    dateEnd,
+    description,
+    companyName,
+    companyUrl,
+  } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(
+    jwt.editExperience,
+    accountId,
+    experienceId,
+    role,
+    dateStart,
+    dateEnd,
+    description,
+    companyName,
+    companyUrl,
+  )
+  if (response) {
+    if (response.experience) {
+      const currentUser = yield select(selectors.user)
+      const experiences = currentUser.Experience
+      const updatedExperiences = experiences.filter(obj => {
+        return obj.experienceId !== experienceId
+      })
+      updatedExperiences.push(response.experience)
+      yield putResolve({
+        type: 'user/SET_STATE',
+        payload: {
+          Experience: updatedExperiences,
+        },
+      })
+      yield call(jwt.updateLocalUserData, currentUser)
+      notification.success({
+        message: 'Your experience was updated successfully.',
+      })
+    }
+  }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
+export function* DELETE_EXPERIENCE({ payload }) {
+  const { accountId, experienceId } = payload
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  const response = yield call(jwt.deleteExperience, accountId, experienceId)
+  if (response) {
+    const currentUser = yield select(selectors.user)
+    const experiences = currentUser.Experience
+    const updatedExperiences = experiences.filter(obj => {
+      return obj.experienceId !== experienceId
+    })
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        Experience: updatedExperiences,
+      },
+    })
+    yield call(jwt.updateLocalUserData, currentUser)
+    notification.success({
+      message: 'Your experience was deleted successfully.',
+    })
+  }
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* DELETE_ACCOUNT({ payload }) {
   const { accountId } = payload
   yield put({
@@ -437,12 +609,16 @@ export default function* rootSaga() {
     takeEvery(actions.LOGOUT, LOGOUT),
     takeEvery(actions.CHANGE_PASSWORD, CHANGE_PASSWORD),
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
-    takeEvery(actions.UPDATE_PROFILE, UPDATE_PROFILE),
     takeEvery(actions.DELETE_ACCOUNT, DELETE_ACCOUNT),
+    takeEvery(actions.UPDATE_PERSONAL_INFO, UPDATE_PERSONAL_INFO),
     takeEvery(actions.UPDATE_ACCOUNT_SETTINGS, UPDATE_ACCOUNT_SETTINGS),
     takeEvery(actions.UPDATE_ABOUT, UPDATE_ABOUT),
     takeEvery(actions.UPDATE_WORK_DETAILS, UPDATE_WORK_DETAILS),
+    takeEvery(actions.UPDATE_PERSONALITY, UPDATE_PERSONALITY),
+    takeEvery(actions.UPDATE_ADMIN_VERIFIED, UPDATE_ADMIN_VERIFIED),
     takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
+    takeEvery(actions.EDIT_EXPERIENCE, EDIT_EXPERIENCE),
+    takeEvery(actions.DELETE_EXPERIENCE, DELETE_EXPERIENCE),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }
