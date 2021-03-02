@@ -42,8 +42,6 @@ const MentorProfile = () => {
   useEffect(() => {
     const getMentors = async () => {
       const response = await jwtAdmin.getSensei(mentorId)
-      // console.log('response')
-      // console.log(response)
       setMentor(response)
       console.log(response)
     }
