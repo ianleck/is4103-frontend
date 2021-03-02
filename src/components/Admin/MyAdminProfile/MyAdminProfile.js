@@ -14,13 +14,15 @@ const MyAdminProfile = () => {
   const saveFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <button
-          type="button"
+        <Button
+          ghost
+          type="primary"
+          size="large"
           onClick={() => setShowEditInformation(false)}
-          className="btn btn-outline-default"
+          className=""
         >
           Close
-        </button>
+        </Button>
       </div>
       <div className="col-auto">
         <Button
@@ -39,13 +41,15 @@ const MyAdminProfile = () => {
   const passwordFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <button
-          type="button"
+        <Button
+          ghost
+          type="primary"
+          size="large"
           onClick={() => setshowChangePassword(false)}
-          className="btn btn-outline-default"
+          className=""
         >
-          Cancel
-        </button>
+          Close
+        </Button>
       </div>
       <div className="col-auto">
         <Button
@@ -154,24 +158,31 @@ const MyAdminProfile = () => {
           </div>
         </div>
 
-        <div className="card">
-          <Button
-            type="primary"
-            shape="round"
-            icon={<EditOutlined />}
-            onClick={() => setShowEditInformation(true)}
-          >
-            Edit Account
-          </Button>
-          <br />
-          <Button
-            type="primary"
-            shape="round"
-            icon={<EditOutlined />}
-            onClick={() => setshowChangePassword(true)}
-          >
-            Change Password
-          </Button>
+        <div className="row">
+          <div className="col-12">
+            <Button
+              block
+              type="primary"
+              size="large"
+              shape="round"
+              icon={<EditOutlined />}
+              onClick={() => setShowEditInformation(true)}
+            >
+              Edit Account
+            </Button>
+          </div>
+          <div className="col-12 mt-4">
+            <Button
+              block
+              type="primary"
+              size="large"
+              shape="round"
+              icon={<EditOutlined />}
+              onClick={() => setshowChangePassword(true)}
+            >
+              Change Password
+            </Button>
+          </div>
         </div>
       </div>
 

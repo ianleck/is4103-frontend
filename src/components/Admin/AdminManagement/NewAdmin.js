@@ -155,13 +155,18 @@ const NewAdmin = () => {
                   <Option value="SUPERADMIN">SUPERADMIN</Option>
                 </Select>
               </Form.Item> */}
-
-            <Button type="primary" htmlType="submit">
-              Create New Admin
-            </Button>
-            <Button type="danger" onClick={handleCancel}>
-              Cancel
-            </Button>
+            <div className="row">
+              <div className="col-auto">
+                <Button type="primary" size="large" shape="round" htmlType="submit">
+                  Create New Admin
+                </Button>
+              </div>
+              <div className="col-auto">
+                <Button type="danger" size="large" shape="round" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
           </Form>
         </div>
       </div>
