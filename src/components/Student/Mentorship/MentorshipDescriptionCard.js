@@ -4,14 +4,17 @@ import { useParams } from 'react-router-dom'
 import { getMentorshipListing } from 'services/mentorshipListing'
 
 const MentorshipDescriptionCard = () => {
-  const [listingDescription, setListingDescription] = useState()
+  const [listingDescription, setListingDescription] = useState([])
   const { mentorshipListingId } = useParams()
 
   useEffect(() => {
     const getListing = async () => {
       const listing = await getMentorshipListing(mentorshipListingId)
-      console.log(listing)
-      setListingDescription(listing.mentorshipListing.description)
+      if (!listing) {
+        setListingDescription('Blank Description')
+      } else {
+        setListingDescription(listing.mentorshipListing.description)
+      }
     }
     getListing()
   }, [mentorshipListingId])

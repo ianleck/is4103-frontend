@@ -15,8 +15,11 @@ const MentorshipExperienceCard = () => {
   useEffect(() => {
     const getListing = async () => {
       const listing = await getMentorshipListing(mentorshipListingId)
-      console.log(listing)
-      setExperience(listing.experience)
+      if (!listing) {
+        setExperience([])
+      } else {
+        setExperience(listing.experience)
+      }
     }
     getListing()
   }, [mentorshipListingId])

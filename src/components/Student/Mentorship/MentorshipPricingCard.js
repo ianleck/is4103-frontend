@@ -5,12 +5,10 @@ const MentorshipPricingCard = () => {
   return (
     <div className="card">
       <div className="card-body">
-        <div className="row justify-content-between">
-          <div className="col-12 text-left mt-2">
-            <Descriptions title="Pricing ">
-              <p>$10/month</p> {/* hard coded to be changed once pricing is added */}
-            </Descriptions>
-          </div>
+        <div className="col-12 text-left mt-2">
+          <Descriptions title="Pricing ">
+            <div>$10/month {/* hard coded to be changed once pricing is added */}</div>
+          </Descriptions>
         </div>
       </div>
     </div>
