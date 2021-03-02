@@ -2099,13 +2099,6 @@ export const personalities = [
     personalityDescription:
       'Spontaneous, energetic and enthusiastic people – life is never boring around them.',
   },
-  {
-    personalityId: 17,
-    personalityName: 'PTSD',
-    personalityTraits: 'Traumatised',
-    personalityDescription:
-      'A psychiatric disorder that may occur in people who have experienced or witnessed a traumatic event such as a natural disaster.',
-  },
 ]
 
 export const categories = {

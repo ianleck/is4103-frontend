@@ -8,6 +8,64 @@ import { createAdminObj, createUserObj, resetUser } from 'components/utils'
 import actions from './actions'
 import * as selectors from '../selectors'
 
+function checkProfileUpdateRqd(user) {
+  user.requiresProfileUpdate =
+    user.headline === '' ||
+    isNil(user.headline) ||
+    user.bio === '' ||
+    isNil(user.bio) ||
+    user.firstName === '' ||
+    isNil(user.firstName) ||
+    user.lastName === '' ||
+    isNil(user.lastName) ||
+    user.contactNumber === '' ||
+    isNil(user.contactNumber)
+
+  return user.requiresProfileUpdate
+}
+
+export function* LOAD_CURRENT_ACCOUNT() {
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+  let currentUser = resetUser
+  const user = yield call(jwt.getLocalUserData)
+  if (user) {
+    if (user.userType === USER_TYPE_ENUM.ADMIN) {
+      currentUser = createAdminObj(user, user.authorized, user.loading)
+    } else if (!isEmpty(user.accountId)) {
+      const userFromAPI = yield call(jwt.getProfile, user.accountId)
+      if (userFromAPI) {
+        userFromAPI.accessToken = user.accessToken
+        currentUser = createUserObj(
+          userFromAPI,
+          user.authorized,
+          user.loading,
+          checkProfileUpdateRqd(userFromAPI),
+        )
+      }
+    } else {
+      currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
+    }
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: currentUser,
+    })
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export function* LOGIN({ payload }) {
   const { email, password, isAdmin } = payload
   yield put({
@@ -20,13 +78,7 @@ export function* LOGIN({ payload }) {
   if (response) {
     const currentUser = isAdmin
       ? createAdminObj(response, true, false)
-      : createUserObj(
-          response,
-          true,
-          false,
-          isNil(response.firstName) || isNil(response.lastName) || isNil(response.contactNumber),
-        )
-
+      : createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -122,52 +174,6 @@ export function* CHANGE_PASSWORD({ payload }) {
   })
 }
 
-export function* LOAD_CURRENT_ACCOUNT() {
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: true,
-    },
-  })
-  const user = yield call(jwt.getLocalUserData)
-  if (user) {
-    let currentUser = resetUser
-    if (user.userType === USER_TYPE_ENUM.ADMIN) {
-      currentUser = createAdminObj(user, user.authorized, user.loading)
-    } else {
-      let userFromAPI = resetUser
-      if (!isEmpty(user.accountId)) {
-        userFromAPI = yield call(jwt.getProfile, user.accountId)
-        if (userFromAPI) {
-          userFromAPI.accessToken = user.accessToken
-          currentUser = createUserObj(
-            userFromAPI,
-            user.authorized,
-            user.loading,
-            user.requiresProfileUpdate,
-          )
-        }
-      } else {
-        currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
-      }
-      currentUser.requiresProfileUpdate = checkProfileUpdateRqd(currentUser)
-    }
-    yield putResolve({
-      type: 'user/SET_STATE',
-      payload: currentUser,
-    })
-  }
-  yield putResolve({
-    type: 'menu/GET_DATA',
-  })
-  yield put({
-    type: 'user/SET_STATE',
-    payload: {
-      loading: false,
-    },
-  })
-}
-
 export function* LOGOUT() {
   yield call(jwt.logout)
   yield putResolve({
@@ -180,22 +186,6 @@ export function* LOGOUT() {
   yield history.push('/')
 }
 
-function checkProfileUpdateRqd(user) {
-  user.requiresProfileUpdate =
-    user.headline === '' ||
-    isNil(user.headline) ||
-    user.bio === '' ||
-    isNil(user.bio) ||
-    user.firstName === '' ||
-    isNil(user.firstName) ||
-    user.lastName === '' ||
-    isNil(user.lastName) ||
-    user.contactNumber === '' ||
-    isNil(user.contactNumber)
-
-  return user.requiresProfileUpdate
-}
-
 export function* UPDATE_PERSONAL_INFO({ payload }) {
   const { accountId, firstName, lastName, contactNumber } = payload
   yield put({
@@ -204,9 +194,10 @@ export function* UPDATE_PERSONAL_INFO({ payload }) {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(jwt.updatePersonalInfo, accountId, firstName, lastName, contactNumber)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -215,9 +206,9 @@ export function* UPDATE_PERSONAL_INFO({ payload }) {
         contactNumber: currentUser.contactNumber,
       },
     })
-    yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
-    currentUser.requiresProfileUpdate = checkProfileUpdateRqd(currentUser)
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
     yield putResolve({
       type: 'user/SET_STATE',
@@ -249,9 +240,10 @@ export function* UPDATE_ABOUT({ payload }) {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(jwt.updateAbout, accountId, updateHeadline, headline, bio)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -259,18 +251,18 @@ export function* UPDATE_ABOUT({ payload }) {
         bio: currentUser.bio,
       },
     })
-    yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
-    notification.success({
-      message: 'Profile Updated',
-    })
-    currentUser.requiresProfileUpdate = checkProfileUpdateRqd(currentUser)
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
         requiresProfileUpdate: currentUser.requiresProfileUpdate,
       },
+    })
+    notification.success({
+      message: 'Profile Updated',
     })
   }
   yield putResolve({
@@ -292,6 +284,7 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(
     jwt.updateAccountSettings,
     accountId,
@@ -300,7 +293,7 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
     chatPrivacy,
   )
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    let currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -309,6 +302,9 @@ export function* UPDATE_ACCOUNT_SETTINGS({ payload }) {
         chatPrivacy: currentUser.chatPrivacy,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
     currentUser = yield select(selectors.user)
     notification.success({
@@ -334,9 +330,10 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(jwt.updateWorkDetails, accountId, isIndustry, industry, occupation)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
@@ -344,8 +341,10 @@ export function* UPDATE_WORK_DETAILS({ payload }) {
         occupation: currentUser.occupation,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
     if (isIndustry) {
       notification.success({
         message: 'Industry Details Updated',
@@ -375,15 +374,19 @@ export function* UPDATE_PERSONALITY({ payload }) {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(jwt.updatePersonality, accountId, personality)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    let currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        personality,
+        personality: currentUser.personality,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
     currentUser = yield select(selectors.user)
     notification.success({
@@ -409,15 +412,19 @@ export function* UPDATE_ADMIN_VERIFIED({ payload }) {
       loading: true,
     },
   })
+  const user = yield call(jwt.getLocalUserData)
   const response = yield call(jwt.updateAdminVerified, accountId, adminVerified)
   if (response) {
-    let currentUser = createUserObj(response, true, false, false)
+    let currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        adminVerified,
+        adminVerified: currentUser.adminVerified,
       },
     })
+    if (!isEmpty(user.accessToken)) {
+      currentUser.accessToken = user.accessToken
+    }
     yield call(jwt.updateLocalUserData, currentUser)
     currentUser = yield select(selectors.user)
     notification.success({

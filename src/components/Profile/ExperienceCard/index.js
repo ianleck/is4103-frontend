@@ -232,12 +232,6 @@ const ExperienceCard = () => {
           hideRequiredMark
           onFinish={onAddExperience}
           onFinishFailed={onFinishFailed}
-          initialValues={{
-            role: 'Software Enginger',
-            description: 'Modern day farmer',
-            companyName: 'TimApple',
-            companyUrl: 'https://google.com',
-          }}
         >
           <div className="row">
             <div className="col-12">
@@ -391,7 +385,7 @@ const ExperienceCard = () => {
             <div className="col-12">
               <Form.Item className="mb-1">
                 <Popconfirm
-                  title="Do you wish to delete your account?"
+                  title="Do you wish to delete this experience?"
                   visible={isConfirmDelete}
                   onConfirm={onDeleteExperience}
                   okText="Delete"
