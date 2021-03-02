@@ -68,7 +68,7 @@ const MentorshipApplications = () => {
   const cancelApplication = async mentorshipContractId => {
     await cancelMentorshipApplication(mentorshipContractId).then(_data => {
       if (_data) {
-        notification.success({ message: 'success', description: _data.message })
+        notification.success({ message: 'Success', description: _data.message })
         getApplications()
       }
     })
@@ -121,7 +121,7 @@ const MentorshipApplications = () => {
           </div>
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
-              title="Are you sure to accept application？"
+              title="Are you sure you wish to accept this application？"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => acceptApplication(record.mentorshipContractId)}
             >
@@ -130,7 +130,7 @@ const MentorshipApplications = () => {
           )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
-              title="Are you sure to reject application？"
+              title="Are you sure you wish to reject this application？"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => rejectApplication(record.mentorshipContractId)}
             >
@@ -164,7 +164,7 @@ const MentorshipApplications = () => {
           </div>
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
-              title="Are you sure to cancel application？"
+              title="Are you sure you wish to cancel your application？"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => cancelApplication(record.mentorshipContractId)}
             >
