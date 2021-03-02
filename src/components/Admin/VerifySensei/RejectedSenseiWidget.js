@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import * as jwtAdmin from 'services/jwt/admin'
 
-const UnverifiedWidget = () => {
+const RejectedSenseiWidget = () => {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const UnverifiedWidget = () => {
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
-        if (response[i].adminVerified === 'PENDING' || response[i].adminVerified === 'SHELL') {
+        if (response[i].adminVerified === 'REJECTED') {
           counter += 1
         }
       }
@@ -24,14 +24,14 @@ const UnverifiedWidget = () => {
 
   return (
     <div className="card">
-      <div className="card-body bg-warning">
-        <h4 className="d-flex align-items-center justify-content-center text-white ">{count}</h4>
+      <div className="card-body bg-danger">
+        <h4 className="d-flex align-items-center justify-content-center text-white">{count}</h4>
         <h6 className="d-flex align-items-center justify-content-center text-white">
-          Unverified Senseis
+          Rejected Senseis
         </h6>
       </div>
     </div>
   )
 }
 
-export default UnverifiedWidget
+export default RejectedSenseiWidget

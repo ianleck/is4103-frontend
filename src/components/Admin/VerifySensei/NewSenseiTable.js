@@ -28,12 +28,10 @@ const NewMentorTable = () => {
         unverified = [...unverified, response[i]]
       }
     }
-    // console.log(unverified)
     setSenseis(unverified)
   }
 
   const onButtonClick = record => {
-    // console.log('button', record)
     const path = `/admin/user-management/verify-senseis/${record.accountId}`
     history.push(path)
   }
@@ -68,10 +66,10 @@ const NewMentorTable = () => {
     <div className="card">
       <div className="card-header card-header-flex">
         <div className="d-flex flex-column justify-content-center mr-auto">
-          <h5>List of New Senseis</h5>
+          <h5>List of Senseis Pending Verification</h5>
         </div>
         <Tabs activeKey={tabKey} className="kit-tabs" onChange={changeTab}>
-          <TabPane tab="New Senseis" key="1" />
+          <TabPane tab="Pending Senseis" key="1" />
         </Tabs>
       </div>
 

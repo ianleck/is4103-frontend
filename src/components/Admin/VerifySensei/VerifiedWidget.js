@@ -9,13 +9,11 @@ const VerifiedWidget = () => {
   }, [])
 
   const populateSensei = async () => {
-    // change endpoint
     const response = await jwtAdmin.getAllSenseis()
     let counter = 0
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
-        // console.log(response[i])
         if (response[i].adminVerified === 'ACCEPTED') {
           counter += 1
         }
@@ -25,10 +23,12 @@ const VerifiedWidget = () => {
   }
 
   return (
-    <div className="card">
+    <div className="card bg-success">
       <div className="card-body">
-        <h4 className="d-flex align-items-center justify-content-center">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center">Verified Senseis</h6>
+        <h4 className="d-flex align-items-center justify-content-center text-white">{count}</h4>
+        <h6 className="d-flex align-items-center justify-content-center text-white">
+          Verified Senseis
+        </h6>
       </div>
     </div>
   )
