@@ -92,7 +92,7 @@ const VerifyProfileCard = () => {
           <div className="col-auto mt-2 mt-sm-0">
             <UploadFileComponent isTranscript />
           </div>
-          <div className="col-4">
+          <div className="col-auto">
             {user.transcriptUrl !== '' && !isNil(user.transcriptUrl) && (
               <DownloadFileComponent isTranscript />
             )}
@@ -105,7 +105,7 @@ const VerifyProfileCard = () => {
           <div className="col-auto mt-2 mt-sm-0">
             <UploadFileComponent isTranscript={false} />
           </div>
-          <div className="col-4">
+          <div className="col-auto">
             {user.cvUrl !== '' && !isNil(user.cvUrl) && (
               <DownloadFileComponent isTranscript={false} />
             )}
