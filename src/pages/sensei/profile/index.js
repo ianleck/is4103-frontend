@@ -19,13 +19,13 @@ const SenseiProfile = () => {
       <Helmet title="Profile" />
       {!!user.requiresProfileUpdate && <ProfileUpdateProfileBanner />}
       <div className="row">
-        <div className="col-xl-8 col-lg-12 order-xs-12 order-sm-12 order-md-12 order-lg-1">
+        <div className="col-xl-8 col-lg-12 order-12 order-xl-1">
           <ProfileAboutCard />
           <ProfileExperienceCard />
           <ProfilePersonalityCard />
           <ProfileUploadFilesCard />
         </div>
-        <div className="col-xl-4 col-lg-12 order-xs-1 order-sm-1 order-md-1 order-lg-12">
+        <div className="col-xl-4 col-lg-12 order-1 order-xl-12">
           <ProfilePersonalInfoCard />
           <ProfileVerificationCard />
           <ProfileIndustryCard />
