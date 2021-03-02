@@ -60,7 +60,7 @@ const MentorshipListings = () => {
   const deleteListing = mentorshipListingId => {
     deleteMentorshipListing(mentorshipListingId).then(_data => {
       if (_data) {
-        notification.success({ message: 'success', description: _data.message })
+        notification.success({ message: 'Success', description: _data.message })
         getListings()
       }
     })
@@ -112,7 +112,7 @@ const MentorshipListings = () => {
             <ListingButton data={record} getListings={getListings} />
           </div>
           <Popconfirm
-            title="Are you sure to delete？"
+            title="Are you sure you wish to delete this listing？"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
             onConfirm={() => deleteListing(record.mentorshipListingId)}
           >
