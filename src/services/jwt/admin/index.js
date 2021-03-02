@@ -123,15 +123,22 @@ export async function deleteAdmin(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function verifySensei(accountId, sensei) {
+export async function acceptSensei(accountId) {
   return apiClient
-    .put(
-      `/admin/verify-senseis/${accountId}`,
-      {
-        sensei,
-      },
-      { withCredentials: true },
-    )
+    .put(`/admin/accept-sensei/${accountId}`, { withCredentials: true })
+    .then(response => {
+      // console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.sensei
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function rejectSensei(accountId) {
+  return apiClient
+    .put(`/admin/reject-sensei/${accountId}`, { withCredentials: true })
     .then(response => {
       // console.log(response)
       if (response && !isNil(response.data)) {

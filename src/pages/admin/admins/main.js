@@ -25,42 +25,47 @@ const AdminsManagement = () => {
 
   return (
     <div>
-      <Helmet title="Admin Management" />
-      <div className="cui__utils__heading">
-        <strong>Admin Management</strong>
+      <div className="row">
+        <Helmet title="Admin Management" />
+        <div className="col-auto">
+          <div className="text-dark text-uppercase h3">
+            <strong>Admin Management</strong>
+          </div>
+        </div>
       </div>
-
       {isSuperAdmin ? (
-        <div className="row">
-          <div className="col-xl-12 col-lg-12">
-            <div className="col-xl-3 col-lg-12" style={{ float: 'right' }}>
-              <div className="card">
-                <Button
-                  type="primary"
-                  shape="round"
-                  onClick={addNewAdmin}
-                  icon={<UserAddOutlined />}
-                >
-                  Add new Admin
-                </Button>
-              </div>
+        <div>
+          <div className="row justify-content-end">
+            <div className="col-12 col-md-auto mt-4 mt-md-0">
+              <Button
+                block
+                type="primary"
+                shape="round"
+                size="large"
+                onClick={addNewAdmin}
+                icon={<UserAddOutlined />}
+              >
+                Add New Admin
+              </Button>
             </div>
           </div>
 
-          <div className="col-xl-4 col-lg-12">
-            <NormalAdminWidget />
-          </div>
+          <div className="row mt-4">
+            <div className="col-xl-4 col-lg-12">
+              <NormalAdminWidget />
+            </div>
 
-          <div className="col-xl-4 col-lg-12">
-            <SuperAdminWidget />
-          </div>
+            <div className="col-xl-4 col-lg-12">
+              <SuperAdminWidget />
+            </div>
 
-          <div className="col-xl-4 col-lg-12">
-            <ActiveAdminWidget />
-          </div>
+            <div className="col-xl-4 col-lg-12">
+              <ActiveAdminWidget />
+            </div>
 
-          <div className="col-xl-12 col-lg-12">
-            <AdminTable />
+            <div className="col-xl-12 col-lg-12">
+              <AdminTable />
+            </div>
           </div>
         </div>
       ) : (

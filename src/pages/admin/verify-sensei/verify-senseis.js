@@ -22,22 +22,31 @@ const VerifyMentors = () => {
 
   return (
     <div>
-      <Helmet title="Verify new Mentor" />
-      <div className="cui__utils__heading">
-        <strong>Verify Senseis</strong>
-      </div>
-
       <div className="row">
-        <div className="col-xl-12 col-lg-12">
-          <div className="col-xl-2 col-lg-12">
-            <div className="card">
-              <Button type="primary" shape="round" onClick={onBack} icon={<ArrowLeftOutlined />}>
-                Back
-              </Button>
-            </div>
+        <Helmet title="User Management" />
+        <div className="col-auto">
+          <div className="text-dark text-uppercase h3">
+            <strong>Verify Senseis</strong>
           </div>
         </div>
+      </div>
 
+      <div className="row mt-4">
+        <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+          <Button
+            block
+            type="primary"
+            size="large"
+            shape="round"
+            onClick={onBack}
+            icon={<ArrowLeftOutlined />}
+          >
+            Back
+          </Button>
+        </div>
+      </div>
+
+      <div className="row mt-4">
         <div className="col-xl-4 col-lg-12">
           <UnverifiedWidget />
         </div>
