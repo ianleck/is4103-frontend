@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, Popconfirm } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { isNil } from 'lodash'
+import * as jwt from 'services/jwt'
 
 const ExperienceCard = () => {
   const { TextArea } = Input
@@ -17,6 +18,21 @@ const ExperienceCard = () => {
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
 
   const [editExperienceForm] = Form.useForm()
+
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!isNil(user.accountId)) {
+        const userRsp = await jwt.getProfile(user.accountId)
+        dispatch({
+          type: 'user/SET_STATE',
+          payload: {
+            Experience: userRsp.Experience,
+          },
+        })
+      }
+    }
+    getProfile()
+  }, [dispatch, user.accountId])
 
   const sortExperienceByDate = () => {
     if (user) {

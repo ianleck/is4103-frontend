@@ -28,6 +28,7 @@ export const user = state => {
     userType: state.user.userType,
     username: state.user.username,
     // Local Attributes
+    accessToken: state.user.accessToken,
     authorized: state.user.authorized,
     loading: state.user.loading,
     requiresProfileUpdate: state.user.requiresProfileUpdate,

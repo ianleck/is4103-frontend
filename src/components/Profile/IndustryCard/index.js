@@ -70,7 +70,7 @@ const IndustryCard = () => {
     return (
       <div className="col-12">
         <div className="row">
-          <div className="col-5 col-md-4">
+          <div className="col-6 col-md-5">
             <Button
               block
               type="primary"
@@ -83,7 +83,7 @@ const IndustryCard = () => {
               &nbsp;&nbsp;Save
             </Button>
           </div>
-          <div className="col-5 col-md-4">
+          <div className="col-6 col-md-5">
             <Button
               block
               ghost
