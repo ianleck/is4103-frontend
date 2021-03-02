@@ -1,51 +1,68 @@
-import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, ConfigProvider, Empty, Modal, Space, Table, Tabs } from 'antd'
+import {
+  CheckOutlined,
+  CloseOutlined,
+  EyeOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
+import {
+  Button,
+  ConfigProvider,
+  Empty,
+  Modal,
+  notification,
+  Popconfirm,
+  Space,
+  Table,
+  Tabs,
+} from 'antd'
 import { filter, size } from 'lodash'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import {
+  acceptMentorshipApplication,
+  getSenseiMentorshipApplications,
+  rejectMentorshipApplication,
+} from 'services/mentorshipApplications'
 
 const MentorshipApplications = () => {
+  const user = useSelector(state => state.user)
+  const [mentorshipApplications, setMentorshipApplications] = useState([])
+  const { accountId } = user
   const { TabPane } = Tabs
   const [tabKey, setTabKey] = useState('pending')
 
   const changeTab = key => {
     setTabKey(key)
   }
-  // for table
-  // TO DO: get from state eventually
-  const data = [
-    {
-      key: '1',
-      mentorshipListingId: 'MENT001',
-      category: 'Finance',
-      studentName: 'Ann',
-      dateReceived: '02-01-2021',
-      status: 'pending',
-      personalStatement:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    },
-    {
-      key: '2',
-      mentorshipListingId: 'MENT002',
-      category: 'Digital Illustration',
-      studentName: 'Bob',
-      dateReceived: '03-02-2021',
-      status: 'approved',
-      personalStatement:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    },
-    {
-      key: '3',
-      mentorshipListingId: 'MENT002',
-      category: 'Digital Illustration',
-      studentName: 'Charlie',
-      dateReceived: '03-02-2021',
-      status: 'rejected',
-      personalStatement:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    },
-  ]
 
-  // const emptyData = []
+  const getApplications = async () => {
+    const result = await getSenseiMentorshipApplications(accountId)
+    const data = result.contracts.map((c, i) => ({ ...c, key: i }))
+    setMentorshipApplications(data)
+  }
+
+  const acceptApplication = mentorshipContractId => {
+    acceptMentorshipApplication(mentorshipContractId).then(res => {
+      if (res) {
+        notification.success({ message: res.message })
+        getApplications()
+      }
+    })
+  }
+
+  const rejectApplication = mentorshipContractId => {
+    rejectMentorshipApplication(mentorshipContractId).then(res => {
+      if (res) {
+        notification.success({ message: res.message })
+        getApplications()
+      }
+    })
+  }
+
+  useEffect(() => {
+    getApplications()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountId])
 
   const tableColumns = [
     {
@@ -54,21 +71,29 @@ const MentorshipApplications = () => {
       key: 'mentorshipListingId',
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: 'Mentorship Title',
+      dataIndex: 'MentorshipListing',
+      key: 'MentorshipListing',
       responsive: ['sm'],
+      render: record => <span>{record.name}</span>,
     },
     {
       title: 'Student Name',
-      dataIndex: 'studentName',
+      dataIndex: 'Student',
       key: 'studentName',
       responsive: ['md'],
+      render: record => {
+        return (
+          <span>
+            {record.firstName} {record.lastName}
+          </span>
+        )
+      },
     },
     {
       title: 'Date Received',
-      dataIndex: 'dateReceived',
-      key: 'dateReceived',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
       responsive: ['md'],
     },
     {
@@ -79,11 +104,23 @@ const MentorshipApplications = () => {
           <div>
             <ViewPersonalStatementButton record={record} />
           </div>
-          {record.status === 'pending' && (
-            <Button type="primary" shape="circle" icon={<CheckOutlined />} />
+          {record.senseiApproval === 'PENDING' && (
+            <Popconfirm
+              title="Are you sure to accept application？"
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              onConfirm={() => acceptApplication(record.mentorshipContractId)}
+            >
+              <Button type="primary" shape="circle" icon={<CheckOutlined />} />
+            </Popconfirm>
           )}
-          {record.status === 'pending' && (
-            <Button type="danger" shape="circle" icon={<CloseOutlined />} />
+          {record.senseiApproval === 'PENDING' && (
+            <Popconfirm
+              title="Are you sure to reject application？"
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              onConfirm={() => rejectApplication(record.mentorshipContractId)}
+            >
+              <Button type="danger" shape="circle" icon={<CloseOutlined />} />
+            </Popconfirm>
           )}
         </Space>
       ),
@@ -104,11 +141,23 @@ const MentorshipApplications = () => {
       </div>
       <div className="card-body">
         {tabKey === 'pending' &&
-          showApplications('pending', filter(data, ['status', 'pending']), tableColumns)}
+          showApplications(
+            'pending',
+            filter(mentorshipApplications, ['senseiApproval', 'PENDING']),
+            tableColumns,
+          )}
         {tabKey === 'approved' &&
-          showApplications('approved', filter(data, ['status', 'approved']), tableColumns)}
+          showApplications(
+            'approved',
+            filter(mentorshipApplications, ['senseiApproval', 'APPROVED']),
+            tableColumns,
+          )}
         {tabKey === 'rejected' &&
-          showApplications('rejected', filter(data, ['status', 'rejected']), tableColumns)}
+          showApplications(
+            'rejected',
+            filter(mentorshipApplications, ['senseiApproval', 'REJECTED']),
+            tableColumns,
+          )}
       </div>
     </div>
   )
@@ -178,7 +227,7 @@ const ViewPersonalStatementButton = values => {
           </Button>,
         ]}
       >
-        {record.personalStatement}
+        {record.statement}
       </Modal>
     </div>
   )

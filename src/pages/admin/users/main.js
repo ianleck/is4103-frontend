@@ -23,27 +23,31 @@ const UsersManagement = () => {
 
   return (
     <div>
-      <Helmet title="User Management" />
-      <div className="cui__utils__heading">
-        <strong>User Management</strong>
-      </div>
-
       <div className="row">
-        <div className="col-xl-12 col-lg-12">
-          <div className="col-xl-3 col-lg-12" style={{ float: 'right' }}>
-            <div className="card">
-              <Button
-                type="primary"
-                shape="round"
-                onClick={verifyNewMentor}
-                icon={<UserAddOutlined />}
-              >
-                Verify New Senseis
-              </Button>
-            </div>
+        <Helmet title="User Management" />
+        <div className="col-auto">
+          <div className="text-dark text-uppercase h3">
+            <strong>User Management</strong>
           </div>
         </div>
+      </div>
 
+      <div className="row justify-content-end">
+        <div className="col-12 col-md-auto mt-4 mt-md-0">
+          <Button
+            block
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={verifyNewMentor}
+            icon={<UserAddOutlined />}
+          >
+            Verify New Senseis
+          </Button>
+        </div>
+      </div>
+
+      <div className="row mt-4">
         <div className="col-xl-4 col-lg-12">
           <StudentWidget />
         </div>
