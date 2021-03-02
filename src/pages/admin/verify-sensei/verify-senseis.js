@@ -6,7 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import NewMentorTable from '../../../components/Admin/VerifySensei/NewSenseiTable'
 import UnverifiedWidget from '../../../components/Admin/VerifySensei/UnverifiedWidget'
 import VerifiedWidget from '../../../components/Admin/VerifySensei/VerifiedWidget'
-import TotalSenseiWidget from '../../../components/Admin/VerifySensei/TotalSenseiWidget'
+import RejectedSenseiWidget from '../../../components/Admin/VerifySensei/RejectedSenseiWidget'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
@@ -48,15 +48,15 @@ const VerifyMentors = () => {
 
       <div className="row mt-4">
         <div className="col-xl-4 col-lg-12">
-          <UnverifiedWidget />
-        </div>
-
-        <div className="col-xl-4 col-lg-12">
           <VerifiedWidget />
         </div>
 
         <div className="col-xl-4 col-lg-12">
-          <TotalSenseiWidget />
+          <UnverifiedWidget />
+        </div>
+
+        <div className="col-xl-4 col-lg-12">
+          <RejectedSenseiWidget />
         </div>
 
         <div className="col-xl-12 col-lg-12">
