@@ -217,6 +217,11 @@ const routes = [
     Component: lazy(() => import('pages/student/settings')),
     exact: true,
   },
+  {
+    path: '/student/mentorship-listing/:mentorshipListingId',
+    Component: lazy(() => import('pages/mentorships/viewListing')),
+    exact: true,
+  },
   /*
 
 

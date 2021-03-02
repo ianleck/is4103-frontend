@@ -64,3 +64,16 @@ export async function updateMentorshipListing(data) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getMentorshipListing(mentorshipListingId) {
+  const url = `/mentorship/listing/${mentorshipListingId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
