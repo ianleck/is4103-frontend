@@ -60,7 +60,7 @@ const MentorshipListings = () => {
   const deleteListing = mentorshipListingId => {
     deleteMentorshipListing(mentorshipListingId).then(_data => {
       if (_data) {
-        notification.success({ message: 'success', description: _data.message })
+        notification.success({ message: 'Success', description: _data.message })
         getListings()
       }
     })
@@ -112,7 +112,7 @@ const MentorshipListings = () => {
             <ListingButton data={record} getListings={getListings} />
           </div>
           <Popconfirm
-            title="Are you sure to delete？"
+            title="Are you sure you wish to delete this listing？"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
             onConfirm={() => deleteListing(record.mentorshipListingId)}
           >
@@ -137,7 +137,7 @@ const MentorshipListings = () => {
       </div>
       <div className="card-body">
         {tabKey === 'about' && showAboutSection()}
-        {tabKey === 'listing' && showListingSection(mentorshipListings, tableColumns)}
+        {tabKey === 'listing' && showListingSection(mentorshipListings, tableColumns, getListings)}
       </div>
     </div>
   )
@@ -154,7 +154,7 @@ const showAboutSection = () => {
   )
 }
 
-const showListingSection = (dataSource, columns) => {
+const showListingSection = (dataSource, columns, getListings) => {
   const numMentorshipListings = size(dataSource)
   const isRenderEmpty = numMentorshipListings === 0
   const customizeRenderEmpty = () => (
@@ -171,7 +171,7 @@ const showListingSection = (dataSource, columns) => {
 
         <div className="col-auto">
           <div>
-            <ListingButton data={null} />
+            <ListingButton data={null} getListings={getListings} />
           </div>
         </div>
       </div>
@@ -182,7 +182,8 @@ const showListingSection = (dataSource, columns) => {
   )
 }
 
-const ListingButton = ({ data, getListings }) => {
+const ListingButton = property => {
+  const { data, getListings } = property
   const listingRecord = data
   const isUpdate = !isNil(listingRecord)
   const [visible, setVisible] = useState(false)

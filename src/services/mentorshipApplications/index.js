@@ -41,3 +41,29 @@ export async function getSenseiMentorshipApplications(accountId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getAllStudentMentorshipApplications(accountId) {
+  const url = `/mentorship/contract/student/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function cancelMentorshipApplication(mentorshipContractId) {
+  const url = `/mentorship/contract/${mentorshipContractId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

@@ -222,6 +222,11 @@ const routes = [
     Component: lazy(() => import('pages/mentorships/viewListing')),
     exact: true,
   },
+  {
+    path: '/student/dashboard/mentorship-applications',
+    Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
+    exact: true,
+  },
   /*
 
 

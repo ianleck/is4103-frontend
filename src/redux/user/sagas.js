@@ -247,8 +247,8 @@ export function* UPDATE_ABOUT({ payload }) {
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        headline,
-        bio,
+        headline: currentUser.headline,
+        bio: currentUser.bio,
       },
     })
     if (!isEmpty(user.accessToken)) {
@@ -377,18 +377,17 @@ export function* UPDATE_PERSONALITY({ payload }) {
   const user = yield call(jwt.getLocalUserData)
   const response = yield call(jwt.updatePersonality, accountId, personality)
   if (response) {
-    let currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
+    const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        personality,
+        personality: currentUser.personality,
       },
     })
     if (!isEmpty(user.accessToken)) {
       currentUser.accessToken = user.accessToken
     }
     yield call(jwt.updateLocalUserData, currentUser)
-    currentUser = yield select(selectors.user)
     notification.success({
       message: 'Personality Updated',
     })
@@ -419,7 +418,7 @@ export function* UPDATE_ADMIN_VERIFIED({ payload }) {
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        adminVerified,
+        adminVerified: currentUser.adminVerified,
       },
     })
     if (!isEmpty(user.accessToken)) {

@@ -20,6 +20,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   acceptMentorshipApplication,
+  cancelMentorshipApplication,
+  getAllStudentMentorshipApplications,
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
@@ -27,7 +29,7 @@ import {
 const MentorshipApplications = () => {
   const user = useSelector(state => state.user)
   const [mentorshipApplications, setMentorshipApplications] = useState([])
-  const { accountId } = user
+  const { accountId, userType } = user
   const { TabPane } = Tabs
   const [tabKey, setTabKey] = useState('pending')
 
@@ -35,8 +37,12 @@ const MentorshipApplications = () => {
     setTabKey(key)
   }
 
+  const isStudent = userType === 'STUDENT'
+
   const getApplications = async () => {
-    const result = await getSenseiMentorshipApplications(accountId)
+    const result = isStudent
+      ? await getAllStudentMentorshipApplications(accountId)
+      : await getSenseiMentorshipApplications(accountId)
     const data = result.contracts.map((c, i) => ({ ...c, key: i }))
     setMentorshipApplications(data)
   }
@@ -59,12 +65,21 @@ const MentorshipApplications = () => {
     })
   }
 
+  const cancelApplication = async mentorshipContractId => {
+    await cancelMentorshipApplication(mentorshipContractId).then(_data => {
+      if (_data) {
+        notification.success({ message: 'Success', description: _data.message })
+        getApplications()
+      }
+    })
+  }
+
   useEffect(() => {
     getApplications()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId])
 
-  const tableColumns = [
+  const senseiTableColumns = [
     {
       title: 'Mentorship Listing ID',
       dataIndex: 'mentorshipListingId',
@@ -106,7 +121,7 @@ const MentorshipApplications = () => {
           </div>
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
-              title="Are you sure to accept application？"
+              title="Are you sure you wish to accept this application？"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => acceptApplication(record.mentorshipContractId)}
             >
@@ -115,9 +130,43 @@ const MentorshipApplications = () => {
           )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
-              title="Are you sure to reject application？"
+              title="Are you sure you wish to reject this application？"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => rejectApplication(record.mentorshipContractId)}
+            >
+              <Button type="danger" shape="circle" icon={<CloseOutlined />} />
+            </Popconfirm>
+          )}
+        </Space>
+      ),
+    },
+  ]
+
+  const studentTableColumns = [
+    {
+      title: 'Mentorship Application ID',
+      dataIndex: 'mentorshipContractId',
+      key: 'mentorshipContractId',
+    },
+    {
+      title: 'Date Applied',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      responsive: ['md'],
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: record => (
+        <Space size="large">
+          <div>
+            <ViewPersonalStatementButton record={record} />
+          </div>
+          {record.senseiApproval === 'PENDING' && (
+            <Popconfirm
+              title="Are you sure you wish to cancel your application？"
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              onConfirm={() => cancelApplication(record.mentorshipContractId)}
             >
               <Button type="danger" shape="circle" icon={<CloseOutlined />} />
             </Popconfirm>
@@ -144,19 +193,19 @@ const MentorshipApplications = () => {
           showApplications(
             'pending',
             filter(mentorshipApplications, ['senseiApproval', 'PENDING']),
-            tableColumns,
+            isStudent ? studentTableColumns : senseiTableColumns,
           )}
         {tabKey === 'approved' &&
           showApplications(
             'approved',
             filter(mentorshipApplications, ['senseiApproval', 'APPROVED']),
-            tableColumns,
+            isStudent ? studentTableColumns : senseiTableColumns,
           )}
         {tabKey === 'rejected' &&
           showApplications(
             'rejected',
             filter(mentorshipApplications, ['senseiApproval', 'REJECTED']),
-            tableColumns,
+            isStudent ? studentTableColumns : senseiTableColumns,
           )}
       </div>
     </div>
