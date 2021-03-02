@@ -212,6 +212,12 @@ const routes = [
     Component: lazy(() => import('pages/student/settings')),
     exact: true,
   },
+  // Common Pages
+  {
+    path: '/mentorship/apply/:id',
+    Component: lazy(() => import('pages/mentorships/ApplyListing')),
+    exact: true,
+  },
   /*
 
 

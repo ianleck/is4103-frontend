@@ -8,8 +8,6 @@ const MentorshipListingListPage = () => {
 
   const getAllListing = () => {
     getMentorshipListings().then(data => {
-      console.log('data =', data)
-      console.log(listings)
       if (data) {
         setListings(data.mentorshipListings)
       }
@@ -48,8 +46,6 @@ const MentorshipListingListPage = () => {
 }
 
 const renderListing = listing => {
-  console.log('listing =', listing)
-
   const randomColor = Math.floor(Math.random() * 16777215).toString(16)
 
   return (

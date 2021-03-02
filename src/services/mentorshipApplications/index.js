@@ -15,6 +15,19 @@ export async function acceptMentorshipApplication(mentorshipContractId) {
     .catch(err => console.log(err))
 }
 
+export async function createMentorshipApplication(mentorshipListingId, body) {
+  const url = `/mentorship/contract/${mentorshipListingId}`
+  return apiClient
+    .post(url, body)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function rejectMentorshipApplication(mentorshipContractId) {
   const url = `/mentorship/reject-application/${mentorshipContractId}`
   return apiClient
