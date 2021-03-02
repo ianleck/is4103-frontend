@@ -1,4 +1,4 @@
-import MentorshipApplications from 'pages/sensei/mentorship/review-applications/MentorshipApplications'
+import MentorshipApplications from 'components/Mentorship/MentorshipApplications'
 import React from 'react'
 
 const StudentMentorshipApplications = () => {
