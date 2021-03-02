@@ -1,6 +1,6 @@
+import MentorshipApplications from 'components/Mentorship/MentorshipApplications'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MentorshipApplications from './MentorshipApplications'
 import MentorshipListings from './MentorshipListings'
 
 const ReviewApplications = () => {
