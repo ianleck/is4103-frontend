@@ -41,11 +41,6 @@ const MentorshipListings = () => {
     const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
     setMentorshipListings(listingRecords)
   }
-  // const getListings = useCallback(async () => {
-  //   const result = await getSenseiMentorshipListings(accountId)
-  //   const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
-  //   setMentorshipListings(listingRecords)
-  // }, [accountId])
 
   useEffect(() => {
     const getListingsEffect = async () => {
@@ -69,35 +64,7 @@ const MentorshipListings = () => {
         getListings()
       }
     })
-    // dispatch({
-    //   type: 'mentorship/DELETE_LISTING',
-    //   payload: mentorshipListingId,
-    // })
   }
-  // const categoryMapping = [
-  //   { id: '001', categoryName: 'Finance' },
-  //   { id: '002', categoryName: 'IT' },
-  //   { id: '003', categoryName: 'Health' },
-  // ]
-  // const categoryMappingWithKeys = keyBy(categoryMapping, 'id')
-  // for table
-  // TO DO: get from state eventually
-  // const data = [
-  //   {
-  //     key: '1',
-  //     mentorshipListingId: 'MENT001',
-  //     categories: ['001', '002'],
-  //     title: 'Becoming a financial consultant',
-  //     description: 'blah blah blah',
-  //   },
-  //   {
-  //     key: '2',
-  //     mentorshipListingId: 'MENT002',
-  //     categories: ['003'],
-  //     title: 'Thriving in graphics design industry',
-  //     description: 'blah blah blah',
-  //   },
-  // ]
 
   const tableColumns = [
     {
