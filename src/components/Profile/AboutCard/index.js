@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Form, Input } from 'antd'
 import { isNil } from 'lodash'
-import { USER_TYPE_ENUM } from 'constants/constants'
 
 const AboutCard = () => {
   const { TextArea } = Input
@@ -25,15 +24,17 @@ const AboutCard = () => {
     if (activate) {
       setShowHeadline(false)
       setEditHeadlineMode(true)
-    } else {
+    } else if (!isNil(currentHeadline)) {
       setShowHeadline(false)
+      setEditHeadlineMode(false)
+    } else {
+      setShowHeadline(true)
       setEditHeadlineMode(false)
     }
   }
 
   const onEditHeadline = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     values.updateHeadline = true
     setShowHeadline(false)
     setCurrentHeadline(values.headline)
@@ -51,15 +52,17 @@ const AboutCard = () => {
     if (activate) {
       setShowBio(false)
       setEditBioMode(true)
-    } else {
+    } else if (!isNil(currentBio)) {
       setShowBio(false)
+      setEditBioMode(false)
+    } else {
+      setShowBio(true)
       setEditBioMode(false)
     }
   }
 
   const onEditBio = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     values.updateHeadline = false
     setShowBio(false)
     setCurrentBio(values.bio)

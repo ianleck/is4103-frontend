@@ -3,7 +3,6 @@ import { Button, Empty, Form, Select } from 'antd'
 import { industries } from 'constants/information'
 import { useDispatch, useSelector } from 'react-redux'
 import { isNil } from 'lodash'
-import { USER_TYPE_ENUM } from 'constants/constants'
 
 const IndustryCard = () => {
   const { Option } = Select
@@ -11,7 +10,7 @@ const IndustryCard = () => {
   const dispatch = useDispatch()
 
   const [currentIndustry, setCurrentIndustry] = useState(user.industry)
-  const [showIndustry, setShowIndustry] = useState(!isNil(user.industry))
+  const [showIndustry, setShowIndustry] = useState(isNil(user.industry))
   const [editIndustryMode, setEditIndustryMode] = useState(false)
 
   const onChangeIndustry = values => {
@@ -20,8 +19,12 @@ const IndustryCard = () => {
 
   const activateEditIndustry = activate => {
     if (activate) {
-      setShowIndustry(true)
+      setShowIndustry(false)
       setEditIndustryMode(true)
+    } else if (!isNil(user.industry)) {
+      setShowIndustry(false)
+      setEditIndustryMode(false)
+      setCurrentIndustry(user.industry)
     } else {
       setShowIndustry(true)
       setEditIndustryMode(false)
@@ -46,13 +49,12 @@ const IndustryCard = () => {
 
   const onSaveIndustry = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     values.isIndustry = true
     dispatch({
       type: 'user/UPDATE_WORK_DETAILS',
       payload: values,
     })
-    setShowIndustry(true)
+    setShowIndustry(false)
     setCurrentIndustry(values.industry)
     if (isNil(values.industry)) {
       setShowIndustry(true)
@@ -147,8 +149,8 @@ const IndustryCard = () => {
         <div className="row align-items-center justify-content-between">
           <div className="col-12">
             <span className="text-dark h3">
-              {!editIndustryMode && !showIndustry && <Empty />}
-              {!editIndustryMode && showIndustry && user.industry}
+              {!editIndustryMode && showIndustry && <Empty />}
+              {!editIndustryMode && !showIndustry && user.industry}
               {editIndustryMode && <SelectIndustryDropdown />}
             </span>
           </div>

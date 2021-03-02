@@ -3,7 +3,6 @@ import { Button, Empty, Form, Select } from 'antd'
 import { occupations } from 'constants/information'
 import { useDispatch, useSelector } from 'react-redux'
 import { isNil } from 'lodash'
-import { USER_TYPE_ENUM } from 'constants/constants'
 
 const OccupationCard = () => {
   const { Option } = Select
@@ -11,7 +10,7 @@ const OccupationCard = () => {
   const dispatch = useDispatch()
 
   const [currentOccupation, setCurrentOccupation] = useState(user.occupation)
-  const [showOccupation, setShowOccupation] = useState(!isNil(user.occupation))
+  const [showOccupation, setShowOccupation] = useState(isNil(user.occupation))
   const [editOccupationMode, setEditOccupationMode] = useState(false)
 
   const onChangeOccupation = values => {
@@ -20,8 +19,12 @@ const OccupationCard = () => {
 
   const activateEditOccupation = activate => {
     if (activate) {
-      setShowOccupation(true)
+      setShowOccupation(false)
       setEditOccupationMode(true)
+    } else if (!isNil(user.occupation)) {
+      setShowOccupation(false)
+      setEditOccupationMode(false)
+      setCurrentOccupation(user.occupation)
     } else {
       setShowOccupation(true)
       setEditOccupationMode(false)
@@ -46,13 +49,12 @@ const OccupationCard = () => {
 
   const onSaveOccupation = values => {
     values.accountId = user.accountId
-    values.isStudent = user.userType === USER_TYPE_ENUM.STUDENT
     values.isIndustry = false
     dispatch({
       type: 'user/UPDATE_WORK_DETAILS',
       payload: values,
     })
-    setShowOccupation(true)
+    setShowOccupation(false)
     setCurrentOccupation(values.occupation)
     if (isNil(values.occupation)) {
       setShowOccupation(true)
@@ -147,8 +149,8 @@ const OccupationCard = () => {
         <div className="row align-items-center justify-content-between">
           <div className="col-12">
             <span className="text-dark h3">
-              {!editOccupationMode && !showOccupation && <Empty />}
-              {!editOccupationMode && showOccupation && user.occupation}
+              {!editOccupationMode && showOccupation && <Empty />}
+              {!editOccupationMode && !showOccupation && user.occupation}
               {editOccupationMode && <SelectOccupationDropdown />}
             </span>
           </div>

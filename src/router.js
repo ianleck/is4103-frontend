@@ -35,6 +35,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/auth/reset-password',
+    Component: lazy(() => import('pages/auth/reset-password')),
+    exact: true,
+  },
+  {
     path: '/auth/register',
     Component: lazy(() => import('pages/auth/register')),
     exact: true,
@@ -179,6 +184,11 @@ const routes = [
   {
     path: '/sensei/profile',
     Component: lazy(() => import('pages/sensei/profile')),
+    exact: true,
+  },
+  {
+    path: '/sensei/settings',
+    Component: lazy(() => import('pages/sensei/settings')),
     exact: true,
   },
   {

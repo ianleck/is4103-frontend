@@ -68,6 +68,38 @@ export async function changePassword(oldPassword, newPassword, confirmPassword) 
     .catch(err => console.log(err))
 }
 
+export async function forgetPassword(email) {
+  return apiClient
+    .post(`/auth/forgot-password/${email}`)
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function resetPassword(resetToken, accountId, newPassword) {
+  return apiClient
+    .put(`/auth/forgot-password`, {
+      resetToken,
+      accountId,
+      newPassword,
+    })
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function register(username, email, password, confirmPassword, isStudent) {
   return apiClient
     .post('/auth/register', {
@@ -115,7 +147,7 @@ export async function getProfile(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function updateProfile(accountId, firstName, lastName, contactNumber, isStudent) {
+export async function updatePersonalInfo(accountId, firstName, lastName, contactNumber) {
   return apiClient
     .put(
       `/user/${accountId}`,
@@ -130,8 +162,7 @@ export async function updateProfile(accountId, firstName, lastName, contactNumbe
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -141,7 +172,6 @@ export async function updateProfile(accountId, firstName, lastName, contactNumbe
 
 export async function updateAccountSettings(
   accountId,
-  isStudent,
   isPrivateProfile,
   emailNotification,
   chatPrivacy,
@@ -160,8 +190,7 @@ export async function updateAccountSettings(
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -169,7 +198,7 @@ export async function updateAccountSettings(
     .catch(err => console.log(err))
 }
 
-export async function updateAbout(accountId, isStudent, updateHeadline, headline, bio) {
+export async function updateAbout(accountId, updateHeadline, headline, bio) {
   let user = {}
   if (updateHeadline) {
     user = { headline }
@@ -186,8 +215,7 @@ export async function updateAbout(accountId, isStudent, updateHeadline, headline
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -195,7 +223,7 @@ export async function updateAbout(accountId, isStudent, updateHeadline, headline
     .catch(err => console.log(err))
 }
 
-export async function updateWorkDetails(accountId, isStudent, isIndustry, industry, occupation) {
+export async function updateWorkDetails(accountId, isIndustry, industry, occupation) {
   let user = {}
   if (isIndustry) {
     user = { industry }
@@ -212,8 +240,50 @@ export async function updateWorkDetails(accountId, isStudent, isIndustry, indust
     )
     .then(response => {
       if (!isNil(response.data)) {
-        if (isStudent && !isNil(response.data.student)) return response.data.student
-        if (!isNil(response.data.sensei)) return response.data.sensei
+        if (!isNil(response.data.user)) return response.data.user
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updatePersonality(accountId, personality) {
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          personality,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.user)) return response.data.user
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateAdminVerified(accountId, adminVerified) {
+  return apiClient
+    .put(
+      `/user/${accountId}`,
+      {
+        user: {
+          adminVerified,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      console.log(response)
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.user)) return response.data.user
         return false
       }
       return false
@@ -245,6 +315,57 @@ export async function addExperience(
       },
       { withCredentials: true },
     )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function editExperience(
+  accountId,
+  experienceId,
+  role,
+  dateStart,
+  dateEnd,
+  description,
+  companyName,
+  companyUrl,
+) {
+  return apiClient
+    .put(
+      `/user/experience/${accountId}`,
+      {
+        experience: {
+          experienceId,
+          role,
+          dateStart,
+          dateEnd,
+          description,
+          companyName,
+          companyUrl,
+        },
+      },
+      { withCredentials: true },
+    )
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function deleteExperience(accountId, experienceId) {
+  return apiClient
+    .delete(`/user/experience/${accountId}/${experienceId}`, { withCredentials: true })
     .then(response => {
       if (!isNil(response.data)) {
         if (!isNil(response.data.success)) return response.data
