@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 // import { getMentorshipListings } from 'services/mentorshipListing'
 import { createMentorshipApplication } from 'services/mentorshipApplications'
-
 import { Button, Card, Form, Input, notification } from 'antd'
-
+// import { useLocation } from 'react-router-dom'; // to get data from update application
+// import { useHistory } from 'react-router-dom';
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -20,9 +20,20 @@ const formItemLayout = {
 const ApplyListing = () => {
   const { id } = useParams()
   const [form] = Form.useForm()
+  // history.push({
+  //   pathname: '/home',
+  //   search: '?update=true',  // query string
+  //   state: {  // location state
+  //     update: true,
+  //   },
+  // });
+  // const location = useLocation();
+  // console.log(location.state.update)  // for location state
 
   const onSubmit = () => {
     form.validateFields().then(values => {
+      // if existing data, send update
+
       createMentorshipApplication(id, values).then(res => {
         if (res) {
           notification.success({ message: res.message })
