@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, Popconfirm } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import * as jwt from 'services/jwt'
 import moment from 'moment'
 import { isNil } from 'lodash'
 
@@ -19,24 +18,16 @@ const ExperienceCard = () => {
 
   const [editExperienceForm] = Form.useForm()
 
-  useEffect(() => {
-    const getProfile = async () => {
-      if (!isNil(user.accountId)) {
-        const userRsp = await jwt.getProfile(user.accountId)
-        dispatch({
-          type: 'user/SET_STATE',
-          payload: {
-            Experience: userRsp.Experience,
-          },
-        })
+  const sortExperienceByDate = () => {
+    if (user) {
+      if (!isNil(user.Experience)) {
+        return user.Experience.sort(
+          (a, b) => new Date(b.dateStart).getTime() - new Date(a.dateStart).getTime(),
+        )
       }
     }
-    getProfile()
-  }, [dispatch, user.accountId])
-
-  const sortExperienceByDate = user.Experience.sort(
-    (a, b) => new Date(b.dateStart).getTime() - new Date(a.dateStart).getTime(),
-  )
+    return []
+  }
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo)
@@ -124,7 +115,7 @@ const ExperienceCard = () => {
   )
 
   const UserExperiences = () => {
-    return sortExperienceByDate.map(item => (
+    return sortExperienceByDate().map(item => (
       <div className="card" key={item.experienceId}>
         <div className="card-body">
           <div className="row justify-content-between align-items-center text-dark">
