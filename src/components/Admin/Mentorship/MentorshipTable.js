@@ -23,6 +23,11 @@ const MentorshipTable = () => {
 
   const populateListings = async () => {
     const response = await jwtAdmin.getAllMentorshipListings()
+
+    // for (let i = 0; i < response.length; i += 1) {
+    //   console.log(response[i])
+    // }
+
     setListings(response)
   }
 
@@ -84,10 +89,10 @@ const MentorshipTable = () => {
           dataIndex="mentorshipListingId"
           key="mentorshipListingId"
         />
-        <Column title="Name" dataIndex="name" key="name" />
+        <Column title="Student Id" dataIndex="accountId" key="accountId" />
         <Column title="Statement" dataIndex="statement" key="statement" />
-        <Column title="Rating" dataIndex="rating" key="rating" />
-        <Column title="Owner Id" dataIndex="accountId" key="accountId" />
+        <Column title="Progress" dataIndex="progress" key="progress" />
+        <Column title="Sensei Approval" dataIndex="senseiApproval" key="senseiApproval" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
         <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
       </Table>
