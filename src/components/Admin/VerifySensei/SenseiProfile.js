@@ -8,9 +8,13 @@ import {
   DownloadOutlined,
   ArrowLeftOutlined,
 } from '@ant-design/icons'
+import Axios from 'axios'
+import download from 'js-file-download'
+import { useSelector } from 'react-redux'
 
 const MentorProfile = () => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
   const { mentorId } = useParams()
   const [mentor, setMentor] = useState({
     accountId: '',
@@ -41,6 +45,7 @@ const MentorProfile = () => {
       // console.log('response')
       // console.log(response)
       setMentor(response)
+      console.log(response)
     }
     getMentors()
   }, [mentorId])
@@ -76,6 +81,22 @@ const MentorProfile = () => {
     } else {
       notification.error({ message: 'Error', description: { response } })
     }
+  }
+
+  const downloadFile = isTranscript => {
+    Axios.get(isTranscript ? mentor.transcriptUrl : mentor.cvUrl, {
+      headers: {
+        authorization: `Bearer ${user.accessToken}`,
+      },
+      responseType: 'blob', // Important
+    }).then(resp => {
+      download(
+        resp.data,
+        isTranscript
+          ? `transcript.${mentor.transcriptUrl.split('.').pop()}`
+          : `cv.${mentor.cvUrl.split('.').pop()}`,
+      )
+    })
   }
 
   return (
@@ -196,13 +217,27 @@ const MentorProfile = () => {
 
           <div className="row">
             <div className="col-12">
-              <Button block type="primary" size="large" shape="round" icon={<DownloadOutlined />}>
+              <Button
+                block
+                type="primary"
+                size="large"
+                shape="round"
+                icon={<DownloadOutlined />}
+                onClick={() => downloadFile(true)}
+              >
                 Transcript
               </Button>
             </div>
             <div className="col-12 mt-4">
-              <Button block type="primary" size="large" shape="round" icon={<DownloadOutlined />}>
-                Personal Writeup
+              <Button
+                block
+                type="primary"
+                size="large"
+                shape="round"
+                icon={<DownloadOutlined />}
+                onClick={() => downloadFile(false)}
+              >
+                CV
               </Button>
             </div>
           </div>
