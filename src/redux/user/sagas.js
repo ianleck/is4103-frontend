@@ -247,8 +247,8 @@ export function* UPDATE_ABOUT({ payload }) {
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        headline,
-        bio,
+        headline: currentUser.headline,
+        bio: currentUser.bio,
       },
     })
     if (!isEmpty(user.accessToken)) {
@@ -381,7 +381,7 @@ export function* UPDATE_PERSONALITY({ payload }) {
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        personality,
+        personality: currentUser.personality,
       },
     })
     if (!isEmpty(user.accessToken)) {
@@ -419,7 +419,7 @@ export function* UPDATE_ADMIN_VERIFIED({ payload }) {
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
-        adminVerified,
+        adminVerified: currentUser.adminVerified,
       },
     })
     if (!isEmpty(user.accessToken)) {
