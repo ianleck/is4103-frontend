@@ -23,7 +23,7 @@ import {
 import TextArea from 'antd/lib/input/TextArea'
 import { indexOf, isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
   createMentorshipListing,
   deleteMentorshipListing,
@@ -48,10 +48,13 @@ const MentorshipListings = () => {
   // }, [accountId])
 
   useEffect(() => {
-    getListings()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const dispatch = useDispatch()
+    const getListingsEffect = async () => {
+      const result = await getSenseiMentorshipListings(accountId)
+      const listingRecords = map(result, res => ({ ...res, key: indexOf(result, res) }))
+      setMentorshipListings(listingRecords)
+    }
+    getListingsEffect()
+  }, [accountId])
   const [tabKey, setTabKey] = useState('listing')
 
   const { TabPane } = Tabs
@@ -213,7 +216,6 @@ const showListingSection = (dataSource, columns) => {
 }
 
 const ListingButton = ({ data, getListings }) => {
-  const dispatch = useDispatch()
   const listingRecord = data
   const isUpdate = !isNil(listingRecord)
   const [visible, setVisible] = useState(false)
