@@ -28,7 +28,6 @@ export async function deleteMentorshipListing(mentorshipListingId) {
   return apiClient
     .delete(url)
     .then(response => {
-      console.log('response =', response)
       if (response && !isNil(response.data)) {
         return response.data
       }
@@ -38,12 +37,10 @@ export async function deleteMentorshipListing(mentorshipListingId) {
 }
 
 export async function getSenseiMentorshipListings(accountId) {
-  console.log('in getSenseiMentorshipListings ')
   const url = `/mentorship/listing/sensei/${accountId}`
   return apiClient
     .get(url)
     .then(response => {
-      console.log('response received is ', response)
       if (response && !isNil(response.data)) {
         return response.data.mentorshipListings
       }
