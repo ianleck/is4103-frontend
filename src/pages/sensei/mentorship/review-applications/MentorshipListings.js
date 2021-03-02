@@ -49,7 +49,8 @@ const MentorshipListings = () => {
       setMentorshipListings(listingRecords)
     }
     getListingsEffect()
-  }, [accountId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const [tabKey, setTabKey] = useState('listing')
 
   const { TabPane } = Tabs

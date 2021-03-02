@@ -18,6 +18,11 @@ const routes = [
     Component: lazy(() => import('pages/browse')),
     exact: true,
   },
+  {
+    path: '/mentorships',
+    Component: lazy(() => import('pages/mentorships')),
+    exact: true,
+  },
   // Auth Pages
   {
     path: '/auth/login',
