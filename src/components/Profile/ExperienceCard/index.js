@@ -391,7 +391,7 @@ const ExperienceCard = () => {
             <div className="col-12">
               <Form.Item className="mb-1">
                 <Popconfirm
-                  title="Do you wish to delete your account?"
+                  title="Do you wish to delete this experience?"
                   visible={isConfirmDelete}
                   onConfirm={onDeleteExperience}
                   okText="Delete"

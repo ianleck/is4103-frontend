@@ -13,6 +13,12 @@ const ResetPasswordPage = () => {
   const accountId = useQuery().get('id')
 
   const onResetPassword = async values => {
+    if (values.newPassword !== values.confirmPassword) {
+      notification.error({
+        message: 'Your passwords do not match!',
+      })
+      return
+    }
     const response = await jwt.resetPassword(resetToken, accountId, values.newPassword)
     if (response) {
       if (response.success && response.message) {
@@ -48,6 +54,17 @@ const ResetPasswordPage = () => {
                   name="newPassword"
                   label="New password"
                   rules={[{ required: true, message: 'Please input your new password.' }]}
+                >
+                  <Input
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    type="password"
+                    placeholder=""
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="confirmPassword"
+                  label="Confirm password"
+                  rules={[{ required: true, message: 'Please input your new password again.' }]}
                 >
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
