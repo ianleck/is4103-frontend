@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Popconfirm } from 'antd'
-import { ADMIN_VERIFIED_ENUM, USER_TYPE_ENUM } from 'constants/constants'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
 const VerifyProfileCard = () => {
   const user = useSelector(state => state.user)
@@ -13,7 +13,7 @@ const VerifyProfileCard = () => {
       type: 'user/UPDATE_ADMIN_VERIFIED',
       payload: {
         accountId: user.accountId,
-        adminVerified: USER_TYPE_ENUM.PENDING,
+        adminVerified: ADMIN_VERIFIED_ENUM.PENDING,
       },
     })
   }
@@ -45,6 +45,12 @@ const VerifyProfileCard = () => {
         status = 'Approved'
         message =
           'Your application has been approved. You are now able to publish mentorship listings and courses.'
+        break
+      case ADMIN_VERIFIED_ENUM.REJECTED:
+        colourClass = 'bg-danger text-white'
+        status = 'Rejected'
+        message =
+          'Your application has been rejected. You may wish to review your profile and re-submit your profile for approval.'
         break
       default:
         break
@@ -91,7 +97,8 @@ const VerifyProfileCard = () => {
           <div className="col-12 mt-2">
             <span>{message}</span>
           </div>
-          {user.adminVerified === ADMIN_VERIFIED_ENUM.SHELL && <SubmitForVerificationBtn />}
+          {(user.adminVerified === ADMIN_VERIFIED_ENUM.SHELL ||
+            user.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED) && <SubmitForVerificationBtn />}
         </div>
       </div>
     </div>

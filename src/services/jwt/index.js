@@ -68,6 +68,38 @@ export async function changePassword(oldPassword, newPassword, confirmPassword) 
     .catch(err => console.log(err))
 }
 
+export async function forgetPassword(email) {
+  return apiClient
+    .post(`/auth/forgot-password/${email}`)
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function resetPassword(resetToken, accountId, newPassword) {
+  return apiClient
+    .put(`/auth/forgot-password`, {
+      resetToken,
+      accountId,
+      newPassword,
+    })
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function register(username, email, password, confirmPassword, isStudent) {
   return apiClient
     .post('/auth/register', {
@@ -249,6 +281,7 @@ export async function updateAdminVerified(accountId, adminVerified) {
       { withCredentials: true },
     )
     .then(response => {
+      console.log(response)
       if (!isNil(response.data)) {
         if (!isNil(response.data.user)) return response.data.user
         return false
