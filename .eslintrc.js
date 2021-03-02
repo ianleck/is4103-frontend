@@ -25,7 +25,7 @@ module.exports = {
     'import/no-unresolved': 0,
     'no-console': 0,
     'react/no-multi-comp': 0,
-    'no-unused-vars': 'off',
+    // "no-unused-vars": 0
   },
   parserOptions: {
     ecmaFeatures: {
