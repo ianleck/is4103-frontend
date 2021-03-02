@@ -23,7 +23,7 @@ const CustomLayout = ({
 }) => {
   const { pathname } = useLocation()
   let showStudentDashboardMenu = false
-  if (pathname === '/student/dashboard' || pathname === '/student/profile') {
+  if (pathname.includes('/student/dashboard') || pathname === '/student/profile') {
     showStudentDashboardMenu = true
   }
   return (
