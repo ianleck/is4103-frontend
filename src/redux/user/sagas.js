@@ -138,6 +138,7 @@ export function* LOAD_CURRENT_ACCOUNT() {
       let userFromAPI = resetUser
       if (!isEmpty(user.accountId)) {
         userFromAPI = yield call(jwt.getProfile, user.accountId)
+        userFromAPI.accessToken = user.accessToken
         currentUser = createUserObj(
           userFromAPI,
           user.authorized,
@@ -147,6 +148,7 @@ export function* LOAD_CURRENT_ACCOUNT() {
       } else {
         currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
       }
+      currentUser.requiresProfileUpdate = checkProfileUpdateRqd(currentUser)
     }
     yield putResolve({
       type: 'user/SET_STATE',
@@ -176,6 +178,22 @@ export function* LOGOUT() {
   yield history.push('/')
 }
 
+function checkProfileUpdateRqd(user) {
+  user.requiresProfileUpdate =
+    user.headline === '' ||
+    isNil(user.headline) ||
+    user.bio === '' ||
+    isNil(user.bio) ||
+    user.firstName === '' ||
+    isNil(user.firstName) ||
+    user.lastName === '' ||
+    isNil(user.lastName) ||
+    user.contactNumber === '' ||
+    isNil(user.contactNumber)
+
+  return user.requiresProfileUpdate
+}
+
 export function* UPDATE_PERSONAL_INFO({ payload }) {
   const { accountId, firstName, lastName, contactNumber } = payload
   yield put({
@@ -197,16 +215,14 @@ export function* UPDATE_PERSONAL_INFO({ payload }) {
     })
     yield call(jwt.updateLocalUserData, currentUser)
     currentUser = yield select(selectors.user)
-    if (currentUser.requiresProfileUpdate) {
-      currentUser.requiresProfileUpdate = false
-      yield call(jwt.updateLocalUserData, currentUser)
-      yield putResolve({
-        type: 'user/SET_STATE',
-        payload: {
-          requiresProfileUpdate: false,
-        },
-      })
-    }
+    currentUser.requiresProfileUpdate = checkProfileUpdateRqd(currentUser)
+    yield call(jwt.updateLocalUserData, currentUser)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        requiresProfileUpdate: currentUser.requiresProfileUpdate,
+      },
+    })
     notification.success({
       message: 'Profile Updated Successfully',
       description: 'We have received your new personal information.',
@@ -245,6 +261,14 @@ export function* UPDATE_ABOUT({ payload }) {
     currentUser = yield select(selectors.user)
     notification.success({
       message: 'Profile Updated',
+    })
+    currentUser.requiresProfileUpdate = checkProfileUpdateRqd(currentUser)
+    yield call(jwt.updateLocalUserData, currentUser)
+    yield putResolve({
+      type: 'user/SET_STATE',
+      payload: {
+        requiresProfileUpdate: currentUser.requiresProfileUpdate,
+      },
     })
   }
   yield putResolve({

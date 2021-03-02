@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Popconfirm } from 'antd'
 import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
-const VerifyProfileCard = () => {
+const ProfileVerificationCard = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const [showSubmitProfile, setShowSubmitProfile] = useState(false)
@@ -105,4 +105,4 @@ const VerifyProfileCard = () => {
   )
 }
 
-export default VerifyProfileCard
+export default ProfileVerificationCard
