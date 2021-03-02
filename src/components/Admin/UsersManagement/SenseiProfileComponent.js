@@ -78,7 +78,6 @@ const SenseiProfileComponent = () => {
         <Column title="Rating" dataIndex="rating" key="rating" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
         <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
-        <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
       </Table>
     )
   }
