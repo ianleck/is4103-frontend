@@ -232,12 +232,6 @@ const ExperienceCard = () => {
           hideRequiredMark
           onFinish={onAddExperience}
           onFinishFailed={onFinishFailed}
-          initialValues={{
-            role: 'Software Enginger',
-            description: 'Modern day farmer',
-            companyName: 'TimApple',
-            companyUrl: 'https://google.com',
-          }}
         >
           <div className="row">
             <div className="col-12">
