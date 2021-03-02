@@ -10,8 +10,8 @@ import {
   Empty,
   Form,
   Input,
-  notification,
   Modal,
+  notification,
   Popconfirm,
   Select,
   Space,
@@ -22,13 +22,13 @@ import {
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { indexOf, isNil, map, size } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   createMentorshipListing,
+  deleteMentorshipListing,
   getSenseiMentorshipListings,
   updateMentorshipListing,
-  deleteMentorshipListing,
 } from 'services/mentorshipListing'
 
 const MentorshipListings = () => {
