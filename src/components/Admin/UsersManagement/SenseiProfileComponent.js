@@ -48,7 +48,6 @@ const SenseiProfileComponent = () => {
 
     const getListings = async () => {
       const response = await jwtAdmin.getMentorMentorshipListings(userId)
-      console.log('Listings response', response)
       setMentorshipListings(response)
     }
     getSensei()
