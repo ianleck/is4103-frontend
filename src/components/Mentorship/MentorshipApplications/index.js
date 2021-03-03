@@ -16,6 +16,7 @@ import {
   Space,
   Table,
   Tabs,
+  Tag,
 } from 'antd'
 import { filter, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -27,6 +28,7 @@ import {
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
+import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 
 const MentorshipApplications = () => {
   const user = useSelector(state => state.user)
@@ -163,6 +165,37 @@ const MentorshipApplications = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       responsive: ['md'],
+    },
+    {
+      title: 'Title',
+      dataIndex: 'MentorshipListing',
+      key: 'MentorshipListing.name',
+      responsive: ['md'],
+      render: listing => (
+        <a
+          href={`/student/mentorship-listing/${listing.mentorshipListingId}`}
+          style={{ color: '#4b7cf3' }}
+        >
+          {listing.name}
+        </a>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'senseiApproval',
+      key: 'senseiApproval',
+      responsive: ['md'],
+      render: senseiApproval => {
+        let color
+        if (senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED) {
+          color = 'success'
+        } else if (senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.PENDING) {
+          color = 'warning'
+        } else {
+          color = 'error'
+        }
+        return <Tag color={color}>{senseiApproval}</Tag>
+      },
     },
     {
       title: 'Action',
