@@ -190,7 +190,7 @@ const ListingButton = property => {
 
   const onSubmit = values => {
     if (!isUpdate) {
-      createMentorshipListing(...values).then(_data => {
+      createMentorshipListing({ ...values }).then(_data => {
         if (_data) {
           notification.success({ message: _data.message })
           getListings()
