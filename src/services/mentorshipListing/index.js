@@ -1,17 +1,8 @@
 import { isNil } from 'lodash'
 import apiClient from 'services/axios'
 
-export async function createMentorshipListing(
-  mentorshipName,
-  mentorshipDescription,
-  mentorshipCategories,
-) {
+export async function createMentorshipListing(mentorshipListing) {
   const url = `/mentorship/listing/`
-  const mentorshipListing = {
-    name: mentorshipName,
-    description: mentorshipDescription,
-    categories: mentorshipCategories,
-  }
   return apiClient
     .post(url, { mentorshipListing })
     .then(response => {
