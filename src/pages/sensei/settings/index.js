@@ -16,7 +16,7 @@ const SenseiSettings = () => {
   let isEmailNotifOn = !!user.emailNotification
   let currentMessagePriv = user.chatPrivacy
 
-  const [activeTab, setActiveTab] = useState('privacy')
+  const [activeTab, setActiveTab] = useState('security')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
   const [togglePrivacy, setTogglePrivacy] = useState(isPrivateUser)
   const [toggleEmailNotif, setToggleEmailNotif] = useState(isEmailNotifOn)
