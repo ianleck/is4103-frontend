@@ -34,7 +34,7 @@ const MentorshipListingList = () => {
       >
         Featured Mentorships
       </div>
-      <div className="row justify-content-between">
+      <div className="row justify-content-start">
         {listings &&
           listings.map(l => {
             return (
