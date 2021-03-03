@@ -18,6 +18,11 @@ const routes = [
     Component: lazy(() => import('pages/browse')),
     exact: true,
   },
+  {
+    path: '/mentorships',
+    Component: lazy(() => import('pages/mentorships')),
+    exact: true,
+  },
   // Auth Pages
   {
     path: '/auth/login',
@@ -226,6 +231,11 @@ const routes = [
     path: '/student/dashboard/mentorship-applications',
     Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
     exact: true,
+  },
+  // Common Pages
+  {
+    path: '/mentorship/apply/:id',
+    Component: lazy(() => import('pages/mentorships/ApplyListing')),
   },
   /*
 

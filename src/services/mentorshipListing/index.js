@@ -1,17 +1,8 @@
 import { isNil } from 'lodash'
 import apiClient from 'services/axios'
 
-export async function createMentorshipListing(
-  mentorshipName,
-  mentorshipDescription,
-  mentorshipCategories,
-) {
+export async function createMentorshipListing(mentorshipListing) {
   const url = `/mentorship/listing/`
-  const mentorshipListing = {
-    name: mentorshipName,
-    description: mentorshipDescription,
-    categories: mentorshipCategories,
-  }
   return apiClient
     .post(url, { mentorshipListing })
     .then(response => {
@@ -43,6 +34,19 @@ export async function getSenseiMentorshipListings(accountId) {
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data.mentorshipListings
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getMentorshipListings() {
+  const url = `/mentorship/listing/`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
       }
       return false
     })

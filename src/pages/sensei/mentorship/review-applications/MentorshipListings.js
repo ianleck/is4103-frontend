@@ -49,7 +49,8 @@ const MentorshipListings = () => {
       setMentorshipListings(listingRecords)
     }
     getListingsEffect()
-  }, [accountId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const [tabKey, setTabKey] = useState('listing')
 
   const { TabPane } = Tabs
@@ -190,7 +191,7 @@ const ListingButton = property => {
 
   const onSubmit = values => {
     if (!isUpdate) {
-      createMentorshipListing(...values).then(_data => {
+      createMentorshipListing({ ...values }).then(_data => {
         if (_data) {
           notification.success({ message: _data.message })
           getListings()
