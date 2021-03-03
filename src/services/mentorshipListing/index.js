@@ -40,6 +40,19 @@ export async function getSenseiMentorshipListings(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function getMentorshipListings() {
+  const url = `/mentorship/listing/`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function updateMentorshipListing(data) {
   const url = `/mentorship/listing/${data.mentorshipListingId}`
   return apiClient

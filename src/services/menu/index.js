@@ -4,7 +4,7 @@ export async function getPublicMenuData() {
       title: 'Mentors',
       key: 'mentors',
       icon: 'fa fa-mortar-board',
-      url: '/browse/mentors',
+      url: '/mentorships',
     },
     {
       title: 'Courses',
@@ -21,7 +21,7 @@ export async function getStudentMenuData() {
       title: 'Mentors',
       key: 'mentors',
       icon: 'fa fa-mortar-board',
-      url: '/browse/mentors',
+      url: '/mentorships',
     },
     {
       title: 'Courses',
