@@ -62,7 +62,7 @@ const renderListing = (listing, redirect) => {
       <div className="col">
         <div className="row align-items-center">
           <Avatar style={{ backgroundColor: `#${randomColor}` }}>
-            {listing?.Sensei?.firstName.substring(0, 1).toUpperCase()}
+            {listing?.Sensei?.firstName?.substring(0, 1).toUpperCase()}
           </Avatar>
           <div className="col">
             <div style={{ fontWeight: 'bold' }}>
