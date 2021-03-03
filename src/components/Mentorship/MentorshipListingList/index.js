@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { getMentorshipListings } from 'services/mentorshipListing'
 import { Avatar, Card, Tag } from 'antd'
+import { useHistory } from 'react-router-dom'
 
 const MentorshipListingList = () => {
   const [listings, setListings] = useState([])
+  const history = useHistory()
 
   const getAllListing = () => {
     getMentorshipListings().then(data => {
       if (data) {
         setListings(data.mentorshipListings)
       }
+    })
+  }
+
+  const redirectToListing = id => {
+    history.push({
+      pathname: `/student/mentorship-listing/${id}`,
     })
   }
 
@@ -34,7 +42,7 @@ const MentorshipListingList = () => {
                 key={l.mentorshipListingId}
                 style={{ paddingLeft: '8px', paddingRight: '8px', paddingBottom: '16px' }}
               >
-                {renderListing(l)}
+                {renderListing(l, redirectToListing)}
               </div>
             )
           })}
@@ -43,15 +51,18 @@ const MentorshipListingList = () => {
   )
 }
 
-const renderListing = listing => {
+const renderListing = (listing, redirect) => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16)
 
   return (
-    <Card style={{ height: '180px', overflowY: 'hidden', position: 'relative' }}>
+    <Card
+      style={{ height: '180px', overflowY: 'hidden', position: 'relative' }}
+      onClick={() => redirect(listing.mentorshipListingId)}
+    >
       <div className="col">
         <div className="row align-items-center">
           <Avatar style={{ backgroundColor: `#${randomColor}` }}>
-            {listing?.Sensei?.firstName.substring(0, 1).toUpperCase()}
+            {listing?.Sensei?.firstName?.substring(0, 1).toUpperCase()}
           </Avatar>
           <div className="col">
             <div style={{ fontWeight: 'bold' }}>

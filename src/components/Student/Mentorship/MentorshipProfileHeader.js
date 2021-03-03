@@ -16,7 +16,7 @@ const MentorshipProfileHeader = () => {
 
   const onAdd = e => {
     e.preventDefault()
-    const path = `/mentorships/apply/${mentorshipListingId}`
+    const path = `/mentorship/apply/${mentorshipListingId}`
     history.push(path)
   }
 

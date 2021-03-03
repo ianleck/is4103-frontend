@@ -1,10 +1,12 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams, useHistory, useLocation } from 'react-router-dom'
 // import { getMentorshipListings } from 'services/mentorshipListing'
-import { createMentorshipApplication } from 'services/mentorshipApplications'
+import {
+  createMentorshipApplication,
+  updateMentorshipApplication,
+} from 'services/mentorshipApplications'
 import { Button, Card, Form, Input, notification } from 'antd'
-// import { useLocation } from 'react-router-dom'; // to get data from update application
-// import { useHistory } from 'react-router-dom';
 
 const formItemLayout = {
   labelCol: {
@@ -20,33 +22,67 @@ const formItemLayout = {
 const ApplyListingForm = () => {
   const { id } = useParams()
   const [form] = Form.useForm()
-  // history.push({
-  //   pathname: '/home',
-  //   search: '?update=true',  // query string
-  //   state: {  // location state
-  //     update: true,
-  //   },
-  // });
-  // const location = useLocation();
-  // console.log(location.state.update)  // for location state
+  const history = useHistory()
+  const [prevApplication, setPrevApplication] = useState(null)
+  const location = useLocation()
+  const setInitialValues = values => {
+    console.log('values =', values)
+    console.log('prevApplication =', prevApplication)
+    form.setFieldsValue({
+      ...values,
+    })
+  }
+
+  useEffect(() => {
+    console.log('state ==', location.state) // for location state
+    const prevApplicationData = location.state
+    if (prevApplicationData) {
+      setPrevApplication(prevApplicationData)
+      setInitialValues(prevApplicationData)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state])
 
   const onSubmit = () => {
     form.validateFields().then(values => {
       // if existing data, send update
-
-      createMentorshipApplication(id, values).then(res => {
-        if (res) {
-          notification.success({ message: res.message })
-        }
-      })
+      if (prevApplication) {
+        updateMentorshipApplication(prevApplication.mentorshipContractId, values).then(res => {
+          if (res) {
+            notification.success({ message: res.message })
+          }
+        })
+      } else {
+        createMentorshipApplication(id, values).then(res => {
+          if (res) {
+            notification.success({ message: res.message })
+          }
+        })
+      }
     })
   }
 
   return (
     <div>
+      <div className="row">
+        <Button
+          type="primary"
+          size="small"
+          shape="round"
+          onClick={() => history.goBack()}
+          icon={<ArrowLeftOutlined />}
+        >
+          Back
+        </Button>
+      </div>
       <div
-        className="row"
-        style={{ fontSize: '18px', color: 'black', marginBottom: '10px', fontWeight: 500 }}
+        style={{
+          marginBottom: '10px',
+          fontSize: '18px',
+          color: 'black',
+          marginTop: '20px',
+          fontWeight: 500,
+        }}
       >
         Mentorship Application Form
       </div>

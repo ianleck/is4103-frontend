@@ -3,7 +3,9 @@ import {
   CloseOutlined,
   EyeOutlined,
   QuestionCircleOutlined,
+  EditOutlined,
 } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
 import {
   Button,
   ConfigProvider,
@@ -28,6 +30,7 @@ import {
 
 const MentorshipApplications = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
   const [mentorshipApplications, setMentorshipApplications] = useState([])
   const { accountId, userType } = user
   const { TabPane } = Tabs
@@ -78,6 +81,13 @@ const MentorshipApplications = () => {
     getApplications()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId])
+
+  const editApplication = application => {
+    history.push({
+      pathname: `/mentorship/apply/${application.mentorshipListingId}`,
+      state: application, // location state
+    })
+  }
 
   const senseiTableColumns = [
     {
@@ -162,6 +172,15 @@ const MentorshipApplications = () => {
           <div>
             <ViewPersonalStatementButton record={record} />
           </div>
+          <Button
+            block
+            type="primary"
+            shape="round"
+            icon={<EditOutlined />}
+            onClick={() => editApplication(record)}
+          >
+            Edit
+          </Button>
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
               title="Are you sure you wish to cancel your application？"
