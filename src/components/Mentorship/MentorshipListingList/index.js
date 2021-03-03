@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getMentorshipListings } from 'services/mentorshipListing'
 import { Avatar, Card, Tag } from 'antd'
 import { useHistory } from 'react-router-dom'
+import './index.css'
 
 const MentorshipListingList = () => {
   const [listings, setListings] = useState([])
@@ -56,6 +57,7 @@ const renderListing = (listing, redirect) => {
 
   return (
     <Card
+      className="clickable hover-shadow"
       style={{ height: '180px', overflowY: 'hidden', position: 'relative' }}
       onClick={() => redirect(listing.mentorshipListingId)}
     >
