@@ -224,7 +224,12 @@ const AccountSettings = () => {
             <div className="col-12">
               <span className="h6 text-dark font-weight-bold">Profile Privacy</span>
               <hr />
-              <Switch checked={togglePrivacy} onChange={onChangePrivacy} />
+              <Switch
+                checked={togglePrivacy}
+                onChange={onChangePrivacy}
+                checkedChildren="ON"
+                unCheckedChildren="OFF"
+              />
               <span>&nbsp;&nbsp;Private Profile</span>
               <div className="mt-2">
                 <PrivateProfileToggleMsg />
@@ -273,7 +278,12 @@ const AccountSettings = () => {
               <span className="h6 text-dark font-weight-bold">Delivery Methods</span>
               <hr />
               <div className="mt-4">
-                <Switch checked={toggleEmailNotif} onChange={onChangeEmailNotif} />
+                <Switch
+                  checked={toggleEmailNotif}
+                  onChange={onChangeEmailNotif}
+                  checkedChildren="ON"
+                  unCheckedChildren="OFF"
+                />
                 <span>&nbsp;&nbsp;Email Notifications</span>
                 <div className="mt-2">
                   <HasEmailNotifMsg />

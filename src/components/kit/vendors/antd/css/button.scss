@@ -11,13 +11,14 @@
   &-primary {
     background: $primary !important;
     border-color: $primary !important;
+    box-shadow: 1px 1px 4px 1px #e3e3e3 !important;
 
     &:hover,
     &:active,
     &:focus {
       background: lighten($blue-light, 0%) !important;
       border-color: lighten($blue-light, 0%) !important;
-      color: $white;
+      color: $white !important;
     }
   }
   &-danger {

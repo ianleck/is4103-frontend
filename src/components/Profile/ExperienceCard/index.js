@@ -17,8 +17,6 @@ const ExperienceCard = () => {
   // Edit Experience Modal
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
-  const [isConfirmDelete, setIsConfirmDelete] = useState(false)
-
   const [editExperienceForm] = Form.useForm()
 
   useEffect(() => {
@@ -72,7 +70,7 @@ const ExperienceCard = () => {
       dateEnd: values.dateEnd,
       description: values.description.trim(),
       companyName: values.companyName.trim(),
-      companyUrl: values.companyUrl.trim(),
+      companyUrl: values.companyUrl ? values.companyUrl.trim() : '',
     }
     dispatch({
       type: 'user/ADD_EXPERIENCE',
@@ -82,11 +80,19 @@ const ExperienceCard = () => {
   }
 
   const onEditExperience = values => {
-    values.accountId = user.accountId
-    values.experienceId = currentEditExpObj.experienceId
+    const formValues = {
+      accountId: user.accountId,
+      experienceId: currentEditExpObj.experienceId,
+      role: values.role.trim(),
+      dateStart: values.dateStart,
+      dateEnd: values.dateEnd,
+      description: values.description.trim(),
+      companyName: values.companyName.trim(),
+      companyUrl: values.companyUrl ? values.companyUrl.trim() : '',
+    }
     dispatch({
       type: 'user/EDIT_EXPERIENCE',
-      payload: values,
+      payload: formValues,
     })
     setShowEditExperience(false)
   }
@@ -101,16 +107,7 @@ const ExperienceCard = () => {
         },
       })
       setShowEditExperience(false)
-      setIsConfirmDelete(false)
     }
-  }
-
-  const showPopconfirm = () => {
-    setIsConfirmDelete(true)
-  }
-
-  const handleCancel = () => {
-    setIsConfirmDelete(false)
   }
 
   const showEditExperienceModal = experience => {
@@ -399,7 +396,17 @@ const ExperienceCard = () => {
               <Form.Item
                 name="dateEnd"
                 label="Date Ended"
-                rules={[{ required: true, message: 'End date of experience is required.' }]}
+                dependencies={['dateStart']}
+                hasFeedback
+                rules={[
+                  { required: true, message: 'End date of experience is required.' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (validateDates(getFieldValue('dateStart'), value)) return Promise.resolve()
+                      return Promise.reject(new Error('Date End cannot be earlier than Date Start'))
+                    },
+                  }),
+                ]}
               >
                 <DatePicker
                   renderExtraFooter={() => 'Enter the date you end/will end your experience.'}
@@ -434,14 +441,12 @@ const ExperienceCard = () => {
               <Form.Item className="mb-1">
                 <Popconfirm
                   title="Do you wish to delete this experience?"
-                  visible={isConfirmDelete}
                   onConfirm={onDeleteExperience}
                   okText="Delete"
                   okType="danger"
                   okButtonProps={{ loading: user.loading }}
-                  onCancel={handleCancel}
                 >
-                  <Button block type="danger" onClick={showPopconfirm}>
+                  <Button block type="danger">
                     Delete experience
                   </Button>
                 </Popconfirm>

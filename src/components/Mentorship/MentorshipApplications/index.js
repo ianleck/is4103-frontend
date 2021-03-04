@@ -4,6 +4,7 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
   EditOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import {
@@ -137,7 +138,7 @@ const MentorshipApplications = () => {
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => acceptApplication(record.mentorshipContractId)}
             >
-              <Button type="primary" shape="circle" icon={<CheckOutlined />} />
+              <Button type="primary" shape="circle" size="large" icon={<CheckOutlined />} />
             </Popconfirm>
           )}
           {record.senseiApproval === 'PENDING' && (
@@ -146,7 +147,7 @@ const MentorshipApplications = () => {
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => rejectApplication(record.mentorshipContractId)}
             >
-              <Button type="danger" shape="circle" icon={<CloseOutlined />} />
+              <Button type="danger" shape="circle" size="large" icon={<DeleteOutlined />} />
             </Popconfirm>
           )}
         </Space>
@@ -174,7 +175,7 @@ const MentorshipApplications = () => {
       render: listing => (
         <a
           href={`/student/mentorship-listing/${listing.mentorshipListingId}`}
-          style={{ color: '#4b7cf3' }}
+          className="text-primary"
         >
           {listing.name}
         </a>
@@ -216,8 +217,8 @@ const MentorshipApplications = () => {
           </Button>
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
-              title="Are you sure you wish to cancel your application？"
-              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              title="Are you sure you wish to cancel your application?"
+              icon={<QuestionCircleOutlined className="text-danger" />}
               onConfirm={() => cancelApplication(record.mentorshipContractId)}
             >
               <Button type="danger" shape="circle" icon={<CloseOutlined />} />
@@ -269,7 +270,7 @@ const showApplications = (applicationStatus, dataSource, columns) => {
   const isRenderEmpty = numApplications === 0
 
   const customizeRenderEmpty = () => (
-    <div style={{ textAlign: 'center' }}>
+    <div className="text-center">
       <Empty />
     </div>
   )
@@ -285,16 +286,14 @@ const showApplications = (applicationStatus, dataSource, columns) => {
   }
   return (
     <div>
-      <div className="row justify-content-between align-items-center mb-3">
+      <div className="row justify-content-between align-items-center mt-2">
         <div className="col-auto">
-          <div>
-            You currently have {numApplications} {renderStyledStatus(applicationStatus)} mentorship{' '}
-            {numApplications === 1 ? 'application' : 'applications'}.
-          </div>
+          You currently have {numApplications} {renderStyledStatus(applicationStatus)} mentorship{' '}
+          {numApplications === 1 ? 'application' : 'applications'}.
         </div>
       </div>
       <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-        <Table dataSource={dataSource} columns={columns} />
+        <Table className="mt-4" dataSource={dataSource} columns={columns} />
       </ConfigProvider>
     </div>
   )
@@ -308,25 +307,43 @@ const ViewPersonalStatementButton = values => {
     setIsViewStatementModalVisible(true)
   }
 
-  const handleOk = () => {
-    setIsViewStatementModalVisible(false)
-  }
-
   const handleCancel = () => {
     setIsViewStatementModalVisible(false)
   }
+
+  const footer = (
+    <div className="row justify-content-end">
+      <div className="col-auto">
+        <Button
+          ghost
+          type="primary"
+          size="large"
+          onClick={() => setIsViewStatementModalVisible(false)}
+          className=""
+        >
+          Close
+        </Button>
+      </div>
+    </div>
+  )
+
   return (
     <div>
-      <Button type="default" shape="circle" icon={<EyeOutlined />} onClick={showModal} />
+      <Button
+        ghost
+        type="primary"
+        shape="circle"
+        size="large"
+        icon={<EyeOutlined />}
+        onClick={showModal}
+      />
       <Modal
         title="View Personal Statement"
         visible={isViewStatementModalVisible}
+        cancelText="Close"
         onCancel={handleCancel}
-        footer={[
-          <Button key="OK" type="primary" onClick={handleOk}>
-            OK
-          </Button>,
-        ]}
+        okButtonProps={{ style: { display: 'none' } }}
+        footer={footer}
       >
         {record.statement}
       </Modal>

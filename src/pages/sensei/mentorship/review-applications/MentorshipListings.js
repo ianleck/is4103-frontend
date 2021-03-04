@@ -32,9 +32,17 @@ import {
 } from 'services/mentorshipListing'
 
 const MentorshipListings = () => {
+  const { TabPane } = Tabs
+
   const user = useSelector(state => state.user)
-  const [mentorshipListings, setMentorshipListings] = useState([])
   const { accountId } = user
+
+  const [mentorshipListings, setMentorshipListings] = useState([])
+  const [tabKey, setTabKey] = useState('listing')
+
+  const changeTab = key => {
+    setTabKey(key)
+  }
 
   const getListings = async () => {
     const result = await getSenseiMentorshipListings(accountId)
@@ -49,14 +57,7 @@ const MentorshipListings = () => {
       setMentorshipListings(listingRecords)
     }
     getListingsEffect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const [tabKey, setTabKey] = useState('listing')
-
-  const { TabPane } = Tabs
-  const changeTab = key => {
-    setTabKey(key)
-  }
+  }, [accountId])
 
   const deleteListing = mentorshipListingId => {
     deleteMentorshipListing(mentorshipListingId).then(_data => {
@@ -73,7 +74,6 @@ const MentorshipListings = () => {
       dataIndex: 'mentorshipListingId',
       key: 'mentorshipListingId',
     },
-
     {
       title: 'Name',
       dataIndex: 'name',
@@ -117,9 +117,8 @@ const MentorshipListings = () => {
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
             onConfirm={() => deleteListing(record.mentorshipListingId)}
           >
-            <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+            <Button type="danger" shape="circle" size="large" icon={<DeleteOutlined />} />
           </Popconfirm>
-          ,
         </Space>
       ),
     },
@@ -129,7 +128,7 @@ const MentorshipListings = () => {
     <div className="card">
       <div className="card-header card-header-flex">
         <div className="d-flex flex-column justify-content-center mr-auto">
-          <h5 className="mb-0">Mentorship Listing</h5>
+          <h5 className="mb-0">Mentorship Listings</h5>
         </div>
         <Tabs activeKey={tabKey} className="kit-tabs" onChange={changeTab}>
           <TabPane tab="About" key="about" />
@@ -147,10 +146,12 @@ const MentorshipListings = () => {
 const showAboutSection = () => {
   return (
     <div className="row justify-content-start">
-      <div className="col-auto">
+      <div className="col-auto mt-2 mt-sm-0">
         <Switch checkedChildren="ON" unCheckedChildren="OFF" />
       </div>
-      <div className="col-auto">Make your mentor profile available for mentorships</div>
+      <div className="col-auto mt-2 mt-sm-0">
+        Make your mentor profile available for mentorships
+      </div>
     </div>
   )
 }
@@ -159,25 +160,22 @@ const showListingSection = (dataSource, columns, getListings) => {
   const numMentorshipListings = size(dataSource)
   const isRenderEmpty = numMentorshipListings === 0
   const customizeRenderEmpty = () => (
-    <div style={{ textAlign: 'center' }}>
+    <div className="text-center">
       <Empty />
     </div>
   )
   return (
     <div>
       <div className="row justify-content-between align-items-center mb-3">
-        <div className="col-auto">
-          <div>You currently have {numMentorshipListings} mentorship listings.</div>
+        <div className="col-12 col-sm-auto text-center text-sm-left">
+          <span>You currently have {numMentorshipListings} mentorship listings.</span>
         </div>
-
-        <div className="col-auto">
-          <div>
-            <ListingButton data={null} getListings={getListings} />
-          </div>
+        <div className="col-12 col-sm-auto mt-3 mt-sm-0 text-center text-sm-right">
+          <ListingButton data={null} getListings={getListings} />
         </div>
       </div>
       <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-        <Table dataSource={dataSource} columns={columns} />
+        <Table className="mt-4" dataSource={dataSource} columns={columns} />
       </ConfigProvider>
     </div>
   )
@@ -197,8 +195,6 @@ const ListingButton = property => {
           getListings()
         }
       })
-
-      // dispatch({ type: 'mentorship/CREATE_LISTING', payload: values })
     } else {
       updateMentorshipListing(values).then(_data => {
         if (_data) {
@@ -206,7 +202,6 @@ const ListingButton = property => {
           getListings()
         }
       })
-      // dispatch({ type: 'mentorship/UPDATE_LISTING', payload: values })
     }
     setVisible(false)
   }
@@ -214,6 +209,7 @@ const ListingButton = property => {
     <div>
       <Button
         type="primary"
+        size="large"
         shape={isUpdate ? 'circle' : 'round'}
         icon={isUpdate ? <EditOutlined /> : <PlusOutlined />}
         onClick={() => setVisible(true)}
@@ -235,31 +231,50 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
   const [form] = Form.useForm()
   const { Option } = Select
 
+  const saveFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button ghost type="primary" size="large" onClick={onCancel} className="">
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => {
+            form
+              .validateFields()
+              .then(values => {
+                form.resetFields()
+                let payload = values
+                if (record) {
+                  payload = {
+                    mentorshipListingId: record.mentorshipListingId,
+                    ...payload,
+                  }
+                }
+                onSubmit(payload)
+              })
+              .catch(info => {
+                console.log('Validate Failed:', info)
+              })
+          }}
+        >
+          {record ? 'Update' : 'Create'}
+        </Button>
+      </div>
+    </div>
+  )
+
   return (
     <Modal
       visible={visible}
-      title={record ? 'Update mentorship listing' : 'Create a new mentorship listing'}
+      title={record ? 'Update Mentorship Listing' : 'Create a New Mentorship Listing'}
       okText={record ? 'Update' : 'Create'}
       cancelText="Cancel"
       onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then(values => {
-            form.resetFields()
-            let payload = values
-            if (record) {
-              payload = {
-                mentorshipListingId: record.mentorshipListingId,
-                ...payload,
-              }
-            }
-            onSubmit(payload)
-          })
-          .catch(info => {
-            console.log('Validate Failed:', info)
-          })
-      }}
+      footer={saveFormFooter}
     >
       <Form
         form={form}
@@ -276,7 +291,7 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: 'Please input a name for your mentorship listing!' }]}
+          rules={[{ required: true, message: 'Please input a name for your mentorship listing.' }]}
         >
           <Input />
         </Form.Item>
@@ -284,10 +299,10 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
         <Form.Item
           label="Description"
           name="description"
-          rules={[{ required: true, message: 'Please input a description!' }]}
+          rules={[{ required: true, message: 'Please input a description.' }]}
         >
           <TextArea
-            placeholder="Tell us more about what the mentorship entails"
+            placeholder="Tell us more about what the mentorship is about."
             autoSize={{ minRows: 2, maxRows: 6 }}
           />
         </Form.Item>
@@ -295,7 +310,7 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
         <Form.Item
           name="categories"
           label="Categories"
-          rules={[{ required: true, message: 'Please select at least 1 category!', type: 'array' }]}
+          rules={[{ required: true, message: 'Please select at least 1 category.', type: 'array' }]}
         >
           <Select mode="multiple" placeholder="Select at least 1 relevant category">
             {map(categories, category => {
