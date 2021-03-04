@@ -20,7 +20,6 @@ const ExperienceCard = () => {
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
 
   const [editExperienceForm] = Form.useForm()
-  const [addExperienceForm] = Form.useForm()
 
   useEffect(() => {
     const getProfile = async () => {
@@ -54,7 +53,11 @@ const ExperienceCard = () => {
 
   const validateDates = (dateStart, dateEnd) => {
     if (!isNil(dateStart) && !isNil(dateEnd)) {
-      if (moment(dateEnd).isSameOrAfter(moment(dateStart))) {
+      if (
+        moment(dateEnd)
+          .startOf('day')
+          .isSameOrAfter(moment(dateStart).startOf('day'))
+      ) {
         return true
       }
     }
@@ -260,7 +263,6 @@ const ExperienceCard = () => {
         footer={addExpFormFooter}
       >
         <Form
-          form={addExperienceForm}
           id="addExperienceForm"
           layout="vertical"
           hideRequiredMark
