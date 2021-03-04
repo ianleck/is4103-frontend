@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import FadeIn from 'react-fade-in'
 import { PRIVACY_PERMISSIONS_ENUM } from 'constants/constants'
 
-const StudentSettings = () => {
+const AccountSettings = () => {
   const { Option } = Select
 
   const dispatch = useDispatch()
@@ -330,4 +330,4 @@ const StudentSettings = () => {
   )
 }
 
-export default StudentSettings
+export default AccountSettings

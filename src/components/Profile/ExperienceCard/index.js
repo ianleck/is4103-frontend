@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, DatePicker, Empty, Form, Input, Modal, Popconfirm } from 'antd'
+import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { isNil } from 'lodash'
@@ -12,12 +12,15 @@ const ExperienceCard = () => {
   let isExperienceEmpty = false
   if (!isNil(user.Experience)) isExperienceEmpty = user.Experience.length === 0
   const dispatch = useDispatch()
+  // Add Experience Modal
   const [showAddExperience, setShowAddExperience] = useState(false)
+  // Edit Experience Modal
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
 
   const [editExperienceForm] = Form.useForm()
+  const [addExperienceForm] = Form.useForm()
 
   useEffect(() => {
     const getProfile = async () => {
@@ -49,11 +52,28 @@ const ExperienceCard = () => {
     console.log('Failed:', errorInfo)
   }
 
+  const validateDates = (dateStart, dateEnd) => {
+    if (!isNil(dateStart) && !isNil(dateEnd)) {
+      if (moment(dateEnd).isSameOrAfter(moment(dateStart))) {
+        return true
+      }
+    }
+    return false
+  }
+
   const onAddExperience = values => {
-    values.accountId = user.accountId
+    const formValues = {
+      accountId: user.accountId,
+      role: values.role.trim(),
+      dateStart: values.dateStart,
+      dateEnd: values.dateEnd,
+      description: values.description.trim(),
+      companyName: values.companyName.trim(),
+      companyUrl: values.companyUrl.trim(),
+    }
     dispatch({
       type: 'user/ADD_EXPERIENCE',
-      payload: values,
+      payload: formValues,
     })
     setShowAddExperience(false)
   }
@@ -91,16 +111,22 @@ const ExperienceCard = () => {
   }
 
   const showEditExperienceModal = experience => {
-    setCurrentEditExpObj(experience)
-    editExperienceForm.setFieldsValue({
-      role: experience.role,
-      description: experience.description,
-      dateStart: moment(experience.dateStart),
-      dateEnd: moment(experience.dateEnd),
-      companyName: experience.companyName,
-      companyUrl: experience.companyUrl,
-    })
-    setShowEditExperience(true)
+    if (!isNil(experience)) {
+      setCurrentEditExpObj(experience)
+      editExperienceForm.setFieldsValue({
+        role: experience.role,
+        description: experience.description,
+        dateStart: moment(experience.dateStart),
+        dateEnd: moment(experience.dateEnd),
+        companyName: experience.companyName,
+        companyUrl: experience.companyUrl,
+      })
+      setShowEditExperience(true)
+    } else {
+      notification.error({
+        message: 'Error editing currently selected experience.',
+      })
+    }
   }
 
   const editExpFormFooter = (
@@ -234,9 +260,11 @@ const ExperienceCard = () => {
         footer={addExpFormFooter}
       >
         <Form
+          form={addExperienceForm}
           id="addExperienceForm"
           layout="vertical"
           hideRequiredMark
+          onSubmit={e => e.preventDefault()}
           onFinish={onAddExperience}
           onFinishFailed={onFinishFailed}
         >
@@ -254,6 +282,7 @@ const ExperienceCard = () => {
               <Form.Item
                 name="dateStart"
                 label="Date Start"
+                hasFeedback
                 rules={[{ required: true, message: 'Start date of experience is required.' }]}
               >
                 <DatePicker
@@ -265,7 +294,17 @@ const ExperienceCard = () => {
               <Form.Item
                 name="dateEnd"
                 label="Date Ended"
-                rules={[{ required: true, message: 'End date of experience is required.' }]}
+                dependencies={['dateStart']}
+                hasFeedback
+                rules={[
+                  { required: true, message: 'End date of experience is required.' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (validateDates(getFieldValue('dateStart'), value)) return Promise.resolve()
+                      return Promise.reject(new Error('Date End cannot be earlier than Date Start'))
+                    },
+                  }),
+                ]}
               >
                 <DatePicker
                   renderExtraFooter={() => 'Enter the date you end/will end your experience.'}

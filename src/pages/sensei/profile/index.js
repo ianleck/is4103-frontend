@@ -10,6 +10,7 @@ import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUpdateProfileBanner from 'components/Profile/UpdateProfileBanner'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
 const SenseiProfile = () => {
   const user = useSelector(state => state.user)
@@ -27,7 +28,7 @@ const SenseiProfile = () => {
         </div>
         <div className="col-xl-4 col-lg-12 order-1 order-xl-12">
           <ProfilePersonalInfoCard />
-          <ProfileVerificationCard />
+          {user.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED && <ProfileVerificationCard />}
           <ProfileIndustryCard />
           <ProfileOccupationCard />
         </div>

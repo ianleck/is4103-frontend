@@ -10,7 +10,7 @@ const ProfileVerificationCard = () => {
 
   const onSubmitProfile = () => {
     dispatch({
-      type: 'user/UPDATE_ADMIN_VERIFIED',
+      type: 'user/UPDATE_PROFILE',
       payload: {
         accountId: user.accountId,
         adminVerified: ADMIN_VERIFIED_ENUM.PENDING,
@@ -39,12 +39,6 @@ const ProfileVerificationCard = () => {
         status = 'Pending Approval'
         message =
           'Your application has been received and is pending verification from Digi Dojo. You will receive an email once your application is approved.'
-        break
-      case ADMIN_VERIFIED_ENUM.ACCEPTED:
-        colourClass = 'bg-success text-white'
-        status = 'Approved'
-        message =
-          'Your application has been approved. You are now able to publish mentorship listings and courses.'
         break
       case ADMIN_VERIFIED_ENUM.REJECTED:
         colourClass = 'bg-danger text-white'

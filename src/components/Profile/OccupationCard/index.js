@@ -32,6 +32,27 @@ const OccupationCard = () => {
     }
   }
 
+  const onSaveOccupation = values => {
+    const formValues = {
+      accountId: user.accountId,
+      occupation: values.occupation,
+    }
+    dispatch({
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
+    })
+    setShowOccupation(false)
+    setCurrentOccupation(values.occupation)
+    if (isNil(values.occupation)) {
+      setShowOccupation(true)
+    }
+    setEditOccupationMode(false)
+  }
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
   const EditOccupationButton = () => {
     return (
       <Button
@@ -45,25 +66,6 @@ const OccupationCard = () => {
         &nbsp;&nbsp;Edit
       </Button>
     )
-  }
-
-  const onSaveOccupation = values => {
-    values.accountId = user.accountId
-    values.isIndustry = false
-    dispatch({
-      type: 'user/UPDATE_WORK_DETAILS',
-      payload: values,
-    })
-    setShowOccupation(false)
-    setCurrentOccupation(values.occupation)
-    if (isNil(values.occupation)) {
-      setShowOccupation(true)
-    }
-    setEditOccupationMode(false)
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const SaveOccupationButtons = () => {
@@ -113,7 +115,10 @@ const OccupationCard = () => {
           occupation: currentOccupation,
         }}
       >
-        <Form.Item name="occupation" rules={[{ required: true }]}>
+        <Form.Item
+          name="occupation"
+          rules={[{ required: true, message: 'Please select your current occupation.' }]}
+        >
           <Select
             showSearch
             className="w-100"

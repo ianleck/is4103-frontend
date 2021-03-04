@@ -48,10 +48,13 @@ const PersonalityCard = () => {
   }
 
   const onSavePersonality = values => {
-    values.accountId = user.accountId
+    const formValues = {
+      accountId: user.accountId,
+      personality: values.personality,
+    }
     dispatch({
-      type: 'user/UPDATE_PERSONALITY',
-      payload: values,
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
     })
     setShowPersonality(false)
     setCurrentPersonality(values.personality)

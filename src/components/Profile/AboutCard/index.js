@@ -34,8 +34,10 @@ const AboutCard = () => {
   }
 
   const onEditHeadline = values => {
-    values.accountId = user.accountId
-    values.updateHeadline = true
+    const formValues = {
+      accountId: user.accountId,
+      headline: values.headline.trim(),
+    }
     setShowHeadline(false)
     setCurrentHeadline(values.headline)
     if (isNil(values.headline)) {
@@ -44,7 +46,7 @@ const AboutCard = () => {
     setEditHeadlineMode(false)
     dispatch({
       type: 'user/UPDATE_ABOUT',
-      payload: values,
+      payload: formValues,
     })
   }
 
@@ -62,8 +64,10 @@ const AboutCard = () => {
   }
 
   const onEditBio = values => {
-    values.accountId = user.accountId
-    values.updateHeadline = false
+    const formValues = {
+      accountId: user.accountId,
+      bio: values.bio.trim(),
+    }
     setShowBio(false)
     setCurrentBio(values.bio)
     if (isNil(values.bio)) {
@@ -71,8 +75,8 @@ const AboutCard = () => {
     }
     setEditBioMode(false)
     dispatch({
-      type: 'user/UPDATE_ABOUT',
-      payload: values,
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
     })
   }
 

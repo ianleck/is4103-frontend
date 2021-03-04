@@ -5,6 +5,7 @@ import QRCode from 'react-qr-code'
 import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { QrcodeOutlined } from '@ant-design/icons'
+import actions from 'redux/user/actions'
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -22,10 +23,15 @@ const PersonalInformationCard = () => {
   const title = `${user.firstName} is sharing his Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
-    values.accountId = user.accountId
+    const formValues = {
+      accountId: user.accountId,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      contactNumber: values.contactNumber.trim(),
+    }
     dispatch({
-      type: 'user/UPDATE_PERSONAL_INFO',
-      payload: values,
+      type: actions.UPDATE_PROFILE,
+      payload: formValues,
     })
     setShowEditInformation(false)
   }

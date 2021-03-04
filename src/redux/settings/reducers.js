@@ -36,7 +36,7 @@ const initialState = {
     isCardShadow: true,
     isSquaredBorders: false,
     isBorderless: false,
-    isDevMode: false,
+    isDevMode: true,
   }),
 }
 

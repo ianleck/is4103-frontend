@@ -32,6 +32,27 @@ const IndustryCard = () => {
     }
   }
 
+  const onSaveIndustry = values => {
+    const formValues = {
+      accountId: user.accountId,
+      industry: values.industry,
+    }
+    dispatch({
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
+    })
+    setShowIndustry(false)
+    setCurrentIndustry(values.industry)
+    if (isNil(values.industry)) {
+      setShowIndustry(true)
+    }
+    setEditIndustryMode(false)
+  }
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
   const EditIndustryButton = () => {
     return (
       <Button
@@ -45,25 +66,6 @@ const IndustryCard = () => {
         &nbsp;&nbsp;Edit
       </Button>
     )
-  }
-
-  const onSaveIndustry = values => {
-    values.accountId = user.accountId
-    values.isIndustry = true
-    dispatch({
-      type: 'user/UPDATE_WORK_DETAILS',
-      payload: values,
-    })
-    setShowIndustry(false)
-    setCurrentIndustry(values.industry)
-    if (isNil(values.industry)) {
-      setShowIndustry(true)
-    }
-    setEditIndustryMode(false)
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const SaveIndustryButtons = () => {
@@ -113,7 +115,10 @@ const IndustryCard = () => {
           industry: currentIndustry,
         }}
       >
-        <Form.Item name="industry" rules={[{ required: true }]}>
+        <Form.Item
+          name="industry"
+          rules={[{ required: true, message: 'Please select an industry you are working in.' }]}
+        >
           <Select
             showSearch
             className="w-100"
