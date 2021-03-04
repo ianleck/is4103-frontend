@@ -12,17 +12,16 @@ const STORED_SETTINGS = storedSettings => {
 
 const initialState = {
   ...STORED_SETTINGS({
-    authProvider: 'firebase', // firebase, jwt
-    logo: 'Clean UI Pro',
+    logo: 'Digi Dojo',
     locale: 'en-US',
     isSidebarOpen: false,
     isSupportChatOpen: false,
     isMobileView: false,
     isMobileMenuOpen: false,
     isMenuCollapsed: false,
-    menuLayoutType: 'left', // left, top, nomenu
+    menuLayoutType: 'top', // left, top, nomenu
     routerAnimation: 'slide-fadein-up', // none, slide-fadein-up, slide-fadein-right, fadein, zoom-fadein
-    menuColor: 'white', // white, dark, gray
+    menuColor: 'gray', // white, dark, gray
     theme: 'default', // default, dark
     authPagesColor: 'white', // white, gray, image
     primaryColor: '#4b7cf3',
@@ -31,12 +30,13 @@ const initialState = {
     isMenuShadow: false,
     isTopbarFixed: false,
     isGrayTopbar: false,
-    isContentMaxWidth: false,
+    isContentMaxWidth: true,
     isAppMaxWidth: false,
     isGrayBackground: false,
     isCardShadow: true,
     isSquaredBorders: false,
     isBorderless: false,
+    isDevMode: false,
   }),
 }
 

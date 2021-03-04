@@ -3,12 +3,10 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import TopBar from 'components/cleanui/layout/TopBar'
 import Breadcrumbs from 'components/cleanui/layout/Breadcrumbs'
-import Menu from 'components/cleanui/layout/Menu'
+import PublicMenuBar from 'components/Public/PublicMenuBar'
 import Footer from 'components/cleanui/layout/Footer'
-import Sidebar from 'components/cleanui/layout/Sidebar'
-import SupportChat from 'components/cleanui/layout/SupportChat'
+import PublicCategoriesBar from 'components/Public/PublicCategoriesBar'
 
 const mapStateToProps = ({ settings }) => ({
   isContentMaxWidth: settings.isContentMaxWidth,
@@ -44,9 +42,7 @@ const MainLayout = ({
           cui__layout__borderless: isBorderless,
         })}
       >
-        <Sidebar />
-        <SupportChat />
-        <Menu />
+        <PublicMenuBar />
         <Layout>
           <Layout.Header
             className={classNames('cui__layout__header', {
@@ -54,7 +50,7 @@ const MainLayout = ({
               cui__layout__headerGray: isGrayTopbar,
             })}
           >
-            <TopBar />
+            <PublicCategoriesBar />
           </Layout.Header>
           <Breadcrumbs />
           <Layout.Content style={{ height: '100%', position: 'relative' }}>

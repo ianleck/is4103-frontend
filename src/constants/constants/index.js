@@ -1,0 +1,30 @@
+export const USER_TYPE_ENUM = {
+  ADMIN: 'ADMIN',
+  STUDENT: 'STUDENT',
+  SENSEI: 'SENSEI',
+}
+
+export const USER_TYPE_STRING = {
+  ADMIN: 'Admin',
+  STUDENT: 'Student',
+  SENSEI: 'Sensei',
+}
+
+export const PRIVACY_PERMISSIONS_ENUM = {
+  FOLLOWING_ONLY: 'FOLLOWING_ONLY',
+  ALL: 'ALL',
+  NONE: 'NONE',
+}
+
+export const ADMIN_VERIFIED_ENUM = {
+  SHELL: 'SHELL',
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+}
+
+export const MENTORSHIP_CONTRACT_APPROVAL = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+}

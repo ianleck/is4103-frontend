@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { Layout } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import Sidebar from 'components/cleanui/layout/Sidebar'
-import SupportChat from 'components/cleanui/layout/SupportChat'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ settings }) => ({
@@ -28,8 +26,6 @@ const AuthLayout = ({
   return (
     <Layout>
       <Layout.Content>
-        <Sidebar />
-        <SupportChat />
         <div
           className={classNames(`${style.container}`, {
             cui__layout__squaredBorders: isSquaredBorders,
@@ -40,7 +36,7 @@ const AuthLayout = ({
           })}
           style={{
             backgroundImage:
-              authPagesColor === 'image' ? 'url(resources/images/content/photos/7.jpg)' : '',
+              authPagesColor === 'image' ? 'url(../resources/images/content/photos/7.jpg)' : '',
           }}
         >
           <div
@@ -49,11 +45,11 @@ const AuthLayout = ({
             })}
           >
             <div className={style.logoContainer}>
-              <div className={style.logo}>
-                <img src="resources/images/logo.svg" className="mr-2" alt="Clean UI" />
+              <a href="/" className={style.logo}>
+                <img src="/resources/images/logo.svg" className="mr-2" alt="Clean UI" />
                 <div className={style.name}>{logo}</div>
                 {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
-              </div>
+              </a>
             </div>
             <div className="d-none d-sm-block">
               <span className="mr-2">Don&#39;t have an account?</span>
@@ -62,7 +58,7 @@ const AuthLayout = ({
               </Link>
             </div>
           </div>
-          <div className={style.containerInner}>{children}</div>
+          <div className="w-75">{children}</div>
           <div className="mt-auto pb-5 pt-5">
             <ul
               className={`${style.footerNav} list-unstyled d-flex mb-0 flex-wrap justify-content-center`}
@@ -89,8 +85,8 @@ const AuthLayout = ({
               </li>
             </ul>
             <div className="text-center">
-              Copyright © 2017-2020 Mdtk Soft |{' '}
-              <a href="https://www.mediatec.org/privacy" target="_blank" rel="noopener noreferrer">
+              Copyright © 2017-2021 IS4103 Capstone Project - Digi Dojo |{' '}
+              <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
                 Privacy Policy
               </a>
             </div>

@@ -1,13 +1,38 @@
 import actions from './actions'
 
 const initialState = {
-  id: '',
-  name: '',
-  role: '',
+  accountId: '',
+  adminVerified: false,
+  bio: '',
+  chatPrivacy: '',
+  contactNumber: '',
+  createdAt: '',
+  cvUrl: '',
+  deletedAt: '',
   email: '',
-  avatar: '',
-  authorized: process.env.REACT_APP_AUTHENTICATED || false, // false is default value
+  emailNotification: '',
+  emailVerified: false,
+  Experience: [],
+  firstName: '',
+  headline: '',
+  industry: '',
+  isPrivateProfile: '',
+  lastName: '',
+  occupation: '',
+  paypalId: '',
+  permission: '',
+  personality: '',
+  profileImgUrl: '',
+  status: '',
+  transcriptUrl: '',
+  updatedAt: '',
+  userType: '',
+  username: '',
+  // Local Attributes
+  accessToken: '',
+  authorized: process.env.REACT_APP_AUTHENTICATED || false,
   loading: false,
+  requiresProfileUpdate: false,
 }
 
 export default function userReducer(state = initialState, action) {

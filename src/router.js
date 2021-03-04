@@ -7,6 +7,243 @@ import { connect } from 'react-redux'
 import Layout from 'layouts'
 
 const routes = [
+  // Landing Pages
+  {
+    path: '/',
+    Component: lazy(() => import('pages/')),
+    exact: true,
+  },
+  {
+    path: '/browse',
+    Component: lazy(() => import('pages/browse')),
+    exact: true,
+  },
+  {
+    path: '/mentorships',
+    Component: lazy(() => import('pages/mentorships')),
+    exact: true,
+  },
+  // Auth Pages
+  {
+    path: '/auth/login',
+    Component: lazy(() => import('pages/auth/login')),
+    exact: true,
+  },
+  {
+    path: '/auth/admin',
+    Component: lazy(() => import('pages/auth/admin-login')),
+    exact: true,
+  },
+  {
+    path: '/auth/forgot-password',
+    Component: lazy(() => import('pages/auth/forgot-password')),
+    exact: true,
+  },
+  {
+    path: '/auth/reset-password',
+    Component: lazy(() => import('pages/auth/reset-password')),
+    exact: true,
+  },
+  {
+    path: '/auth/register',
+    Component: lazy(() => import('pages/auth/register')),
+    exact: true,
+  },
+  {
+    path: '/auth/register-sensei',
+    Component: lazy(() => import('pages/auth/register-sensei')),
+    exact: true,
+  },
+  {
+    path: '/auth/lockscreen',
+    Component: lazy(() => import('pages/auth/lockscreen')),
+    exact: true,
+  },
+  {
+    path: '/auth/404',
+    Component: lazy(() => import('pages/auth/404')),
+    exact: true,
+  },
+  {
+    path: '/auth/500',
+    Component: lazy(() => import('pages/auth/500')),
+    exact: true,
+  },
+  // Admin Pages
+  {
+    path: '/admin',
+    Component: lazy(() => import('pages/admin/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/admin/dashboard',
+    Component: lazy(() => import('pages/admin/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/admin/profile',
+    Component: lazy(() => import('pages/admin/profiles/admin-profile')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management',
+    Component: lazy(() => import('pages/admin/users/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/student/:userId',
+    Component: lazy(() => import('pages/admin/users/student-profile')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/sensei/:userId',
+    Component: lazy(() => import('pages/admin/users/sensei-profile')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/verify-senseis',
+    Component: lazy(() => import('pages/admin/verify-sensei/verify-senseis')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-management/verify-senseis/:mentorId',
+    Component: lazy(() => import('pages/admin/verify-sensei/sensei-page')),
+    exact: true,
+  },
+  {
+    path: '/admin/admin-management',
+    Component: lazy(() => import('pages/admin/admins/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/admin-management/add-admin',
+    Component: lazy(() => import('pages/admin/admins/add-new-admin')),
+    exact: true,
+  },
+  {
+    path: '/admin/admin-management/admin/:adminId',
+    Component: lazy(() => import('pages/admin/admins/another-admin-profile')),
+    exact: true,
+  },
+  {
+    path: '/admin/revenue-management',
+    Component: lazy(() => import('pages/admin/revenue')),
+    exact: true,
+  },
+  {
+    path: '/admin/profit',
+    Component: lazy(() => import('pages/admin/profits')),
+    exact: true,
+  },
+  {
+    path: '/admin/user-statistics',
+    Component: lazy(() => import('pages/admin/user-statistics')),
+    exact: true,
+  },
+  {
+    path: '/admin/mentorship-content-management',
+    Component: lazy(() => import('pages/admin/mentorship/main')),
+    exact: true,
+  },
+  {
+    path: '/admin/course-content-management',
+    Component: lazy(() => import('pages/admin/courses')),
+    exact: true,
+  },
+  {
+    path: '/admin/announcement-content-management',
+    Component: lazy(() => import('pages/admin/announcements')),
+    exact: true,
+  },
+  {
+    path: '/admin/complaint-content-management',
+    Component: lazy(() => import('pages/admin/complaints')),
+    exact: true,
+  },
+  {
+    path: '/admin/withdrawals',
+    Component: lazy(() => import('pages/admin/withdrawals')),
+    exact: true,
+  },
+  {
+    path: '/admin/refunds',
+    Component: lazy(() => import('pages/admin/refunds')),
+    exact: true,
+  },
+  {
+    path: '/admin/transactions',
+    Component: lazy(() => import('pages/admin/transactions')),
+    exact: true,
+  },
+  // Sensei Pages
+  {
+    path: '/sensei',
+    Component: lazy(() => import('pages/sensei/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/sensei/dashboard',
+    Component: lazy(() => import('pages/sensei/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/sensei/profile',
+    Component: lazy(() => import('pages/sensei/profile')),
+    exact: true,
+  },
+  {
+    path: '/sensei/settings',
+    Component: lazy(() => import('pages/sensei/settings')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorship/review-applications',
+    Component: lazy(() => import('pages/sensei/mentorship/review-applications')),
+    exact: true,
+  },
+  // Student Pages
+  {
+    path: '/student',
+    Component: lazy(() => import('pages/student/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard',
+    Component: lazy(() => import('pages/student/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/student/profile',
+    Component: lazy(() => import('pages/student/profile')),
+    exact: true,
+  },
+  {
+    path: '/student/settings',
+    Component: lazy(() => import('pages/student/settings')),
+    exact: true,
+  },
+  {
+    path: '/student/mentorship-listing/:mentorshipListingId',
+    Component: lazy(() => import('pages/mentorships/viewListing')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/mentorship-applications',
+    Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
+    exact: true,
+  },
+  // Common Pages
+  {
+    path: '/mentorship/apply/:id',
+    Component: lazy(() => import('pages/mentorships/ApplyListing')),
+  },
+  /*
+
+
+  SAMPLE PAGES
+  
+  
+  */
   // Dashboards
   {
     path: '/dashboard/alpha',
@@ -275,37 +512,6 @@ const routes = [
     Component: lazy(() => import('pages/advanced/colors')),
     exact: true,
   },
-  // Auth Pages
-  {
-    path: '/auth/login',
-    Component: lazy(() => import('pages/auth/login')),
-    exact: true,
-  },
-  {
-    path: '/auth/forgot-password',
-    Component: lazy(() => import('pages/auth/forgot-password')),
-    exact: true,
-  },
-  {
-    path: '/auth/register',
-    Component: lazy(() => import('pages/auth/register')),
-    exact: true,
-  },
-  {
-    path: '/auth/lockscreen',
-    Component: lazy(() => import('pages/auth/lockscreen')),
-    exact: true,
-  },
-  {
-    path: '/auth/404',
-    Component: lazy(() => import('pages/auth/404')),
-    exact: true,
-  },
-  {
-    path: '/auth/500',
-    Component: lazy(() => import('pages/auth/500')),
-    exact: true,
-  },
 ]
 
 const mapStateToProps = ({ settings }) => ({
@@ -328,7 +534,6 @@ const Router = ({ history, routerAnimation }) => {
                   timeout={routerAnimation === 'none' ? 0 : 300}
                 >
                   <Switch location={location}>
-                    <Route exact path="/" render={() => <Redirect to="/dashboard/alpha" />} />
                     {routes.map(({ path, Component, exact }) => (
                       <Route
                         path={path}

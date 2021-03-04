@@ -1,425 +1,219 @@
-export default async function getMenuData() {
+export async function getPublicMenuData() {
   return [
     {
-      category: true,
-      title: 'Dashboards',
+      title: 'Mentors',
+      key: 'mentors',
+      icon: 'fa fa-mortar-board',
+      url: '/mentorships',
     },
     {
-      title: 'Dashboards',
-      key: 'dashboards',
-      icon: 'fe fe-home',
-      // roles: ['admin'], // set user roles with access to this route
-      count: 4,
+      title: 'Courses',
+      key: 'courses',
+      icon: 'fa fa-cubes',
+      url: '/browse/courses',
+    },
+  ]
+}
+
+export async function getStudentMenuData() {
+  return [
+    {
+      title: 'Mentors',
+      key: 'mentors',
+      icon: 'fa fa-mortar-board',
+      url: '/mentorships',
+    },
+    {
+      title: 'Courses',
+      key: 'courses',
+      icon: 'fa fa-cubes',
+      url: '/browse/courses',
+    },
+    {
+      title: 'My Dashboard',
+      key: 'studentDashboardAccess',
+      url: '/student/dashboard',
+    },
+  ]
+}
+
+export async function getAdminMenuData() {
+  return [
+    {
+      title: 'Users Management',
+      key: 'userManagement',
+      icon: 'fe fe-users',
       children: [
         {
-          title: 'Dashboard Alpha',
-          key: 'dashboard',
-          url: '/dashboard/alpha',
+          title: 'Users',
+          key: 'userManagement',
+          url: '/admin/user-management',
         },
         {
-          title: 'Dashboard Beta',
-          key: 'dashboardBeta',
-          url: '/dashboard/beta',
-        },
-        {
-          title: 'Dashboard Gamma',
-          key: 'dashboardGamma',
-          url: '/dashboard/gamma',
-        },
-        {
-          title: 'Crypto Terminal',
-          key: 'dashboardCrypto',
-          url: '/dashboard/crypto',
+          title: 'Admin',
+          key: 'adminManagement',
+          url: '/admin/admin-management',
         },
       ],
     },
     {
-      category: true,
-      title: 'Apps & Pages',
-    },
-    {
-      title: 'Apps',
-      key: 'apps',
-      icon: 'fe fe-database',
+      title: 'Business Management',
+      key: 'businessManagement',
+      icon: 'fe fe-printer',
       children: [
         {
-          title: 'Profile',
-          key: 'appsProfile',
-          url: '/apps/profile',
+          title: 'Revenue',
+          key: 'revenue',
+          url: '/admin/revenue-management',
         },
         {
-          title: 'Calendar',
-          key: 'appsCalendar',
-          url: '/apps/calendar',
+          title: 'Profit',
+          key: 'profit',
+          url: '/admin/profit',
         },
         {
-          title: 'Gallery',
-          key: 'appsGallery',
-          url: '/apps/gallery',
-        },
-        {
-          title: 'Messaging',
-          key: 'appsCart',
-          url: '/apps/messaging',
-        },
-        {
-          title: 'Mail',
-          key: 'appsMail',
-          url: '/apps/mail',
+          title: 'User Statistics',
+          key: 'userStatistics',
+          url: '/admin/user-statistics',
         },
       ],
     },
     {
-      title: 'Extra Apps',
-      key: 'extraApps',
-      icon: 'fe fe-hard-drive',
+      title: 'Content Management',
+      key: 'contentManagement',
+      icon: 'fe fe-music',
       children: [
         {
-          title: 'Github Explore',
-          key: 'extraAppsGithubExplore',
-          url: '/apps/github-explore',
+          title: 'Mentorship',
+          key: 'mentorshipContent',
+          url: '/admin/mentorship-content-management',
         },
         {
-          title: 'Github Discuss',
-          key: 'extraAppsGithubDiscuss',
-          url: '/apps/github-discuss',
+          title: 'Courses',
+          key: 'courseContent',
+          url: '/admin/course-content-management',
         },
         {
-          title: 'Digitalocean Droplets',
-          key: 'extraAppsDigitaloceanDroplets',
-          url: '/apps/digitalocean-droplets',
+          title: 'Announcements',
+          key: 'announcementContent',
+          url: '/admin/announcement-content-management',
         },
         {
-          title: 'Digitalocean Create',
-          key: 'extraAppsDigitaloceanCreate',
-          url: '/apps/digitalocean-create',
-        },
-        {
-          title: 'Google Analytics',
-          key: 'extraAppsGoogleAnalytis',
-          url: '/apps/google-analytics',
-        },
-        {
-          title: 'Wordpress Post',
-          key: 'extraAppsWordpressPost',
-          url: '/apps/wordpress-post',
-        },
-        {
-          title: 'Wordpress Posts',
-          key: 'extraAppsWordpressPosts',
-          url: '/apps/wordpress-posts',
-        },
-        {
-          title: 'Wordpress Add',
-          key: 'extraAppsWordpressAdd',
-          url: '/apps/wordpress-add',
-        },
-        {
-          title: 'Todoist List',
-          key: 'extraAppsTodoistList',
-          url: '/apps/todoist-list',
-        },
-        {
-          title: 'Jira Dashboard',
-          key: 'extraAppsJiraDashboard',
-          url: '/apps/jira-dashboard',
-        },
-        {
-          title: 'Jira Agile Board',
-          key: 'extraAppsJiraAgileBoard',
-          url: '/apps/jira-agile-board',
-        },
-        {
-          title: 'Helpdesk Dashboard',
-          key: 'extraAppsHelpdeskDashboard',
-          url: '/apps/helpdesk-dashboard',
+          title: 'Complaints',
+          key: 'complaintContent',
+          url: '/admin/complaint-content-management',
         },
       ],
     },
     {
-      title: 'Ecommerce',
-      key: 'ecommerce',
-      icon: 'fe fe-shopping-cart',
+      title: 'Finance Management',
+      key: 'financeManagement',
+      icon: 'fe fe-thermometer',
       children: [
         {
-          title: 'Dashboard',
-          key: 'ecommerceDashboard',
-          url: '/ecommerce/dashboard',
+          title: 'Withdrawals',
+          key: 'withdrawals',
+          url: '/admin/withdrawals',
         },
         {
-          title: 'Orders',
-          key: 'ecommerceOrders',
-          url: '/ecommerce/orders',
+          title: 'Refunds',
+          key: 'refunds',
+          url: '/admin/refunds',
         },
         {
-          title: 'Propduct Catalog',
-          key: 'ecommerceProductCatalog',
-          url: '/ecommerce/product-catalog',
-        },
-        {
-          title: 'Product Details',
-          key: 'ecommerceProductDetails',
-          url: '/ecommerce/product-details',
-        },
-        {
-          title: 'Cart',
-          key: 'ecommerceCart',
-          url: '/ecommerce/cart',
+          title: 'Transactions',
+          key: 'transactions',
+          url: '/admin/transactions',
         },
       ],
     },
+  ]
+}
+
+export async function getSenseiMenuData() {
+  return [
     {
-      title: 'Auth Pages',
-      key: 'auth',
+      title: 'Mentorship',
+      key: 'mentorship',
       icon: 'fe fe-user',
       children: [
         {
-          title: 'Login',
-          key: 'authLogin',
-          url: '/auth/login',
+          title: 'Review Applications',
+          key: 'reviewApplications',
+          url: '/sensei/mentorship/review-applications',
         },
         {
-          title: 'Forgot Password',
-          key: 'authForgotPassword',
-          url: '/auth/forgot-password',
+          title: 'Mentee Overview',
+          key: 'menteeOverview',
+          url: '/sensei/menteeOverview',
         },
         {
-          title: 'Register',
-          key: 'authRegister',
-          url: '/auth/register',
+          title: 'Tasks',
+          key: 'tasks',
+          url: '/sensei/tasks',
         },
         {
-          title: 'Lockscreen',
-          key: 'authLockscreen',
-          url: '/auth/lockscreen',
+          title: 'Testimonials',
+          key: 'testimonials',
+          url: '/sensei/testimonials',
         },
         {
-          title: 'Page 404',
-          key: 'auth404',
-          url: '/auth/404',
-        },
-        {
-          title: 'Page 500',
-          key: 'auth500',
-          url: '/auth/500',
+          title: 'Chat/Video Call',
+          key: 'chatVideoCall',
+          url: '/sensei/chatVideoCall',
         },
       ],
     },
     {
-      category: true,
-      title: 'UI Kits',
-    },
-    {
-      title: 'Ant Design',
-      key: 'antDesign',
-      icon: 'fe fe-bookmark',
-      url: '/ui-kits/antd',
-    },
-    {
-      title: 'Bootstrap',
-      key: 'bootstrap',
-      icon: 'fe fe-bookmark',
-      url: '/ui-kits/bootstrap',
-    },
-    {
-      category: true,
-      title: 'Components',
-    },
-    {
-      title: 'Widgets',
-      key: 'widgets',
-      icon: 'fe fe-image',
-      count: 47,
-      children: [
-        {
-          title: 'General',
-          key: 'widgetsGeneral',
-          url: '/widgets/general',
-        },
-        {
-          title: 'Lists',
-          key: 'widgetsLists',
-          url: '/widgets/lists',
-        },
-        {
-          title: 'Tables',
-          key: 'widgetsTables',
-          url: '/widgets/tables',
-        },
-        {
-          title: 'Charts',
-          key: 'widgetsCharts',
-          url: '/widgets/charts',
-        },
-      ],
-    },
-    {
-      title: 'Cards',
-      key: 'cards',
-      icon: 'fe fe-credit-card',
-      children: [
-        {
-          title: 'Basic Cards',
-          key: 'cardsBasicCards',
-          url: '/cards/basic-cards',
-        },
-        {
-          title: 'Tabbed Cards',
-          key: 'cardsTabbedCards',
-          url: '/cards/tabbed-cards',
-        },
-      ],
-    },
-    {
-      title: 'Tables',
-      key: 'tables',
-      icon: 'fe fe-grid',
-      children: [
-        {
-          title: 'Ant Design',
-          key: 'tablesAntd',
-          url: '/tables/antd',
-        },
-        {
-          title: 'Bootstrap',
-          key: 'tablesBootstrap',
-          url: '/tables/bootstrap',
-        },
-      ],
-    },
-    {
-      title: 'Charts',
-      key: 'charts',
-      icon: 'fe fe-pie-chart',
-      children: [
-        {
-          title: 'Chartist.js',
-          key: 'chartsChartistjs',
-          url: '/charts/chartistjs',
-        },
-        {
-          title: 'Chart.js',
-          key: 'chartsChartjs',
-          url: '/charts/chartjs',
-        },
-        {
-          title: 'C3',
-          key: 'chartsC3',
-          url: '/charts/c3',
-        },
-      ],
-    },
-    {
-      title: 'Icons',
-      key: 'icons',
-      icon: 'fe fe-star',
-      children: [
-        {
-          title: 'Feather Icons',
-          key: 'iconsFeatherIcons',
-          url: '/icons/feather-icons',
-        },
-        {
-          title: 'Fontawesome',
-          key: 'iconsFontawesome',
-          url: '/icons/fontawesome',
-        },
-        {
-          title: 'Linearicons Free',
-          key: 'iconsLineariconsFree',
-          url: '/icons/linearicons-free',
-        },
-        {
-          title: 'Icomoon Free',
-          key: 'iconsIcomoonFree',
-          url: '/icons/icomoon-free',
-        },
-      ],
-    },
-    {
-      category: true,
-      title: 'Advanced',
-    },
-    {
-      title: 'Form Examples',
-      key: 'formExamples',
-      icon: 'fe fe-menu',
-      url: '/advanced/form-examples',
-    },
-    {
-      title: 'Email Templates',
-      key: 'emailTemplates',
-      icon: 'fe fe-mail',
-      url: '/advanced/email-templates',
-    },
-    {
-      title: 'Pricing Tables',
-      key: 'pricingTables',
-      icon: 'fe fe-command',
-      url: '/advanced/pricing-tables',
-    },
-    {
-      title: 'Invoice',
-      key: 'invoice',
-      icon: 'fe fe-file-text',
-      url: '/advanced/invoice',
-    },
-    {
-      title: 'Utilities',
-      key: 'utilities',
-      icon: 'fe fe-inbox',
-      url: '/advanced/utilities',
-    },
-    {
-      title: 'Grid',
-      key: 'grid',
-      icon: 'fe fe-grid',
-      url: '/advanced/grid',
-    },
-    {
-      title: 'Typography',
-      key: 'typography',
-      icon: 'fe fe-type',
-      url: '/advanced/typography',
-    },
-    {
-      title: 'Colors',
-      key: 'colors',
-      icon: 'fe fe-feather',
-      url: '/advanced/colors',
-    },
-    {
-      title: 'Nested Items',
-      key: 'nestedItem1',
+      title: 'Courses',
+      key: 'courses',
       icon: 'fe fe-layers',
-      disabled: true,
       children: [
         {
-          title: 'Nested Item 1-1',
-          key: 'nestedItem1-1',
-          children: [
-            {
-              title: 'Nested Item 1-1-1',
-              key: 'nestedItem1-1-1',
-            },
-            {
-              title: 'Nested Items 1-1-2',
-              key: 'nestedItem1-1-2',
-              disabled: true,
-            },
-          ],
+          title: 'Courses',
+          key: 'courses',
+          url: '/sensei/courses',
         },
         {
-          title: 'Nested Items 1-2',
-          key: 'nestedItem1-2',
+          title: 'Announcements',
+          key: 'announcements',
+          url: '/sensei/announcements',
         },
       ],
     },
     {
-      title: 'Disabled Item',
-      key: 'disabledItem',
-      icon: 'fe fe-slash',
-      disabled: true,
+      title: 'Profile',
+      key: 'profile',
+      icon: 'fe fe-user',
+      children: [
+        {
+          title: 'Mentor Feed',
+          key: 'mentorFeed',
+          url: '/sensei/mentorFeed',
+        },
+        {
+          title: 'My Profile',
+          key: 'myProfile',
+          url: '/sensei/myProfile',
+        },
+      ],
+    },
+    {
+      title: 'Sales',
+      key: 'sales',
+      icon: 'fe fe-shopping-cart',
+      children: [
+        {
+          title: 'Statistics',
+          key: 'statistics',
+          url: '/sensei/statistics',
+        },
+        {
+          title: 'My Wallet',
+          key: 'myWallet',
+          url: '/sensei/myWallet',
+        },
+      ],
     },
   ]
 }

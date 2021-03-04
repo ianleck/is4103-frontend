@@ -1,0 +1,10 @@
+.clickable:hover {
+  cursor: pointer;
+}
+
+.hover-shadow {
+  transition: box-shadow 0.1s;
+}
+.hover-shadow:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}

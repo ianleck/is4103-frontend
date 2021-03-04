@@ -24,7 +24,6 @@ const MenuLeft = ({
   dispatch,
   menuData = [],
   location: { pathname },
-
   isMenuCollapsed,
   isMobileView,
   isMenuUnfixed,
@@ -190,9 +189,8 @@ const MenuLeft = ({
       >
         <div className={style.logoContainer}>
           <div className={style.logo}>
-            <img src="resources/images/logo.svg" className="mr-2" alt="Clean UI" />
+            <img src="/resources/images/logo.svg" className="mr-2" alt="Digi Dojo" />
             <div className={style.name}>{logo}</div>
-            {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
           </div>
         </div>
         <PerfectScrollbar>
@@ -207,17 +205,6 @@ const MenuLeft = ({
           >
             {generateMenuItems()}
           </Menu>
-          <div className={style.banner}>
-            <p>More components, more style, more themes, and premium support!</p>
-            <a
-              href="https://themeforest.net/item/clean-ui-react-admin-template/21938700"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-sm btn-success btn-rounded px-3"
-            >
-              Buy Bundle
-            </a>
-          </div>
         </PerfectScrollbar>
       </div>
     </Layout.Sider>
