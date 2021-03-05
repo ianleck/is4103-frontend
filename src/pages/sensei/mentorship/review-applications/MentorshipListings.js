@@ -229,6 +229,14 @@ const ListingButton = property => {
 const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
   const categories = useSelector(state => state.categories)
   const [form] = Form.useForm()
+
+  useEffect(() => {
+    form.setFieldsValue({
+      name: record.name,
+      description: record.description,
+      categories: map(record.Categories, c => c.categoryId),
+    })
+  })
   const { Option } = Select
 
   const saveFormFooter = (
@@ -269,6 +277,7 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
 
   return (
     <Modal
+      forceRender
       visible={visible}
       title={record ? 'Update Mentorship Listing' : 'Create a New Mentorship Listing'}
       okText={record ? 'Update' : 'Create'}
