@@ -18,7 +18,7 @@ import {
   Tabs,
   Tag,
 } from 'antd'
-import { filter, size } from 'lodash'
+import { filter, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
@@ -48,7 +48,7 @@ const MentorshipApplications = () => {
     const result = isStudent
       ? await getAllStudentMentorshipApplications(accountId)
       : await getSenseiMentorshipApplications(accountId)
-    const data = result.contracts.map((c, i) => ({ ...c, key: i }))
+    const data = map(result.contracts, (c, i) => ({ ...c, key: i }))
     setMentorshipApplications(data)
   }
 
