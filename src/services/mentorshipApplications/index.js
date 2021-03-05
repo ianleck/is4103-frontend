@@ -6,7 +6,6 @@ export async function acceptMentorshipApplication(mentorshipContractId) {
   return apiClient
     .put(url)
     .then(response => {
-      console.log('response = ', response)
       if (response && !isNil(response.data)) {
         return response.data
       }
@@ -46,7 +45,6 @@ export async function getSenseiMentorshipApplications(accountId) {
   return apiClient
     .get(url)
     .then(response => {
-      console.log('response ====', response)
       if (response && !isNil(response.data)) {
         return response.data
       }
