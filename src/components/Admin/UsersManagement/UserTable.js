@@ -53,7 +53,7 @@ const UserTable = () => {
           title="Created At"
           dataIndex="createdAt"
           key="createdAt"
-          render={createdAt => moment(createdAt).format('YYYY-MM-DD')}
+          render={createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a')}
         />
         <Column
           title="Chat Privacy"
@@ -67,7 +67,7 @@ const UserTable = () => {
             { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
             { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
           ]}
-          onFilter={(value, record) => record.adminVerified.indexOf(value) === 0}
+          onFilter={(value, record) => record.chatPrivacy.indexOf(value) === 0}
         />
         <Column
           title="Status"
@@ -80,7 +80,7 @@ const UserTable = () => {
             },
             { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
           ]}
-          onFilter={(value, record) => record.adminVerified.indexOf(value) === 0}
+          onFilter={(value, record) => record.status.indexOf(value) === 0}
         />
         <Column
           title="Details"
@@ -104,7 +104,12 @@ const UserTable = () => {
         <Column title="First Name" dataIndex="firstName" key="firstName" />
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
         <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Created At" dataIndex="createdAt" key="createdAt" />
+        <Column
+          title="Created At"
+          dataIndex="createdAt"
+          key="createdAt"
+          render={createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a')}
+        />
         <Column
           title="Admin Verified"
           dataIndex="adminVerified"

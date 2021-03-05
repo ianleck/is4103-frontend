@@ -12,6 +12,7 @@ import ProfileExperienceCard from 'components/Profile/ExperienceCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
 const MentorProfile = () => {
   const history = useHistory()
@@ -65,30 +66,32 @@ const MentorProfile = () => {
       <div className="card">
         <div className="card-body">
           <ProfileVerificationCard user={mentor} isAdmin />
-          <div className="row justify-content-end">
-            <div className="col-auto">
-              <Button
-                type="primary"
-                shape="round"
-                size="large"
-                icon={<CheckOutlined />}
-                onClick={() => onAccept()}
-              >
-                Accept Sensei
-              </Button>
+          {mentor.adminVerified === ADMIN_VERIFIED_ENUM.PENDING && (
+            <div className="row justify-content-end">
+              <div className="col-auto">
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="large"
+                  icon={<CheckOutlined />}
+                  onClick={() => onAccept()}
+                >
+                  Accept Sensei
+                </Button>
+              </div>
+              <div className="col-auto">
+                <Button
+                  type="danger"
+                  shape="round"
+                  size="large"
+                  icon={<CloseOutlined />}
+                  onClick={() => onReject()}
+                >
+                  Reject Sensei
+                </Button>
+              </div>
             </div>
-            <div className="col-auto">
-              <Button
-                type="danger"
-                shape="round"
-                size="large"
-                icon={<CloseOutlined />}
-                onClick={() => onReject()}
-              >
-                Reject Sensei
-              </Button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     )
