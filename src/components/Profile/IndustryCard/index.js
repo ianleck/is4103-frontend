@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { industries } from 'constants/information'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { isNil } from 'lodash'
 
-const IndustryCard = () => {
+const IndustryCard = ({ user, showEditTools }) => {
   const { Option } = Select
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentIndustry, setCurrentIndustry] = useState(user.industry)
@@ -147,7 +146,9 @@ const IndustryCard = () => {
           <div className="col-auto">
             <span className="h3 font-weight-bold text-dark">Industry</span>
           </div>
-          <div className="col-auto">{!editIndustryMode && <EditIndustryButton />}</div>
+          <div className="col-auto">
+            {!editIndustryMode && !!showEditTools && <EditIndustryButton />}
+          </div>
         </div>
       </div>
       <div className="card-body">

@@ -14,33 +14,15 @@ const AdminProfile = () => {
   const [showChangePassword, setshowChangePassword] = useState(false)
   const history = useHistory()
   const { adminId } = useParams()
-  const [admin, setAdmin] = useState({
-    accountId: '',
-    contactNumber: null,
-    createdAt: '',
-    deletedAt: null,
-    email: '',
-    emailVerified: false,
-    firstName: null,
-    lastName: null,
-    paypalId: null,
-    permission: '',
-    status: '',
-    updatedAt: '',
-    userType: '',
-    username: '',
-  })
+  const [admin, setAdmin] = useState('')
 
   const getAdmin = async () => {
     const response = await jwtAdmin.getAdmin(adminId)
-    // console.log('response')
-    // console.log(response)
     setAdmin(response)
   }
 
   useEffect(() => {
     const checkSuperAdminEffect = () => {
-      // console.log(user)
       if (user.permission !== 'SUPERADMIN') {
         const path = '/admin'
         history.push(path)
@@ -48,8 +30,6 @@ const AdminProfile = () => {
     }
     const getAdminEffect = async () => {
       const response = await jwtAdmin.getAdmin(adminId)
-      // console.log('response')
-      // console.log(response)
       setAdmin(response)
     }
     checkSuperAdminEffect()
@@ -65,13 +45,14 @@ const AdminProfile = () => {
   const saveFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <button
-          type="button"
+        <Button
+          type="default"
+          size="large"
           onClick={() => setShowEditInformation(false)}
-          className="btn btn-outline-default"
+          className=""
         >
           Close
-        </button>
+        </Button>
       </div>
       <div className="col-auto">
         <Button

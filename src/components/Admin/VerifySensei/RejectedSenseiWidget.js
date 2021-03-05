@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import CountIconWidget from 'components/Common/CountIconWidget'
+import { isNil } from 'lodash'
 import * as jwtAdmin from 'services/jwt/admin'
+import { CloseOutlined } from '@ant-design/icons'
 
 const RejectedSenseiWidget = () => {
   const [count, setCount] = useState(0)
@@ -14,8 +17,10 @@ const RejectedSenseiWidget = () => {
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
-        if (response[i].adminVerified === 'REJECTED') {
-          counter += 1
+        if (!isNil(response[i].adminVerified)) {
+          if (response[i].adminVerified === 'REJECTED') {
+            counter += 1
+          }
         }
       }
     }
@@ -23,14 +28,7 @@ const RejectedSenseiWidget = () => {
   }
 
   return (
-    <div className="card">
-      <div className="card-body bg-danger">
-        <h4 className="d-flex align-items-center justify-content-center text-white">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center text-white">
-          Rejected Senseis
-        </h6>
-      </div>
-    </div>
+    <CountIconWidget title="Rejected Senseis" count={count} icon={<CloseOutlined />} color="red" />
   )
 }
 

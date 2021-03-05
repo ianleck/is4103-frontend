@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { personalities } from 'constants/information'
 import { isNil } from 'lodash'
 
-const PersonalityCard = () => {
+const PersonalityCard = ({ user, showEditTools }) => {
   const { Option } = Select
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentPersonality, setCurrentPersonality] = useState(user.personality)
@@ -176,7 +175,9 @@ const PersonalityCard = () => {
           <div className="col-auto">
             <span className="h3 font-weight-bold text-dark">My Personality</span>
           </div>
-          <div className="col-auto">{!editPersonalityMode && <EditPersonalityButton />}</div>
+          <div className="col-auto">
+            {!editPersonalityMode && !!showEditTools && <EditPersonalityButton />}
+          </div>
         </div>
       </div>
       <div className="card-body">

@@ -50,6 +50,7 @@ export function* LOAD_CURRENT_ACCOUNT() {
     } else {
       currentUser = createUserObj(user, user.authorized, user.loading, user.requiresProfileUpdate)
     }
+    yield call(jwt.updateLocalUserData, currentUser)
     yield putResolve({
       type: 'user/SET_STATE',
       payload: currentUser,
@@ -215,7 +216,6 @@ export function* UPDATE_PROFILE({ payload }) {
   const response = yield call(jwt.updateProfile, accountId, payload)
   if (response) {
     const updatedUser = handleProfileUpdateRsp(response)
-    console.log('updatedUser', updatedUser)
     if (updatedUser) {
       yield putResolve({
         type: 'user/SET_STATE',
@@ -250,9 +250,9 @@ function handleProfileUpdateRsp(response) {
   if (response) {
     const currentUser = createUserObj(response, true, false, checkProfileUpdateRqd(response))
     const localStorageUser = jwt.getLocalUserData()
-    console.log('localStorageUser', localStorageUser)
     if (!isEmpty(localStorageUser.accessToken))
       currentUser.accessToken = localStorageUser.accessToken
+    if (!isNil(localStorageUser.Experience)) currentUser.Experience = localStorageUser.Experience
     return currentUser
   }
   return false

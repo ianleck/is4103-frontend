@@ -51,15 +51,15 @@ const AdminsManagement = () => {
           </div>
 
           <div className="row mt-4">
-            <div className="col-xl-4 col-lg-12">
+            <div className="col-12 col-sm-4">
               <NormalAdminWidget />
             </div>
 
-            <div className="col-xl-4 col-lg-12">
+            <div className="col-12 col-sm-4">
               <SuperAdminWidget />
             </div>
 
-            <div className="col-xl-4 col-lg-12">
+            <div className="col-12 col-sm-4">
               <ActiveAdminWidget />
             </div>
 

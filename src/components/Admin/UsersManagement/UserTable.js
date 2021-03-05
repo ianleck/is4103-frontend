@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/jwt/admin'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import { ADMIN_VERIFIED_ENUM, PRIVACY_PERMISSIONS_ENUM, STATUS_ENUM } from 'constants/constants'
+import moment from 'moment'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -15,10 +17,6 @@ const UserTable = () => {
   const [students, setStudents] = useState()
   const [senseis, setSenseis] = useState()
   const history = useHistory()
-
-  // console.log('user', user)
-  // console.log('students', students)
-  // console.log('History', history)
 
   useEffect(() => {
     populateStudents()
@@ -35,7 +33,6 @@ const UserTable = () => {
   }
 
   const onButtonClick = record => {
-    // console.log('button', record.userType)
     if (record.userType === 'STUDENT') {
       const path = `/admin/user-management/student/${record.accountId}`
       history.push(path)
@@ -52,10 +49,39 @@ const UserTable = () => {
         <Column title="First Name" dataIndex="firstName" key="firstName" />
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
         <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Created At" dataIndex="createdAt" key="createdAt" />
-        <Column title="Admin Verified" dataIndex="adminVerified" key="adminVerified" />
-        <Column title="Chat Privacy" dataIndex="chatPrivacy" key="chatPrivacy" />
-        <Column title="Status" dataIndex="status" key="status" />
+        <Column
+          title="Created At"
+          dataIndex="createdAt"
+          key="createdAt"
+          render={createdAt => moment(createdAt).format('YYYY-MM-DD')}
+        />
+        <Column
+          title="Chat Privacy"
+          dataIndex="chatPrivacy"
+          key="chatPrivacy"
+          filters={[
+            {
+              text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+              value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+            },
+            { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
+            { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
+          ]}
+          onFilter={(value, record) => record.adminVerified.indexOf(value) === 0}
+        />
+        <Column
+          title="Status"
+          dataIndex="status"
+          key="status"
+          filters={[
+            {
+              text: STATUS_ENUM.ACTIVE,
+              value: STATUS_ENUM.ACTIVE,
+            },
+            { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
+          ]}
+          onFilter={(value, record) => record.adminVerified.indexOf(value) === 0}
+        />
         <Column
           title="Details"
           render={record => (
@@ -79,7 +105,18 @@ const UserTable = () => {
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
         <Column title="Email" dataIndex="email" key="email" />
         <Column title="Created At" dataIndex="createdAt" key="createdAt" />
-        <Column title="Admin Verified" dataIndex="adminVerified" key="adminVerified" />
+        <Column
+          title="Admin Verified"
+          dataIndex="adminVerified"
+          key="adminVerified"
+          filters={[
+            { text: ADMIN_VERIFIED_ENUM.SHELL, value: ADMIN_VERIFIED_ENUM.SHELL },
+            { text: ADMIN_VERIFIED_ENUM.PENDING, value: ADMIN_VERIFIED_ENUM.PENDING },
+            { text: ADMIN_VERIFIED_ENUM.ACCEPTED, value: ADMIN_VERIFIED_ENUM.ACCEPTED },
+            { text: ADMIN_VERIFIED_ENUM.REJECTED, value: ADMIN_VERIFIED_ENUM.REJECTED },
+          ]}
+          onFilter={(value, record) => record.adminVerified.indexOf(value) === 0}
+        />
         <Column title="Chat Privacy" dataIndex="chatPrivacy" key="chatPrivacy" />
         <Column title="Status" dataIndex="status" key="status" />
         <Column

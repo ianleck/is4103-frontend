@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Button, Form, Input } from 'antd'
 import { isNil } from 'lodash'
 
-const AboutCard = () => {
+const AboutCard = ({ user, showEditTools }) => {
   const { TextArea } = Input
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentHeadline, setCurrentHeadline] = useState(user.headline)
@@ -45,7 +44,7 @@ const AboutCard = () => {
     }
     setEditHeadlineMode(false)
     dispatch({
-      type: 'user/UPDATE_ABOUT',
+      type: 'user/UPDATE_PROFILE',
       payload: formValues,
     })
   }
@@ -190,7 +189,7 @@ const AboutCard = () => {
             <span className="h4 text-dark">Headline</span>
           </div>
           <div className="col-auto">
-            {!editHeadlineMode && (
+            {!editHeadlineMode && !!showEditTools && (
               <Button
                 ghost
                 type="primary"
@@ -218,7 +217,7 @@ const AboutCard = () => {
             <span className="h4 text-dark">Bio</span>
           </div>
           <div className="col-auto">
-            {!editBioMode && (
+            {!editBioMode && !!showEditTools && (
               <Button
                 ghost
                 type="primary"

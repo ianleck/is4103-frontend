@@ -70,21 +70,15 @@ const MentorshipListings = () => {
 
   const tableColumns = [
     {
-      title: 'Mentorship Listing ID',
-      dataIndex: 'mentorshipListingId',
-      key: 'mentorshipListingId',
-    },
-    {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      responsive: ['sm'],
     },
     {
       title: 'Categories',
       key: 'Categories',
       dataIndex: 'Categories',
-      responsive: ['md'],
+      responsive: ['sm'],
       render: categories => (
         <>
           {categories.map(category => {
@@ -102,6 +96,11 @@ const MentorshipListings = () => {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+    },
+    {
+      title: 'Mentorship Listing ID',
+      dataIndex: 'mentorshipListingId',
+      key: 'mentorshipListingId',
       responsive: ['lg'],
     },
     {
@@ -242,7 +241,7 @@ const ListingForm = ({ record, visible, onSubmit, onCancel }) => {
   const saveFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <Button ghost type="primary" size="large" onClick={onCancel} className="">
+        <Button type="default" size="large" onClick={onCancel} className="">
           Close
         </Button>
       </div>

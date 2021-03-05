@@ -21,16 +21,18 @@ const SenseiProfile = () => {
       {!!user.requiresProfileUpdate && <ProfileUpdateProfileBanner />}
       <div className="row">
         <div className="col-xl-8 col-lg-12 order-12 order-xl-1">
-          <ProfileAboutCard />
-          <ProfileExperienceCard />
-          <ProfilePersonalityCard />
-          <ProfileUploadFilesCard />
+          <ProfileAboutCard user={user} showEditTools />
+          <ProfileExperienceCard user={user} showEditTools />
+          <ProfilePersonalityCard user={user} showEditTools />
+          <ProfileUploadFilesCard user={user} showUploadButton />
         </div>
         <div className="col-xl-4 col-lg-12 order-1 order-xl-12">
-          <ProfilePersonalInfoCard />
-          {user.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED && <ProfileVerificationCard />}
-          <ProfileIndustryCard />
-          <ProfileOccupationCard />
+          <ProfilePersonalInfoCard user={user} showEditTools />
+          {user.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED && (
+            <ProfileVerificationCard user={user} />
+          )}
+          <ProfileIndustryCard user={user} showEditTools />
+          <ProfileOccupationCard user={user} showEditTools />
         </div>
       </div>
     </div>

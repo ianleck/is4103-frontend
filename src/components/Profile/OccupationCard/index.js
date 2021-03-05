@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { occupations } from 'constants/information'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { isNil } from 'lodash'
 
-const OccupationCard = () => {
+const OccupationCard = ({ user, showEditTools }) => {
   const { Option } = Select
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentOccupation, setCurrentOccupation] = useState(user.occupation)
@@ -147,7 +146,9 @@ const OccupationCard = () => {
           <div className="col-auto">
             <span className="h3 font-weight-bold text-dark">Occupation</span>
           </div>
-          <div className="col-auto">{!editOccupationMode && <EditOccupationButton />}</div>
+          <div className="col-auto">
+            {!editOccupationMode && !!showEditTools && <EditOccupationButton />}
+          </div>
         </div>
       </div>
       <div className="card-body">

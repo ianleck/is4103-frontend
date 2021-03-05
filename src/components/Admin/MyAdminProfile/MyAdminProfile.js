@@ -22,8 +22,7 @@ const MyAdminProfile = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowEditInformation(false)}
           className=""
@@ -49,8 +48,7 @@ const MyAdminProfile = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setshowChangePassword(false)}
           className=""

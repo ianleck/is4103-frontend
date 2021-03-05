@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import { isNil } from 'lodash'
 import * as jwt from 'services/jwt'
 
-const ExperienceCard = () => {
+const ExperienceCard = ({ user, showEditTools }) => {
   const { TextArea } = Input
 
-  const user = useSelector(state => state.user)
   let isExperienceEmpty = false
   if (!isNil(user.Experience)) isExperienceEmpty = user.Experience.length === 0
   const dispatch = useDispatch()
@@ -133,8 +132,7 @@ const ExperienceCard = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowEditExperience(false)}
           className=""
@@ -169,13 +167,15 @@ const ExperienceCard = () => {
               </span>
             </div>
             <div className="col-auto">
-              <Button
-                type="default"
-                icon={<i className="fe fe-edit" />}
-                onClick={() => showEditExperienceModal(item)}
-              >
-                &nbsp;&nbsp;Edit
-              </Button>
+              {!!showEditTools && (
+                <Button
+                  type="default"
+                  icon={<i className="fe fe-edit" />}
+                  onClick={() => showEditExperienceModal(item)}
+                >
+                  &nbsp;&nbsp;Edit
+                </Button>
+              )}
             </div>
           </div>
           <div className="row mt-2 text-dark align-items-center">
@@ -208,8 +208,7 @@ const ExperienceCard = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowAddExperience(false)}
           className=""
@@ -233,16 +232,18 @@ const ExperienceCard = () => {
             <span className="h3 font-weight-bold text-dark">My Experience</span>
           </div>
           <div className="col-auto">
-            <Button
-              ghost
-              type="primary"
-              shape="round"
-              size="large"
-              icon={<i className="fe fe-plus" />}
-              onClick={() => setShowAddExperience(true)}
-            >
-              &nbsp;&nbsp;Add
-            </Button>
+            {!!showEditTools && (
+              <Button
+                ghost
+                type="primary"
+                shape="round"
+                size="large"
+                icon={<i className="fe fe-plus" />}
+                onClick={() => setShowAddExperience(true)}
+              >
+                &nbsp;&nbsp;Add
+              </Button>
+            )}
           </div>
         </div>
       </div>

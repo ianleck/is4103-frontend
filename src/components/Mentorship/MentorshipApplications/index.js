@@ -94,22 +94,16 @@ const MentorshipApplications = () => {
 
   const senseiTableColumns = [
     {
-      title: 'Mentorship Listing ID',
-      dataIndex: 'mentorshipListingId',
-      key: 'mentorshipListingId',
-    },
-    {
       title: 'Mentorship Title',
       dataIndex: 'MentorshipListing',
       key: 'MentorshipListing',
-      responsive: ['sm'],
       render: record => <span>{record.name}</span>,
     },
     {
       title: 'Student Name',
       dataIndex: 'Student',
       key: 'studentName',
-      responsive: ['md'],
+      responsive: ['sm'],
       render: record => {
         return (
           <span>
@@ -123,6 +117,12 @@ const MentorshipApplications = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       responsive: ['md'],
+    },
+    {
+      title: 'Mentorship Listing ID',
+      dataIndex: 'mentorshipListingId',
+      key: 'mentorshipListingId',
+      responsive: ['lg'],
     },
     {
       title: 'Action',
@@ -157,11 +157,6 @@ const MentorshipApplications = () => {
 
   const studentTableColumns = [
     {
-      title: 'Mentorship Application ID',
-      dataIndex: 'mentorshipContractId',
-      key: 'mentorshipContractId',
-    },
-    {
       title: 'Date Applied',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -174,7 +169,8 @@ const MentorshipApplications = () => {
       responsive: ['md'],
       render: listing => (
         <a
-          href={`/student/mentorship-listing/${listing.mentorshipListingId}`}
+          href="#"
+          onClick={() => history.push(`/student/mentorship-listing/${listing.mentorshipListingId}`)}
           className="text-primary"
         >
           {listing.name}
@@ -197,6 +193,12 @@ const MentorshipApplications = () => {
         }
         return <Tag color={color}>{senseiApproval}</Tag>
       },
+    },
+    {
+      title: 'Mentorship Application ID',
+      dataIndex: 'mentorshipContractId',
+      key: 'mentorshipContractId',
+      responsive: ['md'],
     },
     {
       title: 'Action',
@@ -315,8 +317,7 @@ const ViewPersonalStatementButton = values => {
     <div className="row justify-content-end">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setIsViewStatementModalVisible(false)}
           className=""
