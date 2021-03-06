@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { occupations } from 'constants/information'
 import { useDispatch } from 'react-redux'
@@ -11,6 +11,12 @@ const OccupationCard = ({ user, showEditTools }) => {
   const [currentOccupation, setCurrentOccupation] = useState(user.occupation)
   const [showOccupation, setShowOccupation] = useState(isNil(user.occupation))
   const [editOccupationMode, setEditOccupationMode] = useState(false)
+
+  useEffect(() => {
+    if (user.occupation) {
+      setShowOccupation(isNil(user.occupation))
+    }
+  }, [user.occupation])
 
   const onChangeOccupation = values => {
     setCurrentOccupation(values)

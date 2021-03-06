@@ -86,26 +86,26 @@ const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
       </div>
       <div className="card-body">
         <div className="row align-items-center">
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-4">
             <span className="h4">Transcript</span>
           </div>
           <div className="col-auto mt-2 mt-sm-0">
             {!!showUploadButton && <UploadFileComponent isTranscript />}
           </div>
-          <div className="col-auto">
+          <div className="col-auto mt-2 mt-sm-0">
             {user.transcriptUrl !== '' && !isNil(user.transcriptUrl) && (
               <DownloadFileComponent isTranscript />
             )}
           </div>
         </div>
         <div className="row align-items-center mt-4">
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-4">
             <span className="h4">CV</span>
           </div>
           <div className="col-auto mt-2 mt-sm-0">
             {!!showUploadButton && <UploadFileComponent isTranscript={false} />}
           </div>
-          <div className="col-auto">
+          <div className="col-auto mt-2 mt-sm-0">
             {user.cvUrl !== '' && !isNil(user.cvUrl) && (
               <DownloadFileComponent isTranscript={false} />
             )}

@@ -160,7 +160,7 @@ const SenseiProfileComponent = () => {
       <div className="row mt-4">
         <div className="col-xl-6 col-lg-12">
           <ProfilePersonalInfoCard user={sensei} isAdmin />
-          <ProfileExperienceCard user={sensei} />
+          <ProfileExperienceCard user={sensei} isAdmin />
         </div>
         <div className="col-xl-6 col-lg-12">
           <AdminVerificationCard />

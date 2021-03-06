@@ -5,7 +5,7 @@ import moment from 'moment'
 import { isNil } from 'lodash'
 import * as jwt from 'services/jwt'
 
-const ExperienceCard = ({ user, showEditTools }) => {
+const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
   const { TextArea } = Input
 
   let isExperienceEmpty = false
@@ -20,7 +20,7 @@ const ExperienceCard = ({ user, showEditTools }) => {
 
   useEffect(() => {
     const getProfile = async () => {
-      if (!isNil(user.accountId)) {
+      if (!isAdmin && !isNil(user.accountId)) {
         const userRsp = await jwt.getProfile(user.accountId)
         dispatch({
           type: 'user/SET_STATE',
@@ -31,7 +31,7 @@ const ExperienceCard = ({ user, showEditTools }) => {
       }
     }
     getProfile()
-  }, [dispatch, user.accountId])
+  }, [dispatch, isAdmin, user.accountId])
 
   const sortExperienceByDate = () => {
     if (user) {

@@ -7,7 +7,7 @@ import NewAdmin from '../../../components/Admin/AdminManagement/NewAdmin'
 const addNewAdmin = () => {
   return (
     <div>
-      <Helmet title="Add new Admin" />
+      <Helmet title="Add New Admin" />
       <NewAdmin />
     </div>
   )

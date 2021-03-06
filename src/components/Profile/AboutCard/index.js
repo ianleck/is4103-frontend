@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Form, Input } from 'antd'
 import { isNil } from 'lodash'
@@ -14,6 +14,15 @@ const AboutCard = ({ user, showEditTools }) => {
   const [currentBio, setCurrentBio] = useState(user.bio)
   const [showBio, setShowBio] = useState(isNil(user.bio))
   const [editBioMode, setEditBioMode] = useState(false)
+
+  useEffect(() => {
+    if (user.headline) {
+      setShowHeadline(isNil(user.headline))
+    }
+    if (user.bio) {
+      setShowBio(isNil(user.bio))
+    }
+  }, [user.headline, user.bio])
 
   const EmptyInformation = () => {
     return <span className="font-italic text-secondary">No information provided.</span>

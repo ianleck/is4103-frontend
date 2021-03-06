@@ -68,7 +68,7 @@ const MentorProfile = () => {
           <ProfileVerificationCard user={mentor} isAdmin />
           {mentor.adminVerified === ADMIN_VERIFIED_ENUM.PENDING && (
             <div className="row justify-content-end">
-              <div className="col-auto">
+              <div className="col-auto mt-2 mt-sm-0">
                 <Button
                   type="primary"
                   shape="round"
@@ -79,7 +79,7 @@ const MentorProfile = () => {
                   Accept Sensei
                 </Button>
               </div>
-              <div className="col-auto">
+              <div className="col-auto mt-2 mt-sm-0">
                 <Button
                   type="danger"
                   shape="round"

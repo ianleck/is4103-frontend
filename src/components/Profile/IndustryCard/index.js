@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { industries } from 'constants/information'
 import { useDispatch } from 'react-redux'
@@ -11,6 +11,12 @@ const IndustryCard = ({ user, showEditTools }) => {
   const [currentIndustry, setCurrentIndustry] = useState(user.industry)
   const [showIndustry, setShowIndustry] = useState(isNil(user.industry))
   const [editIndustryMode, setEditIndustryMode] = useState(false)
+
+  useEffect(() => {
+    if (user.industry) {
+      setShowIndustry(isNil(user.industry))
+    }
+  }, [user.industry])
 
   const onChangeIndustry = values => {
     setCurrentIndustry(values)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { useDispatch } from 'react-redux'
 import { personalities } from 'constants/information'
@@ -11,6 +11,12 @@ const PersonalityCard = ({ user, showEditTools }) => {
   const [currentPersonality, setCurrentPersonality] = useState(user.personality)
   const [showPersonality, setShowPersonality] = useState(isNil(user.personality))
   const [editPersonalityMode, setEditPersonalityMode] = useState(false)
+
+  useEffect(() => {
+    if (user.personality) {
+      setShowPersonality(isNil(user.personality))
+    }
+  }, [user.personality])
 
   const onChangePersonality = values => {
     setCurrentPersonality(values)

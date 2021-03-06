@@ -177,7 +177,6 @@ export async function getSensei(accountId) {
   return apiClient
     .get(`/user/${accountId}`, { withCredentials: true })
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.user
       }
@@ -190,7 +189,6 @@ export async function getStudent(accountId) {
   return apiClient
     .get(`/user/${accountId}`, { withCredentials: true })
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.user
       }
