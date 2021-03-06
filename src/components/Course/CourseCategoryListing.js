@@ -10,7 +10,7 @@ const CourseCategoryListing = data => {
     <div>
       <div className="row align-items-center mb-2">
         {'Popular Courses for '}
-        <span className="text-primary">{categoryName}</span>
+        {categoryName}
       </div>
       <div className="row">
         <Space size="large">{map(courses, course => showCourseCard(course))}</Space>

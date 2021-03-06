@@ -4,7 +4,7 @@ import FeaturedCourses from './FeaturedCourses'
 
 const CourseContainer = () => {
   const courseData = {
-    categoryName: 'Finance&Accounting',
+    categoryName: 'Finance & Accounting',
     courses: [
       {
         key: 1,

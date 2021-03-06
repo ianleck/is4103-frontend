@@ -6,11 +6,11 @@ const FeaturedCourses = () => {
   return (
     <div>
       <div className="row">
-        <div className="col-xl-6 col-lg-6 col-md-6">
+        <div className="col-12 col-md-6">
           {/* ============ 1st featured course ============ */}
           {showFeaturedCourse(imgSrc)}
         </div>
-        <div className="col-xl-6 col-lg-6 col-md-6">
+        <div className="col-12 col-md-6">
           {/* ============ 2nd featured course ============ */}
           {showFeaturedCourse(imgSrc)}
         </div>
