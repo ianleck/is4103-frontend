@@ -10,7 +10,7 @@ export async function getPublicMenuData() {
       title: 'Courses',
       key: 'courses',
       icon: 'fa fa-cubes',
-      url: '/browse/courses',
+      url: '/courses',
     },
   ]
 }
@@ -27,7 +27,7 @@ export async function getStudentMenuData() {
       title: 'Courses',
       key: 'courses',
       icon: 'fa fa-cubes',
-      url: '/browse/courses',
+      url: '/courses',
     },
     {
       title: 'My Dashboard',
