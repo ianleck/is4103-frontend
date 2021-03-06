@@ -1,19 +1,7 @@
-export const USER_TYPE_ENUM = {
+export const ADMIN_ROLE_ENUM = {
+  SUPERADMIN: 'SUPERADMIN',
   ADMIN: 'ADMIN',
-  STUDENT: 'STUDENT',
-  SENSEI: 'SENSEI',
-}
-
-export const USER_TYPE_STRING = {
-  ADMIN: 'Admin',
-  STUDENT: 'Student',
-  SENSEI: 'Sensei',
-}
-
-export const PRIVACY_PERMISSIONS_ENUM = {
-  FOLLOWING_ONLY: 'FOLLOWING_ONLY',
-  ALL: 'ALL',
-  NONE: 'NONE',
+  FINANCE: 'FINANCE',
 }
 
 export const ADMIN_VERIFIED_ENUM = {
@@ -29,7 +17,25 @@ export const MENTORSHIP_CONTRACT_APPROVAL = {
   REJECTED: 'REJECTED',
 }
 
+export const PRIVACY_PERMISSIONS_ENUM = {
+  FOLLOWING_ONLY: 'FOLLOWING_ONLY',
+  ALL: 'ALL',
+  NONE: 'NONE',
+}
+
 export const STATUS_ENUM = {
   ACTIVE: 'ACTIVE',
   BANNED: 'BANNED',
+}
+
+export const USER_TYPE_ENUM = {
+  ADMIN: 'ADMIN',
+  STUDENT: 'STUDENT',
+  SENSEI: 'SENSEI',
+}
+
+export const USER_TYPE_STRING = {
+  ADMIN: 'Admin',
+  STUDENT: 'Student',
+  SENSEI: 'Sensei',
 }

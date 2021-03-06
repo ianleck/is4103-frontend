@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getMentorshipListings } from 'services/mentorshipListing'
-import { Avatar, Card, Tag } from 'antd'
+import { Avatar, Space, Tag } from 'antd'
 import { useHistory } from 'react-router-dom'
 import './index.css'
 
@@ -28,20 +28,56 @@ const MentorshipListingList = () => {
 
   return (
     <div>
-      <div
-        className="row"
-        style={{ fontSize: '18px', color: 'black', marginBottom: '10px', fontWeight: 500 }}
-      >
-        Featured Mentorships
+      <div className="row">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="font-weight-bold">Featured Mentorships</h4>
+              <div className="row mt-4">
+                <div className="col-6">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-auto">
+                          <Avatar size={128} />
+                        </div>
+                        <div className="col">
+                          <h3 className="card-title text-wrap">Listing Name</h3>
+                          <h4 className="card-subtitle mb-2 text-muted text-wrap">Mentor Name</h4>
+                          <p className="text-dark mt-4">Listing Description</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-auto">
+                          <Avatar size={128} />
+                        </div>
+                        <div className="col">
+                          <h3 className="card-title text-wrap">Listing Name</h3>
+                          <h4 className="card-subtitle mb-2 text-muted text-wrap">Mentor Name</h4>
+                          <p className="text-dark mt-4">Listing Description</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="row justify-content-start">
+      <div className="row">
         {listings &&
           listings.map(l => {
             return (
               <div
-                className="col-xl-3 col-lg-4"
+                className="col-12 col-md-6 col-lg-4 my-2 d-flex align-items-stretch"
                 key={l.mentorshipListingId}
-                style={{ paddingLeft: '8px', paddingRight: '8px', paddingBottom: '16px' }}
               >
                 {renderListing(l, redirectToListing)}
               </div>
@@ -56,37 +92,50 @@ const renderListing = (listing, redirect) => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16)
 
   return (
-    <Card
-      className="clickable hover-shadow"
-      style={{ height: '180px', overflowY: 'hidden', position: 'relative' }}
+    <div
+      role="button"
+      tabIndex={0}
+      key={listing.mentorshipListingId}
+      className="card btn btn-block d-flex align-items-center justify-content-center"
       onClick={() => redirect(listing.mentorshipListingId)}
+      onKeyDown={event => event.preventDefault()}
     >
-      <div className="col">
+      <div className="card-body container p-3">
         <div className="row align-items-center">
-          <Avatar style={{ backgroundColor: `#${randomColor}` }}>
-            {listing?.Sensei?.firstName?.substring(0, 1).toUpperCase()}
-          </Avatar>
-          <div className="col">
-            <div style={{ fontWeight: 'bold' }}>
-              {listing?.Sensei?.firstName} {listing?.Sensei?.lastName}
-            </div>
-            <div>{listing.name}</div>
+          <div className="col-auto text-left">
+            <Avatar size={32} style={{ backgroundColor: `#${randomColor}` }}>
+              {listing?.Sensei?.firstName?.substring(0, 1).toUpperCase()}
+            </Avatar>
+          </div>
+          <span className="text-dark font-weight-bold text-wrap text-left">
+            {listing?.Sensei?.firstName} {listing?.Sensei?.lastName}
+          </span>
+        </div>
+        <div className="row mt-4">
+          <div className="col-12 text-left">
+            <span className="w-100 d-inline-block">{listing.name}</span>
+          </div>
+          <div className="col-12 text-left mt-0">
+            <small className="w-100 d-inline-block text-dark text-truncate">
+              {listing.description}
+            </small>
           </div>
         </div>
-        <div className="row" style={{ height: '65px', overflow: 'hidden', marginBottom: '10px' }}>
-          {listing.description}
-        </div>
-        <div className="row">
-          {listing.Categories?.map(c => {
-            return (
-              <Tag key={c.categoryId} color="default">
-                {c.name}
-              </Tag>
-            )
-          })}
+        <div className="row text-left mt-2">
+          <div className="col-12">
+            {listing.Categories?.map(c => {
+              return (
+                <Space key={c.categoryId}>
+                  <Tag className="mb-2" color="default">
+                    {c.name}
+                  </Tag>
+                </Space>
+              )
+            })}
+          </div>
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
 

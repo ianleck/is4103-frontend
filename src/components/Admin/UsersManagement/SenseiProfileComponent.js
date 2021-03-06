@@ -183,7 +183,6 @@ const SenseiProfileComponent = () => {
                 <TabPane tab="Mentorship Listings" key="1" />
               </Tabs>
             </div>
-
             <div className="card-body">{tabKey === '1' && showMentorshipListings()}</div>
           </div>
         </div>

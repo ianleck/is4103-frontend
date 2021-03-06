@@ -4,18 +4,16 @@ import { useHistory } from 'react-router-dom'
 import { Button } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
 import { Helmet } from 'react-helmet'
-import AdminTable from '../../../components/Admin/AdminManagement/AdminTable'
-import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveAdminWidget'
-import SuperAdminWidget from '../../../components/Admin/AdminManagement/SuperAdminWidget'
-import NormalAdminWidget from '../../../components/Admin/AdminManagement/NormalAdminWidget'
-
-// const { TabPane } = Tabs
+import AdminTable from 'components/Admin/AdminManagement/AdminTable'
+import ActiveAdminWidget from 'components/Admin/AdminManagement/ActiveAdminWidget'
+import SuperAdminWidget from 'components/Admin/AdminManagement/SuperAdminWidget'
+import NormalAdminWidget from 'components/Admin/AdminManagement/NormalAdminWidget'
+import { ADMIN_ROLE_ENUM } from 'constants/constants'
 
 const AdminsManagement = () => {
   const user = useSelector(state => state.user)
-  const isSuperAdmin = user.permission === 'SUPERADMIN'
-
   const history = useHistory()
+  const isSuperAdmin = user.role === ADMIN_ROLE_ENUM.SUPERADMIN
 
   const addNewAdmin = e => {
     e.preventDefault()

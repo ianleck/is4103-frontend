@@ -82,9 +82,7 @@ export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
     firstName: currentAdmin.firstName,
     lastName: currentAdmin.lastName,
     paypalId: currentAdmin.paypalId,
-    permission: currentAdmin.permission,
-    status: currentAdmin.status,
-    updatedAt: currentAdmin.updatedAt,
+    role: currentAdmin.role,
     userType: currentAdmin.userType,
     username: currentAdmin.username,
     // Local Attributes

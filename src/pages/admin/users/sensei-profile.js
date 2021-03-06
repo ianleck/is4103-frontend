@@ -5,8 +5,7 @@ import SenseiProfileComponent from '../../../components/Admin/UsersManagement/Se
 const UserProfile = () => {
   return (
     <div>
-      <Helmet title="Sensei's Page" />
-
+      <Helmet title="Sensei Profile" />
       <SenseiProfileComponent />
     </div>
   )

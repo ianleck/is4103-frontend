@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { Button, Descriptions, Modal, Form, Input, notification, Select } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { EditOutlined, DeleteOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { ADMIN_ROLE_ENUM } from 'constants/constants'
 
 const { Option } = Select
 
@@ -23,7 +24,7 @@ const AdminProfile = () => {
 
   useEffect(() => {
     const checkSuperAdminEffect = () => {
-      if (user.permission !== 'SUPERADMIN') {
+      if (user.role !== ADMIN_ROLE_ENUM.SUPERADMIN) {
         const path = '/admin'
         history.push(path)
       }
@@ -34,7 +35,7 @@ const AdminProfile = () => {
     }
     checkSuperAdminEffect()
     getAdminEffect()
-  }, [adminId, history, user.permission])
+  }, [adminId, history, user.role])
 
   const onBack = e => {
     e.preventDefault()

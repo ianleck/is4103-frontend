@@ -5,9 +5,9 @@ import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { ADMIN_VERIFIED_ENUM, PRIVACY_PERMISSIONS_ENUM, STATUS_ENUM } from 'constants/constants'
 import moment from 'moment'
+import { indexOf, isNil, map } from 'lodash'
 
 const { TabPane } = Tabs
-const { Column } = Table
 
 const UserTable = () => {
   const [tabKey, setTabKey] = useState('1')
@@ -25,11 +25,13 @@ const UserTable = () => {
 
   const populateStudents = async () => {
     const response = await jwtAdmin.getAllStudents()
-    setStudents(response)
+    const listingRecords = map(response, res => ({ ...res, key: indexOf(response, res) }))
+    setStudents(listingRecords)
   }
   const populateSenseis = async () => {
     const response = await jwtAdmin.getAllSenseis()
-    setSenseis(response)
+    const listingRecords = map(response, res => ({ ...res, key: indexOf(response, res) }))
+    setSenseis(listingRecords)
   }
 
   const onButtonClick = record => {
@@ -43,100 +45,181 @@ const UserTable = () => {
   }
 
   const showStudent = () => {
-    return (
-      <Table bordered="true" dataSource={students} rowKey="accountId">
-        <Column title="Account Id" dataIndex="accountId" key="accountId" />
-        <Column title="First Name" dataIndex="firstName" key="firstName" />
-        <Column title="Last Name" dataIndex="lastName" key="lastName" />
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column
-          title="Created At"
-          dataIndex="createdAt"
-          key="createdAt"
-          render={createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a')}
-        />
-        <Column
-          title="Chat Privacy"
-          dataIndex="chatPrivacy"
-          key="chatPrivacy"
-          filters={[
-            {
-              text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-              value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-            },
-            { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
-            { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
-          ]}
-          onFilter={(value, record) => record.chatPrivacy.indexOf(value) === 0}
-        />
-        <Column
-          title="Status"
-          dataIndex="status"
-          key="status"
-          filters={[
-            {
-              text: STATUS_ENUM.ACTIVE,
-              value: STATUS_ENUM.ACTIVE,
-            },
-            { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
-          ]}
-          onFilter={(value, record) => record.status.indexOf(value) === 0}
-        />
-        <Column
-          title="Details"
-          render={record => (
-            <Button
-              type="primary"
-              shape="round"
-              onClick={() => onButtonClick(record)}
-              icon={<InfoCircleOutlined />}
-            />
-          )}
-        />
-      </Table>
-    )
+    const tableColumns = [
+      {
+        title: 'First Name',
+        dataIndex: 'firstName',
+        key: 'firstName',
+        sorter: (a, b) =>
+          !isNil(a.firstName) && !isNil(b.firstName) ? a.firstName.length - b.firstName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Last Name',
+        dataIndex: 'lastName',
+        key: 'lastName',
+        responsive: ['md'],
+        sorter: (a, b) =>
+          !isNil(a.lastName) && !isNil(b.lastName) ? a.lastName.length - b.lastName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+        responsive: ['lg'],
+        sorter: (a, b) => a.email.length - b.email.length,
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Account ID',
+        dataIndex: 'accountId',
+        key: 'accountId',
+        responsive: ['lg'],
+      },
+      {
+        title: 'Created At',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a'),
+      },
+      {
+        title: 'Chat Privacy',
+        dataIndex: 'chatPrivacy',
+        key: 'chatPrivacy',
+        responsive: ['lg'],
+        filters: [
+          {
+            text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+            value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+          },
+          { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
+          { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
+        ],
+        onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        filters: [
+          {
+            text: STATUS_ENUM.ACTIVE,
+            value: STATUS_ENUM.ACTIVE,
+          },
+          { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
+        ],
+        onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
+      },
+      {
+        title: 'Details',
+        key: 'details',
+        render: record => (
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => onButtonClick(record)}
+            icon={<InfoCircleOutlined />}
+          />
+        ),
+      },
+    ]
+    return <Table bordered="true" dataSource={students} columns={tableColumns} />
   }
 
   const showSensei = () => {
-    return (
-      <Table bordered="true" dataSource={senseis} rowKey="accountId">
-        <Column title="Account Id" dataIndex="accountId" key="accountId" />
-        <Column title="First Name" dataIndex="firstName" key="firstName" />
-        <Column title="Last Name" dataIndex="lastName" key="lastName" />
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column
-          title="Created At"
-          dataIndex="createdAt"
-          key="createdAt"
-          render={createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a')}
-        />
-        <Column
-          title="Admin Verified"
-          dataIndex="adminVerified"
-          key="adminVerified"
-          filters={[
-            { text: ADMIN_VERIFIED_ENUM.SHELL, value: ADMIN_VERIFIED_ENUM.SHELL },
-            { text: ADMIN_VERIFIED_ENUM.PENDING, value: ADMIN_VERIFIED_ENUM.PENDING },
-            { text: ADMIN_VERIFIED_ENUM.ACCEPTED, value: ADMIN_VERIFIED_ENUM.ACCEPTED },
-            { text: ADMIN_VERIFIED_ENUM.REJECTED, value: ADMIN_VERIFIED_ENUM.REJECTED },
-          ]}
-          onFilter={(value, record) => record.adminVerified.indexOf(value) === 0}
-        />
-        <Column title="Chat Privacy" dataIndex="chatPrivacy" key="chatPrivacy" />
-        <Column title="Status" dataIndex="status" key="status" />
-        <Column
-          title="Details"
-          render={record => (
-            <Button
-              type="primary"
-              shape="round"
-              onClick={() => onButtonClick(record)}
-              icon={<InfoCircleOutlined />}
-            />
-          )}
-        />
-      </Table>
-    )
+    const tableColumns = [
+      {
+        title: 'First Name',
+        dataIndex: 'firstName',
+        key: 'firstName',
+        sorter: (a, b) =>
+          !isNil(a.firstName) && !isNil(b.firstName) ? a.firstName.length - b.firstName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Last Name',
+        dataIndex: 'lastName',
+        key: 'lastName',
+        responsive: ['md'],
+        sorter: (a, b) =>
+          !isNil(a.lastName) && !isNil(b.lastName) ? a.lastName.length - b.lastName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+        responsive: ['lg'],
+        sorter: (a, b) => a.email.length - b.email.length,
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Admin Verified',
+        dataIndex: 'adminVerified',
+        key: 'adminVerified',
+        filters: [
+          { text: ADMIN_VERIFIED_ENUM.SHELL, value: ADMIN_VERIFIED_ENUM.SHELL },
+          { text: ADMIN_VERIFIED_ENUM.PENDING, value: ADMIN_VERIFIED_ENUM.PENDING },
+          { text: ADMIN_VERIFIED_ENUM.ACCEPTED, value: ADMIN_VERIFIED_ENUM.ACCEPTED },
+          { text: ADMIN_VERIFIED_ENUM.REJECTED, value: ADMIN_VERIFIED_ENUM.REJECTED },
+        ],
+        onFilter: (value, record) => record.adminVerified.indexOf(value) === 0,
+      },
+      {
+        title: 'Account ID',
+        dataIndex: 'accountId',
+        key: 'accountId',
+        responsive: ['lg'],
+      },
+      {
+        title: 'Created At',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a'),
+      },
+      {
+        title: 'Chat Privacy',
+        dataIndex: 'chatPrivacy',
+        key: 'chatPrivacy',
+        responsive: ['lg'],
+        filters: [
+          {
+            text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+            value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+          },
+          { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
+          { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
+        ],
+        onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        filters: [
+          {
+            text: STATUS_ENUM.ACTIVE,
+            value: STATUS_ENUM.ACTIVE,
+          },
+          { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
+        ],
+        onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
+      },
+      {
+        title: 'Details',
+        key: 'details',
+        render: record => (
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => onButtonClick(record)}
+            icon={<InfoCircleOutlined />}
+          />
+        ),
+      },
+    ]
+    return <Table bordered="true" dataSource={senseis} columns={tableColumns} />
   }
 
   return (
