@@ -147,7 +147,7 @@ const routes = [
   },
   {
     path: '/admin/course-content-management',
-    Component: lazy(() => import('pages/admin/courses')),
+    Component: lazy(() => import('pages/admin/courses/main')),
     exact: true,
   },
   {
