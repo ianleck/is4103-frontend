@@ -21,34 +21,29 @@ const MentorshipProfileHeader = () => {
   }
 
   return (
-    <div
-      className="row mt-4 col-auto"
-      style={{
-        flex: 'space-between',
-        flexDirection: 'row',
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Button
-        type="primary"
-        size="large"
-        shape="round"
-        onClick={onBack}
-        icon={<ArrowLeftOutlined />}
-      >
-        Back
-      </Button>
-
-      <Button
-        type="primary"
-        size="large"
-        shape="round"
-        onClick={onAdd}
-        icon={<CheckSquareOutlined />}
-      >
-        Apply for Mentorship
-      </Button>
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button
+          type="primary"
+          size="large"
+          shape="round"
+          onClick={onBack}
+          icon={<ArrowLeftOutlined />}
+        >
+          Back
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button
+          type="primary"
+          size="large"
+          shape="round"
+          onClick={onAdd}
+          icon={<CheckSquareOutlined />}
+        >
+          Apply for Mentorship
+        </Button>
+      </div>
     </div>
   )
 }
