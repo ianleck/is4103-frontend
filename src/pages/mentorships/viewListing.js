@@ -15,18 +15,14 @@ const viewListing = () => {
         <div className="col-12 col-md-2 d-flex align-items-center justify-content-center">
           <MentorshipProfilePicture />
         </div>
-        {/* <div className="col-xl-4 col-lg-12">
-          <MentorshipDescriptionCard />
-        </div>
-        <div className="col-xl-4 col-lg-12">
-          <MentorshipPricingCard />
-        </div> */}
+        {/* DON'T COPY STUFF FROM THIS COMPONENT */}
         <div className="col-12 col-md-5 my-2 d-flex align-items-stretch">
           <MentorshipDescriptionCard />
         </div>
         <div className="col-12 col-md-5 my-2 d-flex align-items-stretch">
           <MentorshipPricingCard />
         </div>
+        {/* DON'T COPY STUFF FROM THIS COMPONENT */}
         <div className="col-12">
           <MentorshipExperienceCard />
         </div>
