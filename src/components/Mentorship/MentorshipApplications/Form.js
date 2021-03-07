@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { Button, Form, Input, notification } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useParams, useHistory, useLocation } from 'react-router-dom'
-// import { getMentorshipListings } from 'services/mentorshipListing'
 import {
   createMentorshipApplication,
   updateMentorshipApplication,
 } from 'services/mentorshipApplications'
-import { Button, Card, Form, Input, notification } from 'antd'
 
 const formItemLayout = {
   labelCol: {
@@ -50,12 +49,14 @@ const ApplyListingForm = () => {
         updateMentorshipApplication(prevApplication.mentorshipContractId, values).then(res => {
           if (res) {
             notification.success({ message: res.message })
+            history.goBack()
           }
         })
       } else {
         createMentorshipApplication(id, values).then(res => {
           if (res) {
             notification.success({ message: res.message })
+            history.goBack()
           }
         })
       }
@@ -65,37 +66,44 @@ const ApplyListingForm = () => {
   return (
     <div>
       <div className="row">
-        <Button
-          type="primary"
-          size="small"
-          shape="round"
-          onClick={() => history.goBack()}
-          icon={<ArrowLeftOutlined />}
-        >
-          Back
-        </Button>
-      </div>
-      <div
-        style={{
-          marginBottom: '10px',
-          fontSize: '18px',
-          color: 'black',
-          marginTop: '20px',
-          fontWeight: 500,
-        }}
-      >
-        Mentorship Application Form
-      </div>
-      <Card>
-        <Form form={form} {...formItemLayout} layout="vertical">
-          <Form.Item name="statement" label="Description">
-            <Input.TextArea rows={5} placeholder="Why do you want to apply for this mentorship?" />
-          </Form.Item>
-          <Button onClick={() => onSubmit()} type="primary">
-            Submit
+        <div className="col-12">
+          <Button
+            type="primary"
+            size="large"
+            shape="round"
+            onClick={() => history.goBack()}
+            icon={<ArrowLeftOutlined />}
+          >
+            Back
           </Button>
-        </Form>
-      </Card>
+        </div>
+      </div>
+      <div className="row mt-4">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-header pb-1">
+              <div className="h3 font-weight-bold text-dark">Mentorship Application Form</div>
+            </div>
+            <div className="card-body">
+              <div className="row">
+                <div className="col-12">
+                  <Form form={form} {...formItemLayout} layout="vertical">
+                    <Form.Item name="statement" label="Description">
+                      <Input.TextArea
+                        rows={5}
+                        placeholder="Why do you want to apply for this mentorship?"
+                      />
+                    </Form.Item>
+                    <Button onClick={() => onSubmit()} type="primary">
+                      Submit
+                    </Button>
+                  </Form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

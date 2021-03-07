@@ -147,135 +147,13 @@ export async function getProfile(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function updatePersonalInfo(accountId, firstName, lastName, contactNumber) {
+export async function updateProfile(accountId, payload) {
   return apiClient
     .put(
       `/user/${accountId}`,
       {
         user: {
-          firstName,
-          lastName,
-          contactNumber,
-        },
-      },
-      { withCredentials: true },
-    )
-    .then(response => {
-      if (!isNil(response.data)) {
-        if (!isNil(response.data.user)) return response.data.user
-        return false
-      }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function updateAccountSettings(
-  accountId,
-  isPrivateProfile,
-  emailNotification,
-  chatPrivacy,
-) {
-  return apiClient
-    .put(
-      `/user/${accountId}`,
-      {
-        user: {
-          isPrivateProfile,
-          emailNotification,
-          chatPrivacy,
-        },
-      },
-      { withCredentials: true },
-    )
-    .then(response => {
-      if (!isNil(response.data)) {
-        if (!isNil(response.data.user)) return response.data.user
-        return false
-      }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function updateAbout(accountId, updateHeadline, headline, bio) {
-  let user = {}
-  if (updateHeadline) {
-    user = { headline }
-  } else {
-    user = { bio }
-  }
-  return apiClient
-    .put(
-      `/user/${accountId}`,
-      {
-        user,
-      },
-      { withCredentials: true },
-    )
-    .then(response => {
-      if (!isNil(response.data)) {
-        if (!isNil(response.data.user)) return response.data.user
-        return false
-      }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function updateWorkDetails(accountId, isIndustry, industry, occupation) {
-  let user = {}
-  if (isIndustry) {
-    user = { industry }
-  } else {
-    user = { occupation }
-  }
-  return apiClient
-    .put(
-      `/user/${accountId}`,
-      {
-        user,
-      },
-      { withCredentials: true },
-    )
-    .then(response => {
-      if (!isNil(response.data)) {
-        if (!isNil(response.data.user)) return response.data.user
-        return false
-      }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function updatePersonality(accountId, personality) {
-  return apiClient
-    .put(
-      `/user/${accountId}`,
-      {
-        user: {
-          personality,
-        },
-      },
-      { withCredentials: true },
-    )
-    .then(response => {
-      if (!isNil(response.data)) {
-        if (!isNil(response.data.user)) return response.data.user
-        return false
-      }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function updateAdminVerified(accountId, adminVerified) {
-  return apiClient
-    .put(
-      `/user/${accountId}`,
-      {
-        user: {
-          adminVerified,
+          ...payload,
         },
       },
       { withCredentials: true },

@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Button, Descriptions, Form, Input, Modal, Typography } from 'antd'
 import QRCode from 'react-qr-code'
 import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { QrcodeOutlined } from '@ant-design/icons'
+import actions from 'redux/user/actions'
+import moment from 'moment'
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
 }
 
-const PersonalInformationCard = () => {
+const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
   const { Paragraph } = Typography
 
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showQRCode, setShowQRCode] = useState(false)
@@ -22,10 +23,15 @@ const PersonalInformationCard = () => {
   const title = `${user.firstName} is sharing his Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
-    values.accountId = user.accountId
+    const formValues = {
+      accountId: user.accountId,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      contactNumber: values.contactNumber.trim(),
+    }
     dispatch({
-      type: 'user/UPDATE_PERSONAL_INFO',
-      payload: values,
+      type: actions.UPDATE_PROFILE,
+      payload: formValues,
     })
     setShowEditInformation(false)
   }
@@ -44,8 +50,7 @@ const PersonalInformationCard = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowEditInformation(false)}
           className=""
@@ -115,24 +120,57 @@ const PersonalInformationCard = () => {
               size="small"
               column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
               extra={
-                <Button
-                  ghost
-                  type="primary"
-                  shape="round"
-                  icon={<i className="fe fe-edit-3" />}
-                  size="large"
-                  onClick={() => setShowEditInformation(true)}
-                >
-                  &nbsp;&nbsp;Edit
-                </Button>
+                !!showEditTools && (
+                  <Button
+                    ghost
+                    type="primary"
+                    shape="round"
+                    icon={<i className="fe fe-edit-3" />}
+                    size="large"
+                    onClick={() => setShowEditInformation(true)}
+                  >
+                    &nbsp;&nbsp;Edit
+                  </Button>
+                )
               }
             >
+              {!!isAdmin && (
+                <Descriptions.Item label="Account ID">{user.accountId}</Descriptions.Item>
+              )}
               <Descriptions.Item label="Username">{user.username}</Descriptions.Item>
               <Descriptions.Item label="Email">
                 {user.email}
                 {!user.emailVerified && <VerifyEmailLink />}
               </Descriptions.Item>
               <Descriptions.Item label="Contact Number">{user.contactNumber}</Descriptions.Item>
+              {!!isAdmin && (
+                <Descriptions.Item label="User Type">{user.userType}</Descriptions.Item>
+              )}
+              {!!isAdmin && (
+                <Descriptions.Item label="Private Profile">
+                  {user.isPrivateProfile ? 'Yes' : 'No'}
+                </Descriptions.Item>
+              )}
+              {!!isAdmin && (
+                <Descriptions.Item label="Chat Privacy">{user.chatPrivacy}</Descriptions.Item>
+              )}
+              {!!isAdmin && (
+                <Descriptions.Item label="Email Notifications">
+                  {user.emailNotification ? 'Yes' : 'No'}
+                </Descriptions.Item>
+              )}
+              {!!isAdmin && (
+                <Descriptions.Item label="Paypal ID">{user.paypalId}</Descriptions.Item>
+              )}
+              {!!isAdmin && (
+                <Descriptions.Item label="Created At">
+                  {moment(user.createdAt).format('YYYY-MM-DD')}
+                </Descriptions.Item>
+              )}
+              {!!isAdmin && (
+                <Descriptions.Item label="Admin Verified">{user.adminVerified}</Descriptions.Item>
+              )}
+              {!!isAdmin && <Descriptions.Item label="Status">{user.status}</Descriptions.Item>}
             </Descriptions>
           </div>
           <Modal

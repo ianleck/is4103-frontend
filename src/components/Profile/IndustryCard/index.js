@@ -1,17 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { industries } from 'constants/information'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { isNil } from 'lodash'
 
-const IndustryCard = () => {
+const IndustryCard = ({ user, showEditTools }) => {
   const { Option } = Select
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentIndustry, setCurrentIndustry] = useState(user.industry)
   const [showIndustry, setShowIndustry] = useState(isNil(user.industry))
   const [editIndustryMode, setEditIndustryMode] = useState(false)
+
+  useEffect(() => {
+    if (user.industry) {
+      setShowIndustry(isNil(user.industry))
+    }
+  }, [user.industry])
 
   const onChangeIndustry = values => {
     setCurrentIndustry(values)
@@ -32,6 +37,27 @@ const IndustryCard = () => {
     }
   }
 
+  const onSaveIndustry = values => {
+    const formValues = {
+      accountId: user.accountId,
+      industry: values.industry,
+    }
+    dispatch({
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
+    })
+    setShowIndustry(false)
+    setCurrentIndustry(values.industry)
+    if (isNil(values.industry)) {
+      setShowIndustry(true)
+    }
+    setEditIndustryMode(false)
+  }
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
   const EditIndustryButton = () => {
     return (
       <Button
@@ -45,25 +71,6 @@ const IndustryCard = () => {
         &nbsp;&nbsp;Edit
       </Button>
     )
-  }
-
-  const onSaveIndustry = values => {
-    values.accountId = user.accountId
-    values.isIndustry = true
-    dispatch({
-      type: 'user/UPDATE_WORK_DETAILS',
-      payload: values,
-    })
-    setShowIndustry(false)
-    setCurrentIndustry(values.industry)
-    if (isNil(values.industry)) {
-      setShowIndustry(true)
-    }
-    setEditIndustryMode(false)
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const SaveIndustryButtons = () => {
@@ -113,7 +120,10 @@ const IndustryCard = () => {
           industry: currentIndustry,
         }}
       >
-        <Form.Item name="industry" rules={[{ required: true }]}>
+        <Form.Item
+          name="industry"
+          rules={[{ required: true, message: 'Please select an industry you are working in.' }]}
+        >
           <Select
             showSearch
             className="w-100"
@@ -142,7 +152,9 @@ const IndustryCard = () => {
           <div className="col-auto">
             <span className="h3 font-weight-bold text-dark">Industry</span>
           </div>
-          <div className="col-auto">{!editIndustryMode && <EditIndustryButton />}</div>
+          <div className="col-auto">
+            {!editIndustryMode && !!showEditTools && <EditIndustryButton />}
+          </div>
         </div>
       </div>
       <div className="card-body">

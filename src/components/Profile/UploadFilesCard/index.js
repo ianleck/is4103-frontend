@@ -3,12 +3,12 @@ import { Button, Upload, message } from 'antd'
 import Axios from 'axios'
 import { isNil } from 'lodash'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import download from 'js-file-download'
 
-const VerifyProfileCard = () => {
-  const user = useSelector(state => state.user)
+const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
   const dispatch = useDispatch()
+  const useToken = isNil(accessToken) ? user.accessToken : accessToken
 
   const getUploadProps = isTranscript => {
     return {
@@ -38,7 +38,7 @@ const VerifyProfileCard = () => {
   const downloadFile = isTranscript => {
     Axios.get(isTranscript ? user.transcriptUrl : user.cvUrl, {
       headers: {
-        authorization: `Bearer ${user.accessToken}`,
+        authorization: `Bearer ${useToken}`,
       },
       responseType: 'blob', // Important
     }).then(resp => {
@@ -80,32 +80,32 @@ const VerifyProfileCard = () => {
       <div className="card-header pb-1">
         <div className="row align-items-center justify-content-between mb-2">
           <div className="col-auto">
-            <span className="h3 font-weight-bold text-dark">Upload Supporting Documents</span>
+            <span className="h3 font-weight-bold text-dark">Supporting Documents</span>
           </div>
         </div>
       </div>
       <div className="card-body">
         <div className="row align-items-center">
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-4">
             <span className="h4">Transcript</span>
           </div>
           <div className="col-auto mt-2 mt-sm-0">
-            <UploadFileComponent isTranscript />
+            {!!showUploadButton && <UploadFileComponent isTranscript />}
           </div>
-          <div className="col-auto">
+          <div className="col-auto mt-2 mt-sm-0">
             {user.transcriptUrl !== '' && !isNil(user.transcriptUrl) && (
               <DownloadFileComponent isTranscript />
             )}
           </div>
         </div>
         <div className="row align-items-center mt-4">
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-4">
             <span className="h4">CV</span>
           </div>
           <div className="col-auto mt-2 mt-sm-0">
-            <UploadFileComponent isTranscript={false} />
+            {!!showUploadButton && <UploadFileComponent isTranscript={false} />}
           </div>
-          <div className="col-auto">
+          <div className="col-auto mt-2 mt-sm-0">
             {user.cvUrl !== '' && !isNil(user.cvUrl) && (
               <DownloadFileComponent isTranscript={false} />
             )}

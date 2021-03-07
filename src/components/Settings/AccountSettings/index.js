@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import FadeIn from 'react-fade-in'
 import { PRIVACY_PERMISSIONS_ENUM } from 'constants/constants'
 
-const StudentSettings = () => {
+const AccountSettings = () => {
   const { Option } = Select
 
   const dispatch = useDispatch()
@@ -224,7 +224,12 @@ const StudentSettings = () => {
             <div className="col-12">
               <span className="h6 text-dark font-weight-bold">Profile Privacy</span>
               <hr />
-              <Switch checked={togglePrivacy} onChange={onChangePrivacy} />
+              <Switch
+                checked={togglePrivacy}
+                onChange={onChangePrivacy}
+                checkedChildren="ON"
+                unCheckedChildren="OFF"
+              />
               <span>&nbsp;&nbsp;Private Profile</span>
               <div className="mt-2">
                 <PrivateProfileToggleMsg />
@@ -273,7 +278,12 @@ const StudentSettings = () => {
               <span className="h6 text-dark font-weight-bold">Delivery Methods</span>
               <hr />
               <div className="mt-4">
-                <Switch checked={toggleEmailNotif} onChange={onChangeEmailNotif} />
+                <Switch
+                  checked={toggleEmailNotif}
+                  onChange={onChangeEmailNotif}
+                  checkedChildren="ON"
+                  unCheckedChildren="OFF"
+                />
                 <span>&nbsp;&nbsp;Email Notifications</span>
                 <div className="mt-2">
                   <HasEmailNotifMsg />
@@ -330,4 +340,4 @@ const StudentSettings = () => {
   )
 }
 
-export default StudentSettings
+export default AccountSettings

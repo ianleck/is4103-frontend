@@ -94,13 +94,13 @@ label.btn {
   border-color: $border;
   &:hover,
   &:active {
-    background-color: $gray-2;
+    background-color: $gray-1;
     border-color: $gray-2;
   }
   &:hover:active,
   &:focus,
   &.active {
-    background-color: $gray-2;
+    background-color: $gray-1;
     border-color: $gray-2;
   }
 
