@@ -125,7 +125,7 @@ export async function deleteAdmin(accountId) {
 
 export async function acceptSensei(accountId) {
   return apiClient
-    .put(`/admin/accept-sensei/${accountId}`, { withCredentials: true })
+    .put(`/admin/accept/sensei/${accountId}`, { withCredentials: true })
     .then(response => {
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.sensei
@@ -137,7 +137,7 @@ export async function acceptSensei(accountId) {
 
 export async function rejectSensei(accountId) {
   return apiClient
-    .put(`/admin/reject-sensei/${accountId}`, { withCredentials: true })
+    .put(`/admin/reject/sensei/${accountId}`, { withCredentials: true })
     .then(response => {
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.sensei

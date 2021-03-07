@@ -33,7 +33,6 @@ const SenseiProfileComponent = () => {
   useEffect(() => {
     const getSensei = async () => {
       const response = await jwtAdmin.getSensei(userId)
-      // console.log(response)
       setSensei(response)
     }
     const getListings = async () => {
@@ -158,11 +157,11 @@ const SenseiProfileComponent = () => {
       </div>
 
       <div className="row mt-4">
-        <div className="col-xl-6 col-lg-12">
+        <div className="col-12 col-md-6">
           <ProfilePersonalInfoCard user={sensei} isAdmin />
           <ProfileExperienceCard user={sensei} isAdmin />
         </div>
-        <div className="col-xl-6 col-lg-12">
+        <div className="col-12 col-md-6">
           <AdminVerificationCard />
           <ProfileAboutCard user={sensei} />
           <ProfileUploadFilesCard user={sensei} accessToken={user.accessToken} />

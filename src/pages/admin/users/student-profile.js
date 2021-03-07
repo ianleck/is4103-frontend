@@ -6,7 +6,6 @@ const UserProfile = () => {
   return (
     <div>
       <Helmet title="Student's Page" />
-
       <StudentProfileComponent />
     </div>
   )
