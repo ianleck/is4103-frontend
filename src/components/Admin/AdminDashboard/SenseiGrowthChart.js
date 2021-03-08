@@ -34,8 +34,6 @@ const options = {
   ],
 }
 
-const monthNames = [...MONTH_NAMES.monthNames]
-
 const SenseiGrowthChart = () => {
   const [senseis, setSenseis] = useState({})
   const [count, setCount] = useState(0)
@@ -65,7 +63,7 @@ const SenseiGrowthChart = () => {
     const month = last6Month.getMonth()
     for (let i = 0; i < 6; i += 1) {
       const key = (month + i) % 12
-      labels = [...labels, monthNames[key]]
+      labels = [...labels, MONTH_NAMES[key]]
       data = [...data, monthCounts[key]]
     }
 
