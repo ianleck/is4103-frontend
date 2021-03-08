@@ -4,14 +4,13 @@ import { isNil } from 'lodash'
 export async function createAdmin(newAdmin) {
   return apiClient
     .post(
-      `/admin/register-admin`,
+      `/admin/register`,
       {
         newAdmin,
       },
       { withCredentials: true },
     )
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
       }
@@ -45,13 +44,13 @@ export async function updateAdminProfile(accountId, firstName, lastName, contact
     .catch(err => console.log(err))
 }
 
-export async function updatePermission(accountId, permission) {
+export async function updateRole(accountId, role) {
   return apiClient
     .put(
-      `/admin/update-permission/${accountId}`,
+      `/admin/role/${accountId}`,
       {
         admin: {
-          permission,
+          role,
         },
       },
       { withCredentials: true },
@@ -71,7 +70,7 @@ export async function updatePermission(accountId, permission) {
 export async function updateAdminPassword(accountId, newPassword, confirmPassword) {
   return apiClient
     .put(
-      `/admin/reset-admin-password/${accountId}`,
+      `/admin/password/${accountId}`,
       {
         newPassword,
         confirmPassword,

@@ -15,8 +15,7 @@ const MyAdminProfile = () => {
 
   const onBack = e => {
     e.preventDefault()
-    const path = '/admin/admin-management/'
-    history.push(path)
+    history.goBack()
   }
 
   const saveFormFooter = (
@@ -122,7 +121,7 @@ const MyAdminProfile = () => {
         <div className="col-xl-8 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <Descriptions title="Admin's Information" bordered column={2}>
+              <Descriptions title="Admin's Information" bordered column={1}>
                 <Descriptions.Item label="Account ID">
                   {user.accountId ? user.accountId : '-'}
                 </Descriptions.Item>
@@ -138,9 +137,6 @@ const MyAdminProfile = () => {
                 <Descriptions.Item label="Created At">
                   {user.createdAt ? moment(user.createdAt).format('YYYY-MM-DD h:mm:ss a') : '-'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Deleted At">
-                  {user.deletedAt ? moment(user.deletedAt).format('YYYY-MM-DD h:mm:ss a') : '-'}
-                </Descriptions.Item>
                 <Descriptions.Item label="Contact Number">
                   {user.contactNumber ? user.contactNumber : '-'}
                 </Descriptions.Item>
@@ -148,7 +144,7 @@ const MyAdminProfile = () => {
                 <Descriptions.Item label="Email Verified">
                   {user.emailVerified ? 'TRUE' : 'FALSE'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Admin Permission">
+                <Descriptions.Item label="Admin Role">
                   {user.role ? user.role : '-'}
                 </Descriptions.Item>
               </Descriptions>

@@ -26,7 +26,12 @@ const NewAdmin = () => {
   }
 
   const onFinish = async values => {
-    if (values.password === values.confirmPassword) {
+    if (values.password.length < 8) {
+      notification.warn({
+        message: 'Bad Password',
+        description: 'Please ensure passwords are more than 8 characters',
+      })
+    } else if (values.password === values.confirmPassword) {
       const payload = {
         username: values.username,
         email: values.email,

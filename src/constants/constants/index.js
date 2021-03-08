@@ -39,3 +39,18 @@ export const USER_TYPE_STRING = {
   STUDENT: 'Student',
   SENSEI: 'Sensei',
 }
+
+export const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]

@@ -5,12 +5,12 @@ import ListingsWidget from '../../../components/Admin/Mentorship/ListingsWidgets
 import ContractsWidget from '../../../components/Admin/Mentorship/ContractsWidget'
 import ApplicationsWidget from '../../../components/Admin/Mentorship/ApplicationsWidget'
 
-const MentorshipContentManagement = () => {
+const CourseContentManagement = () => {
   return (
     <div>
-      <Helmet title="Mentorship Content Management" />
+      <Helmet title="Course Content Management" />
       <div className="cui__utils__heading">
-        <strong>Mentorship Content Management</strong>
+        <strong>Course Content Management</strong>
       </div>
 
       <div className="row">
@@ -34,4 +34,4 @@ const MentorshipContentManagement = () => {
   )
 }
 
-export default MentorshipContentManagement
+export default CourseContentManagement

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Button, Descriptions, Modal, Form, Input, notification, Select } from 'antd'
+import { Button, Descriptions, Modal, Form, Input, notification, Select, Popconfirm } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { EditOutlined, DeleteOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { ADMIN_ROLE_ENUM } from 'constants/constants'
@@ -13,6 +13,7 @@ const AdminProfile = () => {
   const user = useSelector(state => state.user)
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showChangePassword, setshowChangePassword] = useState(false)
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false)
   const history = useHistory()
   const { adminId } = useParams()
   const [admin, setAdmin] = useState('')
@@ -20,6 +21,13 @@ const AdminProfile = () => {
   const getAdmin = async () => {
     const response = await jwtAdmin.getAdmin(adminId)
     setAdmin(response)
+  }
+
+  const showPopconfirm = () => {
+    setIsConfirmDelete(true)
+  }
+  const handleCancel = () => {
+    setIsConfirmDelete(false)
   }
 
   useEffect(() => {
@@ -110,7 +118,7 @@ const AdminProfile = () => {
       values.lastName,
       values.contactNumber,
     )
-    const response2 = await jwtAdmin.updatePermission(values.accountId, values.permission)
+    const response2 = await jwtAdmin.updateRole(values.accountId, values.role)
 
     if (response1 && response2) {
       getAdmin()
@@ -166,6 +174,30 @@ const AdminProfile = () => {
     }
   }
 
+  const ConfirmDeleteButton = () => {
+    return (
+      <Popconfirm
+        title="Do you wish to delete admin account?"
+        visible={isConfirmDelete}
+        onConfirm={onDelete}
+        okText="Delete"
+        okType="danger"
+        onCancel={handleCancel}
+      >
+        <Button
+          block
+          type="danger"
+          size="large"
+          shape="round"
+          icon={<DeleteOutlined />}
+          onClick={showPopconfirm}
+        >
+          Delete your account
+        </Button>
+      </Popconfirm>
+    )
+  }
+
   return (
     <div>
       <div className="row mt-4">
@@ -187,7 +219,7 @@ const AdminProfile = () => {
         <div className="col-xl-8 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <Descriptions title="Admin's Information" bordered column={2}>
+              <Descriptions title="Admin's Information" bordered column={1}>
                 <Descriptions.Item label="Account ID">
                   {admin.accountId ? admin.accountId : '-'}
                 </Descriptions.Item>
@@ -206,9 +238,6 @@ const AdminProfile = () => {
                 <Descriptions.Item label="Updated At">
                   {admin.updatedAt ? convertDateFromSystem(admin.updatedAt) : '-'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Deleted At">
-                  {admin.deletedAt ? convertDateFromSystem(admin.deletedAt) : '-'}
-                </Descriptions.Item>
                 <Descriptions.Item label="Contact Number">
                   {admin.contactNumber ? admin.contactNumber : '-'}
                 </Descriptions.Item>
@@ -218,11 +247,8 @@ const AdminProfile = () => {
                 <Descriptions.Item label="Email Verified">
                   {admin.emailVerified ? 'TRUE' : 'FALSE'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Admin Permission">
-                  {admin.permission ? admin.permission : '-'}
-                </Descriptions.Item>
-                <Descriptions.Item label="Status">
-                  {admin.status ? admin.status : '-'}
+                <Descriptions.Item label="Admin Role">
+                  {admin.role ? admin.role : '-'}
                 </Descriptions.Item>
               </Descriptions>
             </div>
@@ -271,16 +297,7 @@ const AdminProfile = () => {
             </div>
 
             <div className="col-12 mt-4">
-              <Button
-                block
-                danger
-                shape="round"
-                size="large"
-                icon={<DeleteOutlined />}
-                onClick={() => onDelete()}
-              >
-                Delete Account
-              </Button>
+              <ConfirmDeleteButton />
             </div>
           </div>
         </div>
@@ -307,7 +324,7 @@ const AdminProfile = () => {
                 username: admin.username,
                 email: admin.email,
                 contactNumber: admin.contactNumber,
-                permission: admin.permission,
+                role: admin.role,
               }}
             >
               <div className="row">
@@ -350,11 +367,11 @@ const AdminProfile = () => {
                 </div>
                 <div className="col-md-6">
                   <Form.Item
-                    name="permission"
-                    label="Permissions"
-                    rules={[{ required: true, message: 'Please input permissions' }]}
+                    name="role"
+                    label="role"
+                    rules={[{ required: true, message: 'Please input role' }]}
                   >
-                    <Select placeholder="Select Admin Permission">
+                    <Select placeholder="Select Admin Role">
                       <Option value="ADMIN">ADMIN</Option>
                       <Option value="SUPERADMIN">SUPERADMIN</Option>
                     </Select>

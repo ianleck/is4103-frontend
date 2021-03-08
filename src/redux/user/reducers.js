@@ -20,7 +20,7 @@ const initialState = {
   lastName: '',
   occupation: '',
   paypalId: '',
-  permission: '',
+  role: '',
   personality: '',
   profileImgUrl: '',
   status: '',

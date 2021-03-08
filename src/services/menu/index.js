@@ -59,7 +59,7 @@ export async function getAdminMenuData() {
     {
       title: 'Business Management',
       key: 'businessManagement',
-      icon: 'fe fe-printer',
+      icon: 'fe fe-briefcase',
       children: [
         {
           title: 'Revenue',
@@ -81,7 +81,7 @@ export async function getAdminMenuData() {
     {
       title: 'Content Management',
       key: 'contentManagement',
-      icon: 'fe fe-music',
+      icon: 'fe fe-film',
       children: [
         {
           title: 'Mentorship',
@@ -108,7 +108,7 @@ export async function getAdminMenuData() {
     {
       title: 'Finance Management',
       key: 'financeManagement',
-      icon: 'fe fe-thermometer',
+      icon: 'fe fe-dollar-sign',
       children: [
         {
           title: 'Withdrawals',
