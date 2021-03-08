@@ -20,7 +20,7 @@ export const resetUser = {
   lastName: '',
   occupation: '',
   paypalId: '',
-  permission: '',
+  role: '',
   personality: '',
   profileImgUrl: '',
   status: '',

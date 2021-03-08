@@ -47,7 +47,7 @@ export async function updateAdminProfile(accountId, firstName, lastName, contact
 export async function updatePermission(accountId, permission) {
   return apiClient
     .put(
-      `/admin/update-permission/${accountId}`,
+      `/admin/role/${accountId}`,
       {
         admin: {
           permission,
