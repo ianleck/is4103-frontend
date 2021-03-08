@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/jwt/admin'
 import { Tabs, Table, Button } from 'antd'
+import { PRIVACY_PERMISSIONS_ENUM, STATUS_ENUM } from 'constants/constants'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import moment from 'moment'
+import isNil from 'lodash'
 
 const { TabPane } = Tabs
-const { Column } = Table
 
 const NewMentorTable = () => {
   const [tabKey, setTabKey] = useState('1')
@@ -37,29 +39,92 @@ const NewMentorTable = () => {
   }
 
   const showNewMentors = () => {
-    return (
-      <Table bordered="true" dataSource={senseis} rowKey="accountId">
-        <Column title="Account Id" dataIndex="accountId" key="accountId" />
-        <Column title="First Name" dataIndex="firstName" key="firstName" />
-        <Column title="Last Name" dataIndex="lastName" key="lastName" />
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Created At" dataIndex="createdAt" key="createdAt" />
-        <Column title="Admin Verified" dataIndex="adminVerified" key="adminVerified" />
-        <Column title="Chat Privacy" dataIndex="chatPrivacy" key="chatPrivacy" />
-        <Column title="Status" dataIndex="status" key="status" />
-        <Column
-          title="Details"
-          render={record => (
-            <Button
-              type="primary"
-              shape="round"
-              onClick={() => onButtonClick(record)}
-              icon={<InfoCircleOutlined />}
-            />
-          )}
-        />
-      </Table>
-    )
+    const tableColumns = [
+      {
+        title: 'First Name',
+        dataIndex: 'firstName',
+        key: 'firstName',
+        sorter: (a, b) =>
+          !isNil(a.firstName) && !isNil(b.firstName) ? a.firstName.length - b.firstName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Last Name',
+        dataIndex: 'lastName',
+        key: 'lastName',
+        sorter: (a, b) =>
+          !isNil(a.lastName) && !isNil(b.lastName) ? a.lastName.length - b.lastName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+        responsive: ['lg'],
+        sorter: (a, b) => a.email.length - b.email.length,
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Account ID',
+        dataIndex: 'accountId',
+        key: 'accountId',
+        responsive: ['lg'],
+      },
+      {
+        title: 'Admin Verified',
+        dataIndex: 'adminVerified',
+        key: 'adminVerified',
+        responsive: ['lg'],
+      },
+      {
+        title: 'Created At',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a'),
+      },
+      {
+        title: 'Chat Privacy',
+        dataIndex: 'chatPrivacy',
+        key: 'chatPrivacy',
+        responsive: ['lg'],
+        filters: [
+          {
+            text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+            value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
+          },
+          { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
+          { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
+        ],
+        onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        filters: [
+          {
+            text: STATUS_ENUM.ACTIVE,
+            value: STATUS_ENUM.ACTIVE,
+          },
+          { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
+        ],
+        onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
+      },
+      {
+        title: 'Details',
+        key: 'details',
+        render: record => (
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => onButtonClick(record)}
+            icon={<InfoCircleOutlined />}
+          />
+        ),
+      },
+    ]
+
+    return <Table bordered="true" dataSource={senseis} columns={tableColumns} />
   }
 
   return (

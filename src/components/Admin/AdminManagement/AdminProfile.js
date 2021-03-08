@@ -110,7 +110,7 @@ const AdminProfile = () => {
       values.lastName,
       values.contactNumber,
     )
-    const response2 = await jwtAdmin.updatePermission(values.accountId, values.permission)
+    const response2 = await jwtAdmin.updateRole(values.accountId, values.role)
 
     if (response1 && response2) {
       getAdmin()
@@ -187,7 +187,7 @@ const AdminProfile = () => {
         <div className="col-xl-8 col-lg-12">
           <div className="card">
             <div className="card-body">
-              <Descriptions title="Admin's Information" bordered column={2}>
+              <Descriptions title="Admin's Information" bordered column={1}>
                 <Descriptions.Item label="Account ID">
                   {admin.accountId ? admin.accountId : '-'}
                 </Descriptions.Item>
@@ -206,9 +206,6 @@ const AdminProfile = () => {
                 <Descriptions.Item label="Updated At">
                   {admin.updatedAt ? convertDateFromSystem(admin.updatedAt) : '-'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Deleted At">
-                  {admin.deletedAt ? convertDateFromSystem(admin.deletedAt) : '-'}
-                </Descriptions.Item>
                 <Descriptions.Item label="Contact Number">
                   {admin.contactNumber ? admin.contactNumber : '-'}
                 </Descriptions.Item>
@@ -218,11 +215,8 @@ const AdminProfile = () => {
                 <Descriptions.Item label="Email Verified">
                   {admin.emailVerified ? 'TRUE' : 'FALSE'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Admin Permission">
-                  {admin.permission ? admin.permission : '-'}
-                </Descriptions.Item>
-                <Descriptions.Item label="Status">
-                  {admin.status ? admin.status : '-'}
+                <Descriptions.Item label="Admin Role">
+                  {admin.role ? admin.role : '-'}
                 </Descriptions.Item>
               </Descriptions>
             </div>
@@ -307,7 +301,7 @@ const AdminProfile = () => {
                 username: admin.username,
                 email: admin.email,
                 contactNumber: admin.contactNumber,
-                permission: admin.permission,
+                role: admin.role,
               }}
             >
               <div className="row">
@@ -350,11 +344,11 @@ const AdminProfile = () => {
                 </div>
                 <div className="col-md-6">
                   <Form.Item
-                    name="permission"
-                    label="Permissions"
-                    rules={[{ required: true, message: 'Please input permissions' }]}
+                    name="role"
+                    label="role"
+                    rules={[{ required: true, message: 'Please input role' }]}
                   >
-                    <Select placeholder="Select Admin Permission">
+                    <Select placeholder="Select Admin Role">
                       <Option value="ADMIN">ADMIN</Option>
                       <Option value="SUPERADMIN">SUPERADMIN</Option>
                     </Select>

@@ -44,13 +44,13 @@ export async function updateAdminProfile(accountId, firstName, lastName, contact
     .catch(err => console.log(err))
 }
 
-export async function updatePermission(accountId, permission) {
+export async function updateRole(accountId, role) {
   return apiClient
     .put(
       `/admin/role/${accountId}`,
       {
         admin: {
-          permission,
+          role,
         },
       },
       { withCredentials: true },
@@ -70,7 +70,7 @@ export async function updatePermission(accountId, permission) {
 export async function updateAdminPassword(accountId, newPassword, confirmPassword) {
   return apiClient
     .put(
-      `/admin/reset-admin-password/${accountId}`,
+      `/admin/password/${accountId}`,
       {
         newPassword,
         confirmPassword,
