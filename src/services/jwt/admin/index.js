@@ -4,14 +4,13 @@ import { isNil } from 'lodash'
 export async function createAdmin(newAdmin) {
   return apiClient
     .post(
-      `/admin/register-admin`,
+      `/admin/register`,
       {
         newAdmin,
       },
       { withCredentials: true },
     )
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
       }
