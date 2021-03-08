@@ -6,7 +6,6 @@ const MentorPage = () => {
   return (
     <div>
       <Helmet title="Mentor's Page" />
-
       <MentorProfile />
     </div>
   )

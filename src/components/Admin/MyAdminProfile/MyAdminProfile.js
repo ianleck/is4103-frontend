@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Descriptions, Modal, Form, Input, notification } from 'antd'
 import { EditOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import moment from 'moment'
 
 const MyAdminProfile = () => {
   // const accessToken = useSelector(state => state.accessToken)
@@ -22,8 +23,7 @@ const MyAdminProfile = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowEditInformation(false)}
           className=""
@@ -49,8 +49,7 @@ const MyAdminProfile = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setshowChangePassword(false)}
           className=""
@@ -71,10 +70,6 @@ const MyAdminProfile = () => {
       </div>
     </div>
   )
-
-  const convertDateFromSystem = date => {
-    return date.substring(0, 10)
-  }
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo)
@@ -141,13 +136,10 @@ const MyAdminProfile = () => {
                   {user.lastName ? user.lastName : '-'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Created At">
-                  {user.createdAt ? convertDateFromSystem(user.createdAt) : '-'}
-                </Descriptions.Item>
-                <Descriptions.Item label="Updated At">
-                  {user.updatedAt ? convertDateFromSystem(user.updatedAt) : '-'}
+                  {user.createdAt ? moment(user.createdAt).format('YYYY-MM-DD h:mm:ss a') : '-'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Deleted At">
-                  {user.deletedAt ? convertDateFromSystem(user.deletedAt) : '-'}
+                  {user.deletedAt ? moment(user.deletedAt).format('YYYY-MM-DD h:mm:ss a') : '-'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Contact Number">
                   {user.contactNumber ? user.contactNumber : '-'}
@@ -157,10 +149,7 @@ const MyAdminProfile = () => {
                   {user.emailVerified ? 'TRUE' : 'FALSE'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Admin Permission">
-                  {user.permission ? user.permission : '-'}
-                </Descriptions.Item>
-                <Descriptions.Item label="Status">
-                  {user.status ? user.status : '-'}
+                  {user.role ? user.role : '-'}
                 </Descriptions.Item>
               </Descriptions>
             </div>

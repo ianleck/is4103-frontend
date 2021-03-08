@@ -125,26 +125,24 @@ export async function deleteAdmin(accountId) {
 
 export async function acceptSensei(accountId) {
   return apiClient
-    .put(`/admin/accept-sensei/${accountId}`, { withCredentials: true })
+    .put(`/admin/accept/sensei/${accountId}`, { withCredentials: true })
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.sensei
       }
-      return false
+      return response
     })
     .catch(err => console.log(err))
 }
 
 export async function rejectSensei(accountId) {
   return apiClient
-    .put(`/admin/reject-sensei/${accountId}`, { withCredentials: true })
+    .put(`/admin/reject/sensei/${accountId}`, { withCredentials: true })
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.sensei
       }
-      return false
+      return response
     })
     .catch(err => console.log(err))
 }
@@ -179,7 +177,6 @@ export async function getSensei(accountId) {
   return apiClient
     .get(`/user/${accountId}`, { withCredentials: true })
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.user
       }
@@ -192,7 +189,6 @@ export async function getStudent(accountId) {
   return apiClient
     .get(`/user/${accountId}`, { withCredentials: true })
     .then(response => {
-      // console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data.user
       }

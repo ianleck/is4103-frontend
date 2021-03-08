@@ -4,9 +4,11 @@ import { useSelector } from 'react-redux'
 import { Button, Tabs, Table } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import { indexOf, isNil, map } from 'lodash'
+import moment from 'moment'
+import { ADMIN_ROLE_ENUM } from 'constants/constants'
 
 const { TabPane } = Tabs
-const { Column } = Table
 
 const AdminTable = () => {
   const [tabKey, setTabKey] = useState('1')
@@ -20,7 +22,8 @@ const AdminTable = () => {
 
   const populateAdmin = async () => {
     const response = await jwtAdmin.getAllAdmins()
-    setAdmins(response)
+    const listingRecords = map(response, res => ({ ...res, key: indexOf(response, res) }))
+    setAdmins(listingRecords)
   }
 
   const changeTab = key => {
@@ -28,41 +31,89 @@ const AdminTable = () => {
   }
 
   const buttonClick = record => {
-    // console.log('button')
     if (user.accountId === record.accountId) {
       const path = '/admin/profile'
       history.push(path)
     } else {
       const path = `/admin/admin-management/admin/${record.accountId}`
-      // console.log(path)
       history.push(path)
     }
   }
 
   const showAdmins = () => {
-    return (
-      <Table bordered="true" dataSource={admins} rowKey="accountId">
-        <Column title="Account Id" dataIndex="accountId" key="accountId" />
-        <Column title="First Name" dataIndex="firstName" key="firstName" />
-        <Column title="Last Name" dataIndex="lastName" key="lastName" />
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Created At" dataIndex="createdAt" key="createdAt" />
-        <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
-        <Column title="Permission" dataIndex="permission" key="permission" />
-        <Column title="Status" dataIndex="status" key="status" />
-        <Column
-          title="Details"
-          render={record => (
-            <Button
-              type="primary"
-              shape="round"
-              onClick={() => buttonClick(record)}
-              icon={<InfoCircleOutlined />}
-            />
-          )}
-        />
-      </Table>
-    )
+    const tableColumns = [
+      {
+        title: 'First Name',
+        dataIndex: 'firstName',
+        key: 'firstName',
+        sorter: (a, b) =>
+          !isNil(a.firstName) && !isNil(b.firstName) ? a.firstName.length - b.firstName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Last Name',
+        dataIndex: 'lastName',
+        key: 'lastName',
+        responsive: ['md'],
+        sorter: (a, b) =>
+          !isNil(a.lastName) && !isNil(b.lastName) ? a.lastName.length - b.lastName.length : '',
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+        responsive: ['lg'],
+        sorter: (a, b) => a.email.length - b.email.length,
+        sortDirections: ['ascend', 'descend'],
+      },
+      {
+        title: 'Account ID',
+        dataIndex: 'accountId',
+        key: 'accountId',
+        responsive: ['md'],
+      },
+      {
+        title: 'Created At',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a'),
+      },
+      {
+        title: 'Updated At',
+        dataIndex: 'updatedAt',
+        key: 'updatedAt',
+        responsive: ['lg'],
+        render: updatedAt => moment(updatedAt).format('YYYY-MM-DD h:mm:ss a'),
+      },
+      {
+        title: 'Role',
+        dataIndex: 'role',
+        key: 'role',
+        filters: [
+          {
+            text: ADMIN_ROLE_ENUM.SUPERADMIN,
+            value: ADMIN_ROLE_ENUM.SUPERADMIN,
+          },
+          { text: ADMIN_ROLE_ENUM.ADMIN, value: ADMIN_ROLE_ENUM.ADMIN },
+          { text: ADMIN_ROLE_ENUM.FINANCE, value: ADMIN_ROLE_ENUM.FINANCE },
+        ],
+        onFilter: (value, record) => record.role.indexOf(value) === 0,
+      },
+      {
+        title: 'Details',
+        key: 'details',
+        render: record => (
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => buttonClick(record)}
+            icon={<InfoCircleOutlined />}
+          />
+        ),
+      },
+    ]
+    return <Table bordered="true" dataSource={admins} columns={tableColumns} />
   }
 
   return (

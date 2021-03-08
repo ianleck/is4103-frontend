@@ -9,58 +9,25 @@ import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveA
 
 const AdminDashboard = () => {
   return (
-    <div>
+    <div className="container">
       <Helmet title="Admin Overview" />
       <div className="cui__utils__heading">
         <strong>Admin Dashboard</strong>
       </div>
 
-      <div className="row">
-        <div className="col-xl-4 col-lg-12">
+      <div className="row mt-4">
+        <div className="col-12 col-sm-4">
           <StudentWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <SenseiWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <ActiveAdminWidget />
         </div>
+      </div>
 
-        <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center text-primary">
-                Widget
-              </h4>
-              <h6 className="d-flex align-items-center justify-content-center">Revenue</h6>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center text-success">
-                Widget
-              </h4>
-              <h6 className="d-flex align-items-center justify-content-center">Profits</h6>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center text-danger">
-                Widget
-              </h4>
-              <h6 className="d-flex align-items-center justify-content-center">Refunds</h6>
-            </div>
-          </div>
-        </div>
-
+      <div className="row">
         <div className="col-xl-12 col-lg-12">
           <Charting />
         </div>

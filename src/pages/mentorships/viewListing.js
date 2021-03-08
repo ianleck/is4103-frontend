@@ -10,25 +10,20 @@ const viewListing = () => {
   return (
     <div>
       <Helmet title="MentorshipListing" />
-      <div className="row">
-        <div className="col-xl-12 ">
-          <MentorshipProfileHeader />
-        </div>
-      </div>
-      <div className="row">
-        <div
-          className="col-xl-2 "
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        >
+      <MentorshipProfileHeader />
+      <div className="row mt-4">
+        <div className="col-12 col-md-2 d-flex align-items-center justify-content-center">
           <MentorshipProfilePicture />
         </div>
-        <div className="col-xl-4 col-lg-12">
+        {/* DON'T COPY STUFF FROM THIS COMPONENT */}
+        <div className="col-12 col-md-5 my-2 d-flex align-items-stretch">
           <MentorshipDescriptionCard />
         </div>
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-md-5 my-2 d-flex align-items-stretch">
           <MentorshipPricingCard />
         </div>
-        <div className="col-xl-12 col-lg-12">
+        {/* DON'T COPY STUFF FROM THIS COMPONENT */}
+        <div className="col-12">
           <MentorshipExperienceCard />
         </div>
       </div>

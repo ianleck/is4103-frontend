@@ -47,18 +47,15 @@ const VerifyMentors = () => {
       </div>
 
       <div className="row mt-4">
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <VerifiedWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <UnverifiedWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <RejectedSenseiWidget />
         </div>
-
         <div className="col-xl-12 col-lg-12">
           <NewMentorTable />
         </div>

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import CountIconWidget from 'components/Common/CountIconWidget'
+import { isNil } from 'lodash'
 import * as jwtAdmin from 'services/jwt/admin'
+import { CheckOutlined } from '@ant-design/icons'
 
 const VerifiedWidget = () => {
   const [count, setCount] = useState(0)
@@ -14,8 +17,10 @@ const VerifiedWidget = () => {
 
     if (response.length > 0) {
       for (let i = 0; i < response.length; i += 1) {
-        if (response[i].adminVerified === 'ACCEPTED') {
-          counter += 1
+        if (!isNil(response[i].adminVerified)) {
+          if (response[i].adminVerified === 'ACCEPTED') {
+            counter += 1
+          }
         }
       }
     }
@@ -23,14 +28,12 @@ const VerifiedWidget = () => {
   }
 
   return (
-    <div className="card bg-success">
-      <div className="card-body">
-        <h4 className="d-flex align-items-center justify-content-center text-white">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center text-white">
-          Verified Senseis
-        </h6>
-      </div>
-    </div>
+    <CountIconWidget
+      title="Verified Senseis"
+      count={count}
+      icon={<CheckOutlined />}
+      color="green"
+    />
   )
 }
 

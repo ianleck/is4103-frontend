@@ -9,9 +9,6 @@ import StudentWidget from '../../../components/Admin/UsersManagement/StudentWidg
 import SenseiWidget from '../../../components/Admin/UsersManagement/SenseiWidget'
 import BannedWidget from '../../../components/Admin/UsersManagement/BannedWidget'
 
-// const { TabPane } = Tabs
-// const mapStateToProps = ({ user }) => ({ user })
-
 const UsersManagement = () => {
   const history = useHistory()
 
@@ -48,22 +45,18 @@ const UsersManagement = () => {
       </div>
 
       <div className="row mt-4">
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <StudentWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <SenseiWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <BannedWidget />
         </div>
-
         <div className="col-xl-12 col-lg-12">
           <UserTable />
         </div>
-
         <div className="col-xl-12 col-lg-12">
           <BannedTable />
         </div>

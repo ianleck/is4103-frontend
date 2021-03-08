@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtAdmin from 'services/jwt/admin'
 import { Button, Input, Form, notification } from 'antd'
+import { ADMIN_ROLE_ENUM } from 'constants/constants'
 
 const NewAdmin = () => {
   const user = useSelector(state => state.user)
@@ -10,14 +11,13 @@ const NewAdmin = () => {
 
   useEffect(() => {
     const checkSuperAdmin = () => {
-      // console.log(user)
-      if (user.permission !== 'SUPERADMIN') {
+      if (user.role !== ADMIN_ROLE_ENUM.SUPERADMIN) {
         const path = '/admin'
         history.push(path)
       }
     }
     checkSuperAdmin()
-  }, [history, user.permission])
+  }, [history, user.role])
 
   const handleCancel = e => {
     e.preventDefault()
@@ -25,12 +25,7 @@ const NewAdmin = () => {
     history.push(path)
   }
 
-  // const sleep = milliseconds => {
-  //   return new Promise(resolve => setTimeout(resolve, milliseconds))
-  // }
-
   const onFinish = async values => {
-    // console.log('Values', values)
     if (values.password === values.confirmPassword) {
       const payload = {
         username: values.username,
@@ -39,37 +34,15 @@ const NewAdmin = () => {
         confirmPassword: values.confirmPassword,
       }
 
-      const response1 = await jwtAdmin.createAdmin(payload)
-      // console.log('response1', response1)
-
-      if (response1) {
+      const response = await jwtAdmin.createAdmin(payload)
+      if (response) {
         notification.success({
           message: 'Success',
-          description: 'New Admin Account created',
+          description: 'New Admin Account Created',
         })
         const path = '/admin/admin-management'
         history.push(path)
       }
-
-      // if (response1 !== false) {
-      //   // sleep(2000)
-      //   values.accountId = response1.user.accountId
-      //   console.log('values Account Id', values.accountId)
-
-      //   const response2 = await jwtAdmin.updateAdminProfile(
-      //     values.accountId,
-      //     values.firstName,
-      //     values.lastName,
-      //     values.contactNumber,
-      //   )
-      //   console.log('response2', response2)
-
-      //   if (response2) {
-      //     // sleep(1000)
-      //     const response3 = await jwtAdmin.updatePermission(values.accountId, values.permission)
-      //     console.log('response3', response3)
-      //   }
-      // }
     } else {
       notification.warn({
         message: 'Passwords do not match',
@@ -86,9 +59,16 @@ const NewAdmin = () => {
     return (
       <div className="card">
         <div className="card-body">
-          <h4>Input Admin Details: </h4>
-          <br />
-
+          <div className="row">
+            <div className="col-12">
+              <div className="text-dark text-uppercase h3 align-top">
+                <strong>
+                  <i className="fe fe-shield" />
+                  &nbsp;&nbsp;Add New Admin
+                </strong>
+              </div>
+            </div>
+          </div>
           <Form
             layout="vertical"
             hideRequiredMark
@@ -98,63 +78,40 @@ const NewAdmin = () => {
               permissions: 'admin',
             }}
           >
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please input username' }]}
-            >
-              <Input placeholder="Username" />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: 'Please input password' }]}
-            >
-              <Input placeholder="Password" type="password" />
-            </Form.Item>
-            <Form.Item
-              name="confirmPassword"
-              rules={[{ required: true, message: 'Please re-enter password' }]}
-            >
-              <Input placeholder="Re-enter Password" type="password" />
-            </Form.Item>
-
-            {/* <Form.Item
-                name="firstName"
-                rules={[{ required: true, message: 'Please input First Name' }]}
-              >
-                <Input placeholder="First Name" />
-              </Form.Item>
-
-              <Form.Item
-                name="lastName"
-                rules={[{ required: true, message: 'Please input Last Name' }]}
-              >
-                <Input placeholder="Last Name" />
-              </Form.Item> */}
-
-            <Form.Item
-              name="email"
-              rules={[{ required: true, message: 'Please input e-mail address' }]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item>
-
-            {/* <Form.Item
-                name="contactNumber"
-                rules={[{ required: true, message: 'Please input Contact Number' }]}
-              >
-                <Input placeholder="Contact Number" type="number" />
-              </Form.Item>
-
-              <Form.Item
-                name="permission"
-                rules={[{ required: true, message: 'Please select Admin Permission' }]}
-              >
-                <Select placeholder="Select Admin Permission">
-                  <Option value="ADMIN">ADMIN</Option>
-                  <Option value="SUPERADMIN">SUPERADMIN</Option>
-                </Select>
-              </Form.Item> */}
+            <div className="row mt-4">
+              <div className="col-12">
+                <Form.Item
+                  name="username"
+                  rules={[{ required: true, message: 'Please input username' }]}
+                >
+                  <Input placeholder="Username" />
+                </Form.Item>
+              </div>
+              <div className="col-12">
+                <Form.Item
+                  name="password"
+                  rules={[{ required: true, message: 'Please input password' }]}
+                >
+                  <Input placeholder="Password" type="password" />
+                </Form.Item>
+              </div>
+              <div className="col-12">
+                <Form.Item
+                  name="confirmPassword"
+                  rules={[{ required: true, message: 'Please re-enter password' }]}
+                >
+                  <Input placeholder="Re-enter Password" type="password" />
+                </Form.Item>
+              </div>
+              <div className="col-12">
+                <Form.Item
+                  name="email"
+                  rules={[{ required: true, message: 'Please input e-mail address' }]}
+                >
+                  <Input placeholder="Email" />
+                </Form.Item>
+              </div>
+            </div>
             <div className="row">
               <div className="col-auto">
                 <Button type="primary" size="large" shape="round" htmlType="submit">
