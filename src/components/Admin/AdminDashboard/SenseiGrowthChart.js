@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ChartistGraph from 'react-chartist'
 import * as jwtAdmin from 'services/jwt/admin'
 import ChartistTooltip from 'chartist-plugin-tooltips-updated'
+import { MONTH_NAMES } from 'constants/constants'
 
 const options = {
   chartPadding: {
@@ -33,20 +34,7 @@ const options = {
   ],
 }
 
-const monthNames = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
+const monthNames = [...MONTH_NAMES.monthNames]
 
 const SenseiGrowthChart = () => {
   const [senseis, setSenseis] = useState({})

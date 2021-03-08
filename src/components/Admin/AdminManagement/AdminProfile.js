@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Button, Descriptions, Modal, Form, Input, notification, Select } from 'antd'
+import { Button, Descriptions, Modal, Form, Input, notification, Select, Popconfirm } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { EditOutlined, DeleteOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { ADMIN_ROLE_ENUM } from 'constants/constants'
@@ -13,6 +13,7 @@ const AdminProfile = () => {
   const user = useSelector(state => state.user)
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showChangePassword, setshowChangePassword] = useState(false)
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false)
   const history = useHistory()
   const { adminId } = useParams()
   const [admin, setAdmin] = useState('')
@@ -20,6 +21,13 @@ const AdminProfile = () => {
   const getAdmin = async () => {
     const response = await jwtAdmin.getAdmin(adminId)
     setAdmin(response)
+  }
+
+  const showPopconfirm = () => {
+    setIsConfirmDelete(true)
+  }
+  const handleCancel = () => {
+    setIsConfirmDelete(false)
   }
 
   useEffect(() => {
@@ -166,6 +174,30 @@ const AdminProfile = () => {
     }
   }
 
+  const ConfirmDeleteButton = () => {
+    return (
+      <Popconfirm
+        title="Do you wish to delete admin account?"
+        visible={isConfirmDelete}
+        onConfirm={onDelete}
+        okText="Delete"
+        okType="danger"
+        onCancel={handleCancel}
+      >
+        <Button
+          block
+          type="danger"
+          size="large"
+          shape="round"
+          icon={<DeleteOutlined />}
+          onClick={showPopconfirm}
+        >
+          Delete your account
+        </Button>
+      </Popconfirm>
+    )
+  }
+
   return (
     <div>
       <div className="row mt-4">
@@ -265,16 +297,7 @@ const AdminProfile = () => {
             </div>
 
             <div className="col-12 mt-4">
-              <Button
-                block
-                danger
-                shape="round"
-                size="large"
-                icon={<DeleteOutlined />}
-                onClick={() => onDelete()}
-              >
-                Delete Account
-              </Button>
+              <ConfirmDeleteButton />
             </div>
           </div>
         </div>
