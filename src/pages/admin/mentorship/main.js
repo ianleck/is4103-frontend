@@ -14,19 +14,19 @@ const MentorshipContentManagement = () => {
       </div>
 
       <div className="row">
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-md-4">
           <ListingsWidget />
         </div>
 
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-md-4">
           <ContractsWidget />
         </div>
 
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-md-4">
           <ApplicationsWidget />
         </div>
 
-        <div className="col-xl-12 col-lg-12">
+        <div className="col-12">
           <MentorshipTable />
         </div>
       </div>
