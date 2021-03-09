@@ -1,9 +1,11 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { useHistory } from 'react-router-dom'
 import { Button, Input, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 const SenseiCourses = () => {
+  const history = useHistory()
   const { Option } = Select
   const { Search } = Input
   return (
@@ -20,7 +22,13 @@ const SenseiCourses = () => {
           </Select>
         </div>
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center text-md-right">
-          <Button type="primary" size="large" shape="round" icon={<PlusOutlined />}>
+          <Button
+            type="primary"
+            size="large"
+            shape="round"
+            icon={<PlusOutlined />}
+            onClick={() => history.push('/sensei/courses/create')}
+          >
             Add New Course
           </Button>
         </div>
@@ -35,17 +43,17 @@ const SenseiCourses = () => {
       <div className="row mt-2">
         <div className="col-12 col-lg-6">
           <div className="card btn p-0 text-left text-dark">
-            <div className="row no-gutters align-items-center" style={{ height: '200px' }}>
+            <div className="row no-gutters align-items-center sensei-course-card">
               <div className="col-3" style={{ overflow: 'scroll' }}>
                 <img
-                  style={{ height: '200px' }}
+                  className="sensei-course-card"
                   alt="example"
                   src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                 />
               </div>
               <div className="col-9">
                 <div className="card-body">
-                  <div className="d-flex align-items-start flex-column" style={{ height: '160px' }}>
+                  <div className="d-flex align-items-start flex-column sensei-course-card-content">
                     <div className="h5 card-title truncate-2-overflow">Course Title</div>
                     <p className="card-text truncate-2-overflow">Course Description</p>
                     <div className="row w-100 align-items-center mt-auto">

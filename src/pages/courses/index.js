@@ -1,14 +1,49 @@
 import { Helmet } from 'react-helmet'
 import React from 'react'
-import CourseContainer from 'components/Course/CourseContainer'
+import CourseListingsByCategory from 'components/Course/CourseListingsByCategory'
+import FeaturedCourses from 'components/Course/FeaturedCourses'
 
-const CourseListPage = () => {
+const BrowseCoursesPage = () => {
+  const courseData = {
+    categoryName: 'Finance & Accounting',
+    courses: [
+      {
+        key: 1,
+        courseName: 'F & A (3) F & A (3) F & A (3) F & A (3) F & A (3) F & A (3)',
+        instructorName: 'Ann Summers',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
+      },
+      {
+        key: 2,
+        courseName: 'F & A (2)',
+        instructorName: 'Bob Autumn',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      },
+      {
+        key: 3,
+        courseName: 'F & A (3) F & A (3) F & A (3) F & A (3) F & A (3) F & A (3)',
+        instructorName: 'Charlie Winters',
+        description: 'Lorem ipsum dolor sit amet.',
+      },
+      {
+        key: 4,
+        courseName: 'F & A (4)',
+        instructorName: 'Dean Spring',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+      },
+    ],
+  }
+
   return (
     <div>
       <Helmet title="Courses" />
-      <CourseContainer />
+      <FeaturedCourses />
+      <CourseListingsByCategory courses={courseData} />
     </div>
   )
 }
 
-export default CourseListPage
+export default BrowseCoursesPage

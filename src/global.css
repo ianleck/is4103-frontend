@@ -1,3 +1,23 @@
+.mentorship-listing-card {
+  height: 340px;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.sensei-course-card {
+  height: 200px;
+}
+
+.sensei-course-card-content {
+  height: 160px;
+}
+
+.text-2-lines {
+  height: 45px;
+}
+
 .truncate-3-overflow {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

@@ -19,8 +19,7 @@ const MentorshipListingCard = data => {
       <div
         role="button"
         tabIndex={0}
-        className="card btn text-left w-100"
-        style={{ height: '340px' }}
+        className="card btn text-left w-100 mentorship-listing-card"
         onClick={() => redirect(listing.mentorshipListingId)}
         onKeyDown={event => event.preventDefault()}
       >
@@ -42,7 +41,7 @@ const MentorshipListingCard = data => {
               <p className="m-0 text-secondary text-wrap">{listing?.Sensei?.occupation}</p>
             </div>
           </div>
-          <div className="row mt-4" style={{ height: '45px' }}>
+          <div className="row mt-4 text-2-lines">
             <div className="col-12">
               <span className="card-title w-100 mb-0 h5 text-dark font-weight-bold truncate-2-overflow">
                 {listing.name}
@@ -62,7 +61,7 @@ const MentorshipListingCard = data => {
               </span>
             </div>
           </div>
-          <div className="row" style={{ height: '45px' }}>
+          <div className="row text-2-lines">
             <div className="col-12">
               <span className="w-100 mt-2 text-dark truncate-2-overflow">
                 {listing.description}
