@@ -140,7 +140,7 @@ export async function getSenseiMenuData() {
         {
           title: 'Review Applications',
           key: 'reviewApplications',
-          url: '/sensei/mentorship/review-applications',
+          url: '/sensei/mentorships/review-applications',
         },
         {
           title: 'Mentee Overview',

@@ -36,7 +36,7 @@ const CourseContainer = () => {
     ],
   }
   return (
-    <div className="container">
+    <div>
       <FeaturedCourses />
       <CourseCategoryListing coursesInCategory={courseData} />
     </div>

@@ -202,8 +202,13 @@ const routes = [
     exact: true,
   },
   {
-    path: '/sensei/mentorship/review-applications',
-    Component: lazy(() => import('pages/sensei/mentorship/review-applications')),
+    path: '/sensei/courses',
+    Component: lazy(() => import('pages/sensei/courses')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorships/review-applications',
+    Component: lazy(() => import('pages/sensei/mentorships/review-applications')),
     exact: true,
   },
   // Student Pages

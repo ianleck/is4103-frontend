@@ -1,20 +1,9 @@
 import React from 'react'
-import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Divider, Rate } from 'antd'
-import { map, random, round } from 'lodash'
+import { UserOutlined } from '@ant-design/icons'
+import { random, round } from 'lodash'
 
-const CourseCategoryListing = data => {
-  const { categoryName, courses } = data.coursesInCategory
-
-  return (
-    <div>
-      <div className="row align-items-center mb-2">{`Popular Courses for ${categoryName}`}</div>
-      <div className="row">{map(courses, course => showCourseCard(course))}</div>
-    </div>
-  )
-}
-
-const showCourseCard = course => {
+const CourseListingCard = course => {
   return (
     <div className="col-12 col-md-6 col-xl-4">
       <div className="card btn text-left w-100" key={course.key}>
@@ -28,7 +17,7 @@ const showCourseCard = course => {
           <div className="card-text w-100">
             <div className="row">
               <div className="col-12">
-                <span className="card-title d-inline-block w-100 mb-0 h5 text-dark  font-weight-bold text-truncate">
+                <span className="card-title w-100 mb-0 h5 text-dark  font-weight-bold truncate-2-overflow">
                   {course.courseName}
                 </span>
               </div>
@@ -48,7 +37,7 @@ const showCourseCard = course => {
             </div>
             <div className="row">
               <div className="col-12">
-                <span className="w-100 mt-2 text-dark d-inline-block text-truncate">
+                <span className="w-100 mt-2 text-dark truncate-2-overflow">
                   {course.description}
                 </span>
               </div>
@@ -60,7 +49,9 @@ const showCourseCard = course => {
               <Avatar size={32} icon={<UserOutlined />} />
             </div>
             <div className="col pl-0">
-              <span className="mb-2 text-dark text-wrap">{course.instructorName}</span>
+              <span className="mb-2 text-dark text-wrap truncate-1-overflow">
+                {course.instructorName}
+              </span>
             </div>
           </div>
         </div>
@@ -68,4 +59,5 @@ const showCourseCard = course => {
     </div>
   )
 }
-export default CourseCategoryListing
+
+export default CourseListingCard
