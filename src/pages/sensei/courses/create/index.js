@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button, Form, Input, Select, Space, Upload } from 'antd'
-import { ArrowLeftOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Form, Input, Select, Space, Table, Upload } from 'antd'
+import { ArrowLeftOutlined, PlusOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
+  const [lessons, setLessons] = useState('')
+
   const onBack = e => {
     e.preventDefault()
     history.goBack()
@@ -20,6 +22,37 @@ const SenseiCreateCourse = () => {
       xs: { span: 24 },
       sm: { span: 12 },
     },
+  }
+
+  const tableColumns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+    },
+    {
+      title: 'Lesson Text',
+      dataIndex: 'lessonText',
+    },
+    {
+      title: 'Assessment Video',
+      dataIndex: 'assessmentVideo',
+    },
+    {
+      title: 'Lesson Video',
+      dataIndex: 'lessonVideo',
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'actions',
+    },
+  ]
+
+  const addLesson = () => {
+    const newLesson = {
+      key: '1',
+      title: 'New Lesson',
+    }
+    setLessons([...lessons, newLesson])
   }
 
   return (
@@ -140,6 +173,20 @@ const SenseiCreateCourse = () => {
                       </Upload>
                     </Form.Item>
                   </Form>
+                </div>
+                <div className="col-12 text-right">
+                  <Button
+                    type="primary"
+                    size="large"
+                    shape="round"
+                    icon={<PlusOutlined />}
+                    onClick={() => addLesson()}
+                  >
+                    Add Lesson
+                  </Button>
+                </div>
+                <div className="col-12 mt-4">
+                  <Table bordered className="w-100" columns={tableColumns} dataSource={lessons} />
                 </div>
               </div>
             </div>
