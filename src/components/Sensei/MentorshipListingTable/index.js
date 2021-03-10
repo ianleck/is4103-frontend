@@ -172,7 +172,6 @@ const SenseiMentorshipListings = () => {
             onClick={() =>
               isEdit ? setShowEditListingModal(false) : setShowAddListingModal(false)
             }
-            className=""
           >
             Close
           </Button>
@@ -221,7 +220,7 @@ const SenseiMentorshipListings = () => {
               <div className="col-12 col-sm-auto text-center text-sm-left">
                 <span>
                   You currently have {numMentorshipListings} mentorship listing
-                  {numMentorshipListings > 1 ? 's' : ''}.
+                  {numMentorshipListings === 1 ? '' : 's'}.
                 </span>
               </div>
             </div>

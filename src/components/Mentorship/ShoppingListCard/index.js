@@ -1,7 +1,7 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Avatar, Divider, Rate, Space, Tag } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
 import { random, round } from 'lodash'
 
 const MentorshipListingCard = data => {

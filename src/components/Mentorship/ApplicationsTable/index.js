@@ -317,12 +317,7 @@ const ViewPersonalStatementButton = values => {
   const footer = (
     <div className="row justify-content-end">
       <div className="col-auto">
-        <Button
-          type="default"
-          size="large"
-          onClick={() => setIsViewStatementModalVisible(false)}
-          className=""
-        >
+        <Button type="default" size="large" onClick={() => setIsViewStatementModalVisible(false)}>
           Close
         </Button>
       </div>

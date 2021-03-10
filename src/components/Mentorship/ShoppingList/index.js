@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getMentorshipListings } from 'services/mentorshipListing'
 import { Avatar } from 'antd'
-import MentorshipListingCard from 'components/Mentorship/ShoppingListCard'
+import ShoppingListCard from 'components/Mentorship/ShoppingListCard'
 
 const MentorshipListingList = () => {
   const [listings, setListings] = useState([])
@@ -66,7 +66,7 @@ const MentorshipListingList = () => {
       <div className="row">
         {listings &&
           listings.map(l => {
-            return <MentorshipListingCard listing={l} key={l.mentorshipListingId} />
+            return <ShoppingListCard listing={l} key={l.mentorshipListingId} />
           })}
       </div>
     </div>
