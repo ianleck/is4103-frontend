@@ -6,11 +6,10 @@ import { random, round } from 'lodash'
 
 const MentorshipListingCard = data => {
   const { listing } = data
-  console.log(listing)
   const history = useHistory()
   const redirect = id => {
     history.push({
-      pathname: `/student/mentorship-listing/${id}`,
+      pathname: `/student/mentorship/view/${id}`,
     })
   }
 

@@ -2,7 +2,7 @@ import { isNil } from 'lodash'
 import apiClient from 'services/axios'
 
 export async function acceptMentorshipApplication(mentorshipContractId) {
-  const url = `/mentorship/accept-application/${mentorshipContractId}`
+  const url = `/mentorship/accept/application/${mentorshipContractId}`
   return apiClient
     .put(url)
     .then(response => {
@@ -28,7 +28,7 @@ export async function createMentorshipApplication(mentorshipListingId, body) {
 }
 
 export async function rejectMentorshipApplication(mentorshipContractId) {
-  const url = `/mentorship/reject-application/${mentorshipContractId}`
+  const url = `/mentorship/reject/application/${mentorshipContractId}`
   return apiClient
     .put(url)
     .then(response => {

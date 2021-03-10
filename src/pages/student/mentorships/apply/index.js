@@ -1,12 +1,12 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import ApplyListingForm from 'components/Mentorship/MentorshipApplications/Form'
+import ApplyMentorshipForm from 'components/Student/Mentorship/ApplicationForm'
 
 const ApplyListing = () => {
   return (
     <div>
-      <Helmet title="Mentorship Listings" />
-      <ApplyListingForm />
+      <Helmet title="Apply for a Mentorship" />
+      <ApplyMentorshipForm />
     </div>
   )
 }

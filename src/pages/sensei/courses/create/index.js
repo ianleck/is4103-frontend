@@ -1,7 +1,14 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button, Form, Input, Select, Space, Table, Upload } from 'antd'
-import { ArrowLeftOutlined, PlusOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd'
+import {
+  ArrowLeftOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  SaveOutlined,
+  UploadOutlined,
+} from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
 
 const SenseiCreateCourse = () => {
@@ -44,13 +51,31 @@ const SenseiCreateCourse = () => {
     {
       title: 'Actions',
       dataIndex: 'actions',
+      render: record => <EditLessonButton data={record} />,
     },
   ]
 
+  const EditLessonButton = record => {
+    console.log(record)
+    return (
+      <Space size="middle">
+        <Button
+          type="primary"
+          size="large"
+          shape="circle"
+          icon={<EditOutlined />}
+          onClick={() => console.log(record)}
+        />
+        <Button type="danger" size="large" shape="circle" icon={<DeleteOutlined />} />
+      </Space>
+    )
+  }
+
   const addLesson = () => {
     const newLesson = {
-      key: '1',
-      title: 'New Lesson',
+      key: lessons.length + 1,
+      title: `New Lesson ${lessons.length + 1}`,
+      actions: 'Sample Data',
     }
     setLessons([...lessons, newLesson])
   }
@@ -59,16 +84,16 @@ const SenseiCreateCourse = () => {
     <div>
       <div className="row pt-2">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
-          <Button
-            block
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={onBack}
-            icon={<ArrowLeftOutlined />}
+          <Popconfirm
+            title="Do you wish to discard your changes?"
+            onConfirm={onBack}
+            okText="Yes"
+            cancelText="No"
           >
-            Back
-          </Button>
+            <Button block type="primary" size="large" shape="round" icon={<ArrowLeftOutlined />}>
+              Back
+            </Button>
+          </Popconfirm>
         </div>
       </div>
 
@@ -168,9 +193,7 @@ const SenseiCreateCourse = () => {
                       label="Course Image"
                       rules={[{ required: true, message: 'Please add a course image.' }]}
                     >
-                      <Upload>
-                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                      </Upload>
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
                     </Form.Item>
                   </Form>
                 </div>

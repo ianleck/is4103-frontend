@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getMentorshipListings } from 'services/mentorshipListing'
 import { Avatar } from 'antd'
-import MentorshipListingCard from 'components/Mentorship/MentorshipListingCard'
-import './index.css'
+import MentorshipListingCard from 'components/Mentorship/ShoppingListCard'
 
 const MentorshipListingList = () => {
   const [listings, setListings] = useState([])

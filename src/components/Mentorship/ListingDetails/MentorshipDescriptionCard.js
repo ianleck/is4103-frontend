@@ -5,11 +5,11 @@ import { getMentorshipListing } from 'services/mentorshipListing'
 
 const MentorshipDescriptionCard = () => {
   const [listingDescription, setListingDescription] = useState([])
-  const { mentorshipListingId } = useParams()
+  const { id } = useParams()
 
   useEffect(() => {
     const getListing = async () => {
-      const listing = await getMentorshipListing(mentorshipListingId)
+      const listing = await getMentorshipListing(id)
       if (!listing) {
         setListingDescription('Blank Description')
       } else {
@@ -17,7 +17,7 @@ const MentorshipDescriptionCard = () => {
       }
     }
     getListing()
-  }, [mentorshipListingId])
+  }, [id])
 
   return (
     <div className="card">
