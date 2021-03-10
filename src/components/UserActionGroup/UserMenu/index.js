@@ -116,7 +116,13 @@ const UserMenu = () => {
       <Dropdown overlay={menu} trigger={['click']} onVisibleChange={addCount}>
         <div className={styles.dropdown}>
           <Badge count={count}>
-            <Avatar className={styles.avatar} shape="square" size="large" icon={<UserOutlined />} />
+            <Avatar
+              src={`${user.profileImgUrl}?${new Date().getTime()}`}
+              className={styles.avatar}
+              shape="square"
+              size="large"
+              icon={<UserOutlined />}
+            />
           </Badge>
         </div>
       </Dropdown>
