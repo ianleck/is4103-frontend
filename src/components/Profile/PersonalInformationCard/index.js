@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Descriptions, Form, Input, Modal, Typography } from 'antd'
+import { Button, Descriptions, Form, Input, Modal, Typography, Upload, message } from 'antd'
 import QRCode from 'react-qr-code'
 import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
-import { QrcodeOutlined } from '@ant-design/icons'
+import { QrcodeOutlined, CameraOutlined, PlusOutlined } from '@ant-design/icons'
 import actions from 'redux/user/actions'
 import moment from 'moment'
 
@@ -16,8 +16,10 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
   const { Paragraph } = Typography
 
   const dispatch = useDispatch()
+
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showQRCode, setShowQRCode] = useState(false)
+  const [showDPModal, setShowDPModal] = useState(false)
 
   const shareUrl = `http://digi.dojo/profile/${user.accountId}`
   const title = `${user.firstName} is sharing his Digi Dojo profile with you!`
@@ -72,17 +74,71 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
     </div>
   )
 
+  const GetDefaultProfilePic = () => {
+    if (user.userType === 'STUDENT') {
+      return <img src="/resources/images/avatars/apprentice.png" alt="Display Pic" />
+    }
+    return <img src="/resources/images/avatars/master.png" alt="Display Pic" />
+  }
+
+  const getUploadProps = () => {
+    return {
+      name: 'file',
+      action: 'http://localhost:5000/api/upload/dp',
+      headers: {
+        authorization: `Bearer ${user.accessToken}`,
+      },
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList)
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`)
+          dispatch({
+            type: 'user/LOAD_CURRENT_ACCOUNT',
+          })
+          setShowDPModal(false)
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`)
+        }
+      },
+      beforeUpload(file) {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+        if (!isJpgOrPng) {
+          message.error('You can only upload JPG/PNG file!')
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2
+        if (!isLt2M) {
+          message.error('Image must smaller than 2MB!')
+        }
+        return isJpgOrPng && isLt2M
+      },
+    }
+  }
+
   return (
     <div className="card">
       <div className="card-body">
         <div className="row justify-content-between">
           <div className="col-auto">
             <div className="kit__utils__avatar kit__utils__avatar--size64 mb-3">
-              <img src="../resources/images/avatars/5.jpg" alt="Mary Stanform" />
+              {user.profileImgUrl ? (
+                <img src={`${user.profileImgUrl}?${new Date().getTime()}`} alt="Display Pic" />
+              ) : (
+                GetDefaultProfilePic()
+              )}
             </div>
           </div>
           <div className="col-auto d-flex justify-content-center mt-2">
             <Button
+              type="primary"
+              shape="round"
+              size="middle"
+              icon={<CameraOutlined />}
+              onClick={() => setShowDPModal(true)}
+            />
+            <Button
+              className="ml-2"
               type="primary"
               shape="round"
               icon={<QrcodeOutlined />}
@@ -253,6 +309,43 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
                     Share Link
                   </Paragraph>
                 </div>
+              </div>
+            </div>
+          </Modal>
+
+          <Modal
+            title="Upload Display Picture"
+            visible={showDPModal}
+            cancelText="Close"
+            centered
+            okButtonProps={{ style: { display: 'none' } }}
+            onCancel={() => setShowDPModal(false)}
+          >
+            <div className="row mt-3">
+              <div className="col-12 mt-2 text-center">
+                Click on the box below to upload new display picture
+              </div>
+              <div className="col-12 mt-3 text-center">
+                <Upload
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  showUploadList={false}
+                  {...getUploadProps()}
+                >
+                  {user.profileImgUrl ? (
+                    <img
+                      src={`${user.profileImgUrl}?${new Date().getTime()}`}
+                      alt="avatar"
+                      style={{ width: '100%' }}
+                    />
+                  ) : (
+                    <div>
+                      {' '}
+                      <PlusOutlined />
+                      Upload
+                    </div>
+                  )}
+                </Upload>
               </div>
             </div>
           </Modal>
