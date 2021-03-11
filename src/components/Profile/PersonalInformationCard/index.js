@@ -6,6 +6,7 @@ import { isNil } from 'lodash'
 import { FacebookShareButton, FacebookIcon, LinkedinShareButton, LinkedinIcon } from 'react-share'
 import { QrcodeOutlined, CameraOutlined, PlusOutlined } from '@ant-design/icons'
 import actions from 'redux/user/actions'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import moment from 'moment'
 
 const onFinishFailed = errorInfo => {
@@ -75,7 +76,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
   )
 
   const GetDefaultProfilePic = () => {
-    if (user.userType === 'STUDENT') {
+    if (user.userType === USER_TYPE_ENUM.STUDENT) {
       return <img src="/resources/images/avatars/apprentice.png" alt="Display Pic" />
     }
     return <img src="/resources/images/avatars/master.png" alt="Display Pic" />
