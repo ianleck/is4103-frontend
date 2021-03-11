@@ -103,6 +103,13 @@ const UserMenu = () => {
     </Menu>
   )
 
+  const GetDefaultProfilePic = () => {
+    if (user.userType === USER_TYPE_ENUM.STUDENT) {
+      return '/resources/images/avatars/apprentice.png'
+    }
+    return '/resources/images/avatars/master.png'
+  }
+
   const PendingLoginMenu = () => {
     return (
       <Dropdown.Button overlay={pendingLoginSubMenu} onClick={redirectToLogin(true)}>
@@ -117,7 +124,11 @@ const UserMenu = () => {
         <div className={styles.dropdown}>
           <Badge count={count}>
             <Avatar
-              src={`${user.profileImgUrl}?${new Date().getTime()}`}
+              src={
+                user.profileImgUrl
+                  ? `${user.profileImgUrl}?${new Date().getTime()}`
+                  : GetDefaultProfilePic()
+              }
               className={styles.avatar}
               shape="square"
               size="large"
