@@ -1,8 +1,11 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Dropdown, Button } from 'antd'
 import styles from './style.module.scss'
 
-const Cart = () => {
+const CartDropdown = () => {
+  const history = useHistory()
+
   const cartItems = () => {
     const isItemPresent = false // TO change
     return isItemPresent ? (
@@ -35,6 +38,11 @@ const Cart = () => {
     )
   }
 
+  const goToCart = () => {
+    const path = '/cart'
+    history.push(path)
+  }
+
   const menu = (
     <div className="card cui__utils__shadow width-350 border-0">
       <div className="card-header">My Shopping Cart</div>
@@ -46,7 +54,7 @@ const Cart = () => {
       <div className="card-body bg-gray-2 border-top">
         <div className="row">
           <div className="col-6">
-            <Button block size="large">
+            <Button block size="large" onClick={() => goToCart()}>
               View Cart
             </Button>
           </div>
@@ -69,4 +77,4 @@ const Cart = () => {
   )
 }
 
-export default Cart
+export default CartDropdown

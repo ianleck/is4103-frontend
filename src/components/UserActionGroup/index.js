@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import Actions from './Actions'
 import UserMenu from './UserMenu'
-import Cart from './Cart'
+import CartDropdown from '../Cart/CartDropdown'
 import style from './style.module.scss'
 
 const UserActionGroup = () => {
@@ -14,7 +14,7 @@ const UserActionGroup = () => {
     <div className={style.userActionGroup}>
       {checkIfShowCart ? (
         <div className="mr-4 d-sm-block">
-          <Cart />
+          <CartDropdown />
         </div>
       ) : null}
       <div className="mr-4 d-sm-block">
