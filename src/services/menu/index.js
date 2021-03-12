@@ -211,7 +211,7 @@ export async function getSenseiMenuData() {
         {
           title: 'My Wallet',
           key: 'myWallet',
-          url: '/sensei/myWallet',
+          url: '/sensei/wallet',
         },
       ],
     },
