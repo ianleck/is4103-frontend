@@ -25,6 +25,7 @@ import {
 import TextArea from 'antd/lib/input/TextArea'
 
 import { createCourse, getCourseById, updateCourse } from 'services/courses'
+import { createLesson } from 'services/courses/lessons'
 import { languages, currencyCodes } from 'constants/information'
 import { DEFAULT_TIMEOUT, LEVEL_ENUM } from 'constants/constants'
 
@@ -35,7 +36,7 @@ const SenseiCreateCourse = () => {
 
   const { Option } = Select
 
-  const [lessons, setLessons] = useState('')
+  const [lessons, setLessons] = useState([])
   const [isCourseCreated, setIsCourseCreated] = useState(false)
   const [currentCourse, setCurrentCourse] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -61,29 +62,38 @@ const SenseiCreateCourse = () => {
   const tableColumns = [
     {
       title: 'Title',
+      key: 'title',
       dataIndex: 'title',
     },
     {
       title: 'Lesson Text',
-      dataIndex: 'lessonText',
+      key: 'description',
+      dataIndex: 'description',
     },
     {
       title: 'Assessment Video',
-      dataIndex: 'assessmentVideo',
+      key: 'assessmentUrl',
+      dataIndex: 'assessmentUrl',
     },
     {
       title: 'Lesson Video',
-      dataIndex: 'lessonVideo',
+      key: 'videoUrl',
+      dataIndex: 'videoUrl',
+    },
+    {
+      title: 'Lesson ID',
+      key: 'lessonId',
+      dataIndex: 'lessonId',
     },
     {
       title: 'Actions',
-      dataIndex: 'actions',
-      render: record => <EditLessonButton data={record} />,
+      key: 'actions',
+      render: record => <EditLessonButton record={record} />,
     },
   ]
 
-  const EditLessonButton = record => {
-    console.log(record)
+  const EditLessonButton = data => {
+    const { record } = data
     return (
       <Space size="middle">
         <Button
@@ -99,12 +109,13 @@ const SenseiCreateCourse = () => {
   }
 
   const addLesson = async () => {
-    const newLesson = {
-      key: lessons.length + 1,
-      title: `New Lesson ${lessons.length + 1}`,
-      actions: 'Sample Data',
+    if (currentCourse && !isNil(currentCourse.courseId)) {
+      const result = await createLesson(currentCourse.courseId)
+      if (result && !isNil(result.lesson)) {
+        result.lesson.key = result.lesson.lessonId
+        setLessons([...lessons, result.lesson])
+      }
     }
-    setLessons([...lessons, newLesson])
   }
 
   const saveCourseDraft = async () => {
@@ -133,9 +144,6 @@ const SenseiCreateCourse = () => {
             !isCourseCreated ? 'created' : 'updated'
           }.`,
         })
-        setTimeout(() => {
-          setIsLoading(false)
-        }, DEFAULT_TIMEOUT)
       }
     } else {
       notification.error({ message: 'Error', description: 'There was an error saving your draft.' })
@@ -144,7 +152,6 @@ const SenseiCreateCourse = () => {
     if (!isNil(result.course)) {
       setCourseFormValues(result.course)
     }
-    console.log('currentCourse', currentCourse)
     setTimeout(() => {
       setIsLoading(false)
     }, DEFAULT_TIMEOUT)
@@ -183,6 +190,14 @@ const SenseiCreateCourse = () => {
             level: result.course.level,
             categories: result.course.Categories.map(c => c.categoryId),
           })
+        }
+        let lessonData = []
+        if (!isNil(result.course.Lessons)) {
+          lessonData = map(result.course.Lessons, res => ({
+            ...res,
+            key: res.lessonId,
+          }))
+          setLessons(lessonData)
         }
       }
       getCourseToEdit()
@@ -231,9 +246,11 @@ const SenseiCreateCourse = () => {
                     >
                       Save Draft
                     </Button>
-                    <Button type="primary" size="large" shape="round" icon={<UploadOutlined />}>
-                      Submit
-                    </Button>
+                    <Tooltip title="Courses require approval before they can be published to the store.">
+                      <Button type="primary" size="large" shape="round" icon={<UploadOutlined />}>
+                        Submit
+                      </Button>
+                    </Tooltip>
                   </Space>
                 </div>
               </div>

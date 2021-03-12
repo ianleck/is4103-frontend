@@ -27,7 +27,6 @@ const SenseiCourses = () => {
         ADMIN_VERIFIED_ENUM.DRAFT,
         VISIBILITY_ENUM.HIDDEN,
       )
-      console.log('getCourseDrafts', result)
       if (result && !isNil(result.courses)) {
         setCourseDrafts(result.courses)
       }
