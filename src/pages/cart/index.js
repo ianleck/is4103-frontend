@@ -9,10 +9,10 @@ const cart = () => {
       <Helmet title="Cart" />
 
       <div className="row">
-        <div className="col-xl-7 col-lg-12 font-size-18">
+        <div className="col-12 col-xl-7 font-size-18">
           <CartItemList />
         </div>
-        <div className="col-xl-5 col-lg-12 font-size-18">
+        <div className="col-12 col-xl-5 font-size-18">
           <CheckoutCard />
         </div>
       </div>

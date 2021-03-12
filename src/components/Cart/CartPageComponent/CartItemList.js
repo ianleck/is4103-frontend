@@ -2,22 +2,26 @@ import React from 'react'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 
 const CartItemList = () => {
-  const isEmpty = true
+  const isEmpty = false
 
   const itemsList = () => {
     return (
       <div>
         <div>
           <div className="card-header">Mentorship</div>
-          <div className="card-body">Item 1</div>
-          <div className="card-body">Item 2</div>
-          <div className="card-body">Item 3</div>
+          <div className="card-body">
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div>Item 3</div>
+          </div>
         </div>
         <div className="mt-3">
           <div className="card-header">Courses</div>
-          <div className="card-body">Item 1</div>
-          <div className="card-body">Item 2</div>
-          <div className="card-body">Item 3</div>
+          <div className="card-body">
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div>Item 3</div>
+          </div>
         </div>
       </div>
     )
@@ -30,10 +34,12 @@ const CartItemList = () => {
       </div>
 
       <div className="card-body">
-        <div className="row justify-content-center">
+        <div className="row">
           {isEmpty ? (
-            <div className=" mt-5 mb-5">
-              <ShoppingCartOutlined /> No Items in Cart
+            <div className="col-12 d-flex justify-content-center mt-5 mb-5">
+              <div>
+                <ShoppingCartOutlined /> No Items in Cart
+              </div>
             </div>
           ) : (
             <div className="col-12">{itemsList()}</div>

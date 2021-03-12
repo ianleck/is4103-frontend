@@ -16,7 +16,7 @@ const CheckoutCard = () => {
         </div>
       </div>
 
-      <div className="card-body ">
+      <div className="card-body">
         <Button block size="large" className="bg-success text-white">
           <ShoppingOutlined /> Check out
         </Button>
@@ -25,11 +25,7 @@ const CheckoutCard = () => {
       <div className="card-body">
         <div>WE ACCEPT:</div>
         <div>
-          <img
-            src="https://cdn.iconscout.com/icon/free/png-512/paypal-54-675727.png"
-            alt="Paypal"
-            width="60"
-          />
+          <img src="/resources/images/paypal-logo.png" alt="Paypal" width="60" />
         </div>
       </div>
     </div>
