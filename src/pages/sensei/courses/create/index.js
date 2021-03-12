@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd'
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  notification,
+  Popconfirm,
+  Select,
+  Space,
+  Table,
+  Tooltip,
+} from 'antd'
 import {
   ArrowLeftOutlined,
   DeleteOutlined,
@@ -10,10 +21,23 @@ import {
   UploadOutlined,
 } from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
+import { createCourse } from 'services/courses'
+import { useSelector } from 'react-redux'
+import { isNil, map } from 'lodash'
+import { languages, currencyCodes } from 'constants/information'
+import { LEVEL_ENUM } from 'constants/constants'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
+  const categories = useSelector(state => state.categories)
+
+  const { Option } = Select
+
   const [lessons, setLessons] = useState('')
+  const [isCourseCreated, setIsCourseCreated] = useState(false)
+  const [currentCourse, setCurrentCourse] = useState('')
+
+  const [courseForm] = Form.useForm()
 
   const onBack = e => {
     e.preventDefault()
@@ -71,13 +95,61 @@ const SenseiCreateCourse = () => {
     )
   }
 
-  const addLesson = () => {
+  const addLesson = async () => {
     const newLesson = {
       key: lessons.length + 1,
       title: `New Lesson ${lessons.length + 1}`,
       actions: 'Sample Data',
     }
     setLessons([...lessons, newLesson])
+  }
+
+  const saveCourseDraft = async () => {
+    const values = courseForm.getFieldsValue()
+    const formValues = {
+      title: values.title,
+      subTitle: values.subTitle,
+      description: values.description,
+      imgUrl: 'n.a.',
+      language: values.language,
+      priceAmount: values.priceAmount,
+      currency: values.currency,
+      level: values.level,
+      categories: values.categories,
+    }
+    const result = await createCourse(formValues)
+    if (result && !isNil(result.message)) {
+      if (result.course) {
+        setCurrentCourse(result.course)
+      }
+      notification.success({
+        message: 'Success',
+        description: 'Your course draft was successfully created.',
+      })
+    } else {
+      notification.error({ message: 'Error', description: 'There was an error saving your draft.' })
+    }
+    setIsCourseCreated(true)
+    if (!isNil(result.course)) {
+      setCourseFormValues(result.course)
+    }
+    console.log('currentCourse', currentCourse)
+  }
+
+  const setCourseFormValues = result => {
+    courseForm.setFieldsValue({
+      courseId: result.courseId,
+      adminVerified: result.adminVerified,
+      title: result.title,
+      subTitle: result.subTitle,
+      description: result.description,
+      imgUrl: result.imgUrl,
+      language: result.language,
+      priceAmount: result.priceAmount,
+      currency: result.currency,
+      level: result.level,
+      categories: result.Categories.map(c => c.categoryId),
+    })
   }
 
   return (
@@ -104,16 +176,24 @@ const SenseiCreateCourse = () => {
               <div className="row align-items-center justify-content-between">
                 <div className="col-auto">
                   <span className="text-dark text-uppercase h3">
-                    <strong>Create New Course</strong>
+                    <strong>{!isCourseCreated ? 'Create New Course' : 'Edit Course Draft'}</strong>
                   </span>
                 </div>
                 <div className="col-12 col-md-auto mt-4 mt-md-0 text-center text-md-right">
                   <Space size="large">
-                    <Button ghost type="primary" size="large" shape="round" icon={<SaveOutlined />}>
+                    <Button
+                      ghost
+                      type="primary"
+                      size="large"
+                      shape="round"
+                      icon={<SaveOutlined />}
+                      form="courseForm"
+                      htmlType="submit"
+                    >
                       Save Draft
                     </Button>
                     <Button type="primary" size="large" shape="round" icon={<UploadOutlined />}>
-                      Submit
+                      Submit for Approval
                     </Button>
                   </Space>
                 </div>
@@ -124,9 +204,16 @@ const SenseiCreateCourse = () => {
                 <div className="col-12">
                   <Form
                     {...formItemLayout}
-                    id="createCourseForm"
+                    id="courseForm"
+                    form={courseForm}
                     layout="vertical"
                     hideRequiredMark
+                    onFinish={saveCourseDraft}
+                    initialValues={{
+                      title: 'Test',
+                      subTitle: 'TestSubtitle',
+                      description: 'Test',
+                    }}
                   >
                     <Form.Item
                       name="title"
@@ -138,7 +225,7 @@ const SenseiCreateCourse = () => {
                       <Input size="large" />
                     </Form.Item>
                     <Form.Item
-                      name="subtitle"
+                      name="subTitle"
                       label="Subtitle"
                       rules={[
                         { required: true, message: 'Please provide the subtitle of your course.' },
@@ -165,10 +252,25 @@ const SenseiCreateCourse = () => {
                         { required: true, message: 'Please indicate the language of your course.' },
                       ]}
                     >
-                      <Select size="large" />
+                      <Select
+                        showSearch
+                        size="large"
+                        filterOption={(input, option) =>
+                          option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                      >
+                        {map(languages, language => {
+                          const { name } = language
+                          return (
+                            <Option key={name} value={name}>
+                              {name}
+                            </Option>
+                          )
+                        })}
+                      </Select>
                     </Form.Item>
                     <Form.Item
-                      name="diffculty"
+                      name="level"
                       label="Level"
                       rules={[
                         {
@@ -177,36 +279,105 @@ const SenseiCreateCourse = () => {
                         },
                       ]}
                     >
-                      <Select size="large" />
+                      <Select
+                        showSearch
+                        size="large"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                      >
+                        {map(LEVEL_ENUM, value => {
+                          return (
+                            <Option key={value} value={value}>
+                              {value}
+                            </Option>
+                          )
+                        })}
+                      </Select>
                     </Form.Item>
                     <Form.Item
-                      name="category"
-                      label="Category"
+                      name="categories"
+                      label="Categories"
                       rules={[
                         { required: true, message: 'Please indicate the category of your course.' },
                       ]}
                     >
-                      <Select size="large" />
+                      <Select
+                        showSearch
+                        mode="multiple"
+                        size="large"
+                        filterOption={(input, option) => {
+                          return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }}
+                      >
+                        {map(categories, category => {
+                          const { categoryId, name } = category
+                          return (
+                            <Option key={categoryId} value={categoryId}>
+                              {name}
+                            </Option>
+                          )
+                        })}
+                      </Select>
                     </Form.Item>
                     <Form.Item
-                      name="courseImage"
-                      label="Course Image"
-                      rules={[{ required: true, message: 'Please add a course image.' }]}
+                      name="currency"
+                      label="Currency"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please indicate the currency you are selling your course in.',
+                        },
+                      ]}
                     >
+                      <Select
+                        showSearch
+                        size="large"
+                        filterOption={(input, option) => {
+                          return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }}
+                      >
+                        {map(currencyCodes, currency => {
+                          const { code, name } = currency
+                          return (
+                            <Option key={code} value={code}>
+                              {`${name} (${code})`}
+                            </Option>
+                          )
+                        })}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name="priceAmount"
+                      label="Price"
+                      rules={[
+                        { required: true, message: 'Please provide the cost of your course.' },
+                      ]}
+                    >
+                      <InputNumber stringMode size="large" step="0.01" className="w-50" />
+                    </Form.Item>
+                    <Form.Item name="courseImage" label="Course Image">
                       <Button icon={<UploadOutlined />}>Click to Upload</Button>
                     </Form.Item>
                   </Form>
                 </div>
                 <div className="col-12 text-right">
-                  <Button
-                    type="primary"
-                    size="large"
-                    shape="round"
-                    icon={<PlusOutlined />}
-                    onClick={() => addLesson()}
+                  <Tooltip
+                    visible={!isCourseCreated}
+                    title="Please save your course as a draft before adding lessons."
                   >
-                    Add Lesson
-                  </Button>
+                    <Button
+                      disabled={!isCourseCreated}
+                      type="primary"
+                      size="large"
+                      shape="round"
+                      icon={<PlusOutlined />}
+                      onClick={() => addLesson()}
+                    >
+                      Add Lesson
+                    </Button>
+                  </Tooltip>
                 </div>
                 <div className="col-12 mt-4">
                   <Table bordered className="w-100" columns={tableColumns} dataSource={lessons} />

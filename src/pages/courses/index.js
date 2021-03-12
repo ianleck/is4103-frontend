@@ -1,9 +1,18 @@
 import { Helmet } from 'react-helmet'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getCourses } from 'services/courses'
 import CourseListingsByCategory from 'components/Course/CourseListingsByCategory'
 import FeaturedCourses from 'components/Course/FeaturedCourses'
 
 const BrowseCoursesPage = () => {
+  useEffect(() => {
+    const getCoursesEffect = async () => {
+      const result = await getCourses()
+      console.log(result)
+    }
+    getCoursesEffect()
+  }, [])
+
   const courseData = {
     categoryName: 'Finance & Accounting',
     courses: [
