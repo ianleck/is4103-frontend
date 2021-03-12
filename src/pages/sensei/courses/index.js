@@ -6,19 +6,50 @@ import { PlusOutlined } from '@ant-design/icons'
 import { getSenseiCourses } from 'services/courses'
 import { ADMIN_VERIFIED_ENUM, DEFAULT_TIMEOUT, VISIBILITY_ENUM } from 'constants/constants'
 import { useSelector } from 'react-redux'
-import { isNil, size } from 'lodash'
+import { isEmpty, isNil, size } from 'lodash'
 import SenseiCourseCard from 'components/Sensei/Course/SenseiCourseCard'
 
 const SenseiCourses = () => {
   const history = useHistory()
   const user = useSelector(state => state.user)
 
-  const [courses, setCourses] = useState('')
-  const [pageTitle, setPageTitle] = useState('drafts')
+  const [courses, setCourses] = useState([])
+  const [coursesTemp, setCoursesTemp] = useState([])
+  const [pageTitle, setPageTitle] = useState('Drafts')
+  const [currentSortOrder, setCurrentSortOrder] = useState('desc')
   const [isLoading, setIsLoading] = useState(false)
 
   const { Option } = Select
   const { Search } = Input
+
+  const sortCoursesByDate = (coursesToSort, sort) => {
+    if (coursesToSort) {
+      if (sort === 'asc')
+        return coursesToSort.sort(
+          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        )
+      return coursesToSort.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
+    }
+    return coursesToSort
+  }
+
+  const reorderCourses = sort => {
+    setCurrentSortOrder(sort)
+    setCourses(sortCoursesByDate(courses, sort))
+  }
+
+  const searchCourses = keyword => {
+    if (isEmpty(keyword)) {
+      setCourses(sortCoursesByDate(coursesTemp, currentSortOrder))
+    } else {
+      const courseData = coursesTemp.filter(o =>
+        o.title.toLowerCase().includes(keyword.toLowerCase()),
+      )
+      setCourses(sortCoursesByDate(courseData, currentSortOrder))
+    }
+  }
 
   const getCourses = async tabKey => {
     setLoadingIndicator(true)
@@ -42,7 +73,12 @@ const SenseiCourses = () => {
             !isNil(draftCourses.courses) &&
             !isNil(pendingCourses.courses)
           ) {
-            setCourses([...draftCourses.courses, ...pendingCourses.courses])
+            const courseData = sortCoursesByDate(
+              [...draftCourses.courses, ...pendingCourses.courses],
+              currentSortOrder,
+            )
+            setCourses(courseData)
+            setCoursesTemp(courseData)
           }
         }
         break
@@ -55,7 +91,9 @@ const SenseiCourses = () => {
             VISIBILITY_ENUM.PUBLISHED,
           )
           if (publishedCourses && !isNil(publishedCourses.courses)) {
-            setCourses(...publishedCourses.courses)
+            const courseData = sortCoursesByDate([...publishedCourses.courses], currentSortOrder)
+            setCourses(courseData)
+            setCoursesTemp(courseData)
           }
         }
         break
@@ -68,7 +106,9 @@ const SenseiCourses = () => {
             VISIBILITY_ENUM.HIDDEN,
           )
           if (hiddenCourses && !isNil(hiddenCourses.courses)) {
-            setCourses(...hiddenCourses.courses)
+            const courseData = sortCoursesByDate([...hiddenCourses.courses], currentSortOrder)
+            setCourses(courseData)
+            setCoursesTemp(courseData)
           }
         }
         break
@@ -77,11 +117,13 @@ const SenseiCourses = () => {
           setPageTitle('Rejected Courses')
           const rejectedCourses = await getSenseiCourses(
             user.accountId,
-            ADMIN_VERIFIED_ENUM.ACCEPTED,
-            VISIBILITY_ENUM.HIDDEN,
+            ADMIN_VERIFIED_ENUM.REJECTED,
+            null,
           )
           if (rejectedCourses && !isNil(rejectedCourses.courses)) {
-            setCourses(...rejectedCourses.courses)
+            const courseData = sortCoursesByDate([...rejectedCourses.courses], currentSortOrder)
+            setCourses(courseData)
+            setCoursesTemp(courseData)
           }
         }
         break
@@ -162,12 +204,23 @@ const SenseiCourses = () => {
           </Radio.Group>
         </div>
         <div className="col-12 col-lg-4 mt-4 mt-lg-0">
-          <Search placeholder="Search Courses" size="large" allowClear />
+          <Search
+            placeholder="Search Courses"
+            size="large"
+            allowClear
+            onSearch={data => searchCourses(data)}
+          />
         </div>
         <div className="col-6 col-lg-3 mt-4 mt-lg-0">
-          <Select className="w-100" size="large" placeholder="Sort by">
-            <Option value="desc">Newest First</Option>
-            <Option value="asc">Oldest First</Option>
+          <Select
+            className="w-100"
+            size="large"
+            placeholder="Sort by"
+            onChange={sort => reorderCourses(sort)}
+            defaultValue="desc"
+          >
+            <Option value="desc">Most Recent First</Option>
+            <Option value="asc">Least Recent First</Option>
           </Select>
         </div>
       </div>
