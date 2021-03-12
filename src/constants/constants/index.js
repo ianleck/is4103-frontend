@@ -54,3 +54,9 @@ export const MONTH_NAMES = [
   'Nov',
   'Dec',
 ]
+
+export const LEVEL_ENUM = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+}
