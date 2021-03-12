@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { isNil, map } from 'lodash'
 import {
   Button,
   Form,
@@ -21,23 +23,22 @@ import {
   UploadOutlined,
 } from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
-import { createCourse } from 'services/courses'
-import { useSelector } from 'react-redux'
-import { isNil, map } from 'lodash'
+
+import { createCourse, getCourseById, updateCourse } from 'services/courses'
 import { languages, currencyCodes } from 'constants/information'
-import { LEVEL_ENUM } from 'constants/constants'
+import { DEFAULT_TIMEOUT, LEVEL_ENUM } from 'constants/constants'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
   const { id } = useParams()
   const categories = useSelector(state => state.categories)
-  console.log('id', id)
 
   const { Option } = Select
 
   const [lessons, setLessons] = useState('')
   const [isCourseCreated, setIsCourseCreated] = useState(false)
   const [currentCourse, setCurrentCourse] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const [courseForm] = Form.useForm()
 
@@ -107,6 +108,7 @@ const SenseiCreateCourse = () => {
   }
 
   const saveCourseDraft = async () => {
+    setIsLoading(true)
     const values = courseForm.getFieldsValue()
     const formValues = {
       title: values.title,
@@ -119,15 +121,22 @@ const SenseiCreateCourse = () => {
       level: values.level,
       categories: values.categories,
     }
-    const result = await createCourse(formValues)
+    const result = !isCourseCreated
+      ? await createCourse(formValues)
+      : await updateCourse(currentCourse.courseId, formValues)
     if (result && !isNil(result.message)) {
       if (result.course) {
         setCurrentCourse(result.course)
+        notification.success({
+          message: 'Success',
+          description: `Your course draft was successfully ${
+            !isCourseCreated ? 'created' : 'updated'
+          }.`,
+        })
+        setTimeout(() => {
+          setIsLoading(false)
+        }, DEFAULT_TIMEOUT)
       }
-      notification.success({
-        message: 'Success',
-        description: 'Your course draft was successfully created.',
-      })
     } else {
       notification.error({ message: 'Error', description: 'There was an error saving your draft.' })
     }
@@ -136,23 +145,49 @@ const SenseiCreateCourse = () => {
       setCourseFormValues(result.course)
     }
     console.log('currentCourse', currentCourse)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, DEFAULT_TIMEOUT)
   }
 
-  const setCourseFormValues = result => {
+  const setCourseFormValues = data => {
     courseForm.setFieldsValue({
-      courseId: result.courseId,
-      adminVerified: result.adminVerified,
-      title: result.title,
-      subTitle: result.subTitle,
-      description: result.description,
-      imgUrl: result.imgUrl,
-      language: result.language,
-      priceAmount: result.priceAmount,
-      currency: result.currency,
-      level: result.level,
-      categories: result.Categories.map(c => c.categoryId),
+      title: data.title,
+      subTitle: data.subTitle,
+      description: data.description,
+      imgUrl: data.imgUrl,
+      language: data.language,
+      priceAmount: data.priceAmount,
+      currency: data.currency,
+      level: data.level,
+      categories: data.Categories.map(c => c.categoryId),
     })
   }
+
+  useEffect(() => {
+    if (!isNil(id)) {
+      const getCourseToEdit = async () => {
+        const result = await getCourseById(id)
+        if (result && !isNil(result.course)) {
+          setCurrentCourse(result.course)
+          setIsCourseCreated(true)
+
+          courseForm.setFieldsValue({
+            title: result.course.title,
+            subTitle: result.course.subTitle,
+            description: result.course.description,
+            imgUrl: result.course.imgUrl,
+            language: result.course.language,
+            priceAmount: result.course.priceAmount,
+            currency: result.course.currency,
+            level: result.course.level,
+            categories: result.course.Categories.map(c => c.categoryId),
+          })
+        }
+      }
+      getCourseToEdit()
+    }
+  }, [courseForm, id])
 
   return (
     <div>
@@ -191,6 +226,7 @@ const SenseiCreateCourse = () => {
                       icon={<SaveOutlined />}
                       form="courseForm"
                       htmlType="submit"
+                      loading={isLoading}
                     >
                       Save Draft
                     </Button>
@@ -230,7 +266,10 @@ const SenseiCreateCourse = () => {
                       name="subTitle"
                       label="Subtitle"
                       rules={[
-                        { required: true, message: 'Please provide the subtitle of your course.' },
+                        {
+                          required: true,
+                          message: 'Please provide the subtitle of your course.',
+                        },
                       ]}
                     >
                       <Input size="large" />
@@ -251,7 +290,10 @@ const SenseiCreateCourse = () => {
                       name="language"
                       label="Language"
                       rules={[
-                        { required: true, message: 'Please indicate the language of your course.' },
+                        {
+                          required: true,
+                          message: 'Please indicate the language of your course.',
+                        },
                       ]}
                     >
                       <Select
@@ -302,7 +344,10 @@ const SenseiCreateCourse = () => {
                       name="categories"
                       label="Categories"
                       rules={[
-                        { required: true, message: 'Please indicate the category of your course.' },
+                        {
+                          required: true,
+                          message: 'Please indicate the category of your course.',
+                        },
                       ]}
                     >
                       <Select

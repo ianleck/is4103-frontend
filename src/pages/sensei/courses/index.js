@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Button, Input, Select, Skeleton } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { getSenseiCourses } from 'services/courses'
-import { ADMIN_VERIFIED_ENUM, VISIBILITY_ENUM } from 'constants/constants'
+import { ADMIN_VERIFIED_ENUM, DEFAULT_TIMEOUT, VISIBILITY_ENUM } from 'constants/constants'
 import { useSelector } from 'react-redux'
 import { isNil, size } from 'lodash'
 import { formatTime } from 'components/utils'
@@ -33,7 +33,7 @@ const SenseiCourses = () => {
       }
       setTimeout(() => {
         setIsDraftsLoading(false)
-      }, 550)
+      }, DEFAULT_TIMEOUT)
     }
     getCourseDrafts()
   }, [user.accountId])
@@ -60,7 +60,9 @@ const SenseiCourses = () => {
             <div className="col-9">
               <div className="card-body">
                 <div className="d-flex align-items-start flex-column sensei-course-card-content">
-                  <div className="h5 card-title truncate-2-overflow">{course.title}</div>
+                  <div className="h5 card-title font-weight-bold truncate-2-overflow">
+                    {course.title}
+                  </div>
                   <p className="card-text truncate-2-overflow">{course.description}</p>
                   <div className="row w-100 align-items-center mt-auto">
                     <div className="col-12">
