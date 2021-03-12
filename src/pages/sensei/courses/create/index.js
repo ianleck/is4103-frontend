@@ -195,6 +195,7 @@ const SenseiCreateCourse = () => {
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <Popconfirm
             title="Do you wish to discard your changes?"
+            placement="bottom"
             onConfirm={onBack}
             okText="Yes"
             cancelText="No"
@@ -211,7 +212,7 @@ const SenseiCreateCourse = () => {
           <div className="card">
             <div className="card-header">
               <div className="row align-items-center justify-content-between">
-                <div className="col-auto">
+                <div className="col-12 col-md-auto text-center text-md-left">
                   <span className="text-dark text-uppercase h3">
                     <strong>{!isCourseCreated ? 'Create New Course' : 'Edit Course Draft'}</strong>
                   </span>
@@ -231,7 +232,7 @@ const SenseiCreateCourse = () => {
                       Save Draft
                     </Button>
                     <Button type="primary" size="large" shape="round" icon={<UploadOutlined />}>
-                      Submit for Approval
+                      Submit
                     </Button>
                   </Space>
                 </div>

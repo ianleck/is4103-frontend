@@ -12,8 +12,8 @@ const mapStateToProps = ({ settings }) => ({
   leftMenuWidth: settings.leftMenuWidth,
 })
 
-let touchStartPrev = 0
-let touchStartLocked = false
+// let touchStartPrev = 0
+// let touchStartLocked = false
 
 const PublicMenuBar = ({
   dispatch,
@@ -24,30 +24,30 @@ const PublicMenuBar = ({
 }) => {
   useEffect(() => {
     // mobile menu touch slide opener
-    const unify = e => {
-      return e.changedTouches ? e.changedTouches[0] : e
-    }
-    document.addEventListener(
-      'touchstart',
-      e => {
-        const x = unify(e).clientX
-        touchStartPrev = x
-        touchStartLocked = x > 70
-      },
-      { passive: false },
-    )
-    document.addEventListener(
-      'touchmove',
-      e => {
-        const x = unify(e).clientX
-        const prev = touchStartPrev
-        if (x - prev > 50 && !touchStartLocked) {
-          toggleMobileMenu()
-          touchStartLocked = true
-        }
-      },
-      { passive: false },
-    )
+    // const unify = e => {
+    //   return e.changedTouches ? e.changedTouches[0] : e
+    // }
+    // document.addEventListener(
+    //   'touchstart',
+    //   e => {
+    //     const x = unify(e).clientX
+    //     touchStartPrev = x
+    //     touchStartLocked = x > 70
+    //   },
+    //   { passive: false },
+    // )
+    // document.addEventListener(
+    //   'touchmove',
+    //   e => {
+    //     const x = unify(e).clientX
+    //     const prev = touchStartPrev
+    //     if (x - prev > 50 && !touchStartLocked) {
+    //       toggleMobileMenu()
+    //       touchStartLocked = true
+    //     }
+    //   },
+    //   { passive: false },
+    // )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

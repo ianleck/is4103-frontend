@@ -96,7 +96,7 @@ const SenseiCourses = () => {
             <Option value="asc">Oldest First</Option>
           </Select>
         </div>
-        <div className="col-12 col-md-3 mt-4 mt-md-0 text-center text-md-right">
+        <div className="col-12 col-md-3 mt-5 mt-md-0 text-center text-md-right">
           <Button
             type="primary"
             size="large"
@@ -108,7 +108,7 @@ const SenseiCourses = () => {
           </Button>
         </div>
       </div>
-      <div className="row mt-5">
+      <div className="row mt-4">
         <div className="col-auto">
           <div className="text-dark h3">
             <strong>Drafts</strong>
