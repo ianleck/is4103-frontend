@@ -211,7 +211,7 @@ const SenseiCourses = () => {
             onSearch={data => searchCourses(data)}
           />
         </div>
-        <div className="col-6 col-lg-3 mt-4 mt-lg-0">
+        <div className="col-8 col-lg-3 mt-4 mt-lg-0">
           <Select
             className="w-100"
             size="large"
