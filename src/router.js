@@ -207,7 +207,7 @@ const routes = [
     exact: true,
   },
   {
-    path: '/sensei/courses/create',
+    path: '/sensei/courses/create/:id',
     Component: lazy(() => import('pages/sensei/courses/create')),
     exact: true,
   },

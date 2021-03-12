@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import {
   Button,
   Form,
@@ -29,7 +29,9 @@ import { LEVEL_ENUM } from 'constants/constants'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
+  const { id } = useParams()
   const categories = useSelector(state => state.categories)
+  console.log('id', id)
 
   const { Option } = Select
 

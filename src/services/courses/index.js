@@ -14,6 +14,19 @@ export async function getCourses() {
     .catch(err => console.log(err))
 }
 
+export async function getSenseiCourses(accountId, adminVerified, visibility) {
+  const url = `/course/sensei/${accountId}?adminVerified=${adminVerified}&visibility=${visibility}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function createCourse(payload) {
   const url = `/course/`
   return apiClient

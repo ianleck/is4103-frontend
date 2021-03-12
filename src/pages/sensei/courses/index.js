@@ -1,13 +1,86 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory } from 'react-router-dom'
-import { Button, Input, Select } from 'antd'
+import { Button, Input, Select, Skeleton } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import { getSenseiCourses } from 'services/courses'
+import { ADMIN_VERIFIED_ENUM, VISIBILITY_ENUM } from 'constants/constants'
+import { useSelector } from 'react-redux'
+import { isNil, size } from 'lodash'
+import { formatTime } from 'components/utils'
 
 const SenseiCourses = () => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
+
+  const [courseDrafts, setCourseDrafts] = useState('')
+  const [isDraftsLoading, setIsDraftsLoading] = useState(false)
+
   const { Option } = Select
   const { Search } = Input
+
+  useEffect(() => {
+    const getCourseDrafts = async () => {
+      setIsDraftsLoading(true)
+      const result = await getSenseiCourses(
+        user.accountId,
+        ADMIN_VERIFIED_ENUM.DRAFT,
+        VISIBILITY_ENUM.HIDDEN,
+      )
+      console.log('getCourseDrafts', result)
+      if (result && !isNil(result.courses)) {
+        setCourseDrafts(result.courses)
+      }
+      setTimeout(() => {
+        setIsDraftsLoading(false)
+      }, 550)
+    }
+    getCourseDrafts()
+  }, [user.accountId])
+
+  const SenseiCourseCard = data => {
+    const { course } = data
+    return (
+      <Skeleton active loading={isDraftsLoading}>
+        <div
+          role="button"
+          tabIndex={0}
+          className="card btn p-0 text-left text-dark"
+          onClick={() => history.push(`/sensei/courses/create/${course.courseId}`)}
+          onKeyDown={event => event.preventDefault()}
+        >
+          <div className="row no-gutters align-items-center sensei-course-card">
+            <div className="col-3" style={{ overflow: 'scroll' }}>
+              <img
+                className="sensei-course-card"
+                alt="example"
+                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              />
+            </div>
+            <div className="col-9">
+              <div className="card-body">
+                <div className="d-flex align-items-start flex-column sensei-course-card-content">
+                  <div className="h5 card-title truncate-2-overflow">{course.title}</div>
+                  <p className="card-text truncate-2-overflow">{course.description}</p>
+                  <div className="row w-100 align-items-center mt-auto">
+                    <div className="col-12">
+                      <span className="text-uppercase">{course.adminVerified}</span>
+                    </div>
+                    <div className="col-12">
+                      <small className="text-uppercase text-secondary">
+                        Created on {formatTime(course.createdAt)}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Skeleton>
+    )
+  }
+
   return (
     <div className="container">
       <Helmet title="My Courses" />
@@ -41,37 +114,14 @@ const SenseiCourses = () => {
         </div>
       </div>
       <div className="row mt-2">
-        <div className="col-12 col-lg-6">
-          <div className="card btn p-0 text-left text-dark">
-            <div className="row no-gutters align-items-center sensei-course-card">
-              <div className="col-3" style={{ overflow: 'scroll' }}>
-                <img
-                  className="sensei-course-card"
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
+        {size(courseDrafts) > 0 &&
+          courseDrafts.map(course => {
+            return (
+              <div key={course.courseId} className="col-12 col-lg-6">
+                <SenseiCourseCard course={course} />
               </div>
-              <div className="col-9">
-                <div className="card-body">
-                  <div className="d-flex align-items-start flex-column sensei-course-card-content">
-                    <div className="h5 card-title truncate-2-overflow">Course Title</div>
-                    <p className="card-text truncate-2-overflow">Course Description</p>
-                    <div className="row w-100 align-items-center mt-auto">
-                      <div className="col-12">
-                        <span className="text-uppercase">Draft</span>
-                      </div>
-                      <div className="col-12">
-                        <small className="text-uppercase text-secondary">
-                          Created on 03-Mar-2021 12:50PM
-                        </small>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            )
+          })}
       </div>
     </div>
   )
