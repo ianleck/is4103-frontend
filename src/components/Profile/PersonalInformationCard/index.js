@@ -341,7 +341,6 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
                     />
                   ) : (
                     <div>
-                      {' '}
                       <PlusOutlined />
                       Upload
                     </div>
