@@ -109,7 +109,9 @@ const SenseiCreateCourse = () => {
     let uploadUrl = ''
     switch (uploadType) {
       case 'courseImg':
-        uploadUrl = `http://localhost:5000/api/upload/course/${id}`
+        uploadUrl = `http://localhost:5000/api/upload/course/${
+          !isNil(id) ? id : currentCourse.courseId
+        }`
         break
       case 'lessonFile':
         uploadUrl = `http://localhost:5000/api/upload/lesson/file/${currentLesson.lessonId}`
@@ -153,6 +155,7 @@ const SenseiCreateCourse = () => {
           shape="circle"
           icon={<EditOutlined />}
           onClick={() => handleEditLesson(record)}
+          disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING}
         />
         <Popconfirm
           title="Do you wish to delete this lesson?"
@@ -160,7 +163,13 @@ const SenseiCreateCourse = () => {
           okText="Delete"
           okType="danger"
         >
-          <Button type="danger" size="large" shape="circle" icon={<DeleteOutlined />} />
+          <Button
+            type="danger"
+            size="large"
+            shape="circle"
+            icon={<DeleteOutlined />}
+            disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING}
+          />
         </Popconfirm>
       </Space>
     )
@@ -282,7 +291,6 @@ const SenseiCreateCourse = () => {
   }
 
   const submitCourseForApproval = async () => {
-    setIsLoading(true)
     const formValues = {
       adminVerified: ADMIN_VERIFIED_ENUM.PENDING,
     }
@@ -294,6 +302,7 @@ const SenseiCreateCourse = () => {
           message: 'Success',
           description: `Your course was submitted for approval.`,
         })
+        history.goBack()
       }
     } else {
       notification.error({
@@ -301,9 +310,6 @@ const SenseiCreateCourse = () => {
         description: 'There was an error submitting your course for approval.',
       })
     }
-    setTimeout(() => {
-      setIsLoading(false)
-    }, DEFAULT_TIMEOUT)
   }
 
   const getCourseToEdit = async () => {
@@ -385,6 +391,7 @@ const SenseiCreateCourse = () => {
                       form="courseForm"
                       htmlType="submit"
                       loading={isLoading}
+                      disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING}
                     >
                       {isCourseDraft ? 'Save Draft' : 'Update Course'}
                     </Button>
@@ -603,7 +610,10 @@ const SenseiCreateCourse = () => {
                     title="Please save your course as a draft before adding lessons."
                   >
                     <Button
-                      disabled={!isCourseCreated}
+                      disabled={
+                        !isCourseCreated ||
+                        currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING
+                      }
                       type="primary"
                       size="large"
                       shape="round"
