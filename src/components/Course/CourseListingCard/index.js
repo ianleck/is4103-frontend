@@ -64,13 +64,15 @@ const CourseListingCard = data => {
                   src={
                     !isNil(course.Sensei?.profileImgUrl)
                       ? course.Sensei.profileImgUrl
-                      : '/resources/images/content/photos/1.jpeg'
+                      : '/resources/images/avatars/master.png'
                   }
                 />
               </div>
               <div className="col pl-0">
                 <span className="p-0 text-dark text-wrap truncate-1-overflow">
-                  {`${course.Sensei?.firstName} ${course.Sensei?.lastName}`}
+                  {`${isNil(course.Sensei?.firstName) ? 'Anonymous' : course.Sensei?.firstName} ${
+                    isNil(course.Sensei?.lastName) ? 'Pigeon' : course.Sensei?.lastName
+                  }`}
                 </span>
               </div>
             </div>
