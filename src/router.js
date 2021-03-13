@@ -28,6 +28,11 @@ const routes = [
     Component: lazy(() => import('pages/courses')),
     exact: true,
   },
+  {
+    path: '/cart',
+    Component: lazy(() => import('pages/cart')),
+    exact: true,
+  },
   // Auth Pages
   {
     path: '/auth/login',
@@ -224,6 +229,11 @@ const routes = [
   {
     path: '/sensei/mentorships/applications',
     Component: lazy(() => import('pages/sensei/mentorships/applications')),
+    exact: true,
+  },
+  {
+    path: '/sensei/wallet',
+    Component: lazy(() => import('pages/sensei/wallet')),
     exact: true,
   },
   // Student Pages
