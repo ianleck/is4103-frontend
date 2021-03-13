@@ -17,8 +17,8 @@ const SenseiCourseCard = data => {
         onClick={() => history.push(`/sensei/courses/create/${course.courseId}`)}
         onKeyDown={event => event.preventDefault()}
       >
-        <div className="row no-gutters align-items-center sensei-course-card">
-          <div className="col-3" style={{ overflow: 'scroll' }}>
+        <div className="row no-gutters align-items-center">
+          <div className="col-3 overflow-hidden">
             <img
               className="sensei-course-card"
               alt="example"

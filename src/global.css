@@ -6,6 +6,10 @@
   overflow: scroll;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .course-card-img-holder {
   max-height: 150px;
 }
@@ -15,6 +19,9 @@
 }
 
 .sensei-course-card {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
   height: 200px;
 }
 
