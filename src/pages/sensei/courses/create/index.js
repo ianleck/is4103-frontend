@@ -313,7 +313,7 @@ const SenseiCreateCourse = () => {
   }
 
   const getCourseToEdit = async () => {
-    const result = await getCourseById(id)
+    const result = await getCourseById(!isNil(id) ? id : currentCourse.courseId)
     if (result && !isNil(result.course)) {
       setCurrentCourse(result.course)
       setIsCourseCreated(true)
