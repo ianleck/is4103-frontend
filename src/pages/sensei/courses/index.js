@@ -15,7 +15,7 @@ const SenseiCourses = () => {
 
   const [courses, setCourses] = useState([])
   const [coursesTemp, setCoursesTemp] = useState([])
-  const [pageTitle, setPageTitle] = useState('Drafts')
+  const [pageTitle, setPageTitle] = useState('Published Courses')
   const [currentSortOrder, setCurrentSortOrder] = useState('desc')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -159,7 +159,7 @@ const SenseiCourses = () => {
   }
 
   useEffect(() => {
-    getCourses('drafts')
+    getCourses('published')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -188,15 +188,15 @@ const SenseiCourses = () => {
       </div>
       <div className="row mt-2 align-items-center">
         <div className="col-12 col-lg-auto mt-2 mt-lg-0 text-center text-lg-left">
-          <Radio.Group defaultValue="drafts" size="large">
-            <Radio.Button value="drafts" onClick={() => getCourses('drafts')}>
-              Drafts
-            </Radio.Button>
+          <Radio.Group defaultValue="published" size="large">
             <Radio.Button value="published" onClick={() => getCourses('published')}>
               Published
             </Radio.Button>
             <Radio.Button value="hidden" onClick={() => getCourses('hidden')}>
               Hidden
+            </Radio.Button>
+            <Radio.Button value="drafts" onClick={() => getCourses('drafts')}>
+              Drafts
             </Radio.Button>
             <Radio.Button value="rejected" onClick={() => getCourses('rejected')}>
               Rejected

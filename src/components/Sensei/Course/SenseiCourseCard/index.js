@@ -2,6 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Skeleton } from 'antd'
 import { formatTime } from 'components/utils'
+import { isNil } from 'lodash'
 
 const SenseiCourseCard = data => {
   const history = useHistory()
@@ -21,7 +22,9 @@ const SenseiCourseCard = data => {
             <img
               className="sensei-course-card"
               alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              src={
+                !isNil(course.imgUrl) ? course.imgUrl : '/resources/images/course-placeholder.png'
+              }
             />
           </div>
           <div className="col-9">
