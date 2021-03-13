@@ -6,6 +6,14 @@
   overflow: scroll;
 }
 
+.course-card-img-holder {
+  max-height: 150px;
+}
+
+.course-card-img {
+  max-width: 100%;
+}
+
 .sensei-course-card {
   height: 200px;
 }

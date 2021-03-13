@@ -30,7 +30,7 @@ import { createCourse, getCourseById, updateCourse } from 'services/courses'
 import { createLesson, deleteLesson, updateLesson } from 'services/courses/lessons'
 import { formatTime } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
-import { DEFAULT_TIMEOUT, LEVEL_ENUM } from 'constants/constants'
+import { ADMIN_VERIFIED_ENUM, DEFAULT_TIMEOUT, LEVEL_ENUM } from 'constants/constants'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -45,6 +45,7 @@ const SenseiCreateCourse = () => {
 
   const [lessons, setLessons] = useState([])
   const [isCourseCreated, setIsCourseCreated] = useState(false)
+  const [isCourseDraft, setIsCourseDraft] = useState(true)
   const [currentCourse, setCurrentCourse] = useState('')
   const [showEditLesson, setShowEditLesson] = useState(false)
   const [currentLesson, setCurrentLesson] = useState('')
@@ -70,6 +71,38 @@ const SenseiCreateCourse = () => {
       xs: { span: 24 },
       sm: { span: 12 },
     },
+  }
+
+  const tableColumns = [
+    {
+      title: 'Title',
+      key: 'title',
+      dataIndex: 'title',
+    },
+    {
+      title: 'Lesson Text',
+      key: 'description',
+      dataIndex: 'description',
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: record => <EditLessonButton record={record} />,
+    },
+  ]
+
+  const setCourseFormValues = data => {
+    courseForm.setFieldsValue({
+      title: data.title,
+      subTitle: data.subTitle,
+      description: data.description,
+      imgUrl: data.imgUrl,
+      language: data.language,
+      priceAmount: data.priceAmount,
+      currency: data.currency,
+      level: data.level,
+      categories: data.Categories.map(c => c.categoryId),
+    })
   }
 
   const getUploadProps = uploadType => {
@@ -109,24 +142,6 @@ const SenseiCreateCourse = () => {
       },
     }
   }
-
-  const tableColumns = [
-    {
-      title: 'Title',
-      key: 'title',
-      dataIndex: 'title',
-    },
-    {
-      title: 'Lesson Text',
-      key: 'description',
-      dataIndex: 'description',
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: record => <EditLessonButton record={record} />,
-    },
-  ]
 
   const EditLessonButton = data => {
     const { record } = data
@@ -248,7 +263,7 @@ const SenseiCreateCourse = () => {
         setCurrentCourse(result.course)
         notification.success({
           message: 'Success',
-          description: `Your course draft was successfully ${
+          description: `Your course ${isCourseDraft ? 'draft' : ''} was successfully ${
             !isCourseCreated ? 'created' : 'updated'
           }.`,
         })
@@ -259,24 +274,36 @@ const SenseiCreateCourse = () => {
     setIsCourseCreated(true)
     if (!isNil(result.course)) {
       setCourseFormValues(result.course)
+      setIsCourseDraft(result.course.adminVerified === ADMIN_VERIFIED_ENUM.DRAFT)
     }
     setTimeout(() => {
       setIsLoading(false)
     }, DEFAULT_TIMEOUT)
   }
 
-  const setCourseFormValues = data => {
-    courseForm.setFieldsValue({
-      title: data.title,
-      subTitle: data.subTitle,
-      description: data.description,
-      imgUrl: data.imgUrl,
-      language: data.language,
-      priceAmount: data.priceAmount,
-      currency: data.currency,
-      level: data.level,
-      categories: data.Categories.map(c => c.categoryId),
-    })
+  const submitCourseForApproval = async () => {
+    setIsLoading(true)
+    const formValues = {
+      adminVerified: ADMIN_VERIFIED_ENUM.PENDING,
+    }
+    const result = await updateCourse(currentCourse.courseId, formValues)
+    if (result && !isNil(result.message)) {
+      if (result.course) {
+        setCurrentCourse(result.course)
+        notification.success({
+          message: 'Success',
+          description: `Your course was submitted for approval.`,
+        })
+      }
+    } else {
+      notification.error({
+        message: 'Error',
+        description: 'There was an error submitting your course for approval.',
+      })
+    }
+    setTimeout(() => {
+      setIsLoading(false)
+    }, DEFAULT_TIMEOUT)
   }
 
   const getCourseToEdit = async () => {
@@ -284,6 +311,7 @@ const SenseiCreateCourse = () => {
     if (result && !isNil(result.course)) {
       setCurrentCourse(result.course)
       setIsCourseCreated(true)
+      setIsCourseDraft(result.course.adminVerified === ADMIN_VERIFIED_ENUM.DRAFT)
 
       courseForm.setFieldsValue({
         title: result.course.title,
@@ -339,7 +367,11 @@ const SenseiCreateCourse = () => {
               <div className="row align-items-center justify-content-between">
                 <div className="col-12 col-md-auto text-center text-md-left">
                   <span className="text-dark text-uppercase h3">
-                    <strong>{!isCourseCreated ? 'Create New Course' : 'Edit Course Draft'}</strong>
+                    <strong>
+                      {!isCourseCreated
+                        ? 'Create New Course'
+                        : `Edit Course ${isCourseDraft ? 'Draft' : ''}`}
+                    </strong>
                   </span>
                 </div>
                 <div className="col-12 col-md-auto mt-4 mt-md-0 text-center text-md-right">
@@ -354,13 +386,30 @@ const SenseiCreateCourse = () => {
                       htmlType="submit"
                       loading={isLoading}
                     >
-                      Save Draft
+                      {isCourseDraft ? 'Save Draft' : 'Update Course'}
                     </Button>
-                    <Tooltip title="Courses require approval before they can be published to the store.">
-                      <Button type="primary" size="large" shape="round" icon={<UploadOutlined />}>
-                        Submit
-                      </Button>
-                    </Tooltip>
+                    {(!!isCourseDraft ||
+                      currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED) && (
+                      <Tooltip title="Courses require approval before they can be published to the store.">
+                        <Popconfirm
+                          title="Do you wish to submit your course for administrator review and approval?"
+                          placement="bottom"
+                          onConfirm={() => submitCourseForApproval()}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button
+                            disabled={!isCourseCreated}
+                            type="primary"
+                            size="large"
+                            shape="round"
+                            icon={<UploadOutlined />}
+                          >
+                            {isCourseDraft ? 'Submit' : 'Resubmit'}
+                          </Button>
+                        </Popconfirm>
+                      </Tooltip>
+                    )}
                   </Space>
                 </div>
               </div>

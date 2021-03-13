@@ -3,16 +3,18 @@ import { map } from 'lodash'
 import CourseListingCard from 'components/Course/CourseListingCard'
 
 const CourseListingsByCategory = data => {
-  const { categoryName, courses } = data.courses
+  const { courses, isLoading } = data
+  const courseData = map(courses, res => ({ ...res, key: res.courseId }))
+
+  const showCourseCard = course => {
+    return <CourseListingCard key={course.key} course={course} isLoading={isLoading} />
+  }
+
   return (
     <div>
-      <div className="row align-items-center mb-2">{`Popular Courses for ${categoryName}`}</div>
-      <div className="row">{map(courses, course => showCourseCard(course))}</div>
+      <div className="row">{map(courseData, course => showCourseCard(course))}</div>
     </div>
   )
 }
 
-const showCourseCard = course => {
-  return <CourseListingCard key={course.key} course={course} />
-}
 export default CourseListingsByCategory

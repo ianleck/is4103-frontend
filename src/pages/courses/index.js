@@ -1,56 +1,42 @@
+import React, { useEffect, useState } from 'react'
+import { isNil } from 'lodash'
 import { Helmet } from 'react-helmet'
-import React, { useEffect } from 'react'
 import { getCourses } from 'services/courses'
 import CourseListingsByCategory from 'components/Course/CourseListingsByCategory'
-import FeaturedCourses from 'components/Course/FeaturedCourses'
+// import FeaturedCourses from 'components/Course/FeaturedCourses'
+import { DEFAULT_TIMEOUT } from 'constants/constants'
 
 const BrowseCoursesPage = () => {
+  const [courses, setCourses] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const setLoadingIndicator = loading => {
+    if (loading) setIsLoading(true)
+    else {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, DEFAULT_TIMEOUT)
+    }
+  }
+
   useEffect(() => {
     const getCoursesEffect = async () => {
+      setLoadingIndicator(true)
       const result = await getCourses()
       console.log(result)
+      if (result && !isNil(result.courses)) {
+        setCourses(result.courses)
+      }
+      setLoadingIndicator(false)
     }
     getCoursesEffect()
   }, [])
 
-  const courseData = {
-    categoryName: 'Finance & Accounting',
-    courses: [
-      {
-        key: 1,
-        courseName: 'F & A (3) F & A (3) F & A (3) F & A (3) F & A (3) F & A (3)',
-        instructorName: 'Ann Summers',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
-      },
-      {
-        key: 2,
-        courseName: 'F & A (2)',
-        instructorName: 'Bob Autumn',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      },
-      {
-        key: 3,
-        courseName: 'F & A (3) F & A (3) F & A (3) F & A (3) F & A (3) F & A (3)',
-        instructorName: 'Charlie Winters',
-        description: 'Lorem ipsum dolor sit amet.',
-      },
-      {
-        key: 4,
-        courseName: 'F & A (4)',
-        instructorName: 'Dean Spring',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-      },
-    ],
-  }
-
   return (
     <div>
       <Helmet title="Courses" />
-      <FeaturedCourses />
-      <CourseListingsByCategory courses={courseData} />
+      {/* <FeaturedCourses /> */}
+      <CourseListingsByCategory courses={courses} isLoading={isLoading} />
     </div>
   )
 }
