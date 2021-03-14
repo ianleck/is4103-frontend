@@ -1,3 +1,4 @@
+import { notification } from 'antd'
 import { isNil } from 'lodash'
 import moment from 'moment'
 
@@ -94,5 +95,30 @@ export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
     accessToken: currentAdmin.accessToken,
     authorized: isAuthorized,
     loading: isLoading,
+  }
+}
+
+export const showNotification = (type, message, description) => {
+  switch (type) {
+    case 'success':
+      notification.success({
+        message,
+        description,
+      })
+      break
+    case 'error':
+      notification.error({
+        message,
+        description,
+      })
+      break
+    case 'warn':
+      notification.warn({
+        message,
+        description,
+      })
+      break
+    default:
+      break
   }
 }
