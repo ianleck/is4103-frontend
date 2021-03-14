@@ -61,6 +61,8 @@ export async function updateMentorshipListing(data) {
         name: data.name,
         description: data.description,
         categories: data.categories,
+        priceAmount: data.priceAmount,
+        visibility: data.visibility,
       },
     })
     .then(response => {
