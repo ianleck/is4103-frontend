@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Button, Descriptions, Modal, Form, Input, notification, Select, Popconfirm } from 'antd'
+import { Button, Descriptions, Modal, Form, Input, Select, Popconfirm } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { EditOutlined, DeleteOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { ADMIN_ROLE_ENUM } from 'constants/constants'
+import { showNotification } from 'components/utils'
+import {
+  ADMIN_DELETED,
+  ADMIN_DET_CHANGED,
+  ADMIN_NAMES_CHANGED,
+  ADMIN_PERMISSIONS_CHANGED,
+  ENSURE_PASSWORDS_MATCH,
+  ERROR,
+  OOPS,
+  PASSWORDS_MISMATCH,
+  SUCCESS,
+  WARNING,
+} from 'constants/notifications'
 
 const { Option } = Select
 
@@ -122,19 +135,16 @@ const AdminProfile = () => {
 
     if (response1 && response2) {
       getAdmin()
-      notification.success({ message: 'Success', description: 'Admin details changed' })
+      showNotification('success', SUCCESS, ADMIN_DET_CHANGED)
       setShowEditInformation(false)
     } else if (response1) {
       getAdmin()
-      notification.error({ message: 'Warning', description: 'Only Admin names has been changed' })
+      showNotification('error', WARNING, ADMIN_NAMES_CHANGED)
     } else if (response2) {
       getAdmin()
-      notification.error({
-        message: 'Warning',
-        description: 'Only Admin permission has been changed',
-      })
+      showNotification('error', WARNING, ADMIN_PERMISSIONS_CHANGED)
     } else {
-      notification.error({ message: 'Error', description: 'Something went wrong...' })
+      showNotification('error', ERROR, OOPS)
     }
   }
 
@@ -149,16 +159,13 @@ const AdminProfile = () => {
       )
 
       if (response.data.success) {
-        notification.success({ message: 'Success', description: 'Admin details changed' })
+        showNotification('success', SUCCESS, ADMIN_DET_CHANGED)
         setshowChangePassword(false)
       } else {
-        notification.error({ message: 'Error', description: { response } })
+        showNotification('error', ERROR, response)
       }
     } else {
-      notification.warn({
-        message: 'Passwords do not match',
-        description: 'Please ensure both passwords entered match',
-      })
+      showNotification('warn', PASSWORDS_MISMATCH, ENSURE_PASSWORDS_MATCH)
     }
   }
 
@@ -168,7 +175,7 @@ const AdminProfile = () => {
     // console.log(response)
 
     if (response) {
-      notification.success({ message: 'Success', description: 'Admin Deleted' })
+      showNotification('success', SUCCESS, ADMIN_DELETED)
       const path = '/admin/admin-management'
       history.push(path)
     }
