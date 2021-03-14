@@ -39,3 +39,16 @@ export async function deleteLesson(lessonId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function deleteLessonVideo(lessonId) {
+  const url = `/upload/lesson/video/${lessonId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

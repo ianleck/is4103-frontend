@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { isNil, map } from 'lodash'
+import { isNil, map, size } from 'lodash'
 import {
   Button,
   Card,
+  Empty,
   Form,
   Input,
   InputNumber,
@@ -12,6 +13,7 @@ import {
   Modal,
   notification,
   Popconfirm,
+  Radio,
   Select,
   Space,
   Switch,
@@ -27,10 +29,15 @@ import {
   SaveOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
-
+import ReactPlayer from 'react-player/lazy'
 import { createCourse, getCourseById, updateCourse } from 'services/courses'
-import { createLesson, deleteLesson, updateLesson } from 'services/courses/lessons'
-import { formatTime } from 'components/utils'
+import {
+  createLesson,
+  deleteLesson,
+  updateLesson,
+  deleteLessonVideo,
+} from 'services/courses/lessons'
+import { formatTime, showNotification } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
 import {
   ADMIN_VERIFIED_ENUM,
@@ -38,6 +45,7 @@ import {
   LEVEL_ENUM,
   VISIBILITY_ENUM,
 } from 'constants/constants'
+import { LESSON_VID_DELETE_SUCCESS, LESSON_VID_DELETE_ERR } from 'constants/notifications'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -54,8 +62,10 @@ const SenseiCreateCourse = () => {
   const [isCourseCreated, setIsCourseCreated] = useState(false)
   const [isCourseDraft, setIsCourseDraft] = useState(true)
   const [currentCourse, setCurrentCourse] = useState('')
+
   const [showEditLesson, setShowEditLesson] = useState(false)
   const [currentLesson, setCurrentLesson] = useState('')
+  const [currentLessonTab, setCurrentLessonTab] = useState('lessonVideo')
 
   const [courseForm] = Form.useForm()
   const [editLessonForm] = Form.useForm()
@@ -224,7 +234,7 @@ const SenseiCreateCourse = () => {
       if (result.success) {
         getCourseToEdit()
         notification.success({
-          message: 'Success',
+          message: result.message,
           description: `Your lesson was successfully deleted.`,
         })
       }
@@ -246,7 +256,7 @@ const SenseiCreateCourse = () => {
       if (result.lesson) {
         getCourseToEdit()
         notification.success({
-          message: 'Success',
+          message: result.message,
           description: `Your lesson was successfully updated.`,
         })
         setShowEditLesson(false)
@@ -256,6 +266,19 @@ const SenseiCreateCourse = () => {
         message: 'Error',
         description: 'There was an error saving your lesson.',
       })
+    }
+  }
+
+  const handleDeleteLessonVideo = async () => {
+    const result = await deleteLessonVideo(currentLesson.lessonId)
+
+    if (result && !isNil(result.message)) {
+      if (result.course) {
+        getCourseToEdit()
+        showNotification('success', result.message, LESSON_VID_DELETE_SUCCESS)
+      }
+    } else {
+      showNotification('error', 'Error', LESSON_VID_DELETE_ERR)
     }
   }
 
@@ -280,7 +303,7 @@ const SenseiCreateCourse = () => {
       if (result.course) {
         setCurrentCourse(result.course)
         notification.success({
-          message: 'Success',
+          message: result.message,
           description: `Your course ${isCourseDraft ? 'draft' : ''} was successfully ${
             !isCourseCreated ? 'created' : 'updated'
           }.`,
@@ -308,7 +331,7 @@ const SenseiCreateCourse = () => {
       if (result.course) {
         setCurrentCourse(result.course)
         notification.success({
-          message: 'Success',
+          message: result.message,
           description: `Course Image removed.`,
         })
       }
@@ -342,8 +365,29 @@ const SenseiCreateCourse = () => {
     }
   }
 
+  const toggleCourseVisibility = async () => {
+    const toggleVisibility =
+      currentCourse.visibility === VISIBILITY_ENUM.HIDDEN
+        ? VISIBILITY_ENUM.PUBLISHED
+        : VISIBILITY_ENUM.HIDDEN
+    const formValues = {
+      visibility: toggleVisibility,
+    }
+    const result = await updateCourse(currentCourse.courseId, formValues)
+    if (result && !isNil(result.message)) {
+      if (result.course) {
+        setCurrentCourse(result.course)
+        notification.success({
+          message: 'Success',
+          description: `Your course was ${toggleVisibility.toLowerCase()} successfully.`,
+        })
+      }
+    }
+  }
+
   const getCourseToEdit = async () => {
     const result = await getCourseById(!isNil(id) ? id : currentCourse.courseId)
+    console.log('result', result)
     if (result && !isNil(result.course)) {
       setCurrentCourse(result.course)
       setIsCourseCreated(true)
@@ -361,13 +405,17 @@ const SenseiCreateCourse = () => {
         categories: result.course.Categories.map(c => c.categoryId),
       })
     }
-    let lessonData = []
     if (!isNil(result.course.Lessons)) {
-      lessonData = map(result.course.Lessons, res => ({
+      const lessonData = map(result.course.Lessons, res => ({
         ...res,
         key: res.lessonId,
       }))
       setLessons(lessonData)
+      for (let i = 0; i < size(lessonData); i += 1) {
+        if (lessonData[i].key === currentLesson.lessonId) setCurrentLesson(lessonData[i])
+        console.log('yoyo, i reset the currentLesson', lessonData[i])
+        break
+      }
     }
   }
 
@@ -412,6 +460,18 @@ const SenseiCreateCourse = () => {
                 </div>
                 <div className="col-12 col-md-auto mt-4 mt-md-0 text-center text-md-right">
                   <Space size="large">
+                    {currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED && (
+                      <div>
+                        <Switch
+                          checked={currentCourse.visibility === VISIBILITY_ENUM.PUBLISHED}
+                          disabled={currentCourse.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED}
+                          checkedChildren="ON"
+                          unCheckedChildren="OFF"
+                          onChange={() => toggleCourseVisibility()}
+                        />
+                        <span>&nbsp;&nbsp;Publish Course to Marketplace</span>
+                      </div>
+                    )}
                     <Button
                       ghost
                       type="primary"
@@ -489,15 +549,6 @@ const SenseiCreateCourse = () => {
                       </div>
                     </div>
                   </Card>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-12">
-                  <Switch
-                    disabled={currentCourse.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED}
-                    checkedChildren={VISIBILITY_ENUM.PUBLISHED}
-                    unCheckedChildren={VISIBILITY_ENUM.HIDDEN}
-                  />
                 </div>
               </div>
               <div className="row mt-4">
@@ -740,27 +791,75 @@ const SenseiCreateCourse = () => {
           </div>
         </Form>
         <div className="row">
-          <div className="col-12 mt-2">
-            <Upload {...getUploadProps('lessonVideo')}>
-              <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                Upload Lesson Video
-              </Button>
-            </Upload>
+          <div className="col-12">
+            <Radio.Group defaultValue="lessonVideo" size="large">
+              <Radio.Button value="lessonVideo" onClick={() => setCurrentLessonTab('lessonVideo')}>
+                Lesson Video
+              </Radio.Button>
+              <Radio.Button
+                value="assessmentVideo"
+                onClick={() => setCurrentLessonTab('assessmentVideo')}
+              >
+                Assessment Video
+              </Radio.Button>
+              <Radio.Button value="lessonFile" onClick={() => setCurrentLessonTab('lessonFile')}>
+                Lesson File
+              </Radio.Button>
+            </Radio.Group>
           </div>
-          <div className="col-12 mt-2">
-            <Upload {...getUploadProps('assessmentVideo')}>
-              <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                Upload Assessment Video
-              </Button>
-            </Upload>
-          </div>
-          <div className="col-12 mt-2">
-            <Upload {...getUploadProps('lessonFile')}>
-              <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                Upload Lesson File
-              </Button>
-            </Upload>
-          </div>
+          {currentLessonTab === 'lessonVideo' && (
+            <div className="col-12">
+              {!isNil(currentLesson.videoUrl) && (
+                <ReactPlayer controls width="100%" url={currentLesson.videoUrl} />
+              )}
+              {isNil(currentLesson.videoUrl) && <Empty className="mt-4" />}
+              <div className="mt-4">
+                <Space size="large">
+                  <Upload {...getUploadProps('lessonVideo')} showUploadList={false}>
+                    <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                      Upload Lesson Video
+                    </Button>
+                  </Upload>
+                  {!isNil(currentLesson.videoUrl) && (
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteLessonVideo()}
+                    >
+                      Delete Video
+                    </Button>
+                  )}
+                </Space>
+              </div>
+            </div>
+          )}
+          {currentLessonTab === 'assessmentVideo' && (
+            <div className="col-12">
+              {!isNil(currentLesson.assessmentUrl) && (
+                <ReactPlayer controls width="100%" url={currentLesson.assessmentUrl} />
+              )}
+              {isNil(currentLesson.assessmentUrl) && <Empty className="mt-4" />}
+              <div className="mt-4">
+                <Upload {...getUploadProps('assessmentVideo')} showUploadList={false}>
+                  <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                    Upload Assessment Video
+                  </Button>
+                </Upload>
+              </div>
+            </div>
+          )}
+          {currentLessonTab === 'lessonFile' && (
+            <div className="col-12">
+              {isNil(currentLesson.assessmentUrl) && <Empty className="mt-4" />}
+              <div className="mt-4">
+                <Upload {...getUploadProps('lessonFile')} showUploadList={false}>
+                  <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                    Upload Lesson File
+                  </Button>
+                </Upload>
+              </div>
+            </div>
+          )}
         </div>
         <div className="row mt-2">
           <div className="col-12 text-right">
