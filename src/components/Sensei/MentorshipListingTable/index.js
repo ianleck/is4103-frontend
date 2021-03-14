@@ -4,11 +4,13 @@ import {
   Button,
   Form,
   Input,
+  InputNumber,
   Modal,
   notification,
   Popconfirm,
   Select,
   Space,
+  Switch,
   Table,
   Tag,
 } from 'antd'
@@ -18,13 +20,14 @@ import {
   PlusOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons'
-import { indexOf, map, size } from 'lodash'
+import { compact, indexOf, isEmpty, map, size } from 'lodash'
 import {
   getSenseiMentorshipListings,
   createMentorshipListing,
   updateMentorshipListing,
   deleteMentorshipListing,
 } from 'services/mentorshipListing'
+import { VISIBILITY_ENUM } from 'constants/constants'
 
 const SenseiMentorshipListings = () => {
   const user = useSelector(state => state.user)
@@ -42,6 +45,7 @@ const SenseiMentorshipListings = () => {
 
   const [showAddListingModal, setShowAddListingModal] = useState(false)
   const [showEditListingModal, setShowEditListingModal] = useState(false)
+  const categoryFilters = map(categories, cat => ({ value: cat.categoryId, text: cat.name }))
 
   const getListings = async () => {
     const result = await getSenseiMentorshipListings(accountId)
@@ -72,6 +76,11 @@ const SenseiMentorshipListings = () => {
   }
 
   const onAddListing = values => {
+    if (values.visibility) {
+      values.visibility = VISIBILITY_ENUM.PUBLISHED
+    } else {
+      values.visibility = VISIBILITY_ENUM.HIDDEN
+    }
     createMentorshipListing({ ...values }).then(_data => {
       if (_data) {
         notification.success({ message: _data.message })
@@ -84,6 +93,12 @@ const SenseiMentorshipListings = () => {
 
   const onEditListing = values => {
     values.mentorshipListingId = currentListing.mentorshipListingId
+
+    if (values.visibility) {
+      values.visibility = VISIBILITY_ENUM.PUBLISHED
+    } else {
+      values.visibility = VISIBILITY_ENUM.HIDDEN
+    }
     updateMentorshipListing({ ...values }).then(_data => {
       if (_data) {
         notification.success({ message: _data.message })
@@ -99,6 +114,8 @@ const SenseiMentorshipListings = () => {
       name: record.name,
       description: record.description,
       categories: record.Categories.map(c => c.categoryId),
+      priceAmount: record.priceAmount,
+      visbility: record.visiblity,
     })
     setShowEditListingModal(true)
   }
@@ -108,6 +125,8 @@ const SenseiMentorshipListings = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Categories',
@@ -126,11 +145,38 @@ const SenseiMentorshipListings = () => {
           })}
         </>
       ),
+      filters: categoryFilters,
+      onFilter: (value, record) => {
+        return !isEmpty(compact(record.Categories.map(c => c.categoryId.indexOf(value) === 0)))
+      },
     },
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+    },
+    {
+      title: 'Monthly Price (S$)',
+      dataIndex: 'priceAmount',
+      key: 'priceAmount',
+      responsive: ['lg'],
+      render: record => record.toFixed(2),
+      sorter: (a, b) => a.priceAmount - b.priceAmount,
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Visibility',
+      dataIndex: 'visibility',
+      key: 'visibility',
+      responsive: ['md'],
+      filters: [
+        {
+          text: VISIBILITY_ENUM.PUBLISHED,
+          value: VISIBILITY_ENUM.PUBLISHED,
+        },
+        { text: VISIBILITY_ENUM.HIDDEN, value: VISIBILITY_ENUM.HIDDEN },
+      ],
+      onFilter: (value, record) => record.visibility.indexOf(value) === 0,
     },
     {
       title: 'Mentorship Listing ID',
@@ -279,7 +325,15 @@ const SenseiMentorshipListings = () => {
               { required: true, message: 'Please select at least 1 category.', type: 'array' },
             ]}
           >
-            <Select mode="multiple" placeholder="Select at least 1 relevant category">
+            <Select
+              showSearch
+              mode="multiple"
+              size="large"
+              filterOption={(input, option) => {
+                return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }}
+              placeholder="Please select at least 1 relevant category."
+            >
               {map(categories, category => {
                 const { categoryId, name } = category
                 return (
@@ -289,6 +343,24 @@ const SenseiMentorshipListings = () => {
                 )
               })}
             </Select>
+          </Form.Item>
+          <Form.Item
+            label="Monthly subscription price (S$)"
+            name="priceAmount"
+            rules={[{ required: true, message: 'Please add a monthly subscription price.' }]}
+          >
+            <InputNumber
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              step="0.01"
+              min={0}
+            />
+          </Form.Item>
+          <Form.Item label="Visibility" name="visibility" valuePropName="checked">
+            <Switch
+              checkedChildren={VISIBILITY_ENUM.PUBLISHED}
+              unCheckedChildren={VISIBILITY_ENUM.HIDDEN}
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -314,6 +386,8 @@ const SenseiMentorshipListings = () => {
               name: currentListing.name,
               description: currentListing.description,
               categories: currentListing.Categories.map(c => c.categoryId),
+              priceAmount: currentListing.priceAmount,
+              visibility: currentListing.visibility,
             }
           }
         >
@@ -355,6 +429,24 @@ const SenseiMentorshipListings = () => {
                 )
               })}
             </Select>
+          </Form.Item>
+          <Form.Item
+            label="Monthly subscription price (S$)"
+            name="priceAmount"
+            rules={[{ required: true, message: 'Please add a monthly subscription price.' }]}
+          >
+            <InputNumber
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              step="0.01"
+              min={0}
+            />
+          </Form.Item>
+          <Form.Item label="Visibility" name="visibility" valuePropName="checked">
+            <Switch
+              checkedChildren={VISIBILITY_ENUM.PUBLISHED}
+              unCheckedChildren={VISIBILITY_ENUM.HIDDEN}
+            />
           </Form.Item>
         </Form>
       </Modal>
