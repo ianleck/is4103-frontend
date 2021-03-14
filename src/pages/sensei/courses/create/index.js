@@ -24,11 +24,14 @@ import {
 import {
   ArrowLeftOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   EditOutlined,
   PlusOutlined,
   SaveOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
+import Axios from 'axios'
+import download from 'js-file-download'
 import ReactPlayer from 'react-player/lazy'
 import { createCourse, getCourseById, updateCourse } from 'services/courses'
 import {
@@ -36,6 +39,8 @@ import {
   deleteLesson,
   updateLesson,
   deleteLessonVideo,
+  deleteAssessmentVideo,
+  deleteLessonFile,
 } from 'services/courses/lessons'
 import { formatTime, showNotification } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
@@ -45,7 +50,20 @@ import {
   LEVEL_ENUM,
   VISIBILITY_ENUM,
 } from 'constants/constants'
-import { LESSON_VID_DELETE_SUCCESS, LESSON_VID_DELETE_ERR } from 'constants/notifications'
+import {
+  ASSESSMENT_VID_DELETE_ERR,
+  ASSESSMENT_VID_DELETE_SUCCESS,
+  LESSON_DELETE_SUCCESS,
+  LESSON_FILE_DELETE_SUCCESS,
+  LESSON_FILE_DELETE_ERR,
+  LESSON_VID_DELETE_SUCCESS,
+  LESSON_VID_DELETE_ERR,
+  SUCCESS,
+  ERROR,
+  LESSON_DELETE_ERR,
+  LESSON_UPDATE_SUCCESS,
+  LESSON_UPDATE_ERR,
+} from 'constants/notifications'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -163,6 +181,17 @@ const SenseiCreateCourse = () => {
     }
   }
 
+  const downloadLessonFile = url => {
+    Axios.get(url, {
+      headers: {
+        authorization: `Bearer ${user.accessToken}`,
+      },
+      responseType: 'blob', // Important
+    }).then(resp => {
+      download(resp.data, `lessonFile.${url.split('.').pop()}`)
+    })
+  }
+
   const EditLessonButton = data => {
     const { record } = data
     return (
@@ -214,12 +243,12 @@ const SenseiCreateCourse = () => {
       if (result && !isNil(result.lesson)) {
         result.lesson.key = result.lesson.lessonId
         setLessons([...lessons, result.lesson])
+        setCurrentLesson(result.lesson)
       }
     }
   }
 
   const handleEditLesson = record => {
-    console.log('record', record)
     setCurrentLesson(record)
     setShowEditLesson(true)
     editLessonForm.setFieldsValue({
@@ -233,16 +262,10 @@ const SenseiCreateCourse = () => {
     if (result && !isNil(result.success)) {
       if (result.success) {
         getCourseToEdit()
-        notification.success({
-          message: result.message,
-          description: `Your lesson was successfully deleted.`,
-        })
+        showNotification('success', SUCCESS, LESSON_DELETE_SUCCESS)
       }
     } else {
-      notification.error({
-        message: 'Error',
-        description: 'There was an error deleting your lesson.',
-      })
+      showNotification('error', ERROR, LESSON_DELETE_ERR)
     }
   }
 
@@ -255,17 +278,11 @@ const SenseiCreateCourse = () => {
     if (result && !isNil(result.message)) {
       if (result.lesson) {
         getCourseToEdit()
-        notification.success({
-          message: result.message,
-          description: `Your lesson was successfully updated.`,
-        })
+        showNotification('success', SUCCESS, LESSON_UPDATE_SUCCESS)
         setShowEditLesson(false)
       }
     } else {
-      notification.error({
-        message: 'Error',
-        description: 'There was an error saving your lesson.',
-      })
+      showNotification('error', ERROR, LESSON_UPDATE_ERR)
     }
   }
 
@@ -273,12 +290,38 @@ const SenseiCreateCourse = () => {
     const result = await deleteLessonVideo(currentLesson.lessonId)
 
     if (result && !isNil(result.message)) {
-      if (result.course) {
+      if (result.lesson) {
         getCourseToEdit()
-        showNotification('success', result.message, LESSON_VID_DELETE_SUCCESS)
+        showNotification('success', SUCCESS, LESSON_VID_DELETE_SUCCESS)
       }
     } else {
-      showNotification('error', 'Error', LESSON_VID_DELETE_ERR)
+      showNotification('error', ERROR, LESSON_VID_DELETE_ERR)
+    }
+  }
+
+  const handleDeleteAssessmentVideo = async () => {
+    const result = await deleteAssessmentVideo(currentLesson.lessonId)
+
+    if (result && !isNil(result.message)) {
+      if (result.lesson) {
+        getCourseToEdit()
+        showNotification('success', SUCCESS, ASSESSMENT_VID_DELETE_SUCCESS)
+      }
+    } else {
+      showNotification('error', ERROR, ASSESSMENT_VID_DELETE_ERR)
+    }
+  }
+
+  const handleDeleteLessonFile = async () => {
+    const result = await deleteLessonFile(currentLesson.lessonId)
+
+    if (result && !isNil(result.message)) {
+      if (result.lesson) {
+        getCourseToEdit()
+        showNotification('success', SUCCESS, LESSON_FILE_DELETE_SUCCESS)
+      }
+    } else {
+      showNotification('error', ERROR, LESSON_FILE_DELETE_ERR)
     }
   }
 
@@ -412,9 +455,10 @@ const SenseiCreateCourse = () => {
       }))
       setLessons(lessonData)
       for (let i = 0; i < size(lessonData); i += 1) {
-        if (lessonData[i].key === currentLesson.lessonId) setCurrentLesson(lessonData[i])
-        console.log('yoyo, i reset the currentLesson', lessonData[i])
-        break
+        if (lessonData[i].key === currentLesson.lessonId) {
+          setCurrentLesson(lessonData[i])
+          break
+        }
       }
     }
   }
@@ -516,7 +560,6 @@ const SenseiCreateCourse = () => {
                 <div className="col-12 col-xl-5">
                   <Card
                     title="Course Image"
-                    className="w-100"
                     actions={[
                       <Tooltip title="Please save your course as a draft before adding a course image.">
                         <Upload {...getUploadProps('courseImg')} showUploadList={false}>
@@ -810,7 +853,9 @@ const SenseiCreateCourse = () => {
           {currentLessonTab === 'lessonVideo' && (
             <div className="col-12">
               {!isNil(currentLesson.videoUrl) && (
-                <ReactPlayer controls width="100%" url={currentLesson.videoUrl} />
+                <div className="mt-4">
+                  <ReactPlayer controls width="100%" url={currentLesson.videoUrl} />
+                </div>
               )}
               {isNil(currentLesson.videoUrl) && <Empty className="mt-4" />}
               <div className="mt-4">
@@ -836,27 +881,62 @@ const SenseiCreateCourse = () => {
           {currentLessonTab === 'assessmentVideo' && (
             <div className="col-12">
               {!isNil(currentLesson.assessmentUrl) && (
-                <ReactPlayer controls width="100%" url={currentLesson.assessmentUrl} />
+                <div className="mt-4">
+                  <ReactPlayer controls width="100%" url={currentLesson.assessmentUrl} />
+                </div>
               )}
               {isNil(currentLesson.assessmentUrl) && <Empty className="mt-4" />}
               <div className="mt-4">
-                <Upload {...getUploadProps('assessmentVideo')} showUploadList={false}>
-                  <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                    Upload Assessment Video
-                  </Button>
-                </Upload>
+                <Space>
+                  <Upload {...getUploadProps('assessmentVideo')} showUploadList={false}>
+                    <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                      Upload Assessment Video
+                    </Button>
+                  </Upload>
+                  {!isNil(currentLesson.assessmentUrl) && (
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteAssessmentVideo()}
+                    >
+                      Delete Video
+                    </Button>
+                  )}
+                </Space>
               </div>
             </div>
           )}
           {currentLessonTab === 'lessonFile' && (
             <div className="col-12">
-              {isNil(currentLesson.assessmentUrl) && <Empty className="mt-4" />}
-              <div className="mt-4">
-                <Upload {...getUploadProps('lessonFile')} showUploadList={false}>
-                  <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                    Upload Lesson File
+              {!isNil(currentLesson.lessonFileUrl) && (
+                <div className="mt-4">
+                  <Button
+                    type="primary"
+                    icon={<DownloadOutlined />}
+                    onClick={() => downloadLessonFile(currentLesson.lessonFileUrl)}
+                  >
+                    Download
                   </Button>
-                </Upload>
+                </div>
+              )}
+              {isNil(currentLesson.lessonFileUrl) && <Empty className="mt-4" />}
+              <div className="mt-4">
+                <Space>
+                  <Upload {...getUploadProps('lessonFile')} showUploadList={false}>
+                    <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                      Upload Lesson File
+                    </Button>
+                  </Upload>
+                  {!isNil(currentLesson.lessonFileUrl) && (
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteLessonFile()}
+                    >
+                      Delete Files
+                    </Button>
+                  )}
+                </Space>
               </div>
             </div>
           )}

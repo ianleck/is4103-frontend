@@ -52,3 +52,29 @@ export async function deleteLessonVideo(lessonId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function deleteAssessmentVideo(lessonId) {
+  const url = `/upload/lesson/assessment/${lessonId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function deleteLessonFile(lessonId) {
+  const url = `/upload/lesson/file/${lessonId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
