@@ -5,8 +5,8 @@ import { Button, Tabs, Table } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { indexOf, isNil, map } from 'lodash'
-import moment from 'moment'
 import { ADMIN_ROLE_ENUM } from 'constants/constants'
+import { formatTime } from 'components/utils'
 
 const { TabPane } = Tabs
 
@@ -77,14 +77,14 @@ const AdminTable = () => {
         title: 'Created At',
         dataIndex: 'createdAt',
         key: 'createdAt',
-        render: createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a'),
+        render: createdAt => formatTime(createdAt),
       },
       {
         title: 'Updated At',
         dataIndex: 'updatedAt',
         key: 'updatedAt',
         responsive: ['lg'],
-        render: updatedAt => moment(updatedAt).format('YYYY-MM-DD h:mm:ss a'),
+        render: updatedAt => formatTime(updatedAt),
       },
       {
         title: 'Role',

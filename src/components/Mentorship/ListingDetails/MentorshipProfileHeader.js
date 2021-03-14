@@ -5,18 +5,17 @@ import { Button } from 'antd'
 import { CheckSquareOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 
 const MentorshipProfileHeader = () => {
-  const { mentorshipListingId } = useParams()
+  const { id } = useParams()
   const history = useHistory()
 
   const onBack = e => {
     e.preventDefault()
-    const path = '/mentorships'
-    history.push(path)
+    history.goBack()
   }
 
   const onAdd = e => {
     e.preventDefault()
-    const path = `/mentorship/apply/${mentorshipListingId}`
+    const path = `/student/mentorship/apply/${id}`
     history.push(path)
   }
 

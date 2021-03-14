@@ -1,4 +1,9 @@
 import { isNil } from 'lodash'
+import moment from 'moment'
+
+export const formatTime = dateTime => {
+  return moment(dateTime).format('YYYY-MM-DD h:mm:ss a')
+}
 
 export const resetUser = {
   accountId: '',

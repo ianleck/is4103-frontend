@@ -207,8 +207,28 @@ const routes = [
     exact: true,
   },
   {
-    path: '/sensei/mentorship/review-applications',
-    Component: lazy(() => import('pages/sensei/mentorship/review-applications')),
+    path: '/sensei/courses',
+    Component: lazy(() => import('pages/sensei/courses')),
+    exact: true,
+  },
+  {
+    path: '/sensei/courses/create/:id',
+    Component: lazy(() => import('pages/sensei/courses/create')),
+    exact: true,
+  },
+  {
+    path: '/sensei/courses/create',
+    Component: lazy(() => import('pages/sensei/courses/create')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorships/',
+    Component: lazy(() => import('pages/sensei/mentorships')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorships/applications',
+    Component: lazy(() => import('pages/sensei/mentorships/applications')),
     exact: true,
   },
   {
@@ -238,19 +258,19 @@ const routes = [
     exact: true,
   },
   {
-    path: '/student/mentorship-listing/:mentorshipListingId',
-    Component: lazy(() => import('pages/mentorships/viewListing')),
+    path: '/student/mentorship/view/:id',
+    Component: lazy(() => import('pages/student/mentorships/view')),
+    exact: true,
+  },
+  {
+    path: '/student/mentorship/apply/:id',
+    Component: lazy(() => import('pages/student/mentorships/apply')),
     exact: true,
   },
   {
     path: '/student/dashboard/mentorship-applications',
     Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
     exact: true,
-  },
-  // Common Pages
-  {
-    path: '/mentorship/apply/:id',
-    Component: lazy(() => import('pages/mentorships/ApplyListing')),
   },
   /*
 

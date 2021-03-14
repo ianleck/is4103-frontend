@@ -4,7 +4,6 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
   EditOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import {
@@ -30,8 +29,9 @@ import {
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
 import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import { formatTime } from 'components/utils'
 
-const MentorshipApplications = () => {
+const MentorshipApplicationsTable = () => {
   const user = useSelector(state => state.user)
   const history = useHistory()
   const [mentorshipApplications, setMentorshipApplications] = useState([])
@@ -87,12 +87,19 @@ const MentorshipApplications = () => {
 
   const editApplication = application => {
     history.push({
-      pathname: `/mentorship/apply/${application.mentorshipListingId}`,
+      pathname: `/student/mentorship/apply/${application.mentorshipListingId}`,
       state: application, // location state
     })
   }
 
   const senseiTableColumns = [
+    {
+      title: 'Date Received',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      responsive: ['md'],
+      render: createdAt => formatTime(createdAt),
+    },
     {
       title: 'Mentorship Title',
       dataIndex: 'MentorshipListing',
@@ -111,12 +118,6 @@ const MentorshipApplications = () => {
           </span>
         )
       },
-    },
-    {
-      title: 'Date Received',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      responsive: ['md'],
     },
     {
       title: 'Mentorship Listing ID',
@@ -147,7 +148,7 @@ const MentorshipApplications = () => {
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               onConfirm={() => rejectApplication(record.mentorshipContractId)}
             >
-              <Button type="danger" shape="circle" size="large" icon={<DeleteOutlined />} />
+              <Button type="danger" shape="circle" size="large" icon={<CloseOutlined />} />
             </Popconfirm>
           )}
         </Space>
@@ -161,16 +162,17 @@ const MentorshipApplications = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       responsive: ['md'],
+      render: createdAt => formatTime(createdAt),
     },
     {
-      title: 'Title',
+      title: 'Mentorship Title',
       dataIndex: 'MentorshipListing',
       key: 'MentorshipListing.name',
       responsive: ['md'],
       render: listing => (
         <a
           href="#"
-          onClick={() => history.push(`/student/mentorship-listing/${listing.mentorshipListingId}`)}
+          onClick={() => history.push(`/student/mentorship/view/${listing.mentorshipListingId}`)}
           className="text-primary"
         >
           {listing.name}
@@ -211,12 +213,11 @@ const MentorshipApplications = () => {
           <Button
             block
             type="primary"
-            shape="round"
+            size="large"
+            shape="circle"
             icon={<EditOutlined />}
             onClick={() => editApplication(record)}
-          >
-            Edit
-          </Button>
+          />
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
               title="Are you sure you wish to cancel your application?"
@@ -316,12 +317,7 @@ const ViewPersonalStatementButton = values => {
   const footer = (
     <div className="row justify-content-end">
       <div className="col-auto">
-        <Button
-          type="default"
-          size="large"
-          onClick={() => setIsViewStatementModalVisible(false)}
-          className=""
-        >
+        <Button type="default" size="large" onClick={() => setIsViewStatementModalVisible(false)}>
           Close
         </Button>
       </div>
@@ -352,4 +348,4 @@ const ViewPersonalStatementButton = values => {
   )
 }
 
-export default MentorshipApplications
+export default MentorshipApplicationsTable

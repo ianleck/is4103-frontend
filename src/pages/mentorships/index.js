@@ -1,14 +1,14 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MentorshipListingList from 'components/Mentorship/MentorshipListingList'
+import MentorshipListingShoppingList from 'components/Mentorship/ShoppingList'
 
-const MentorshipListingListPage = () => {
+const BrowseMentorshipListings = () => {
   return (
     <div>
       <Helmet title="Mentorship Listings" />
-      <MentorshipListingList />
+      <MentorshipListingShoppingList />
     </div>
   )
 }
 
-export default MentorshipListingListPage
+export default BrowseMentorshipListings

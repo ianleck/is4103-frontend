@@ -1,8 +1,8 @@
-import MentorshipApplications from 'components/Mentorship/MentorshipApplications'
 import React from 'react'
+import MentorshipApplicationsTable from 'components/Mentorship/ApplicationsTable'
 
 const StudentMentorshipApplications = () => {
-  return <MentorshipApplications />
+  return <MentorshipApplicationsTable />
 }
 
 export default StudentMentorshipApplications

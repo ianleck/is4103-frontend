@@ -138,9 +138,14 @@ export async function getSenseiMenuData() {
       icon: 'fe fe-user',
       children: [
         {
-          title: 'Review Applications',
-          key: 'reviewApplications',
-          url: '/sensei/mentorship/review-applications',
+          title: 'Mentorship Listings',
+          key: 'mentorshipListings',
+          url: '/sensei/mentorships/',
+        },
+        {
+          title: 'Mentorship Applications',
+          key: 'mentorshipApplications',
+          url: '/sensei/mentorships/applications',
         },
         {
           title: 'Mentee Overview',

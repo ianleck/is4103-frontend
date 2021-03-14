@@ -24,23 +24,22 @@ const ApplyListingForm = () => {
   const history = useHistory()
   const [prevApplication, setPrevApplication] = useState(null)
   const location = useLocation()
-  const setInitialValues = values => {
-    console.log('values =', values)
-    console.log('prevApplication =', prevApplication)
-    form.setFieldsValue({
-      ...values,
-    })
-  }
 
   useEffect(() => {
     console.log('state ==', location.state) // for location state
     const prevApplicationData = location.state
+    const setInitialValues = values => {
+      console.log('values =', values)
+      console.log('prevApplication =', prevApplication)
+      form.setFieldsValue({
+        ...values,
+      })
+    }
     if (prevApplicationData) {
       setPrevApplication(prevApplicationData)
       setInitialValues(prevApplicationData)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state])
+  }, [form, location.state, prevApplication])
 
   const onSubmit = () => {
     form.validateFields().then(values => {

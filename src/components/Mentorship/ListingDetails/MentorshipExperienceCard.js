@@ -8,13 +8,13 @@ import { getMentorshipListing } from 'services/mentorshipListing'
 
 const MentorshipExperienceCard = () => {
   const [experience, setExperience] = useState([])
-  const { mentorshipListingId } = useParams()
+  const { id } = useParams()
   let isExperienceEmpty = false
   if (!isNil(experience)) isExperienceEmpty = experience.length === 0
 
   useEffect(() => {
     const getListing = async () => {
-      const listing = await getMentorshipListing(mentorshipListingId)
+      const listing = await getMentorshipListing(id)
       if (!listing) {
         setExperience([])
       } else {
@@ -22,12 +22,11 @@ const MentorshipExperienceCard = () => {
       }
     }
     getListing()
-  }, [mentorshipListingId])
+  }, [id])
 
   const sortExperienceByDate = experience.sort(
     (a, b) => new Date(b.dateStart).getTime() - new Date(a.dateStart).getTime(),
   )
-  console.log(sortExperienceByDate)
   const UserExperiences = () => {
     return sortExperienceByDate.map(item => (
       <div className="card" key={item.experienceId}>

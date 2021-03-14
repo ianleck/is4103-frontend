@@ -9,12 +9,36 @@ export const ADMIN_VERIFIED_ENUM = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
+  DRAFT: 'DRAFT',
 }
+
+export const DEFAULT_TIMEOUT = 550
 
 export const MENTORSHIP_CONTRACT_APPROVAL = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
+}
+
+export const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
+
+export const LEVEL_ENUM = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
 }
 
 export const PRIVACY_PERMISSIONS_ENUM = {
@@ -40,17 +64,7 @@ export const USER_TYPE_STRING = {
   SENSEI: 'Sensei',
 }
 
-export const MONTH_NAMES = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
+export const VISIBILITY_ENUM = {
+  PUBLISHED: 'PUBLISHED',
+  HIDDEN: 'HIDDEN',
+}

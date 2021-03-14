@@ -1,15 +1,15 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MentorshipProfilePicture from 'components/Student/Mentorship/MentorshipProfilePicture'
-import MentorshipExperienceCard from 'components/Student/Mentorship/MentorshipExperienceCard'
-import MentorshipDescriptionCard from 'components/Student/Mentorship/MentorshipDescriptionCard'
-import MentorshipProfileHeader from 'components/Student/Mentorship/MentorshipProfileHeader'
-import MentorshipPricingCard from 'components/Student/Mentorship/MentorshipPricingCard'
+import MentorshipProfilePicture from 'components/Mentorship/ListingDetails/MentorshipProfilePicture'
+import MentorshipExperienceCard from 'components/Mentorship/ListingDetails/MentorshipExperienceCard'
+import MentorshipDescriptionCard from 'components/Mentorship/ListingDetails/MentorshipDescriptionCard'
+import MentorshipProfileHeader from 'components/Mentorship/ListingDetails/MentorshipProfileHeader'
+import MentorshipPricingCard from 'components/Mentorship/ListingDetails/MentorshipPricingCard'
 
 const viewListing = () => {
   return (
     <div>
-      <Helmet title="MentorshipListing" />
+      <Helmet title="View Mentorship Listing" />
       <MentorshipProfileHeader />
       <div className="row mt-4">
         <div className="col-12 col-md-2 d-flex align-items-center justify-content-center">

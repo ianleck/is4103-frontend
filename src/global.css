@@ -1,0 +1,58 @@
+.mentorship-listing-card {
+  height: 340px;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.course-card-img-holder {
+  max-height: 150px;
+}
+
+.course-card-img {
+  max-width: 100%;
+}
+
+.sensei-course-card {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  height: 200px;
+}
+
+.sensei-course-card-content {
+  height: 160px;
+}
+
+.text-2-lines {
+  height: 45px;
+}
+
+.truncate-3-overflow {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
+
+.truncate-2-overflow {
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
+
+.truncate-1-overflow {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
