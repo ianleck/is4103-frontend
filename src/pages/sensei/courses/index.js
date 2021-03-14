@@ -137,7 +137,7 @@ const SenseiCourses = () => {
     if (size(courses) > 0)
       return courses.map(course => {
         return (
-          <div key={course.courseId} className="col-12 col-lg-6">
+          <div key={course.courseId} className="col-12 col-lg-6 col-xl-4">
             <SenseiCourseCard course={course} isLoading={isLoading} />
           </div>
         )

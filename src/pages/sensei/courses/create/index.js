@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { isNil, map } from 'lodash'
 import {
   Button,
+  Card,
   Form,
   Input,
   InputNumber,
@@ -13,6 +14,7 @@ import {
   Popconfirm,
   Select,
   Space,
+  Switch,
   Table,
   Tooltip,
   Upload,
@@ -30,7 +32,12 @@ import { createCourse, getCourseById, updateCourse } from 'services/courses'
 import { createLesson, deleteLesson, updateLesson } from 'services/courses/lessons'
 import { formatTime } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
-import { ADMIN_VERIFIED_ENUM, DEFAULT_TIMEOUT, LEVEL_ENUM } from 'constants/constants'
+import {
+  ADMIN_VERIFIED_ENUM,
+  DEFAULT_TIMEOUT,
+  LEVEL_ENUM,
+  VISIBILITY_ENUM,
+} from 'constants/constants'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -65,11 +72,11 @@ const SenseiCreateCourse = () => {
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
-      sm: { span: 5 },
+      lg: { span: 5 },
     },
     wrapperCol: {
       xs: { span: 24 },
-      sm: { span: 12 },
+      lg: { span: 14 },
     },
   }
 
@@ -138,6 +145,7 @@ const SenseiCreateCourse = () => {
         }
         if (info.file.status === 'done') {
           message.success(`${info.file.name} file uploaded successfully`)
+          getCourseToEdit(currentCourse.courseId)
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} file upload failed.`)
         }
@@ -254,6 +262,7 @@ const SenseiCreateCourse = () => {
   const saveCourseDraft = async () => {
     setIsLoading(true)
     const values = courseForm.getFieldsValue()
+    console.log('values.visibility', values)
     const formValues = {
       title: values.title,
       subTitle: values.subTitle,
@@ -288,6 +297,27 @@ const SenseiCreateCourse = () => {
     setTimeout(() => {
       setIsLoading(false)
     }, DEFAULT_TIMEOUT)
+  }
+
+  const removeCourseImg = async () => {
+    const formValues = {
+      imgUrl: null,
+    }
+    const result = await updateCourse(currentCourse.courseId, formValues)
+    if (result && !isNil(result.message)) {
+      if (result.course) {
+        setCurrentCourse(result.course)
+        notification.success({
+          message: 'Success',
+          description: `Course Image removed.`,
+        })
+      }
+    } else {
+      notification.error({
+        message: 'Error',
+        description: 'There was an error removing your course image.',
+      })
+    }
   }
 
   const submitCourseForApproval = async () => {
@@ -422,15 +452,52 @@ const SenseiCreateCourse = () => {
               </div>
             </div>
             <div className="card-body">
-              <div className="row">
+              <div className="row mt-4">
+                <div className="col-12 col-xl-5">
+                  <Card
+                    title="Course Image"
+                    className="w-100"
+                    actions={[
+                      <Tooltip title="Please save your course as a draft before adding a course image.">
+                        <Upload {...getUploadProps('courseImg')} showUploadList={false}>
+                          <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                            Upload
+                          </Button>
+                        </Upload>
+                      </Tooltip>,
+                      <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        disabled={isNil(currentCourse.imgUrl)}
+                        onClick={() => removeCourseImg()}
+                      >
+                        Remove
+                      </Button>,
+                    ]}
+                  >
+                    <div className="row">
+                      <div className="col-12 text-center">
+                        <img
+                          className="course-card-img-holder"
+                          alt="course"
+                          src={
+                            !isNil(currentCourse.imgUrl)
+                              ? `${currentCourse.imgUrl}?${new Date().getTime()}`
+                              : '/resources/images/course-placeholder.png'
+                          }
+                        />
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </div>
+              <div className="row mt-4">
                 <div className="col-12">
-                  <Tooltip title="Please save your course as a draft before adding a course image.">
-                    <Upload {...getUploadProps('courseImg')}>
-                      <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                        Upload Course Image
-                      </Button>
-                    </Upload>
-                  </Tooltip>
+                  <Switch
+                    disabled={currentCourse.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED}
+                    checkedChildren={VISIBILITY_ENUM.PUBLISHED}
+                    unCheckedChildren={VISIBILITY_ENUM.HIDDEN}
+                  />
                 </div>
               </div>
               <div className="row mt-4">
@@ -449,6 +516,7 @@ const SenseiCreateCourse = () => {
                       level: LEVEL_ENUM.BEGINNER,
                       language: 'English',
                       currency: 'SGD',
+                      visibility: false,
                     }}
                   >
                     <Form.Item
