@@ -34,7 +34,7 @@ const SenseiCourseCard = data => {
                 <div className="h5 card-title font-weight-bold truncate-2-overflow">
                   {course.title}
                 </div>
-                <p className="card-text truncate-2-overflow">{course.description}</p>
+                <p className="card-text text-break truncate-2-overflow">{course.description}</p>
                 <div className="row w-100 align-items-center mt-auto">
                   <div className="col-12">
                     <StatusTag data={course} />

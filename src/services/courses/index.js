@@ -68,3 +68,55 @@ export async function updateCourse(courseId, payload) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getAnnouncements(courseId) {
+  const url = `course/all/announcement/${courseId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function createAnnouncement(courseId, payload) {
+  const url = `course/announcement/${courseId}`
+  return apiClient
+    .post(url, { newAnnouncement: { ...payload } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateAnnouncement(announcementId, payload) {
+  const url = `course/announcement/${announcementId}`
+  return apiClient
+    .put(url, { updateAnnouncement: { ...payload } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function deleteAnnouncement(announcementId) {
+  const url = `course/announcement/${announcementId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

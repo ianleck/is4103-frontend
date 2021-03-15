@@ -49,7 +49,7 @@ const CourseListingCard = data => {
               </div>
               <div className="row">
                 <div className="col-12">
-                  <span className="w-100 mt-2 text-dark text-2-lines truncate-2-overflow">
+                  <span className="w-100 mt-2 text-dark text-2-lines truncate-2-overflow text-break">
                     {course.description}
                   </span>
                 </div>

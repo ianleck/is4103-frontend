@@ -65,6 +65,7 @@ import {
   LESSON_UPDATE_ERR,
 } from 'constants/notifications'
 import StatusTag from 'components/Common/StatusTag'
+import CourseAnnouncements2 from 'components/Sensei/Course/Create/Announcements'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -445,7 +446,6 @@ const SenseiCreateCourse = () => {
 
   const getCourseToEdit = async () => {
     const result = await getCourseById(!isNil(id) ? id : currentCourse.courseId)
-    console.log('result', result)
     if (result && !isNil(result.course)) {
       setCurrentCourse(result.course)
       setIsCourseCreated(true)
@@ -852,6 +852,12 @@ const SenseiCreateCourse = () => {
             <div className="card-body">
               {currentCourseTab === 'settings' && <CourseSettings />}
               {currentCourseTab === 'lessons' && <CourseLessons />}
+              {currentCourseTab === 'announcements' && (
+                <CourseAnnouncements2
+                  currentCourse={currentCourse}
+                  isCourseCreated={isCourseCreated}
+                />
+              )}
             </div>
           </div>
         </div>
