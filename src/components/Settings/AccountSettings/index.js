@@ -19,6 +19,7 @@ const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState('security')
   const [isConfirmDelete, setIsConfirmDelete] = useState(false)
   const [togglePrivacy, setTogglePrivacy] = useState(isPrivateUser)
+  const [toggleMessagePrivilege, setToggleMessagePrivilege] = useState(currentMessagePriv)
   const [toggleEmailNotif, setToggleEmailNotif] = useState(isEmailNotifOn)
 
   const changeActiveTab = tabKey => {
@@ -84,6 +85,7 @@ const AccountSettings = () => {
   }
 
   const onChangeMsgPrivileges = value => {
+    setToggleMessagePrivilege(value)
     currentMessagePriv = value
     const payload = {
       accountId: user.accountId,
@@ -106,6 +108,18 @@ const AccountSettings = () => {
         profile and follow you without approval.
       </small>
     )
+  }
+
+  const MessagePrivilegeToggleMsg = () => {
+    if (toggleMessagePrivilege === PRIVACY_PERMISSIONS_ENUM.NONE) {
+      return <small>You can receive messages from no one.</small>
+    }
+
+    if (toggleMessagePrivilege === PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY) {
+      return <small>You can receive messages only from those who you follow.</small>
+    }
+
+    return <small>You can receive messages from everyone.</small>
   }
 
   const HasEmailNotifMsg = () => {
@@ -254,7 +268,7 @@ const AccountSettings = () => {
                     <Option value={PRIVACY_PERMISSIONS_ENUM.NONE}>No one</Option>
                   </Select>
                   <div className="mt-2">
-                    <small>You can receive messages from everyone.</small>
+                    <MessagePrivilegeToggleMsg />
                   </div>
                 </div>
               </div>
