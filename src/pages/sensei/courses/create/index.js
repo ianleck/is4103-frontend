@@ -64,6 +64,7 @@ import {
   LESSON_UPDATE_SUCCESS,
   LESSON_UPDATE_ERR,
 } from 'constants/notifications'
+import StatusTag from 'components/Common/StatusTag'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -76,11 +77,12 @@ const SenseiCreateCourse = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const [lessons, setLessons] = useState([])
   const [isCourseCreated, setIsCourseCreated] = useState(false)
   const [isCourseDraft, setIsCourseDraft] = useState(true)
   const [currentCourse, setCurrentCourse] = useState('')
+  const [currentCourseTab, setCurrentCourseTab] = useState('settings')
 
+  const [lessons, setLessons] = useState([])
   const [showEditLesson, setShowEditLesson] = useState(false)
   const [currentLesson, setCurrentLesson] = useState('')
   const [currentLessonTab, setCurrentLessonTab] = useState('lessonVideo')
@@ -110,9 +112,22 @@ const SenseiCreateCourse = () => {
 
   const tableColumns = [
     {
+      title: 'Created At',
+      key: 'created_at',
+      dataIndex: 'created_at',
+      width: '10%',
+      responsive: ['lg'],
+      render: record => formatTime(record),
+      sorter: (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
       title: 'Title',
       key: 'title',
       dataIndex: 'title',
+      minWidth: '40%',
+      sorter: (a, b) => a.title.length - b.title.length,
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Lesson Text',
@@ -122,6 +137,7 @@ const SenseiCreateCourse = () => {
     {
       title: 'Actions',
       key: 'actions',
+      width: '10%',
       render: record => <EditLessonButton record={record} />,
     },
   ]
@@ -242,7 +258,7 @@ const SenseiCreateCourse = () => {
       const result = await createLesson(currentCourse.courseId)
       if (result && !isNil(result.lesson)) {
         result.lesson.key = result.lesson.lessonId
-        setLessons([...lessons, result.lesson])
+        setLessons([result.lesson, ...lessons])
         setCurrentLesson(result.lesson)
       }
     }
@@ -398,7 +414,6 @@ const SenseiCreateCourse = () => {
           message: 'Success',
           description: `Your course was submitted for approval.`,
         })
-        history.goBack()
       }
     } else {
       notification.error({
@@ -453,7 +468,11 @@ const SenseiCreateCourse = () => {
         ...res,
         key: res.lessonId,
       }))
-      setLessons(lessonData)
+      setLessons(
+        lessonData.sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        ),
+      )
       for (let i = 0; i < size(lessonData); i += 1) {
         if (lessonData[i].key === currentLesson.lessonId) {
           setCurrentLesson(lessonData[i])
@@ -469,6 +488,275 @@ const SenseiCreateCourse = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const CourseSettings = () => {
+    return (
+      <div>
+        <div className="row mt-2">
+          <div className="col-12 col-xl-5">
+            <Card
+              title="Course Image"
+              actions={[
+                <Tooltip title="Please save your course as a draft before adding a course image.">
+                  <Upload {...getUploadProps('courseImg')} showUploadList={false}>
+                    <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
+                      Upload
+                    </Button>
+                  </Upload>
+                </Tooltip>,
+                <Button
+                  danger
+                  icon={<DeleteOutlined />}
+                  disabled={isNil(currentCourse.imgUrl)}
+                  onClick={() => removeCourseImg()}
+                >
+                  Remove
+                </Button>,
+              ]}
+            >
+              <div className="row">
+                <div className="col-12 text-center">
+                  <img
+                    className="course-card-img-holder"
+                    alt="course"
+                    src={
+                      !isNil(currentCourse.imgUrl)
+                        ? `${currentCourse.imgUrl}?${new Date().getTime()}`
+                        : '/resources/images/course-placeholder.png'
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="col-12 mt-4">
+            <span className="font-weight-bold font-size-18">
+              Current Course Status:&nbsp;&nbsp;
+            </span>
+            <span className="align-middle">
+              <StatusTag data={currentCourse} />
+            </span>
+          </div>
+          {currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED && (
+            <div className="col-12 mt-4">
+              <Switch
+                checked={currentCourse.visibility === VISIBILITY_ENUM.PUBLISHED}
+                disabled={currentCourse.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED}
+                checkedChildren="ON"
+                unCheckedChildren="OFF"
+                onChange={() => toggleCourseVisibility()}
+              />
+              <span>&nbsp;&nbsp;Publish Course to Marketplace</span>
+            </div>
+          )}
+        </div>
+        <div className="row mt-4">
+          <div className="col-12">
+            <Form
+              {...formItemLayout}
+              id="courseForm"
+              form={courseForm}
+              layout="vertical"
+              hideRequiredMark
+              onFinish={saveCourseDraft}
+              initialValues={{
+                title: 'Test',
+                subTitle: 'TestSubtitle',
+                description: 'Test',
+                level: LEVEL_ENUM.BEGINNER,
+                language: 'English',
+                currency: 'SGD',
+                visibility: false,
+              }}
+            >
+              <Form.Item
+                name="title"
+                label="Title"
+                rules={[{ required: true, message: 'Please provide the title of your course.' }]}
+              >
+                <Input size="large" />
+              </Form.Item>
+              <Form.Item
+                name="subTitle"
+                label="Subtitle"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please provide the subtitle of your course.',
+                  },
+                ]}
+              >
+                <Input size="large" />
+              </Form.Item>
+              <Form.Item
+                name="description"
+                label="Description"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please provide the description of your course.',
+                  },
+                ]}
+              >
+                <TextArea />
+              </Form.Item>
+              <Form.Item
+                name="language"
+                label="Language"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please indicate the language of your course.',
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  size="large"
+                  filterOption={(input, option) =>
+                    option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {map(languages, language => {
+                    const { name } = language
+                    return (
+                      <Option key={name} value={name}>
+                        {name}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="level"
+                label="Level"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please indicate the level of difficulty of your course.',
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  size="large"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {map(LEVEL_ENUM, value => {
+                    return (
+                      <Option key={value} value={value}>
+                        {value}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="categories"
+                label="Categories"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please indicate the category of your course.',
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  mode="multiple"
+                  size="large"
+                  filterOption={(input, option) => {
+                    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }}
+                >
+                  {map(categories, category => {
+                    const { categoryId, name } = category
+                    return (
+                      <Option key={categoryId} value={categoryId}>
+                        {name}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="currency"
+                label="Currency"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please indicate the currency you are selling your course in.',
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  size="large"
+                  filterOption={(input, option) => {
+                    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }}
+                >
+                  {map(currencyCodes, currency => {
+                    const { code, name } = currency
+                    return (
+                      <Option key={code} value={code}>
+                        {`${name} (${code})`}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="priceAmount"
+                label="Price"
+                rules={[{ required: true, message: 'Please provide the cost of your course.' }]}
+              >
+                <InputNumber
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  step="0.01"
+                  min={0}
+                  className="w-50"
+                />
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const CourseLessons = () => {
+    return (
+      <div className="row mt-4">
+        <div className="col-12 text-right">
+          <Tooltip
+            visible={!isCourseCreated}
+            title="Please save your course as a draft before adding lessons."
+          >
+            <Button
+              disabled={
+                !isCourseCreated || currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING
+              }
+              type="primary"
+              size="large"
+              shape="round"
+              icon={<PlusOutlined />}
+              onClick={() => addLesson()}
+            >
+              Add Lesson
+            </Button>
+          </Tooltip>
+        </div>
+        <div className="col-12 mt-4">
+          <Table bordered className="w-100" columns={tableColumns} dataSource={lessons} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -504,18 +792,6 @@ const SenseiCreateCourse = () => {
                 </div>
                 <div className="col-12 col-md-auto mt-4 mt-md-0 text-center text-md-right">
                   <Space size="large">
-                    {currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED && (
-                      <div>
-                        <Switch
-                          checked={currentCourse.visibility === VISIBILITY_ENUM.PUBLISHED}
-                          disabled={currentCourse.adminVerified !== ADMIN_VERIFIED_ENUM.ACCEPTED}
-                          checkedChildren="ON"
-                          unCheckedChildren="OFF"
-                          onChange={() => toggleCourseVisibility()}
-                        />
-                        <span>&nbsp;&nbsp;Publish Course to Marketplace</span>
-                      </div>
-                    )}
                     <Button
                       ghost
                       type="primary"
@@ -554,242 +830,28 @@ const SenseiCreateCourse = () => {
                   </Space>
                 </div>
               </div>
+              <div className="row align-items-center mt-4">
+                <div className="col-12 text-center text-md-left">
+                  <Radio.Group defaultValue="settings" size="large">
+                    <Radio.Button value="settings" onClick={() => setCurrentCourseTab('settings')}>
+                      Settings
+                    </Radio.Button>
+                    <Radio.Button value="lessons" onClick={() => setCurrentCourseTab('lessons')}>
+                      Lessons
+                    </Radio.Button>
+                    <Radio.Button
+                      value="announcements"
+                      onClick={() => setCurrentCourseTab('announcements')}
+                    >
+                      Announcements
+                    </Radio.Button>
+                  </Radio.Group>
+                </div>
+              </div>
             </div>
             <div className="card-body">
-              <div className="row mt-4">
-                <div className="col-12 col-xl-5">
-                  <Card
-                    title="Course Image"
-                    actions={[
-                      <Tooltip title="Please save your course as a draft before adding a course image.">
-                        <Upload {...getUploadProps('courseImg')} showUploadList={false}>
-                          <Button disabled={!isCourseCreated} icon={<UploadOutlined />}>
-                            Upload
-                          </Button>
-                        </Upload>
-                      </Tooltip>,
-                      <Button
-                        danger
-                        icon={<DeleteOutlined />}
-                        disabled={isNil(currentCourse.imgUrl)}
-                        onClick={() => removeCourseImg()}
-                      >
-                        Remove
-                      </Button>,
-                    ]}
-                  >
-                    <div className="row">
-                      <div className="col-12 text-center">
-                        <img
-                          className="course-card-img-holder"
-                          alt="course"
-                          src={
-                            !isNil(currentCourse.imgUrl)
-                              ? `${currentCourse.imgUrl}?${new Date().getTime()}`
-                              : '/resources/images/course-placeholder.png'
-                          }
-                        />
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-12">
-                  <Form
-                    {...formItemLayout}
-                    id="courseForm"
-                    form={courseForm}
-                    layout="vertical"
-                    hideRequiredMark
-                    onFinish={saveCourseDraft}
-                    initialValues={{
-                      title: 'Test',
-                      subTitle: 'TestSubtitle',
-                      description: 'Test',
-                      level: LEVEL_ENUM.BEGINNER,
-                      language: 'English',
-                      currency: 'SGD',
-                      visibility: false,
-                    }}
-                  >
-                    <Form.Item
-                      name="title"
-                      label="Title"
-                      rules={[
-                        { required: true, message: 'Please provide the title of your course.' },
-                      ]}
-                    >
-                      <Input size="large" />
-                    </Form.Item>
-                    <Form.Item
-                      name="subTitle"
-                      label="Subtitle"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please provide the subtitle of your course.',
-                        },
-                      ]}
-                    >
-                      <Input size="large" />
-                    </Form.Item>
-                    <Form.Item
-                      name="description"
-                      label="Description"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please provide the description of your course.',
-                        },
-                      ]}
-                    >
-                      <TextArea />
-                    </Form.Item>
-                    <Form.Item
-                      name="language"
-                      label="Language"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please indicate the language of your course.',
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        size="large"
-                        filterOption={(input, option) =>
-                          option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                      >
-                        {map(languages, language => {
-                          const { name } = language
-                          return (
-                            <Option key={name} value={name}>
-                              {name}
-                            </Option>
-                          )
-                        })}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="level"
-                      label="Level"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please indicate the level of difficulty of your course.',
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        size="large"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                      >
-                        {map(LEVEL_ENUM, value => {
-                          return (
-                            <Option key={value} value={value}>
-                              {value}
-                            </Option>
-                          )
-                        })}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="categories"
-                      label="Categories"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please indicate the category of your course.',
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        mode="multiple"
-                        size="large"
-                        filterOption={(input, option) => {
-                          return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }}
-                      >
-                        {map(categories, category => {
-                          const { categoryId, name } = category
-                          return (
-                            <Option key={categoryId} value={categoryId}>
-                              {name}
-                            </Option>
-                          )
-                        })}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="currency"
-                      label="Currency"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please indicate the currency you are selling your course in.',
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        size="large"
-                        filterOption={(input, option) => {
-                          return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }}
-                      >
-                        {map(currencyCodes, currency => {
-                          const { code, name } = currency
-                          return (
-                            <Option key={code} value={code}>
-                              {`${name} (${code})`}
-                            </Option>
-                          )
-                        })}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="priceAmount"
-                      label="Price"
-                      rules={[
-                        { required: true, message: 'Please provide the cost of your course.' },
-                      ]}
-                    >
-                      <InputNumber stringMode size="large" step="0.01" className="w-50" />
-                    </Form.Item>
-                  </Form>
-                </div>
-                <div className="col-12 text-right">
-                  <Tooltip
-                    visible={!isCourseCreated}
-                    title="Please save your course as a draft before adding lessons."
-                  >
-                    <Button
-                      disabled={
-                        !isCourseCreated ||
-                        currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING
-                      }
-                      type="primary"
-                      size="large"
-                      shape="round"
-                      icon={<PlusOutlined />}
-                      onClick={() => addLesson()}
-                    >
-                      Add Lesson
-                    </Button>
-                  </Tooltip>
-                </div>
-                <div className="col-12 mt-4">
-                  <Table bordered className="w-100" columns={tableColumns} dataSource={lessons} />
-                </div>
-              </div>
+              {currentCourseTab === 'settings' && <CourseSettings />}
+              {currentCourseTab === 'lessons' && <CourseLessons />}
             </div>
           </div>
         </div>

@@ -6,6 +6,10 @@ export const formatTime = dateTime => {
   return moment(dateTime).format('YYYY-MM-DD h:mm:ss a')
 }
 
+export const sortArrByCreatedAtAsc = objArr => {
+  return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+}
+
 export const resetUser = {
   accountId: '',
   adminVerified: '',

@@ -14,6 +14,8 @@ export const LESSON_DELETE_ERR = 'There was an error deleting your lesson.'
 export const LESSON_DELETE_SUCCESS = 'Your lesson was successfully deleted.'
 export const LESSON_VID_DELETE_SUCCESS = 'Your lesson video was successfully deleted.'
 export const LESSON_VID_DELETE_ERR = 'There was an error deleting your lesson video.'
+export const LESSON_FILE_DELETE_SUCCESS = 'Your lesson file was successfully deleted.'
+export const LESSON_FILE_DELETE_ERR = 'There was an error deleting your lesson file.'
 
 export const SUCCESS = 'Success'
 export const ERROR = 'Error'
