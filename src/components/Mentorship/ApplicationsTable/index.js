@@ -4,6 +4,7 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
   EditOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import {
@@ -28,6 +29,7 @@ import {
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
+import { addToCart } from 'services/jwt/cart'
 import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import { formatTime } from 'components/utils'
 
@@ -78,6 +80,12 @@ const MentorshipApplicationsTable = () => {
         getApplications()
       }
     })
+  }
+
+  const addItemToCart = async record => {
+    console.log(record)
+    const response = await addToCart(record.mentorshipListingId) // Pending backend implementation
+    console.log(response)
   }
 
   useEffect(() => {
@@ -218,6 +226,17 @@ const MentorshipApplicationsTable = () => {
             icon={<EditOutlined />}
             onClick={() => editApplication(record)}
           />
+          {record.senseiApproval === 'APPROVED' && (
+            <Button
+              type="primary"
+              size="large"
+              shape="circle"
+              onClick={() => {
+                addItemToCart(record)
+              }}
+              icon={<ShoppingOutlined />}
+            />
+          )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
               title="Are you sure you wish to cancel your application?"
