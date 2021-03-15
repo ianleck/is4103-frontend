@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import Actions from './Actions'
 import UserMenu from './UserMenu'
-import CartDropdown from '../Cart/CartDropdown'
+import Cart from '../Cart/CartDropdown/Cart'
 import style from './style.module.scss'
 
 const UserActionGroup = () => {
@@ -16,7 +16,7 @@ const UserActionGroup = () => {
     <div className={style.userActionGroup}>
       {checkIfShowCart ? (
         <div className="mr-4 d-sm-block">
-          <CartDropdown />
+          <Cart />
         </div>
       ) : null}
       <div className="mr-4 d-sm-block">
