@@ -114,12 +114,12 @@ const SenseiCreateCourse = () => {
   const tableColumns = [
     {
       title: 'Created At',
-      key: 'created_at',
-      dataIndex: 'created_at',
+      key: 'createdAt',
+      dataIndex: 'createdAt',
       width: '10%',
       responsive: ['lg'],
       render: record => formatTime(record),
-      sorter: (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       sortDirections: ['ascend', 'descend'],
     },
     {
@@ -411,6 +411,7 @@ const SenseiCreateCourse = () => {
     if (result && !isNil(result.message)) {
       if (result.course) {
         setCurrentCourse(result.course)
+        setIsCourseDraft(result.course.adminVerified === ADMIN_VERIFIED_ENUM.DRAFT)
         notification.success({
           message: 'Success',
           description: `Your course was submitted for approval.`,
@@ -470,7 +471,7 @@ const SenseiCreateCourse = () => {
       }))
       setLessons(
         lessonData.sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         ),
       )
       for (let i = 0; i < size(lessonData); i += 1) {
@@ -1013,13 +1014,13 @@ const SenseiCreateCourse = () => {
           <div className="col-12 text-right">
             <small className="text-secondary text-uppercase">
               <strong>CREATED ON </strong>
-              {formatTime(currentLesson.created_at)}
+              {formatTime(currentLesson.createdAt)}
             </small>
           </div>
           <div className="col-12 text-right">
             <small className="text-secondary text-uppercase">
               <strong>UPDATED ON </strong>
-              {formatTime(currentLesson.updated_at)}
+              {formatTime(currentLesson.updatedAt)}
             </small>
           </div>
         </div>

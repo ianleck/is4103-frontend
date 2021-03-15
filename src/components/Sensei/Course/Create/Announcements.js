@@ -38,12 +38,12 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
   const announcementTableCols = [
     {
       title: 'Created At',
-      key: 'created_at',
-      dataIndex: 'created_at',
+      key: 'createdAt',
+      dataIndex: 'createdAt',
       width: '10%',
       responsive: ['lg'],
       render: record => formatTime(record),
-      sorter: (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       sortDirections: ['ascend', 'descend'],
     },
     {
@@ -165,8 +165,9 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
         getCourseAnnouncements()
         setShowAddAnnouncement(false)
         showNotification('success', SUCCESS, ANNOUNCEMENT_CREATED_SUCCESS)
+      } else {
+        showNotification('error', ERROR, ANNOUNCEMENT_CREATED_ERR)
       }
-      showNotification('error', ERROR, ANNOUNCEMENT_CREATED_ERR)
     }
   }
 
@@ -198,7 +199,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
         }))
         setAnnouncements(
           announcementData.sort(
-            (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           ),
         )
       }
