@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
+import { Button, Descriptions, List, Rate, Typography } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isNil, map, random } from 'lodash'
-import { Button, Descriptions, List, Rate, Typography } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
 import { formatTime } from 'components/utils'
@@ -12,12 +13,16 @@ import { getProfile } from 'services/jwt'
 const ViewCourseDetailsPublic = () => {
   const history = useHistory()
   const { id } = useParams()
+  const user = useSelector(state => state.user)
 
   const [currentCourse, setCurrentCourse] = useState('')
   const [currentSensei, setCurrentSensei] = useState('')
 
   useEffect(() => {
-    console.log('id', id)
+    if (!user.authorized) {
+      history.push('/auth/login')
+      return
+    }
     const viewCourse = async () => {
       const result = await getCourseById(id)
       console.log(result)
