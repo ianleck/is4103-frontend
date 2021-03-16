@@ -4,6 +4,8 @@ export const VIEW_PROFILE = 'View Profile'
 export const ANNOUNCEMENTS = 'Announcements'
 
 export const PURCHASED_COURSES = 'Purchased Courses'
+export const LESSONS = 'Lessons'
+export const VIEW_LESSON = 'View Lesson'
 
 export const CURRENT_PRICE = 'Current Price'
 

@@ -34,7 +34,23 @@
 }
 
 .text-2-lines {
-  height: 45px;
+  height: 45px !important;
+}
+
+.text-2-bold-lines {
+  height: 55px !important;
+}
+
+.text-4-lines {
+  height: 90px !important;
+}
+
+.truncate-4-overflow {
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
 }
 
 .truncate-3-overflow {
@@ -59,4 +75,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+}
+
+.menu-item {
+  width: 275px;
+  white-space: normal !important;
 }

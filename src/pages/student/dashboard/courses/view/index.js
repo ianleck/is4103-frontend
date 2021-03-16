@@ -3,10 +3,18 @@ import { Button } from 'antd'
 import { useParams } from 'react-router-dom'
 import { isNil, map } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
-import { ANNOUNCEMENTS, EXPAND, COLLAPSE, CREATED_AT } from 'constants/text'
+import { ANNOUNCEMENTS, EXPAND, COLLAPSE, CREATED_AT, LESSONS, VIEW_LESSON } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons'
+import {
+  ArrowDownOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  ArrowUpOutlined,
+  CaretRightOutlined,
+} from '@ant-design/icons'
 import { formatTime } from 'components/utils'
+import FadeIn from 'react-fade-in'
+import ScrollMenu from 'react-horizontal-scrolling-menu'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -38,7 +46,6 @@ const StudentCourseDetails = () => {
 
     const AnnouncementListInfo = data => {
       const { announcement } = data
-      console.log('announcement', announcement)
       return (
         <div className="p-2">
           <h5 className="mb-0">{announcement.title}</h5>
@@ -49,7 +56,6 @@ const StudentCourseDetails = () => {
         </div>
       )
     }
-    console.log(announcements)
     return (
       <div className="col-12">
         <div className="card">
@@ -72,19 +78,87 @@ const StudentCourseDetails = () => {
               </div>
             </div>
           </div>
-          <div
-            className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}
-          >
-            {map(announcements, announcement => {
-              return (
-                <AnnouncementListInfo
-                  key={announcement.announcementId}
-                  announcement={announcement}
-                />
-              )
-            })}
+          <FadeIn>
+            <div
+              className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}
+            >
+              {map(announcements, announcement => {
+                return (
+                  <AnnouncementListInfo
+                    key={announcement.announcementId}
+                    announcement={announcement}
+                  />
+                )
+              })}
+            </div>
+          </FadeIn>
+        </div>
+      </div>
+    )
+  }
+
+  const CourseLessonsList = () => {
+    // eslint-disable-next-line no-unused-vars
+    const LessonItem = data => {
+      const { lesson } = data
+      return (
+        <div className="menu-item">
+          <div className="card btn m-2 text-dark text-left">
+            <div className="card-body">
+              <div className="row text-2-bold-lines truncate-2-overflow">
+                <div className="col-12">
+                  <span className="font-weight-bold h4">{lesson.title}</span>
+                </div>
+              </div>
+              <div className="row text-4-lines truncate-4-overflow mt-2">
+                <div className="col-12">
+                  <span>{lesson.description}</span>
+                </div>
+              </div>
+              <div className="row mt-4">
+                <div className="col-12">
+                  <Button
+                    ghost
+                    type="primary"
+                    size="large"
+                    shape="round"
+                    icon={<CaretRightOutlined />}
+                  >
+                    {VIEW_LESSON}
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      )
+    }
+
+    const mapLessonItems = () => {
+      return map(course.Lessons, lesson => {
+        return <LessonItem key={lesson.lessonId} lesson={lesson} />
+      })
+    }
+
+    const ArrowLeft = () => {
+      return <Button type="default" size="large" icon={<ArrowLeftOutlined />} />
+    }
+
+    const ArrowRight = () => {
+      return <Button type="default" size="large" icon={<ArrowRightOutlined />} />
+    }
+
+    return (
+      <div>
+        <ScrollMenu
+          data={mapLessonItems()}
+          alignCenter={false}
+          arrowLeft={<ArrowLeft />}
+          arrowRight={<ArrowRight />}
+          hideArrows
+          inertiaScrolling
+          disableTabindex
+        />
       </div>
     )
   }
@@ -115,6 +189,18 @@ const StudentCourseDetails = () => {
       </div>
       <div className="row mt-4">
         <CourseAnnouncementList />
+      </div>
+      <div className="row mt-4">
+        <div className="col-auto">
+          <div className="text-dark h3">
+            <strong>{LESSONS}</strong>
+          </div>
+        </div>
+      </div>
+      <div className="row mt-4">
+        <div className="col-12">
+          <CourseLessonsList />
+        </div>
       </div>
     </div>
   )
