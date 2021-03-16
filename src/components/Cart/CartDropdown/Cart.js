@@ -17,13 +17,12 @@ const Cart = () => {
     const populateCart = async () => {
       if (user.accountId !== '') {
         const response = await jwtCart.getCart()
-        setCart(response.updatedCart)
+        setCart(response.cart)
 
         if (
-          (response.updatedCart.Course === undefined &&
-            response.updatedCart.MentorshipApplications === undefined) ||
-          (response.updatedCart.Course.length === 0 &&
-            response.updatedCart.MentorshipApplications.length === 0)
+          (response.cart.Course === undefined &&
+            response.cart.MentorshipApplications === undefined) ||
+          (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
         ) {
           setIsEmptyCart(true)
         } else {
