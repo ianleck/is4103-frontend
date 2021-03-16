@@ -10,6 +10,10 @@
   overflow: hidden;
 }
 
+.announcement-card-body {
+  max-height: 175px;
+}
+
 .course-card-img-holder {
   max-height: 150px;
 }
