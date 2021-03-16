@@ -187,7 +187,7 @@ const SenseiCourses = () => {
         </div>
       </div>
       <div className="row mt-2 align-items-center">
-        <div className="col-12 col-lg-auto mt-2 mt-lg-0 text-center text-lg-left">
+        <div className="col-12 col-lg-5 mt-2 mt-lg-0 text-center text-lg-left">
           <Radio.Group defaultValue="published" size="large">
             <Radio.Button value="published" onClick={() => getCourses('published')}>
               Published

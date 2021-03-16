@@ -1,15 +1,23 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Avatar, Divider, Rate, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { isNil, random } from 'lodash'
 
 const CourseListingCard = data => {
+  const history = useHistory()
   const { course, isLoading } = data
-  console.log('card course', course)
+
   return (
     <div className="col-12 col-md-4 col-xl-3">
       <Skeleton active loading={isLoading}>
-        <div className="card btn text-left w-100">
+        <div
+          role="button"
+          tabIndex={0}
+          className="card btn text-left w-100"
+          onClick={() => history.push(`/courses/${course.courseId}`)}
+          onKeyDown={event => event.preventDefault()}
+        >
           <div className="card-header p-0 text-secondary">
             <span>
               <i className="fe fe-book" />
@@ -49,7 +57,7 @@ const CourseListingCard = data => {
               </div>
               <div className="row">
                 <div className="col-12">
-                  <span className="w-100 mt-2 text-dark text-2-lines truncate-2-overflow">
+                  <span className="w-100 mt-2 text-dark text-2-lines truncate-2-overflow text-break">
                     {course.description}
                   </span>
                 </div>
