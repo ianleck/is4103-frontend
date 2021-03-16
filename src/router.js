@@ -253,6 +253,21 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/dashboard/courses',
+    Component: lazy(() => import('pages/student/dashboard/courses')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/courses/:id',
+    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/courses/view-lesson/:id',
+    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    exact: true,
+  },
+  {
     path: '/student/profile',
     Component: lazy(() => import('pages/student/profile')),
     exact: true,
