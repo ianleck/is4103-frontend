@@ -22,6 +22,14 @@
   width: 100%;
 }
 
+.course-img-banner-holder {
+  max-height: 200px;
+}
+
+.course-img-banner {
+  width: 100%;
+}
+
 .sensei-course-card {
   margin-left: 50%;
   transform: translateX(-50%);

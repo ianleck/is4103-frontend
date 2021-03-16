@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from 'antd'
-import { useParams } from 'react-router-dom'
-import { isNil, map } from 'lodash'
+import { Button, Empty } from 'antd'
+import { useHistory, useParams } from 'react-router-dom'
+import { isNil, map, size } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
 import { ANNOUNCEMENTS, EXPAND, COLLAPSE, CREATED_AT, LESSONS, VIEW_LESSON } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
@@ -13,7 +13,6 @@ import {
   CaretRightOutlined,
 } from '@ant-design/icons'
 import { formatTime } from 'components/utils'
-import FadeIn from 'react-fade-in'
 import ScrollMenu from 'react-horizontal-scrolling-menu'
 
 const StudentCourseDetails = () => {
@@ -66,23 +65,26 @@ const StudentCourseDetails = () => {
                   <strong>{ANNOUNCEMENTS}</strong>
                 </div>
               </div>
-              <div className="col-auto">
-                <Button
-                  ghost
-                  type="primary"
-                  icon={!isExpanded ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
-                  onClick={() => setIsExpanded(!isExpanded)}
-                >
-                  {!isExpanded ? EXPAND : COLLAPSE}
-                </Button>
-              </div>
+              {size(announcements) > 1 && (
+                <div className="col-auto">
+                  <Button
+                    ghost
+                    type="primary"
+                    icon={!isExpanded ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
+                    onClick={() => setIsExpanded(!isExpanded)}
+                  >
+                    {!isExpanded ? EXPAND : COLLAPSE}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
-          <FadeIn>
-            <div
-              className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}
-            >
-              {map(announcements, announcement => {
+          <div
+            className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}
+          >
+            {size(announcements) === 0 && <Empty />}
+            {size(announcements) > 0 &&
+              map(announcements, announcement => {
                 return (
                   <AnnouncementListInfo
                     key={announcement.announcementId}
@@ -90,15 +92,14 @@ const StudentCourseDetails = () => {
                   />
                 )
               })}
-            </div>
-          </FadeIn>
+          </div>
         </div>
       </div>
     )
   }
 
   const CourseLessonsList = () => {
-    // eslint-disable-next-line no-unused-vars
+    const history = useHistory()
     const LessonItem = data => {
       const { lesson } = data
       return (
@@ -123,6 +124,9 @@ const StudentCourseDetails = () => {
                     size="large"
                     shape="round"
                     icon={<CaretRightOutlined />}
+                    onClick={() =>
+                      history.push(`/student/dashboard/courses/view-lesson/${lesson.lessonId}`)
+                    }
                   >
                     {VIEW_LESSON}
                   </Button>
@@ -148,19 +152,21 @@ const StudentCourseDetails = () => {
       return <Button type="default" size="large" icon={<ArrowRightOutlined />} />
     }
 
-    return (
-      <div>
-        <ScrollMenu
-          data={mapLessonItems()}
-          alignCenter={false}
-          arrowLeft={<ArrowLeft />}
-          arrowRight={<ArrowRight />}
-          hideArrows
-          inertiaScrolling
-          disableTabindex
-        />
-      </div>
-    )
+    if (size(course.Lessons) > 0)
+      return (
+        <div>
+          <ScrollMenu
+            data={mapLessonItems()}
+            alignCenter={false}
+            arrowLeft={<ArrowLeft />}
+            arrowRight={<ArrowRight />}
+            hideArrows
+            inertiaScrolling
+            disableTabindex
+          />
+        </div>
+      )
+    return <Empty />
   }
 
   return (
@@ -171,7 +177,18 @@ const StudentCourseDetails = () => {
         </div>
       </div>
       <div className="row mt-4">
-        <div className="col-auto">
+        <div className="col-12">
+          <div className="course-img-banner-holder overflow-scroll">
+            <img
+              className="course-img-banner"
+              alt="example"
+              src={
+                !isNil(course.imgUrl) ? course.imgUrl : '/resources/images/course-placeholder.png'
+              }
+            />
+          </div>
+        </div>
+        <div className="col-12 mt-4">
           <div className="text-dark h3">
             <strong>{course.title}</strong>
           </div>
