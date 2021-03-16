@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Skeleton } from 'antd'
 import { formatTime } from 'components/utils'
 import { isNil } from 'lodash'
+import StatusTag from 'components/Common/StatusTag'
 
 const SenseiCourseCard = data => {
   const history = useHistory()
@@ -33,12 +34,12 @@ const SenseiCourseCard = data => {
                 <div className="h5 card-title font-weight-bold truncate-2-overflow">
                   {course.title}
                 </div>
-                <p className="card-text truncate-2-overflow">{course.description}</p>
+                <p className="card-text text-break truncate-2-overflow">{course.description}</p>
                 <div className="row w-100 align-items-center mt-auto">
                   <div className="col-12">
-                    <span className="text-uppercase">{course.adminVerified}</span>
+                    <StatusTag data={course} />
                   </div>
-                  <div className="col-12">
+                  <div className="col-12 mt-1">
                     <small className="text-uppercase text-secondary">
                       Created on {formatTime(course.createdAt)}
                     </small>
