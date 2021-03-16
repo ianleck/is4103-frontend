@@ -23,7 +23,6 @@ const BrowseCoursesPage = () => {
     const getCoursesEffect = async () => {
       setLoadingIndicator(true)
       const result = await getCourses()
-      console.log(result)
       if (result && !isNil(result.courses)) {
         setCourses(result.courses)
       }
