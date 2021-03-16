@@ -174,6 +174,7 @@ const StudentCourseDetails = () => {
             alignCenter={false}
             arrowLeft={<ArrowLeft />}
             arrowRight={<ArrowRight />}
+            wheel={false}
             wrapperClass="w-100"
             arrowDisabledClass="scroll-menu-arrow--disabled"
             hideArrows
