@@ -114,7 +114,6 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
   )
 
   const EditAnnouncementButtons = data => {
-    console.log(data)
     const { record } = data
     return (
       <Space size="middle">
@@ -154,7 +153,6 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
   }
 
   const onAddAnnouncement = async values => {
-    console.log('values', values)
     const formValues = {
       title: values.addAnnouncementTitle,
       description: values.addAnnouncementDescription,
@@ -172,7 +170,6 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
   }
 
   const onEditAnnouncement = async values => {
-    console.log('values', values)
     const formValues = {
       title: values.editAnnouncementTitle,
       description: values.editAnnouncementDescription,
@@ -208,7 +205,6 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
 
   const removeAnnouncement = async record => {
     const result = await deleteAnnouncement(record.announcementId)
-    console.log('delAnnouncement', result)
     if (result && !isNil(result.message)) {
       getCourseAnnouncements()
       showNotification('success', SUCCESS, ANNOUNCEMENT_DEL_SUCCESS)
@@ -252,7 +248,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
         />
       </div>
       <Modal
-        title="Add Notification"
+        title="Add Announcement"
         visible={showAddAnnouncement}
         cancelText="Close"
         centered
@@ -273,7 +269,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
               <Form.Item
                 name="addAnnouncementTitle"
                 label="Title"
-                rules={[{ required: true, message: 'Please input your notification title.' }]}
+                rules={[{ required: true, message: 'Please input your announcement title.' }]}
               >
                 <Input />
               </Form.Item>
@@ -282,7 +278,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
               <Form.Item
                 name="addAnnouncementDescription"
                 label="Description"
-                rules={[{ required: true, message: 'Please input your notification content.' }]}
+                rules={[{ required: true, message: 'Please input your announcement content.' }]}
               >
                 <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
               </Form.Item>
@@ -291,7 +287,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
         </Form>
       </Modal>
       <Modal
-        title="Edit Notification"
+        title="Edit Announcement"
         visible={showEditAnnouncement}
         cancelText="Close"
         centered
@@ -313,7 +309,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
               <Form.Item
                 name="editAnnouncementTitle"
                 label="Title"
-                rules={[{ required: true, message: 'Please input your notification title.' }]}
+                rules={[{ required: true, message: 'Please input your announcement title.' }]}
               >
                 <Input />
               </Form.Item>
@@ -322,7 +318,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
               <Form.Item
                 name="editAnnouncementDescription"
                 label="Description"
-                rules={[{ required: true, message: 'Please input your notification content.' }]}
+                rules={[{ required: true, message: 'Please input your announcement content.' }]}
               >
                 <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
               </Form.Item>
