@@ -145,22 +145,39 @@ const StudentCourseDetails = () => {
     }
 
     const ArrowLeft = () => {
-      return <Button type="default" size="large" icon={<ArrowLeftOutlined />} />
+      return (
+        <Button
+          type="default"
+          size="large"
+          icon={<ArrowLeftOutlined />}
+          className="scroll-menu-arrow--disabled"
+        />
+      )
     }
 
     const ArrowRight = () => {
-      return <Button type="default" size="large" icon={<ArrowRightOutlined />} />
+      return (
+        <Button
+          type="default"
+          size="large"
+          icon={<ArrowRightOutlined />}
+          className="scroll-menu-arrow--disabled"
+        />
+      )
     }
 
     if (size(course.Lessons) > 0)
       return (
-        <div>
+        <div className="w-100">
           <ScrollMenu
             data={mapLessonItems()}
             alignCenter={false}
             arrowLeft={<ArrowLeft />}
             arrowRight={<ArrowRight />}
+            wrapperClass="w-100"
+            arrowDisabledClass="scroll-menu-arrow--disabled"
             hideArrows
+            hideSingleArrow
             inertiaScrolling
             disableTabindex
           />
