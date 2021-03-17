@@ -76,7 +76,7 @@ const CourseCard = data => {
             <div className="card-subtitle m-1 text-dark text-wrap">
               Price : $ {listing.priceAmount}
             </div>
-            <Rate allowHalf defaultValue={listing.rating} />
+            <Rate disabled allowHalf defaultValue={listing.rating} />
             <div className="mt-2">
               <Button block onClick={removeClick}>
                 <DeleteOutlined /> Remove from Cart

@@ -75,6 +75,30 @@ const CartItemList = () => {
     )
   }
 
+  const getSubTotal = () => {
+    let amt = 0
+
+    if (!isEmptyCart) {
+      for (let i = 0; i < cart.Course.length; i += 1) {
+        amt += cart.Course[i].priceAmount
+      }
+
+      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
+        amt += cart.MentorshipApplications[i].priceAmount
+      }
+    }
+    return amt
+  }
+
+  const cartSubTotal = () => {
+    return (
+      <div className="d-flex flex-row justify-content-between font-size-18">
+        <div>Sub-total</div>
+        <div>$ {getSubTotal()}</div>
+      </div>
+    )
+  }
+
   return (
     <div className="card">
       <div className="card-header">
@@ -82,6 +106,7 @@ const CartItemList = () => {
       </div>
 
       <div className="card-body">{cartItems()}</div>
+      <div className="card-body bg-gray-1 border-top">{cartSubTotal()}</div>
     </div>
   )
 }

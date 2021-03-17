@@ -121,7 +121,7 @@ const Cart = () => {
             </Button>
           </div>
           <div className="col-6">
-            <Button block type="primary" size="large">
+            <Button block type="primary" size="large" onClick={() => goToCart()}>
               Check out
             </Button>
           </div>
