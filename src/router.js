@@ -297,6 +297,16 @@ const routes = [
     Component: lazy(() => import('pages/student/dashboard/mentorship-subscriptions')),
     exact: true,
   },
+  {
+    path: '/student/dashboard/transactions',
+    Component: lazy(() => import('pages/student/dashboard/transactions')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/transaction/view/:id',
+    Component: lazy(() => import('pages/transactions/view')),
+    exact: true,
+  },
   /*
 
 
