@@ -65,7 +65,7 @@ const Cart = () => {
 
   const mentorshipItems = () => {
     return (
-      <div className="border-top">
+      <div>
         <div className="mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="mt-2">
           {cart.MentorshipApplications.map(m => (
