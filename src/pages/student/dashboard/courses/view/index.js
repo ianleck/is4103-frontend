@@ -3,7 +3,15 @@ import { Button, Empty } from 'antd'
 import { useHistory, useParams } from 'react-router-dom'
 import { isNil, map, size } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
-import { ANNOUNCEMENTS, EXPAND, COLLAPSE, CREATED_AT, LESSONS, VIEW_LESSON } from 'constants/text'
+import {
+  ANNOUNCEMENTS,
+  EXPAND,
+  COLLAPSE,
+  CREATED_AT,
+  LESSONS,
+  VIEW_LESSON,
+  COURSE_DESC,
+} from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import {
   ArrowDownOutlined,
@@ -56,43 +64,39 @@ const StudentCourseDetails = () => {
       )
     }
     return (
-      <div className="col-12">
-        <div className="card">
-          <div className="card-header">
-            <div className="row justify-content-between align-items-center">
-              <div className="col-auto">
-                <div className="text-dark h5 text-uppercase m-0">
-                  <strong>{ANNOUNCEMENTS}</strong>
-                </div>
+      <div className="card">
+        <div className="card-header">
+          <div className="row justify-content-between align-items-center">
+            <div className="col-auto">
+              <div className="text-dark h5 text-uppercase m-0">
+                <strong>{ANNOUNCEMENTS}</strong>
               </div>
-              {size(announcements) > 1 && (
-                <div className="col-auto">
-                  <Button
-                    ghost
-                    type="primary"
-                    icon={!isExpanded ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
-                    onClick={() => setIsExpanded(!isExpanded)}
-                  >
-                    {!isExpanded ? EXPAND : COLLAPSE}
-                  </Button>
-                </div>
-              )}
             </div>
+            {size(announcements) > 1 && (
+              <div className="col-auto">
+                <Button
+                  ghost
+                  type="primary"
+                  icon={!isExpanded ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  {!isExpanded ? EXPAND : COLLAPSE}
+                </Button>
+              </div>
+            )}
           </div>
-          <div
-            className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}
-          >
-            {size(announcements) === 0 && <Empty />}
-            {size(announcements) > 0 &&
-              map(announcements, announcement => {
-                return (
-                  <AnnouncementListInfo
-                    key={announcement.announcementId}
-                    announcement={announcement}
-                  />
-                )
-              })}
-          </div>
+        </div>
+        <div className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}>
+          {size(announcements) === 0 && <Empty />}
+          {size(announcements) > 0 &&
+            map(announcements, announcement => {
+              return (
+                <AnnouncementListInfo
+                  key={announcement.announcementId}
+                  announcement={announcement}
+                />
+              )
+            })}
         </div>
       </div>
     )
@@ -178,7 +182,6 @@ const StudentCourseDetails = () => {
             wrapperClass="w-100"
             arrowDisabledClass="scroll-menu-arrow--disabled"
             hideArrows
-            hideSingleArrow
             inertiaScrolling
             disableTabindex
           />
@@ -194,7 +197,7 @@ const StudentCourseDetails = () => {
           <BackBtn />
         </div>
       </div>
-      <div className="row mt-4">
+      <div className="row mt-5">
         <div className="col-12">
           <div className="course-img-banner-holder overflow-scroll">
             <img
@@ -206,13 +209,18 @@ const StudentCourseDetails = () => {
             />
           </div>
         </div>
-        <div className="col-12 mt-4">
+        <div className="col-12 mt-5">
           <div className="text-dark h3">
             <strong>{course.title}</strong>
           </div>
         </div>
       </div>
       <div className="row">
+        <div className="col-12">
+          <span>{course.subTitle}</span>
+        </div>
+      </div>
+      <div className="row mt-2">
         <div className="col-auto">
           <span>
             by&nbsp;
@@ -223,7 +231,19 @@ const StudentCourseDetails = () => {
         </div>
       </div>
       <div className="row mt-4">
-        <CourseAnnouncementList />
+        <div className="col-12">
+          <div className="card">
+            <div className="card-header">
+              <div className="text-dark h5 text-uppercase m-0">
+                <strong>{COURSE_DESC}</strong>
+              </div>
+            </div>
+            <div className="card-body">{course.description}</div>
+          </div>
+        </div>
+        <div className="col-12">
+          <CourseAnnouncementList />
+        </div>
       </div>
       <div className="row mt-4">
         <div className="col-auto">
@@ -232,7 +252,7 @@ const StudentCourseDetails = () => {
           </div>
         </div>
       </div>
-      <div className="row mt-4">
+      <div className="row mt-4 pb-5">
         <div className="col-12">
           <CourseLessonsList />
         </div>
