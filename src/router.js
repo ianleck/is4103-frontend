@@ -38,6 +38,12 @@ const routes = [
     Component: lazy(() => import('pages/cart')),
     exact: true,
   },
+
+  {
+    path: '/success',
+    Component: lazy(() => import('pages/checkout')),
+    exact: true,
+  },
   // Auth Pages
   {
     path: '/auth/login',

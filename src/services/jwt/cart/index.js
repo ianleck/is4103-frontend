@@ -49,3 +49,29 @@ export async function deleteFromCart(courseIds, mentorshipListingIds) {
     })
     .catch(err => console.log(err))
 }
+
+export async function checkOut(courseIds, mentorshipListingIds) {
+  return apiClient
+    .post(`/paypal/order/create`, { courseIds, mentorshipListingIds }, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function capturePayment(paymentId, token, payerID) {
+  return apiClient
+    .post(`/paypal/order/capture?paymentId=${paymentId}&token=${token}&PayerID=${payerID}`, {
+      withCredentials: true,
+    })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
