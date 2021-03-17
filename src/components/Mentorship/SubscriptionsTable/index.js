@@ -2,6 +2,7 @@ import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Button, ConfigProvider, Empty, Popconfirm, Space, Table, Tabs } from 'antd'
 import { filter, size } from 'lodash'
 import React, { useState } from 'react'
+import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 
 const MentorshipSubscriptionsTable = () => {
   const { TabPane } = Tabs
@@ -44,7 +45,8 @@ const MentorshipSubscriptionsTable = () => {
       key: 'action',
       render: record => (
         <Space size="large">
-          {record.progress === 'ONGOING' && (
+          {record.progress ===
+            (CONTRACT_PROGRESS_ENUM.ONGOING || CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
             <Popconfirm
               title="Are you sure you wish to cancel your subscription?"
               icon={<QuestionCircleOutlined className="text-danger" />}
@@ -100,18 +102,18 @@ const MentorshipSubscriptionsTable = () => {
     )
     const renderStyledStatus = status => {
       let textStyle = ''
-      if (status === 'cancelled') {
+      if (status === CONTRACT_PROGRESS_ENUM.CANCELLED) {
         textStyle = 'text-danger'
       }
-      if (status === 'ongoing' || status === 'completed') {
+      if (status === (CONTRACT_PROGRESS_ENUM.ONGOING || CONTRACT_PROGRESS_ENUM.COMPLETED)) {
         textStyle = 'text-success'
       }
-      return <span className={`${textStyle} font-weight-bold`}>{status}</span>
+      return <span className={`${textStyle} font-weight-bold`}>{status.toLowerCase()}</span>
     }
     return (
       <div>
         <div className="row justify-content-between align-items-center mt-2">
-          {subscriptionStatus !== 'notStarted' && (
+          {subscriptionStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
             <div className="col-auto">
               You currently have {numSubscriptions} {renderStyledStatus(subscriptionStatus)}{' '}
               mentorship {numSubscriptions === 1 ? 'subscription' : 'subscriptions'}.
@@ -142,26 +144,26 @@ const MentorshipSubscriptionsTable = () => {
         {' '}
         {tabKey === 'notStarted' &&
           showSubscriptions(
-            'notStarted',
-            filter(mentorshipSubscriptions, ['progress', 'NOT_STARTED']),
+            CONTRACT_PROGRESS_ENUM.NOT_STARTED,
+            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.NOT_STARTED]),
             tableColumns,
           )}
         {tabKey === 'ongoing' &&
           showSubscriptions(
-            'ongoing',
-            filter(mentorshipSubscriptions, ['progress', 'ONGOING']),
+            CONTRACT_PROGRESS_ENUM.ONGOING,
+            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.ONGOING]),
             tableColumns,
           )}
         {tabKey === 'completed' &&
           showSubscriptions(
-            'completed',
-            filter(mentorshipSubscriptions, ['progress', 'CANCELLED']),
+            CONTRACT_PROGRESS_ENUM.COMPLETED,
+            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.COMPLETED]),
             tableColumns,
           )}
         {tabKey === 'cancelled' &&
           showSubscriptions(
-            'cancelled',
-            filter(mentorshipSubscriptions, ['progress', 'COMPLETED']),
+            CONTRACT_PROGRESS_ENUM.CANCELLED,
+            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.CANCELLED]),
             tableColumns,
           )}
       </div>
