@@ -38,6 +38,7 @@ export const resetUser = {
   updatedAt: '',
   userType: '',
   username: '',
+  walletId: '',
   // Local Attributes
   accessToken: '',
   authorized: false,
@@ -73,6 +74,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     updatedAt: currentUser.updatedAt,
     userType: currentUser.userType,
     username: currentUser.username,
+    walletId: currentUser.walletId,
     // Local Attributes
     accessToken: currentUser.accessToken,
     authorized: isAuthorized,
@@ -95,6 +97,7 @@ export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
     role: currentAdmin.role,
     userType: currentAdmin.userType,
     username: currentAdmin.username,
+    walletId: currentAdmin.walletId,
     // Local Attributes
     accessToken: currentAdmin.accessToken,
     authorized: isAuthorized,
