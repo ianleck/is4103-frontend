@@ -43,6 +43,11 @@ const mapStateToProps = ({ settings, user }) => ({
       key: 'mentorshipApplications',
       url: '/student/dashboard/mentorship-applications',
     },
+    {
+      title: 'Mentorship Subscriptions',
+      key: 'mentorshipSubscriptions',
+      url: '/student/dashboard/mentorship-subscriptions',
+    },
   ],
   logo: settings.logo,
   menuColor: settings.menuColor,
