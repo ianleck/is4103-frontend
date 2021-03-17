@@ -15,26 +15,15 @@ const StudentCourseLesson = () => {
 
     const ToggleCommentField = () => {
       return (
-        <div className="row no-gutters">
-          <div className="col-auto">
-            <Avatar
-              src={
-                user.profileImgUrl
-                  ? `${user.profileImgUrl}?${new Date().getTime()}`
-                  : '/resources/images/avatars/apprentice.png'
-              }
-            />
-          </div>
-          <div
-            role="button"
-            className="col btn border-0 text-left ml-4"
-            tabIndex={0}
-            onClick={() => setShowCommentField(true)}
-            onKeyDown={event => event.preventDefault()}
-          >
-            <span className="text-secondary">{ADD_COMMENTS}</span>
-            <Divider className="m-0" />
-          </div>
+        <div
+          role="button"
+          className="col btn border-0 text-left"
+          tabIndex={0}
+          onClick={() => setShowCommentField(true)}
+          onKeyDown={event => event.preventDefault()}
+        >
+          <span className="text-secondary">{ADD_COMMENTS}</span>
+          <Divider className="m-0" />
         </div>
       )
     }
@@ -42,17 +31,8 @@ const StudentCourseLesson = () => {
     const AddCommentField = () => {
       return (
         <div>
-          <div className="row no-gutters">
-            <div className="col-auto">
-              <Avatar
-                src={
-                  user.profileImgUrl
-                    ? `${user.profileImgUrl}?${new Date().getTime()}`
-                    : '/resources/images/avatars/apprentice.png'
-                }
-              />
-            </div>
-            <div className="col ml-4">
+          <div className="row">
+            <div className="col">
               <TextArea autoSize size="large" placeholder={ADD_COMMENTS} />
             </div>
           </div>
@@ -71,8 +51,17 @@ const StudentCourseLesson = () => {
     }
 
     return (
-      <div>
-        <div className="col-12 p-0 mt-4">
+      <div className="row">
+        <div className="col-auto">
+          <Avatar
+            src={
+              user.profileImgUrl
+                ? `${user.profileImgUrl}?${new Date().getTime()}`
+                : '/resources/images/avatars/apprentice.png'
+            }
+          />
+        </div>
+        <div className="col pl-0">
           {!showCommentField && <ToggleCommentField />}
           {showCommentField && <AddCommentField />}
         </div>
