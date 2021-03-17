@@ -33,8 +33,6 @@ const Cart = () => {
     populateCart()
   }, [user, cart])
 
-  // console.log('cart', cart)
-
   const cartItems = () => {
     return isEmptyCart ? (
       <div>
@@ -54,7 +52,7 @@ const Cart = () => {
 
   const courseItems = () => {
     return (
-      <div className="border-bottom">
+      <div>
         <div className="font-weight-bold">Course(s)</div>
         <div className="mt-2">
           {cart.Course.map(c => (
@@ -67,8 +65,8 @@ const Cart = () => {
 
   const mentorshipItems = () => {
     return (
-      <div>
-        <div className="font-weight-bold">Mentorship(s)</div>
+      <div className="border-top">
+        <div className="mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="mt-2">
           {cart.MentorshipApplications.map(m => (
             <MentorshipCard listing={m} key={m.mentorshipListingId} />

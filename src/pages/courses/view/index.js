@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Descriptions, List, Rate, Typography } from 'antd'
+import { Button, Descriptions, List, Rate, Typography, notification } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isNil, map, random } from 'lodash'
@@ -9,6 +9,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
 import { formatTime } from 'components/utils'
 import { getProfile } from 'services/jwt'
+import { addCourseToCart } from 'services/jwt/cart'
 
 const ViewCourseDetailsPublic = () => {
   const history = useHistory()
@@ -37,6 +38,20 @@ const ViewCourseDetailsPublic = () => {
     viewCourse()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const addToCart = async () => {
+    const courseId = id
+    const response = await addCourseToCart(courseId)
+
+    console.log('response', response)
+
+    if (response && response.success) {
+      notification.success({
+        message: 'Success',
+        description: response.message,
+      })
+    }
+  }
 
   return (
     <div className="container">
@@ -127,7 +142,13 @@ const ViewCourseDetailsPublic = () => {
               <h2 className="font-weight-bold">
                 ${parseFloat(currentCourse.priceAmount).toFixed(2)}
               </h2>
-              <Button block type="primary" size="large" className="mt-4">
+              <Button
+                block
+                type="primary"
+                size="large"
+                className="mt-4"
+                onClick={() => addToCart()}
+              >
                 {ADD_TO_CART}
               </Button>
               <hr className="mt-4" />

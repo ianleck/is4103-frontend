@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { getProfile } from 'services/jwt/index'
-import { Avatar } from 'antd'
+import { Avatar, Button } from 'antd'
+import { deleteFromCart } from 'services/jwt/cart'
+import { DeleteOutlined } from '@ant-design/icons'
 
 const CourseCard = data => {
   const { listing } = data
@@ -18,12 +20,19 @@ const CourseCard = data => {
 
   const redirect = id => {
     history.push({
-      pathname: `/student/course/view/${id}`, // Double check end point when course is up
+      pathname: `/courses/${id}`,
     })
   }
 
+  const removeClick = async e => {
+    e.stopPropagation()
+
+    const response = await deleteFromCart([listing.courseId], [])
+    console.log('response', response)
+  }
+
   const GetDefaultProfilePic = () => {
-    return '/resources/images/avatars/master.png'
+    return '/resources/images/course-placeholder.png'
   }
 
   return (
@@ -32,7 +41,7 @@ const CourseCard = data => {
         role="button"
         tabIndex={0}
         className="card btn text-left w-100 "
-        onClick={() => redirect(listing.mentorshipListingId)}
+        onClick={() => redirect(listing.courseId)}
         onKeyDown={event => event.preventDefault()}
       >
         <div className="row">
@@ -40,8 +49,8 @@ const CourseCard = data => {
             <Avatar
               size={70}
               src={
-                sensei.profileImgUrl
-                  ? `${sensei.profileImgUrl}?${new Date().getTime()}`
+                listing.imgUrl
+                  ? `${listing.imgUrl}?${new Date().getTime()}`
                   : GetDefaultProfilePic()
               }
             />
@@ -53,6 +62,11 @@ const CourseCard = data => {
             </h6>
             <div className="card-subtitle m-0 text-dark text-uppercase text-wrap">
               Price : $ {listing.priceAmount}
+            </div>
+            <div className="mt-2">
+              <Button block onClick={removeClick}>
+                <DeleteOutlined /> Remove from Cart
+              </Button>
             </div>
           </div>
         </div>

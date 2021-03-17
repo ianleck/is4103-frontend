@@ -29,7 +29,7 @@ import {
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
-import { addToCart } from 'services/jwt/cart'
+import { addMentorshipListingToCart } from 'services/jwt/cart'
 import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import { formatTime } from 'components/utils'
 
@@ -83,9 +83,21 @@ const MentorshipApplicationsTable = () => {
   }
 
   const addItemToCart = async record => {
-    console.log(record)
-    const response = await addToCart(record.mentorshipListingId) // Pending backend implementation
+    const response = await addMentorshipListingToCart(record.mentorshipContractId)
+
     console.log(response)
+
+    if (response && response.success) {
+      notification.success({
+        message: 'Success',
+        description: 'Mentorship Application successfully added to Cart',
+      })
+    } else {
+      notification.error({
+        message: 'Unable to add to Cart',
+        description: 'Mentorship Application is already in Cart',
+      })
+    }
   }
 
   useEffect(() => {
@@ -226,7 +238,7 @@ const MentorshipApplicationsTable = () => {
             icon={<EditOutlined />}
             onClick={() => editApplication(record)}
           />
-          {record.senseiApproval === 'APPROVED' && (
+          {record.senseiApproval === 'APPROVED' && record.progress === 'NOT_STARTED' && (
             <Button
               type="primary"
               size="large"

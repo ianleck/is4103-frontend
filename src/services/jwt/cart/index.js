@@ -13,11 +13,23 @@ export async function getCart() {
     .catch(err => console.log(err))
 }
 
-export async function addToCart(payload) {
+export async function addCourseToCart(courseId) {
   return apiClient
-    .post(`/cart`, { ...payload }, { withCredentials: true })
+    .post(`/cart/course`, { courseId }, { withCredentials: true })
     .then(response => {
       console.log(response)
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function addMentorshipListingToCart(mentorshipContractId) {
+  return apiClient
+    .post(`/cart/mentorshipListing`, { mentorshipContractId }, { withCredentials: true })
+    .then(response => {
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
       }
