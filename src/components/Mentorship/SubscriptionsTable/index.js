@@ -67,6 +67,7 @@ const MentorshipSubscriptionsTable = () => {
       mentorshipContractId: '999999999',
       price: 123.0,
       progress: 'ONGOING',
+      key: 1,
     },
     {
       createdAt: '2020 - 01 - 01',
@@ -74,6 +75,7 @@ const MentorshipSubscriptionsTable = () => {
       mentorshipContractId: '999999999',
       price: 123.0,
       progress: 'CANCELLED',
+      key: 2,
     },
     {
       createdAt: '2020 - 01 - 02',
@@ -81,6 +83,7 @@ const MentorshipSubscriptionsTable = () => {
       mentorshipContractId: '999999999',
       price: 123.0,
       progress: 'CANCELLED',
+      key: 3,
     },
     {
       createdAt: '2020 - 01 - 01',
@@ -88,6 +91,7 @@ const MentorshipSubscriptionsTable = () => {
       mentorshipContractId: '999999999',
       price: 123.0,
       progress: 'COMPLETED',
+      key: 4,
     },
   ]
 

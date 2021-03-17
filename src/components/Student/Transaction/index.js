@@ -14,7 +14,7 @@ const StudentTransactionsTable = () => {
   console.log(walletId)
 
   const emptyData = [
-    { createdAt: '10 March', billingId: '001', amount: 34.9, productId: '0000110' },
+    { key: 1, createdAt: '10 March', billingId: '001', amount: 34.9, productId: '0000110' },
   ]
 
   const columns = [
