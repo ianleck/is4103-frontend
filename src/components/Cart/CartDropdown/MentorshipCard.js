@@ -4,6 +4,7 @@ import { getProfile } from 'services/jwt/index'
 import { deleteFromCart } from 'services/jwt/cart'
 import { Avatar, Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
+import { isNil } from 'lodash'
 
 const MentorshipCard = data => {
   const { listing } = data
@@ -35,41 +36,40 @@ const MentorshipCard = data => {
   }
 
   return (
-    <div className="col-12">
-      <div
-        role="button"
-        tabIndex={0}
-        className="card btn text-left w-100 "
-        onClick={() => redirect(listing.mentorshipListingId)}
-        onKeyDown={event => event.preventDefault()}
-      >
-        <div className="row">
-          <div className="col-4">
-            <Avatar
-              size={80}
-              src={
-                sensei.profileImgUrl
-                  ? `${sensei.profileImgUrl}?${new Date().getTime()}`
-                  : GetDefaultProfilePic()
-              }
-            />
+    <div
+      role="button"
+      tabIndex={0}
+      className="btn border-0 text-left w-100 mt-2"
+      onClick={() => redirect(listing.mentorshipListingId)}
+      onKeyDown={event => event.preventDefault()}
+    >
+      <div className="row align-items-center">
+        <div className="col-auto pl-2">
+          <Avatar
+            size={32}
+            src={
+              sensei.profileImgUrl
+                ? `${sensei.profileImgUrl}?${new Date().getTime()}`
+                : GetDefaultProfilePic()
+            }
+          />
+        </div>
+        <div className="col pl-0">
+          <h6 className="truncate-2-overflow text-wrap">
+            {!isNil(sensei.firstName) ? sensei.firstName : 'Anonymous'}{' '}
+            {!isNil(sensei.lastName) ? sensei.lastName : 'Pigeon'}
+          </h6>
+          <div className="text-dark text-wrap">{listing.name}</div>
+          <div className="text-dark text-wrap mt-2">
+            <span>
+              <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+            </span>
           </div>
-          <div className="col-5">
-            <h4 className="card-title text-wrap">
-              {sensei.firstName} {sensei.lastName}
-            </h4>
-            <h6 className="card-subtitle m-0 text-dark text-wrap">{listing.name}</h6>
-            <div className="card-subtitle m-0 text-dark text-wrap">
-              <span className="mt2">
-                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
-              </span>
-            </div>
-          </div>
-          <div className="col-3 m-0 float-right">
-            <Button danger onClick={removeClick}>
-              <DeleteOutlined />
-            </Button>
-          </div>
+        </div>
+        <div className="col-3">
+          <Button danger onClick={removeClick}>
+            <DeleteOutlined />
+          </Button>
         </div>
       </div>
     </div>

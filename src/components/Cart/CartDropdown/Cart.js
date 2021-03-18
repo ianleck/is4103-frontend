@@ -3,9 +3,10 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { Dropdown, Button } from 'antd'
-import styles from './style.module.scss'
+import { isEmpty } from 'lodash'
 import MentorshipCard from './MentorshipCard'
 import CourseCard from './CourseCard'
+import styles from './style.module.scss'
 
 const Cart = () => {
   const history = useHistory()
@@ -20,8 +21,7 @@ const Cart = () => {
         setCart(response.cart)
 
         if (
-          (response.cart.Course === undefined &&
-            response.cart.MentorshipApplications === undefined) ||
+          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
           (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
         ) {
           setIsEmptyCart(true)
@@ -31,7 +31,8 @@ const Cart = () => {
       }
     }
     populateCart()
-  }, [user, cart])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const cartItems = () => {
     return isEmptyCart ? (
@@ -43,9 +44,7 @@ const Cart = () => {
     ) : (
       <div>
         <div className="row">{cart.Course.length !== 0 && courseItems()}</div>
-        <div className="row mt-2">
-          {cart.MentorshipApplications.length !== 0 && mentorshipItems()}
-        </div>
+        <div className="mt-2">{cart.MentorshipApplications.length !== 0 && mentorshipItems()}</div>
       </div>
     )
   }
@@ -53,10 +52,8 @@ const Cart = () => {
   const courseItems = () => {
     return (
       <div>
-        <div className="font-weight-bold">
-          <div className="col-12">Course(s)</div>
-        </div>
-        <div className="mt-2">
+        <div className="col-12 font-weight-bold">Course(s)</div>
+        <div className="col-12 mt-2">
           {cart.Course.map(c => (
             <CourseCard listing={c} key={c.courseId} />
           ))}
@@ -67,11 +64,9 @@ const Cart = () => {
 
   const mentorshipItems = () => {
     return (
-      <div>
-        <div className="mt-2 font-weight-bold">
-          <div className="col-12">Mentorship(s)</div>
-        </div>
-        <div className="mt-2">
+      <div className="row">
+        <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
+        <div className="col-12 mt-2">
           {cart.MentorshipApplications.map(m => (
             <MentorshipCard listing={m} key={m.mentorshipListingId} />
           ))}
@@ -111,8 +106,6 @@ const Cart = () => {
 
   const menu = (
     <div className="card cui__utils__shadow width-350 border-0">
-      <div className="card-header font-weight-bold">My Shopping Cart</div>
-
       <div className="card-body">{cartItems()}</div>
 
       <div className="card-body bg-gray-1 border-top">{cartSubTotal()}</div>

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { LoadingOutlined } from '@ant-design/icons'
+import { isEmpty } from 'lodash'
 import CourseCard from './CourseCard'
 import MentorshipCard from './MentorshipCard'
 
@@ -24,8 +25,7 @@ const Success = () => {
         setCart(response.cart)
 
         if (
-          (response.cart.Course === undefined &&
-            response.cart.MentorshipApplications === undefined) ||
+          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
           (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
         ) {
           setIsEmptyCart(true)
@@ -98,7 +98,7 @@ const Success = () => {
     return (
       <div className="col-12">
         <div className="row">
-          <div className="width-100p">
+          <div className="w-100">
             {courses.map(c => (
               <CourseCard listing={c} key={c.courseId} />
             ))}
@@ -106,7 +106,7 @@ const Success = () => {
         </div>
 
         <div className="row mt-2">
-          <div className="width-100p">
+          <div className="w-100">
             {mentorships.map(m => (
               <MentorshipCard listing={m} key={m.mentorshipListingId} />
             ))}

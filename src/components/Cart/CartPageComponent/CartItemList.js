@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
+import { isEmpty } from 'lodash'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import CourseCard from './CourseCard'
 import MentorshipCard from './MentorshipCard'
@@ -17,8 +18,7 @@ const CartItemList = () => {
         setCart(response.cart)
 
         if (
-          (response.cart.Course === undefined &&
-            response.cart.MentorshipApplications === undefined) ||
+          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
           (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
         ) {
           setIsEmptyCart(true)
@@ -28,7 +28,8 @@ const CartItemList = () => {
       }
     }
     populateCart()
-  }, [user, cart])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const cartItems = () => {
     return isEmptyCart ? (
@@ -40,9 +41,9 @@ const CartItemList = () => {
         </div>
       </div>
     ) : (
-      <div className="col-12 ">
-        <div className="row">{cart.Course.length !== 0 && courseItems()}</div>
-        <div className="row mt-2">
+      <div className="row">
+        <div className="col-12">{cart.Course.length !== 0 && courseItems()}</div>
+        <div className="col-12 mt-2">
           {cart.MentorshipApplications.length !== 0 && mentorshipItems()}
         </div>
       </div>
@@ -51,11 +52,9 @@ const CartItemList = () => {
 
   const courseItems = () => {
     return (
-      <div className="width-100p">
-        <div className="font-weight-bold">
-          <div className="col-12">Course(s)</div>
-        </div>
-        <div className="mt-2">
+      <div className="row">
+        <div className="col-12 font-weight-bold">Course(s)</div>
+        <div className="col-12 mt-2">
           {cart.Course.map(c => (
             <CourseCard listing={c} key={c.courseId} />
           ))}
@@ -66,11 +65,9 @@ const CartItemList = () => {
 
   const mentorshipItems = () => {
     return (
-      <div className="width-100p ">
-        <div className="mt-2 font-weight-bold">
-          <div className="col-12">Mentorship(s)</div>
-        </div>
-        <div className="mt-2">
+      <div className="row mt-5">
+        <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
+        <div className="col-12 mt-2">
           {cart.MentorshipApplications.map(m => (
             <MentorshipCard listing={m} key={m.mentorshipListingId} />
           ))}

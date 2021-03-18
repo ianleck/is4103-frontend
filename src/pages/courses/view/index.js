@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Descriptions, List, Rate, Typography, notification } from 'antd'
+import { Button, Descriptions, List, Rate, Typography } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
-import { formatTime } from 'components/utils'
+import { formatTime, showNotification } from 'components/utils'
 import { getProfile } from 'services/jwt'
 import { addCourseToCart } from 'services/jwt/cart'
+import { SUCCESS } from 'constants/notifications'
 
 const ViewCourseDetailsPublic = () => {
   const history = useHistory()
@@ -43,13 +44,8 @@ const ViewCourseDetailsPublic = () => {
     const courseId = id
     const response = await addCourseToCart(courseId)
 
-    console.log('response', response)
-
     if (response && response.success) {
-      notification.success({
-        message: 'Success',
-        description: response.message,
-      })
+      showNotification('success', SUCCESS, response.message)
     }
   }
 

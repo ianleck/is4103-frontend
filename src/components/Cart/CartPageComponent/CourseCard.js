@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { getProfile } from 'services/jwt/index'
-import { Avatar, Button, notification, Rate } from 'antd'
+import { Avatar, Button, notification } from 'antd'
 import { deleteFromCart } from 'services/jwt/cart'
 import { DeleteOutlined } from '@ant-design/icons'
 import { SUCCESS } from 'constants/notifications'
+import { isNil } from 'lodash'
 
 const CourseCard = data => {
   const { listing } = data
@@ -43,49 +44,40 @@ const CourseCard = data => {
   }
 
   return (
-    <div className="col-12">
-      <div
-        role="button"
-        tabIndex={0}
-        className="card btn text-left w-100 "
-        onClick={() => redirect(listing.courseId)}
-        onKeyDown={event => event.preventDefault()}
-      >
-        <div className="row">
-          <div className="col-3">
-            <Avatar
-              size={150}
-              src={
-                listing.imgUrl
-                  ? `${listing.imgUrl}?${new Date().getTime()}`
-                  : GetDefaultProfilePic()
-              }
-            />
+    <div
+      role="button"
+      tabIndex={0}
+      className="btn border-0 text-left w-100 mt-4"
+      onClick={() => redirect(listing.courseId)}
+      onKeyDown={event => event.preventDefault()}
+    >
+      <div className="row align-items-center">
+        <div className="col-auto pl-2">
+          <Avatar
+            size={64}
+            src={
+              listing.imgUrl ? `${listing.imgUrl}?${new Date().getTime()}` : GetDefaultProfilePic()
+            }
+          />
+        </div>
+        <div className="col pl-2">
+          <h5 className="truncate-2-overflow text-wrap font-weight-bold">{listing.title}</h5>
+          <span className="mb-2 h6 text-dark text-uppercase text-wrap">
+            {!isNil(sensei.firstName) ? sensei.firstName : 'Anonymous'}{' '}
+            {!isNil(sensei.lastName) ? sensei.lastName : 'Pigeon'}
+          </span>
+          <div className="truncate-2-overflow text-wrap text-muted">{listing.subTitle}</div>
+          <div className="text-dark text-wrap mt-2">
+            <span>
+              <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+            </span>
           </div>
-          <div className="col-7">
-            <h4 className="card-title text-wrap">{listing.title}</h4>
-            <h6 className="card-subtitle mb-2 text-dark text-uppercase text-wrap">
-              {sensei.firstName} {sensei.lastName}
-            </h6>
-            <div className="card-subtitle m-0 text-dark text-wrap">
-              Sub Title: {listing.subTitle}
-            </div>
-            <div className="card-subtitle m-0 text-dark text-wrap">
-              Description: {listing.description}
-            </div>
-            <div className="card-subtitle m-0 text-dark text-wrap">
-              <span className="mt2">
-                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
-              </span>
-            </div>
-            <Rate disabled allowHalf defaultValue={listing.rating} />
-          </div>
+        </div>
 
-          <div className="col-2 float-right">
-            <Button danger block onClick={removeClick}>
-              <DeleteOutlined />
-            </Button>
-          </div>
+        <div className="col-2">
+          <Button block danger onClick={removeClick}>
+            <DeleteOutlined />
+          </Button>
         </div>
       </div>
     </div>

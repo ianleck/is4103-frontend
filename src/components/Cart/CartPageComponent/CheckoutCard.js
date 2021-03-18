@@ -4,6 +4,7 @@ import * as jwtCart from 'services/jwt/cart'
 import { Button, notification } from 'antd'
 import { LoadingOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { CART_EMPTY, WARNING } from 'constants/notifications'
+import { isEmpty } from 'lodash'
 
 const CheckoutCard = () => {
   const user = useSelector(state => state.user)
@@ -18,8 +19,7 @@ const CheckoutCard = () => {
         setCart(response.cart)
 
         if (
-          (response.cart.Course === undefined &&
-            response.cart.MentorshipApplications === undefined) ||
+          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
           (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
         ) {
           setIsEmptyCart(true)
@@ -29,7 +29,8 @@ const CheckoutCard = () => {
       }
     }
     populateCart()
-  }, [user, cart])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const getSubTotal = () => {
     const amt = 0
@@ -96,27 +97,22 @@ const CheckoutCard = () => {
         <div className="font-size-24">TOTAL</div>
       </div>
 
-      <div className="card-body mt-3">
-        <div className="row justify-content-between">
+      <div className="card-body">
+        <div className="row justify-content-between mt-3">
           <div className="col-7">Course Total</div>
           <div className="col-5 d-flex flex-row justify-content-end">
             $ {parseFloat(getCourseTotal()).toFixed(2)}
           </div>
         </div>
-      </div>
-
-      <div className="card-body mt-3">
         <div className="row justify-content-between">
           <div className="col-7">Mentorship Total</div>
           <div className="col-5 d-flex flex-row justify-content-end">
             $ {parseFloat(getMentorshipTotal()).toFixed(2)}
           </div>
         </div>
-      </div>
-
-      <div className="card-body mt-3">
-        <div className="row justify-content-between">
-          <div className="col-7">Sub-total</div>
+        <hr />
+        <div className="row justify-content-between mt-3">
+          <div className="col-7 font-weight-bold">Sub-total</div>
           <div className="col-5 d-flex flex-row justify-content-end">
             $ {parseFloat(getSubTotal()).toFixed(2)}
           </div>
