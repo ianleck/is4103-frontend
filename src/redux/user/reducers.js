@@ -28,6 +28,7 @@ const initialState = {
   updatedAt: '',
   userType: '',
   username: '',
+  walletId: '',
   // Local Attributes
   accessToken: '',
   authorized: process.env.REACT_APP_AUTHENTICATED || false,
