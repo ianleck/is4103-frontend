@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { Button, notification } from 'antd'
 import { LoadingOutlined, ShoppingOutlined } from '@ant-design/icons'
-import { WARNING } from 'constants/notifications'
+import { CART_EMPTY, WARNING } from 'constants/notifications'
 
 const CheckoutCard = () => {
   const user = useSelector(state => state.user)
@@ -58,7 +58,7 @@ const CheckoutCard = () => {
     if (isEmptyCart) {
       notification.warning({
         message: WARNING,
-        description: 'You cannot checkout an empty cart.',
+        description: CART_EMPTY,
       })
     } else {
       setIsLoading(true)
@@ -78,8 +78,7 @@ const CheckoutCard = () => {
 
       const response = await jwtCart.checkOut(courseIds, mentorshipListingIds)
       setIsLoading(false)
-      window.open(response.paypalUrl, '_blank')
-      console.log(response)
+      window.location = response.paypalUrl
     }
   }
 
