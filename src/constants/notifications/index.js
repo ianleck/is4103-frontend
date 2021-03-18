@@ -31,3 +31,5 @@ export const SUCCESS = 'Success'
 export const ERROR = 'Error'
 export const WARNING = 'Warning'
 export const OOPS = 'Something went wrong.'
+
+export const CART_EMPTY = 'You cannot checkout an empty cart.'

@@ -17,7 +17,6 @@ export async function addCourseToCart(courseId) {
   return apiClient
     .post(`/cart/course`, { courseId }, { withCredentials: true })
     .then(response => {
-      console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
       }

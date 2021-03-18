@@ -117,9 +117,6 @@ const Success = () => {
   }
 
   const emptyCart = async (courses, mentorships) => {
-    console.log(courses)
-    console.log(mentorships)
-
     let courseIds = []
     let mentorshipListingIds = []
 
@@ -131,8 +128,7 @@ const Success = () => {
       mentorshipListingIds = [...mentorshipListingIds, mentorships[i].mentorshipListingId]
     }
 
-    const response = await jwtCart.deleteFromCart(courseIds, mentorshipListingIds)
-    console.log('empty cart', response)
+    await jwtCart.deleteFromCart(courseIds, mentorshipListingIds)
   }
 
   const transactionDetails = () => {

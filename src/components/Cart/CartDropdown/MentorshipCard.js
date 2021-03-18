@@ -31,8 +31,7 @@ const MentorshipCard = data => {
   const removeClick = async e => {
     e.stopPropagation()
 
-    const response = await deleteFromCart([], [listing.mentorshipListingId])
-    console.log('response', response)
+    await deleteFromCart([], [listing.mentorshipListingId])
   }
 
   return (
