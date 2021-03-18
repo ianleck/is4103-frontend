@@ -64,7 +64,7 @@ const Success = () => {
   const cartSubTotal = () => {
     return (
       <div className="d-flex flex-row justify-content-end">
-        <div>$ {getSubTotal()}</div>
+        <div>$ {parseFloat(getSubTotal()).toFixed(2)}</div>
       </div>
     )
   }
@@ -139,8 +139,8 @@ const Success = () => {
         </div>
 
         <div className="card-body">
-          <div>Payment Id: {paymentId}</div>
-          <div>Payer Id: {payerID}</div>
+          <div>Payment ID: {paymentId}</div>
+          <div>Payer ID: {payerID}</div>
         </div>
 
         <div className="card-body">{itemList()}</div>

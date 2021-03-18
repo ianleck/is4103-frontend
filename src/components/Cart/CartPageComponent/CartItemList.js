@@ -52,7 +52,9 @@ const CartItemList = () => {
   const courseItems = () => {
     return (
       <div className="width-100p">
-        <div className="font-weight-bold">Course(s)</div>
+        <div className="font-weight-bold">
+          <div className="col-12">Course(s)</div>
+        </div>
         <div className="mt-2">
           {cart.Course.map(c => (
             <CourseCard listing={c} key={c.courseId} />
@@ -65,7 +67,9 @@ const CartItemList = () => {
   const mentorshipItems = () => {
     return (
       <div className="width-100p ">
-        <div className="mt-2 font-weight-bold">Mentorship(s)</div>
+        <div className="mt-2 font-weight-bold">
+          <div className="col-12">Mentorship(s)</div>
+        </div>
         <div className="mt-2">
           {cart.MentorshipApplications.map(m => (
             <MentorshipCard listing={m} key={m.mentorshipListingId} />
@@ -94,7 +98,7 @@ const CartItemList = () => {
     return (
       <div className="d-flex flex-row justify-content-between font-size-18">
         <div>Sub-total</div>
-        <div>$ {getSubTotal()}</div>
+        <div>$ {parseFloat(getSubTotal()).toFixed(2)}</div>
       </div>
     )
   }

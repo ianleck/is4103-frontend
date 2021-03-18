@@ -45,9 +45,9 @@ const CourseCard = data => {
         onKeyDown={event => event.preventDefault()}
       >
         <div className="row">
-          <div className="col-auto">
+          <div className="col-4">
             <Avatar
-              size={70}
+              size={80}
               src={
                 listing.imgUrl
                   ? `${listing.imgUrl}?${new Date().getTime()}`
@@ -55,19 +55,22 @@ const CourseCard = data => {
               }
             />
           </div>
-          <div className="col">
+          <div className="col-5">
             <h4 className="card-title text-wrap">{listing.title}</h4>
-            <h6 className="card-subtitle m-0 text-dark text-uppercase text-wrap">
+            <div className="font-size-12 m-0 text-dark">
               {sensei.firstName} {sensei.lastName}
-            </h6>
-            <div className="card-subtitle m-0 text-dark text-uppercase text-wrap">
-              Price : $ {listing.priceAmount}
             </div>
-            <div className="mt-2">
-              <Button block onClick={removeClick}>
-                <DeleteOutlined /> Remove from Cart
-              </Button>
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              <span className="mt2">
+                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+              </span>
             </div>
+          </div>
+
+          <div className="col-3 m-0 float-right">
+            <Button danger onClick={removeClick}>
+              <DeleteOutlined />
+            </Button>
           </div>
         </div>
       </div>

@@ -52,9 +52,9 @@ const CourseCard = data => {
         onKeyDown={event => event.preventDefault()}
       >
         <div className="row">
-          <div className="col-auto">
+          <div className="col-3">
             <Avatar
-              size={100}
+              size={150}
               src={
                 listing.imgUrl
                   ? `${listing.imgUrl}?${new Date().getTime()}`
@@ -62,26 +62,29 @@ const CourseCard = data => {
               }
             />
           </div>
-          <div className="col">
+          <div className="col-7">
             <h4 className="card-title text-wrap">{listing.title}</h4>
             <h6 className="card-subtitle mb-2 text-dark text-uppercase text-wrap">
               {sensei.firstName} {sensei.lastName}
             </h6>
-            <div className="card-subtitle m-1 text-dark text-wrap">
-              Sub Title : {listing.subTitle}
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              Sub Title: {listing.subTitle}
             </div>
-            <div className="card-subtitle m-1 text-dark text-wrap">
-              Description : {listing.description}
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              Description: {listing.description}
             </div>
-            <div className="card-subtitle m-1 text-dark text-wrap">
-              Price : $ {listing.priceAmount}
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              <span className="mt2">
+                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+              </span>
             </div>
             <Rate disabled allowHalf defaultValue={listing.rating} />
-            <div className="mt-2">
-              <Button block onClick={removeClick}>
-                <DeleteOutlined /> Remove from Cart
-              </Button>
-            </div>
+          </div>
+
+          <div className="col-2 float-right">
+            <Button danger block onClick={removeClick}>
+              <DeleteOutlined />
+            </Button>
           </div>
         </div>
       </div>

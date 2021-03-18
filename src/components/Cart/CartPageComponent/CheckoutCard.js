@@ -32,26 +32,12 @@ const CheckoutCard = () => {
   }, [user, cart])
 
   const getSubTotal = () => {
-    let amt = 0
+    const amt = 0
 
     if (!isEmptyCart) {
-      for (let i = 0; i < cart.Course.length; i += 1) {
-        amt += cart.Course[i].priceAmount
-      }
-
-      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
-        amt += cart.MentorshipApplications[i].priceAmount
-      }
+      return getCourseTotal() + getMentorshipTotal()
     }
     return amt
-  }
-
-  const cartSubTotal = () => {
-    return (
-      <div className="d-flex flex-row justify-content-end">
-        <div>$ {getSubTotal()}</div>
-      </div>
-    )
   }
 
   const doCheckout = async () => {
@@ -82,6 +68,28 @@ const CheckoutCard = () => {
     }
   }
 
+  const getCourseTotal = () => {
+    let amt = 0
+
+    if (!isEmptyCart) {
+      for (let i = 0; i < cart.Course.length; i += 1) {
+        amt += cart.Course[i].priceAmount
+      }
+    }
+    return amt
+  }
+
+  const getMentorshipTotal = () => {
+    let amt = 0
+
+    if (!isEmptyCart) {
+      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
+        amt += cart.MentorshipApplications[i].priceAmount
+      }
+    }
+    return amt
+  }
+
   return (
     <div className="card">
       <div className="card-header">
@@ -90,14 +98,34 @@ const CheckoutCard = () => {
 
       <div className="card-body mt-3">
         <div className="row justify-content-between">
-          <div className="col-7 ">Sub-total</div>
-          <div className="col-5 ">{cartSubTotal()}</div>
+          <div className="col-7">Course Total</div>
+          <div className="col-5 d-flex flex-row justify-content-end">
+            $ {parseFloat(getCourseTotal()).toFixed(2)}
+          </div>
+        </div>
+      </div>
+
+      <div className="card-body mt-3">
+        <div className="row justify-content-between">
+          <div className="col-7">Mentorship Total</div>
+          <div className="col-5 d-flex flex-row justify-content-end">
+            $ {parseFloat(getMentorshipTotal()).toFixed(2)}
+          </div>
+        </div>
+      </div>
+
+      <div className="card-body mt-3">
+        <div className="row justify-content-between">
+          <div className="col-7">Sub-total</div>
+          <div className="col-5 d-flex flex-row justify-content-end">
+            $ {parseFloat(getSubTotal()).toFixed(2)}
+          </div>
         </div>
       </div>
 
       <div className="card-body">
         <Button block size="large" className="bg-success text-white" onClick={() => doCheckout()}>
-          {isLoading ? <LoadingOutlined spin /> : <ShoppingOutlined />} Check out
+          {isLoading ? <LoadingOutlined spin /> : <ShoppingOutlined />} Checkout
         </Button>
       </div>
 

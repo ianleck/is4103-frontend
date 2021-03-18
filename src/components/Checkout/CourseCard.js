@@ -51,14 +51,16 @@ const CourseCard = data => {
             <h6 className="card-subtitle mb-2 text-dark text-uppercase text-wrap">
               {sensei.firstName} {sensei.lastName}
             </h6>
-            <div className="card-subtitle m-1 text-dark text-wrap">
-              Sub Title : {listing.subTitle}
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              Sub Title: {listing.subTitle}
             </div>
-            <div className="card-subtitle m-1 text-dark text-wrap">
-              Description : {listing.description}
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              Description: {listing.description}
             </div>
-            <div className="card-subtitle m-1 text-dark text-wrap">
-              Price : $ {listing.priceAmount}
+            <div className="card-subtitle m-0 text-dark text-wrap">
+              <span className="mt2">
+                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+              </span>
             </div>
             <Rate disabled allowHalf defaultValue={listing.rating} />
           </div>

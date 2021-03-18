@@ -53,7 +53,9 @@ const Cart = () => {
   const courseItems = () => {
     return (
       <div>
-        <div className="font-weight-bold">Course(s)</div>
+        <div className="font-weight-bold">
+          <div className="col-12">Course(s)</div>
+        </div>
         <div className="mt-2">
           {cart.Course.map(c => (
             <CourseCard listing={c} key={c.courseId} />
@@ -66,7 +68,9 @@ const Cart = () => {
   const mentorshipItems = () => {
     return (
       <div>
-        <div className="mt-2 font-weight-bold">Mentorship(s)</div>
+        <div className="mt-2 font-weight-bold">
+          <div className="col-12">Mentorship(s)</div>
+        </div>
         <div className="mt-2">
           {cart.MentorshipApplications.map(m => (
             <MentorshipCard listing={m} key={m.mentorshipListingId} />
@@ -113,7 +117,7 @@ const Cart = () => {
 
       <div className="card-body bg-gray-1 border-top">{cartSubTotal()}</div>
 
-      <div className="card-body bg-gray-2 border-top">
+      <div className="card-body border-top">
         <div className="row">
           <div className="col-6">
             <Button block size="large" onClick={() => goToCart()}>
@@ -121,8 +125,8 @@ const Cart = () => {
             </Button>
           </div>
           <div className="col-6">
-            <Button block type="primary" size="large" onClick={() => goToCart()}>
-              Check out
+            <Button block className="bg-success text-white" size="large" onClick={() => goToCart()}>
+              Checkout
             </Button>
           </div>
         </div>
