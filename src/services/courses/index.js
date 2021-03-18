@@ -14,6 +14,19 @@ export async function getCourses() {
     .catch(err => console.log(err))
 }
 
+export async function getPurchasedCourses(accountId) {
+  const url = `/course/contract/student/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getCourseById(courseId) {
   const url = `/course/${courseId}`
   return apiClient

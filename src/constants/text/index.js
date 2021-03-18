@@ -1,6 +1,8 @@
 export const CREATOR_INFO = 'Creator Information'
 export const VIEW_PROFILE = 'View Profile'
 
+export const PURCHASED_COURSES = 'Purchased Courses'
+
 export const CURRENT_PRICE = 'Current Price'
 
 export const ADD_TO_CART = 'Add to Cart'

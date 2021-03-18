@@ -259,6 +259,21 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/dashboard/courses',
+    Component: lazy(() => import('pages/student/dashboard/courses')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/courses/:id',
+    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/courses/view-lesson/:id',
+    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    exact: true,
+  },
+  {
     path: '/student/profile',
     Component: lazy(() => import('pages/student/profile')),
     exact: true,
@@ -281,6 +296,21 @@ const routes = [
   {
     path: '/student/dashboard/mentorship-applications',
     Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/mentorship-subscriptions',
+    Component: lazy(() => import('pages/student/dashboard/mentorship-subscriptions')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/transactions',
+    Component: lazy(() => import('pages/student/dashboard/transactions')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/transaction/view/:id',
+    Component: lazy(() => import('pages/transactions/view')),
     exact: true,
   },
   /*
