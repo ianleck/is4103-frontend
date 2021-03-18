@@ -25,6 +25,7 @@ import {
   COURSE_PROGRESS,
   DOWNLOAD_LESSON_FILES,
   EMPTY_LESSON_TITLE,
+  EMPTY_LESSON_DESC,
   LESSON_GUIDE,
   LESSON_LIST,
   SHOW_ASSESSMENT_VID,
@@ -86,7 +87,6 @@ const StudentCourseLesson = () => {
       const result = await getCommentsByLessonId(lessonId)
       if (result && !isNil(result.comments)) {
         setComments(result.comments)
-        console.log(comments)
       }
     }
     viewCourse()
@@ -134,7 +134,6 @@ const StudentCourseLesson = () => {
 
     const deleteCommentFromVideo = async commentIdToDelete => {
       const result = await deleteComment(commentIdToDelete)
-      console.log('result', result)
       if (result && !isNil(result.message)) {
         getLessonComments()
         showNotification('success', SUCCESS, COMMENT_DEL_SUCCESS)
@@ -226,7 +225,6 @@ const StudentCourseLesson = () => {
 
     const CommentGridItem = data => {
       const { comment } = data
-      console.log(comment)
       return (
         <div className="row align-items-center mb-4">
           <div className="col-auto">
@@ -298,7 +296,7 @@ const StudentCourseLesson = () => {
           <div className="row align-items-center justify-content-between">
             <div className="col-12 col-md-8">
               <h3>{currentCourse.title}</h3>
-              <h5>{currentLesson.title}</h5>
+              <h5>{!isEmpty(currentLesson.title) ? currentLesson.title : EMPTY_LESSON_TITLE}</h5>
             </div>
             <div className="col-12 col-md-4 text-center text-md-right">
               <Button type="primary" size="large" onClick={() => setShowLessonGuide(true)}>
@@ -324,8 +322,12 @@ const StudentCourseLesson = () => {
         >
           <div className="row">
             <div className="col-12">
-              <h3>{currentLesson.title}</h3>
-              <h5 className="mt-2">{currentLesson.description}</h5>
+              <h3>{!isEmpty(currentLesson.title) ? currentLesson.title : EMPTY_LESSON_TITLE}</h3>
+              <h5 className="mt-2">
+                {!isEmpty(currentLesson.description)
+                  ? currentLesson.description
+                  : EMPTY_LESSON_DESC}
+              </h5>
               <hr className="mt-5" />
               <h4 className="text-uppercase font-weight-bold">{ABOUT_THE_COURSE}</h4>
               <h6 className="mt-2">{currentCourse.title}</h6>
@@ -488,11 +490,12 @@ const StudentCourseLesson = () => {
                 renderItem={item => (
                   <List.Item>
                     <Typography.Text
-                      className="btn btn-link no-border text-left"
+                      className="btn btn-link text-left pl-0"
                       onClick={() => sendToLessonUrl(currentCourse.courseId, item.lessonId)}
                     >
-                      Lesson {item.listNumber}:{' '}
-                      {!isEmpty(item.title) ? item.title : EMPTY_LESSON_TITLE}
+                      {`Lesson ${item.listNumber}: ${
+                        !isEmpty(item.title) ? item.title : EMPTY_LESSON_TITLE
+                      }`}
                     </Typography.Text>
                   </List.Item>
                 )}

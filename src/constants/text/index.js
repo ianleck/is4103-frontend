@@ -16,6 +16,7 @@ export const SHOW_LESSON_VID = 'Show Lesson Video'
 export const LESSON_LIST = 'Lesson List'
 export const LESSON_GUIDE = 'Lesson Guide'
 export const EMPTY_LESSON_TITLE = 'Empty Lesson Title'
+export const EMPTY_LESSON_DESC = 'Empty Lesson Description'
 
 export const DOWNLOAD_LESSON_FILES = 'Download Lesson Files'
 
