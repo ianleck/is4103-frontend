@@ -23,6 +23,11 @@ export const LESSON_FILE_DELETE_SUCCESS = 'Your lesson file was successfully del
 export const LESSON_FILE_DELETE_ERR = 'There was an error deleting your lesson file.'
 export const LESSON_FILE_DOWNLOAD_ERR = 'There was an error downloading your file.'
 
+export const COMMENT_ADD_SUCCESS = 'Your comment was successfully added.'
+export const COMMENT_ADD_ERR = 'There was an error adding your comment.'
+export const COMMENT_DEL_SUCCESS = 'Your comment was successfully deleted.'
+export const COMMENT_DEL_ERR = 'There was an error deleting your comment.'
+
 export const ANNOUNCEMENT_CREATED_SUCCESS = 'Your announcement was successfully added.'
 export const ANNOUNCEMENT_CREATED_ERR = 'There was an error adding your announcement.'
 export const ANNOUNCEMENT_EDIT_SUCCESS = 'Your announcement was successfully updated.'

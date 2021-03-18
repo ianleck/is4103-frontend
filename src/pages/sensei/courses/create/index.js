@@ -242,12 +242,12 @@ const SenseiCreateCourse = () => {
   const editLessonFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <Button type="default" size="large" onClick={() => setShowEditLesson(false)} className="">
+        <Button type="default" size="large" onClick={() => setShowEditLesson(false)}>
           Close
         </Button>
       </div>
       <div className="col-auto">
-        <Button type="primary" form="editLessonForm" htmlType="submit" size="large" className="">
+        <Button type="primary" form="editLessonForm" htmlType="submit" size="large">
           Update
         </Button>
       </div>
