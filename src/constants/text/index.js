@@ -8,11 +8,18 @@ export const ADD_COMMENTS = 'Add a comment'
 
 export const PURCHASED_COURSES = 'Purchased Courses'
 export const COURSE_DESC = 'Course Description'
+export const ABOUT_THE_COURSE = 'About the Course'
 
 export const LESSONS = 'Lessons'
 export const VIEW_LESSON = 'View Lesson'
+export const SHOW_LESSON_VID = 'Show Lesson Video'
 export const LESSON_LIST = 'Lesson List'
 export const LESSON_GUIDE = 'Lesson Guide'
+export const EMPTY_LESSON_TITLE = 'Empty Lesson Title'
+
+export const DOWNLOAD_LESSON_FILES = 'Download Lesson Files'
+
+export const SHOW_ASSESSMENT_VID = 'Show Assessment Video'
 
 export const CURRENT_PRICE = 'Current Price'
 
@@ -27,3 +34,4 @@ export const PROGRESS = 'Progress'
 export const NA = 'N.A.'
 export const EXPAND = 'EXPAND'
 export const COLLAPSE = 'COLLAPSE'
+export const CLOSE = 'Close'

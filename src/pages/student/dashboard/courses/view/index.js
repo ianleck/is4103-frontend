@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Empty } from 'antd'
 import { useHistory, useParams } from 'react-router-dom'
-import { isNil, map, size } from 'lodash'
+import { isEmpty, isNil, map, size } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
 import {
   ANNOUNCEMENTS,
@@ -11,6 +11,7 @@ import {
   LESSONS,
   VIEW_LESSON,
   COURSE_DESC,
+  EMPTY_LESSON_TITLE,
 } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import {
@@ -39,8 +40,6 @@ const StudentCourseDetails = () => {
     if (courseAnnouncements && courseAnnouncements.announcements) {
       setAnnouncements(courseAnnouncements.announcements)
     }
-    console.log('announcements', announcements)
-    console.log('courseAnnouncements', courseAnnouncements)
   }
 
   useEffect(() => {
@@ -105,14 +104,16 @@ const StudentCourseDetails = () => {
   const CourseLessonsList = () => {
     const history = useHistory()
     const LessonItem = data => {
-      const { lesson } = data
+      const { lesson, courseId } = data
       return (
         <div className="menu-item">
           <div className="card btn m-2 text-dark text-left">
             <div className="card-body">
               <div className="row text-2-bold-lines truncate-2-overflow">
                 <div className="col-12">
-                  <span className="font-weight-bold h4">{lesson.title}</span>
+                  <span className="font-weight-bold h4">
+                    {!isEmpty(lesson.title) ? lesson.title : EMPTY_LESSON_TITLE}
+                  </span>
                 </div>
               </div>
               <div className="row text-4-lines truncate-4-overflow mt-2">
@@ -129,7 +130,9 @@ const StudentCourseDetails = () => {
                     shape="round"
                     icon={<CaretRightOutlined />}
                     onClick={() =>
-                      history.push(`/student/dashboard/courses/view-lesson/${lesson.lessonId}`)
+                      history.push(
+                        `/student/dashboard/courses/${courseId}/view-lesson/${lesson.lessonId}`,
+                      )
                     }
                   >
                     {VIEW_LESSON}
@@ -143,9 +146,14 @@ const StudentCourseDetails = () => {
     }
 
     const mapLessonItems = () => {
-      return map(course.Lessons, lesson => {
-        return <LessonItem key={lesson.lessonId} lesson={lesson} />
-      })
+      return map(
+        course.Lessons.sort(
+          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        ),
+        lesson => {
+          return <LessonItem key={lesson.lessonId} lesson={lesson} courseId={course.courseId} />
+        },
+      )
     }
 
     const ArrowLeft = () => {
@@ -179,7 +187,7 @@ const StudentCourseDetails = () => {
             arrowLeft={<ArrowLeft />}
             arrowRight={<ArrowRight />}
             wheel={false}
-            wrapperClass="w-100"
+            wrapperClass="w-100 align-items-center"
             arrowDisabledClass="scroll-menu-arrow--disabled"
             hideArrows
             inertiaScrolling

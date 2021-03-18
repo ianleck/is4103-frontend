@@ -6,6 +6,14 @@
   overflow: scroll;
 }
 
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -39,6 +47,10 @@
 
 .sensei-course-card-content {
   height: 160px;
+}
+
+.lesson-list-card {
+  height: 250px;
 }
 
 .text-2-lines {
