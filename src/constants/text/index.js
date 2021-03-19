@@ -7,6 +7,8 @@ export const COMMENTS = 'Comments'
 export const ADD_COMMENTS = 'Add a comment'
 
 export const COURSES = 'Courses'
+export const APPROVE_COURSE = 'Approve Course'
+export const REJECT_COURSE = 'Reject Course'
 export const COURSE_CONTENT_MGT = 'Course Content Management'
 export const PENDING_COURSES = 'Pending Courses'
 export const ACCEPTED_COURSES = 'Accepted Courses'

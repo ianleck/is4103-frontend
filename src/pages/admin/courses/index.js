@@ -147,7 +147,6 @@ const CourseContentManagement = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      width: '40%',
       sorter: (a, b) => a.title.length - b.title.length,
       sortDirections: ['ascend', 'descend'],
     },
@@ -273,7 +272,7 @@ const CourseContentManagement = () => {
                 <TabPane tab="Courses" key="courses" />
               </Tabs>
             </div>
-            <div className="card-body">
+            <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
               <Table className="w-100" dataSource={currentTableData} columns={tableColumns} />
             </div>
           </div>

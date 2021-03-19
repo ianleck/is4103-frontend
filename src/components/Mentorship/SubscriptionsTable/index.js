@@ -133,8 +133,8 @@ const MentorshipSubscriptionsTable = () => {
 
   return (
     <div className="card">
-      <div className="card-header card-header-flex">
-        <div className="d-flex flex-column justify-content-center mr-auto">
+      <div className="card-header card-header-flex overflow-x-scroll">
+        <div className="col-auto mt-4 justify-content-center mr-auto">
           <h5 className="mb-0">Mentorship Subscriptions</h5>
         </div>
         <Tabs activeKey={tabKey} className="kit-tabs" onChange={changeTab}>

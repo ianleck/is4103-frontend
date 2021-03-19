@@ -9,6 +9,19 @@ import LessonMainContent from 'components/Course/LessonMainContent'
 import CourseProgressCard from 'components/Course/ProgressCard'
 import AdditionalContentCard from 'components/Course/AdditionalContentCard'
 import LessonList from 'components/Course/LessonList'
+import { Button, Space } from 'antd'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { acceptCourseRequest, rejectCourseRequest } from 'services/courses/requests'
+import { showNotification } from 'components/utils'
+import {
+  COURSE_ACCEPT_ERROR,
+  COURSE_ACCEPT_SUCCESS,
+  COURSE_REJECT_ERROR,
+  COURSE_REJECT_SUCCESS,
+  ERROR,
+  SUCCESS,
+} from 'constants/notifications'
+import { APPROVE_COURSE, REJECT_COURSE } from 'constants/text'
 
 const AdminCourseLesson = () => {
   const { courseId, lessonId } = useParams()
@@ -17,6 +30,24 @@ const AdminCourseLesson = () => {
   const [currentLesson, setCurrentLesson] = useState('')
   const [currentVideoUrl, setCurrentVideoUrl] = useState('')
   const [comments, setComments] = useState([])
+
+  const approveCourse = async () => {
+    const result = await acceptCourseRequest(courseId)
+    if (result && result.success) {
+      showNotification('success', SUCCESS, COURSE_ACCEPT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_ACCEPT_ERROR)
+    }
+  }
+
+  const rejectCourse = async () => {
+    const result = await rejectCourseRequest(courseId)
+    if (result && result.success) {
+      showNotification('success', SUCCESS, COURSE_REJECT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_REJECT_ERROR)
+    }
+  }
 
   useEffect(() => {
     const viewCourse = async () => {
@@ -47,9 +78,31 @@ const AdminCourseLesson = () => {
 
   return (
     <div>
-      <div className="row pt-2">
+      <div className="row pt-2 justify-content-md-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />
+        </div>
+        <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
+          <Space size="large">
+            <Button
+              className="bg-success text-white"
+              shape="round"
+              size="large"
+              icon={<CheckOutlined />}
+              onClick={() => approveCourse()}
+            >
+              {APPROVE_COURSE}
+            </Button>
+            <Button
+              className="bg-danger text-white"
+              shape="round"
+              size="large"
+              icon={<CloseOutlined />}
+              onClick={() => rejectCourse()}
+            >
+              {REJECT_COURSE}
+            </Button>
+          </Space>
         </div>
       </div>
       <div className="row mt-5">
