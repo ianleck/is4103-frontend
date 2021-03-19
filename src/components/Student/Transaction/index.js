@@ -1,98 +1,26 @@
-import { ConfigProvider, Empty, Table } from 'antd'
-import { size } from 'lodash'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { Tooltip } from 'antd'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 
-const StudentTransactionsTable = () => {
-  const history = useHistory()
-
-  const user = useSelector(state => state.user)
-  const { walletId } = user
-
-  // to get wallet with transactions
-  console.log(walletId)
-
-  const emptyData = [
-    { key: 1, createdAt: '10 March', billingId: '001', amount: 34.9, productId: '0000110' },
-  ]
-
-  const columns = [
-    {
-      title: 'Date of Transaction',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      responsive: ['md'],
-      // render: createdAt => formatTime(createdAt),
-    },
-    {
-      title: 'Transaction Id',
-      dataIndex: 'billingId',
-      key: 'billingId',
-      responsive: ['md'],
-    },
-    {
-      title: 'Product ID',
-      dataIndex: 'productId',
-      key: 'productId',
-      responsive: ['md'],
-    },
-    {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
-      responsive: ['md'],
-      render: amount => amount.toFixed(2),
-    },
-  ]
-
-  const viewTransaction = record => {
-    return {
-      onClick: event => {
-        event.preventDefault()
-        const path = `transaction/view/${record.billingId}`
-        history.push(path)
-      },
-    }
-  }
-  const showTransactions = (dataSource, tableColumns) => {
-    const numTransactions = size(dataSource)
-    const isRenderEmpty = numTransactions === 0
-
-    const customizeRenderEmpty = () => (
-      <div className="text-center">
-        <Empty />
-      </div>
-    )
-    return (
-      <div>
-        <div className="row justify-content-between align-items-center mt-2">
-          <div className="col-auto">
-            You currently have {numTransactions}{' '}
-            {numTransactions === 1 ? 'transaction' : 'transactions'}.
-          </div>
-        </div>
-        <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-          <Table
-            className="mt-4"
-            dataSource={dataSource}
-            columns={tableColumns}
-            onRow={record => viewTransaction(record)}
-          />
-        </ConfigProvider>
-      </div>
-    )
-  }
+const TransactionCard = props => {
+  const { children, isIncoming } = props
   return (
     <div className="card">
       <div className="card-header card-header-flex">
-        <div className="d-flex flex-column justify-content-center mr-auto">
-          <h5 className="mb-0">Transaction History</h5>
+        <div className="row d-flex flex-column justify-content-center mr-auto">
+          <div className="col-auto">
+            <Tooltip title={isIncoming ? 'Your payments received' : 'Your payments made'}>
+              <InfoCircleOutlined className="mx-2" style={{ color: 'black' }} />
+            </Tooltip>
+            <span className="mb-0 h5 text-dark">
+              Transaction History ({isIncoming ? 'Incoming' : 'Outgoing'})
+            </span>
+          </div>
         </div>
       </div>
-      <div className="card-body">{showTransactions(emptyData, columns)}</div>
+      <div className="card-body">{children}</div>
     </div>
   )
 }
 
-export default StudentTransactionsTable
+export default TransactionCard
