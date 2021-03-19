@@ -78,3 +78,42 @@ export async function deleteLessonFile(lessonId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getCommentsByLessonId(lessonId) {
+  const url = `/comment/lesson/${lessonId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function addCommentToLesson(lessonId, payload) {
+  const url = `/comment/lesson/${lessonId}`
+  return apiClient
+    .post(url, { comment: { ...payload } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function deleteComment(commentId) {
+  const url = `/comment/${commentId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

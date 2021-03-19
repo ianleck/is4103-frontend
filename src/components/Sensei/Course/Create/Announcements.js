@@ -214,12 +214,12 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
   }
 
   useEffect(() => {
-    getCourseAnnouncements()
+    if (isCourseCreated) getCourseAnnouncements()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <div className="row">
+    <div className="row mt-4">
       <div className="col-12 text-right">
         <Tooltip
           visible={!isCourseCreated}

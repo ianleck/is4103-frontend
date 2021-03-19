@@ -6,8 +6,20 @@
   overflow: scroll;
 }
 
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
 .overflow-hidden {
   overflow: hidden;
+}
+
+.announcement-card-body {
+  max-height: 175px;
 }
 
 .course-card-img-holder {
@@ -15,6 +27,14 @@
 }
 
 .course-card-img {
+  width: 100%;
+}
+
+.course-img-banner-holder {
+  max-height: 200px;
+}
+
+.course-img-banner {
   width: 100%;
 }
 
@@ -29,8 +49,28 @@
   height: 160px;
 }
 
+.lesson-list-card {
+  height: 250px;
+}
+
 .text-2-lines {
-  height: 45px;
+  height: 45px !important;
+}
+
+.text-2-bold-lines {
+  height: 54px !important;
+}
+
+.text-4-lines {
+  height: 88px !important;
+}
+
+.truncate-4-overflow {
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
 }
 
 .truncate-3-overflow {
@@ -55,4 +95,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+}
+
+.menu-item {
+  width: 275px;
+  white-space: normal !important;
+}
+
+.scroll-menu-arrow--disabled {
+  display: none;
 }

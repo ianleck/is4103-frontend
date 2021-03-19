@@ -11,14 +11,22 @@ export const COURSE_IMG_DEL_ERR = 'There was an error removing your course image
 
 export const ASSESSMENT_VID_DELETE_ERR = 'There was an error deleting your assessment video.'
 export const ASSESSMENT_VID_DELETE_SUCCESS = 'Your assessment video was successfully deleted.'
+export const ASSESSMENT_VID_ALR_PLAYING = 'Your assessment video is already playing.'
 export const LESSON_UPDATE_SUCCESS = 'Your lesson was successfully updated.'
 export const LESSON_UPDATE_ERR = 'There was an error updating your lesson.'
 export const LESSON_DELETE_ERR = 'There was an error deleting your lesson.'
 export const LESSON_DELETE_SUCCESS = 'Your lesson was successfully deleted.'
 export const LESSON_VID_DELETE_SUCCESS = 'Your lesson video was successfully deleted.'
+export const LESSON_VID_ALR_PLAYING = 'Your lesson video is already playing.'
 export const LESSON_VID_DELETE_ERR = 'There was an error deleting your lesson video.'
 export const LESSON_FILE_DELETE_SUCCESS = 'Your lesson file was successfully deleted.'
 export const LESSON_FILE_DELETE_ERR = 'There was an error deleting your lesson file.'
+export const LESSON_FILE_DOWNLOAD_ERR = 'There was an error downloading your file.'
+
+export const COMMENT_ADD_SUCCESS = 'Your comment was successfully added.'
+export const COMMENT_ADD_ERR = 'There was an error adding your comment.'
+export const COMMENT_DEL_SUCCESS = 'Your comment was successfully deleted.'
+export const COMMENT_DEL_ERR = 'There was an error deleting your comment.'
 
 export const ANNOUNCEMENT_CREATED_SUCCESS = 'Your announcement was successfully added.'
 export const ANNOUNCEMENT_CREATED_ERR = 'There was an error adding your announcement.'
