@@ -490,6 +490,7 @@ const StudentCourseLesson = () => {
                 renderItem={item => (
                   <List.Item>
                     <Typography.Text
+                      code={item.lessonId === currentLesson.lessonId}
                       className="btn btn-link text-left pl-0"
                       onClick={() => sendToLessonUrl(currentCourse.courseId, item.lessonId)}
                     >
