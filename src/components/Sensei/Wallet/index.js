@@ -1,37 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Popconfirm, Tooltip } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { viewWallet, requestWithdrawal } from 'services/wallet'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { filter, isEmpty, isNil } from 'lodash'
-import {
-  WITHDRAWAL_REQUEST_ERR,
-  WITHDRAWAL_REQUEST_SUCCESS,
-  SUCCESS,
-  ERROR,
-} from 'constants/notifications'
-import { showNotification } from 'components/utils'
 
-const SenseiWallet = () => {
-  const user = useSelector(state => state.user)
+const SenseiWallet = ({
+  totalEarned,
+  pendingAmount,
+  confirmedAmount,
+  billingsReceived,
+  onWithdraw,
+}) => {
   const [isConfirmWithdraw, setIsConfirmWithdraw] = useState(false)
-  const [wallet, setWallet] = useState([])
-
-  const { walletId } = user
-  const { confirmedAmount, pendingAmount, totalEarned, BillingsReceived } = wallet
+  const [isExistingWithdrawalRequest, setIsExistingWithdrawalRequest] = useState(false)
 
   const isWithdrawable = confirmedAmount > 0
-  const isExistingWithdrawalRequest = !isEmpty(
-    filter(BillingsReceived, ['status', 'PENDING_WITHDRAWAL']),
-  )
-
   useEffect(() => {
-    const getWalletEffect = async () => {
-      const result = await viewWallet(walletId)
-      setWallet(result.wallet)
-    }
-    getWalletEffect()
-  }, [walletId])
+    const result = !isEmpty(filter(billingsReceived, ['status', 'PENDING_WITHDRAWAL']))
+    setIsExistingWithdrawalRequest(result)
+  }, [billingsReceived])
 
   const showPopconfirm = () => {
     setIsConfirmWithdraw(true)
@@ -43,14 +30,7 @@ const SenseiWallet = () => {
 
   const handleWithdrawConfirmedAmount = async () => {
     setIsConfirmWithdraw(false)
-    const result = await requestWithdrawal(walletId)
-    if (result && !isNil(result.success)) {
-      if (result.success) {
-        showNotification('success', SUCCESS, WITHDRAWAL_REQUEST_SUCCESS)
-      }
-    } else {
-      showNotification('error', ERROR, WITHDRAWAL_REQUEST_ERR)
-    }
+    onWithdraw()
   }
 
   const WalletHeader = () => {
