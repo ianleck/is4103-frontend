@@ -21,7 +21,7 @@ import {
 } from 'antd'
 import { filter, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   acceptMentorshipApplication,
   cancelMentorshipApplication,
@@ -29,13 +29,12 @@ import {
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
-import { addMentorshipListingToCart } from 'services/jwt/cart'
 import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
-import { formatTime, showNotification } from 'components/utils'
-import { MENTORSHIP_ADD, MENTORSHIP_ALR_IN, SUCCESS, UNABLE_ADD } from 'constants/notifications'
+import { formatTime } from 'components/utils'
 
 const MentorshipApplicationsTable = () => {
   const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const history = useHistory()
   const [mentorshipApplications, setMentorshipApplications] = useState([])
   const { accountId, userType } = user
@@ -83,16 +82,11 @@ const MentorshipApplicationsTable = () => {
     })
   }
 
-  const addItemToCart = async record => {
-    const response = await addMentorshipListingToCart(record.mentorshipContractId)
-
-    console.log(response)
-
-    if (response && response.success) {
-      showNotification('success', SUCCESS, MENTORSHIP_ADD)
-    } else {
-      showNotification('error', UNABLE_ADD, MENTORSHIP_ALR_IN)
-    }
+  const addItemToCart = record => {
+    dispatch({
+      type: 'cart/ADD_MENTORSHIP_LISTING_TO_CART',
+      payload: { mentorshipListingId: record.mentorshipContractId },
+    })
   }
 
   useEffect(() => {

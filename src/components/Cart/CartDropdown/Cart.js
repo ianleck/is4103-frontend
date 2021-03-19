@@ -1,37 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import * as jwtCart from 'services/jwt/cart'
 import { Dropdown, Button } from 'antd'
-import { isEmpty } from 'lodash'
+import { map, size } from 'lodash'
 import styles from './style.module.scss'
 import ProductCard from '../ProductCard'
 
 const Cart = () => {
   const history = useHistory()
-  const user = useSelector(state => state.user)
-  const [cart, setCart] = useState()
-  const [isEmptyCart, setIsEmptyCart] = useState(true)
-
-  useEffect(() => {
-    const populateCart = async () => {
-      if (user.accountId !== '') {
-        const response = await jwtCart.getCart()
-        setCart(response.cart)
-
-        if (
-          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
-          (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
-        ) {
-          setIsEmptyCart(true)
-        } else {
-          setIsEmptyCart(false)
-        }
-      }
-    }
-    populateCart()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const cart = useSelector(state => state.cart)
+  const isEmptyCart = size(cart.Course) === 0 && size(cart.MentorshipApplications) === 0
 
   const cartItems = () => {
     return isEmptyCart ? (
@@ -53,7 +31,7 @@ const Cart = () => {
       <div className="row">
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
-          {cart.Course.map(c => (
+          {map(cart.Course, c => (
             <ProductCard listing={c} location="CartDropdown" key={c.courseId} />
           ))}
         </div>
@@ -66,7 +44,7 @@ const Cart = () => {
       <div className="row">
         <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="col-12 mt-2">
-          {cart.MentorshipApplications.map(m => (
+          {map(cart.MentorshipApplications, m => (
             <ProductCard listing={m} location="CartDropdown" key={m.mentorshipListingId} />
           ))}
         </div>

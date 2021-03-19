@@ -1,6 +1,14 @@
 import actions from './actions'
 
-const initialState = {}
+const initialState = {
+  createdAt: '',
+  updatedAt: '',
+  cartId: '',
+  studentId: '',
+  deletedAt: null,
+  Course: [],
+  MentorshipApplications: [],
+}
 
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {

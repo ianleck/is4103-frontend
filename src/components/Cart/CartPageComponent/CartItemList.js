@@ -1,34 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
-import * as jwtCart from 'services/jwt/cart'
-import { isEmpty } from 'lodash'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import { size } from 'lodash'
 import ProductCard from '../ProductCard'
 
 const CartItemList = () => {
-  const user = useSelector(state => state.user)
-  const [cart, setCart] = useState()
-  const [isEmptyCart, setIsEmptyCart] = useState(true)
-
-  useEffect(() => {
-    const populateCart = async () => {
-      if (user.accountId !== '') {
-        const response = await jwtCart.getCart()
-        setCart(response.cart)
-
-        if (
-          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
-          (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
-        ) {
-          setIsEmptyCart(true)
-        } else {
-          setIsEmptyCart(false)
-        }
-      }
-    }
-    populateCart()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const cart = useSelector(state => state.cart)
+  const isEmptyCart = size(cart.Course) === 0 && size(cart.MentorshipApplications) === 0
 
   const cartItems = () => {
     return isEmptyCart ? (

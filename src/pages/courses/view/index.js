@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, Descriptions, List, Rate, Typography } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
-import { indexOf, isNil, map, random } from 'lodash'
+import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
-import { formatTime, showNotification } from 'components/utils'
+import { formatTime } from 'components/utils'
 import { getProfile } from 'services/jwt'
-import { addCourseToCart } from 'services/jwt/cart'
-import { SUCCESS } from 'constants/notifications'
 
 const ViewCourseDetailsPublic = () => {
+  const dispatch = useDispatch()
   const history = useHistory()
+  const user = useSelector(state => state.user)
   const { id } = useParams()
 
   const [currentCourse, setCurrentCourse] = useState('')
@@ -31,13 +32,13 @@ const ViewCourseDetailsPublic = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const addToCart = async () => {
-    const courseId = id
-    const response = await addCourseToCart(courseId)
-
-    if (response && response.success) {
-      showNotification('success', SUCCESS, response.message)
-    }
+  const addToCart = () => {
+    if (!isEmpty(user.accessToken))
+      dispatch({
+        type: 'cart/ADD_COURSE_TO_CART',
+        payload: { courseId: id },
+      })
+    else history.push('/auth/login')
   }
 
   return (
