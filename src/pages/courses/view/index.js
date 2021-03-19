@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, Descriptions, List, Rate, Typography } from 'antd'
 import { Helmet } from 'react-helmet'
@@ -15,25 +14,17 @@ import { SUCCESS } from 'constants/notifications'
 const ViewCourseDetailsPublic = () => {
   const history = useHistory()
   const { id } = useParams()
-  const user = useSelector(state => state.user)
 
   const [currentCourse, setCurrentCourse] = useState('')
   const [currentSensei, setCurrentSensei] = useState('')
 
   useEffect(() => {
-    if (!user.authorized) {
-      history.push('/auth/login')
-      return
-    }
     const viewCourse = async () => {
       const result = await getCourseById(id)
-      console.log(result)
       if (result && !isNil(result.course)) {
         setCurrentCourse(result.course)
         const senseiProfile = await getProfile(result.course.accountId)
         setCurrentSensei(senseiProfile)
-        console.log('senseiProfile', senseiProfile)
-        console.log('currentSensei', currentSensei)
       }
     }
     viewCourse()

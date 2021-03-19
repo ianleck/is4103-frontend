@@ -16,7 +16,6 @@ const StudentPurchasedCourses = () => {
   const getAllPurchasedCourses = async () => {
     setIsLoading(true)
     const result = await getPurchasedCourses(user.accountId)
-    console.log('result', result)
     if (result && !isNil(result.requests)) {
       setCourses(result.requests)
     }
@@ -49,15 +48,6 @@ const StudentPurchasedCourses = () => {
 
     return (
       <div className="row mt-4">
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
-        <DisplayStudentCourseCards />
         <DisplayStudentCourseCards />
       </div>
     )
