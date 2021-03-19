@@ -60,7 +60,7 @@ const SenseiWallet = () => {
           <span className="h3 font-weight-bold text-dark">My Wallet</span>
         </div>
         <div className="col-auto">
-          <Tooltip title="Your revenue earned since registeration">
+          <Tooltip title="Your revenue earned since registration">
             <InfoCircleOutlined className="mx-2" />
           </Tooltip>
           <span>
