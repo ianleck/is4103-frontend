@@ -2,7 +2,7 @@ import { Table, Tag } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
 import TransactionCard from 'components/Student/Transaction'
 import { formatTime, showNotification } from 'components/utils'
-import { BILLING_TYPE_FILTER } from 'constants/filters'
+import { BILLING_TYPE_FILTER, CURRENCY_FILTERS } from 'constants/filters'
 import {
   ERROR,
   SUCCESS,
@@ -96,6 +96,8 @@ const StudentTransactions = () => {
       key: 'currency',
       width: '10%',
       responsive: ['md'],
+      filters: CURRENCY_FILTERS,
+      onFilter: (value, record) => record.currency.indexOf(value) === 0,
     },
     {
       title: 'Amount',
@@ -170,11 +172,11 @@ const StudentTransactions = () => {
         </TransactionCard>
       )}
       <TransactionCard isIncoming={false}>
-        {showTransactions('incoming', billingsSent, columns)}
+        {showTransactions('outgoing', billingsSent, columns)}
       </TransactionCard>
       {!isSensei && (
         <TransactionCard isIncoming>
-          {showTransactions('outgoing', billingsReceived, columns)}
+          {showTransactions('incoming', billingsReceived, columns)}
         </TransactionCard>
       )}
     </div>
