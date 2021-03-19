@@ -305,7 +305,7 @@ const routes = [
   },
   {
     path: '/student/dashboard/transactions',
-    Component: lazy(() => import('pages/student/dashboard/transactions')),
+    Component: lazy(() => import('pages/transactions')),
     exact: true,
   },
   {
