@@ -64,6 +64,7 @@ export function* DELETE_FROM_CART({ payload }) {
 
 export default function* rootSaga() {
   yield all([
+    takeEvery(actions.LOAD_CURRENT_CART, LOAD_CURRENT_CART),
     takeEvery(actions.ADD_COURSE_TO_CART, ADD_COURSE_TO_CART),
     takeEvery(actions.ADD_MENTORSHIP_LISTING_TO_CART, ADD_MENTORSHIP_LISTING_TO_CART),
     takeEvery(actions.DELETE_FROM_CART, DELETE_FROM_CART),

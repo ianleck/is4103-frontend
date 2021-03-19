@@ -10,6 +10,16 @@ export const sortArrByCreatedAtAsc = objArr => {
   return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 }
 
+export const resetCart = {
+  createdAt: '',
+  updatedAt: '',
+  cartId: '',
+  studentId: '',
+  deletedAt: null,
+  Course: [],
+  MentorshipApplications: [],
+}
+
 export const resetUser = {
   accountId: '',
   adminVerified: '',

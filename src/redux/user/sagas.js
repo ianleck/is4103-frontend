@@ -4,7 +4,7 @@ import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import { isEmpty, isNil } from 'lodash'
 import * as jwt from 'services/jwt'
-import { createAdminObj, createUserObj, resetUser } from 'components/utils'
+import { createAdminObj, createUserObj, resetCart, resetUser } from 'components/utils'
 import actions from './actions'
 import * as selectors from '../selectors'
 
@@ -59,6 +59,9 @@ export function* LOAD_CURRENT_ACCOUNT() {
   yield putResolve({
     type: 'menu/GET_DATA',
   })
+  yield putResolve({
+    type: 'cart/LOAD_CURRENT_CART',
+  })
   yield put({
     type: 'user/SET_STATE',
     payload: {
@@ -109,6 +112,9 @@ export function* LOGIN({ payload }) {
     })
     yield putResolve({
       type: 'menu/GET_DATA',
+    })
+    yield putResolve({
+      type: 'cart/LOAD_CURRENT_CART',
     })
   }
   yield putResolve({
@@ -180,6 +186,10 @@ export function* LOGOUT() {
   yield putResolve({
     type: 'user/SET_STATE',
     payload: resetUser,
+  })
+  yield putResolve({
+    type: 'cart/SET_STATE',
+    payload: resetCart,
   })
   yield putResolve({
     type: 'menu/GET_DATA',
