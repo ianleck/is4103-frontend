@@ -35,6 +35,9 @@ export const ANNOUNCEMENT_EDIT_ERR = 'There was an error updating your announcem
 export const ANNOUNCEMENT_DEL_SUCCESS = 'Your announcement was successfully deleted.'
 export const ANNOUNCEMENT_DEL_ERR = 'There was an error deleting your announcement.'
 
+export const WITHDRAWAL_REQUEST_SUCCESS = 'Your withdrawal request was successfully sent.'
+export const WITHDRAWAL_REQUEST_ERR = 'There was an error sending your withdrawal request.'
+
 export const SUCCESS = 'Success'
 export const ERROR = 'Error'
 export const WARNING = 'Warning'
