@@ -31,7 +31,8 @@ import {
 } from 'services/mentorshipApplications'
 import { addMentorshipListingToCart } from 'services/jwt/cart'
 import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
-import { formatTime } from 'components/utils'
+import { formatTime, showNotification } from 'components/utils'
+import { MENTORSHIP_ADD, MENTORSHIP_ALR_IN, SUCCESS, UNABLE_ADD } from 'constants/notifications'
 
 const MentorshipApplicationsTable = () => {
   const user = useSelector(state => state.user)
@@ -88,15 +89,9 @@ const MentorshipApplicationsTable = () => {
     console.log(response)
 
     if (response && response.success) {
-      notification.success({
-        message: 'Success',
-        description: 'Mentorship Application successfully added to Cart',
-      })
+      showNotification('success', SUCCESS, MENTORSHIP_ADD)
     } else {
-      notification.error({
-        message: 'Unable to add to Cart',
-        description: 'Mentorship Application is already in Cart',
-      })
+      showNotification('error', UNABLE_ADD, MENTORSHIP_ALR_IN)
     }
   }
 

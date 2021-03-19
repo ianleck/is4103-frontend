@@ -5,6 +5,8 @@ import { Avatar, Button } from 'antd'
 import { deleteFromCart } from 'services/jwt/cart'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
+import { showNotification } from 'components/utils'
+import { ITEM_REMOVE } from 'constants/notifications'
 
 const ProductCard = data => {
   const { listing } = data
@@ -12,8 +14,6 @@ const ProductCard = data => {
   const [isCourse, setIsCourse] = useState(false)
   const history = useHistory()
   const currLocation = data.location
-
-  console.log(data.location, isCourse)
 
   useEffect(() => {
     getProfile(listing.accountId).then(res => {
@@ -48,10 +48,10 @@ const ProductCard = data => {
 
     if (isCourse) {
       const response = await deleteFromCart([listing.courseId], [])
-      console.log('response', response)
+      showNotification('success', ITEM_REMOVE, response.message)
     } else {
       const response = await deleteFromCart([], [listing.mentorshipListingId])
-      console.log('response', response)
+      showNotification('success', ITEM_REMOVE, response.message)
     }
   }
 

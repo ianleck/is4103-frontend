@@ -41,3 +41,7 @@ export const WARNING = 'Warning'
 export const OOPS = 'Something went wrong.'
 
 export const CART_EMPTY = 'You cannot checkout an empty cart.'
+export const ITEM_REMOVE = 'Item(s) removed'
+export const MENTORSHIP_ADD = 'Mentorship Application successfully added to Cart'
+export const UNABLE_ADD = 'Unable to add to Cart'
+export const MENTORSHIP_ALR_IN = 'Mentorship Application is already in Cart'
