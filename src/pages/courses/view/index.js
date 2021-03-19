@@ -6,8 +6,10 @@ import { getCourseById } from 'services/courses'
 import { indexOf, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
-import { formatTime } from 'components/utils'
+import { formatTime, showNotification } from 'components/utils'
 import { getProfile } from 'services/jwt'
+import { addCourseToCart } from 'services/jwt/cart'
+import { SUCCESS } from 'constants/notifications'
 
 const ViewCourseDetailsPublic = () => {
   const history = useHistory()
@@ -28,6 +30,15 @@ const ViewCourseDetailsPublic = () => {
     viewCourse()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const addToCart = async () => {
+    const courseId = id
+    const response = await addCourseToCart(courseId)
+
+    if (response && response.success) {
+      showNotification('success', SUCCESS, response.message)
+    }
+  }
 
   return (
     <div className="container">
@@ -118,7 +129,13 @@ const ViewCourseDetailsPublic = () => {
               <h2 className="font-weight-bold">
                 ${parseFloat(currentCourse.priceAmount).toFixed(2)}
               </h2>
-              <Button block type="primary" size="large" className="mt-4">
+              <Button
+                block
+                type="primary"
+                size="large"
+                className="mt-4"
+                onClick={() => addToCart()}
+              >
                 {ADD_TO_CART}
               </Button>
               <hr className="mt-4" />
