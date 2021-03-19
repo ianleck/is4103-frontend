@@ -43,7 +43,7 @@ const Cart = () => {
       </div>
     ) : (
       <div>
-        <div className="row">{cart.Course.length !== 0 && courseItems()}</div>
+        <div className="mt-2">{cart.Course.length !== 0 && courseItems()}</div>
         <div className="mt-2">{cart.MentorshipApplications.length !== 0 && mentorshipItems()}</div>
       </div>
     )
@@ -51,7 +51,7 @@ const Cart = () => {
 
   const courseItems = () => {
     return (
-      <div>
+      <div className="row">
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
           {cart.Course.map(c => (
