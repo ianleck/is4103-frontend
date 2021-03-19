@@ -6,6 +6,8 @@ import {
   STATUS_ENUM,
   VISIBILITY_ENUM,
 } from 'constants/constants'
+import { currencyCodes } from 'constants/information'
+import { map } from 'lodash'
 
 export const BILLING_TYPE_FILTER = [
   {
@@ -58,3 +60,5 @@ export const VISIBILITY_ENUM_FILTER = [
   },
   { text: VISIBILITY_ENUM.HIDDEN, value: VISIBILITY_ENUM.HIDDEN },
 ]
+
+export const CURRENCY_FILTERS = map(currencyCodes, c => ({ value: c.code, text: c.code }))
