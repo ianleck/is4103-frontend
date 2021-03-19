@@ -244,7 +244,12 @@ const routes = [
   },
   {
     path: '/sensei/wallet',
-    Component: lazy(() => import('pages/sensei/wallet')),
+    Component: lazy(() => import('pages/transactions')),
+    exact: true,
+  },
+  {
+    path: '/sensei/transaction/view/:id',
+    Component: lazy(() => import('pages/transactions/view')),
     exact: true,
   },
   // Student Pages
