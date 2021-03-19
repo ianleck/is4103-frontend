@@ -22,6 +22,7 @@ import {
   SUCCESS,
 } from 'constants/notifications'
 import { APPROVE_COURSE, REJECT_COURSE } from 'constants/text'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
 const AdminCourseLesson = () => {
   const { courseId, lessonId } = useParams()
@@ -34,6 +35,7 @@ const AdminCourseLesson = () => {
   const approveCourse = async () => {
     const result = await acceptCourseRequest(courseId)
     if (result && result.success) {
+      viewCourse()
       showNotification('success', SUCCESS, COURSE_ACCEPT_SUCCESS)
     } else {
       showNotification('error', ERROR, COURSE_ACCEPT_ERROR)
@@ -43,34 +45,37 @@ const AdminCourseLesson = () => {
   const rejectCourse = async () => {
     const result = await rejectCourseRequest(courseId)
     if (result && result.success) {
+      viewCourse()
       showNotification('success', SUCCESS, COURSE_REJECT_SUCCESS)
     } else {
       showNotification('error', ERROR, COURSE_REJECT_ERROR)
     }
   }
 
-  useEffect(() => {
-    const viewCourse = async () => {
-      const result = await getCourseById(courseId)
-      if (result && !isNil(result.course)) {
-        setCurrentCourse(result.course)
-        if (!isNil(result.course.Lessons)) {
-          const viewLesson = result.course.Lessons.filter(o => o.lessonId === lessonId)
-          if (size(viewLesson) > 0) {
-            setCurrentLesson(viewLesson[0])
-            if (!isNil(viewLesson[0].videoUrl)) {
-              setCurrentVideoUrl(viewLesson[0].videoUrl)
-            }
+  const viewCourse = async () => {
+    const result = await getCourseById(courseId)
+    if (result && !isNil(result.course)) {
+      setCurrentCourse(result.course)
+      if (!isNil(result.course.Lessons)) {
+        const viewLesson = result.course.Lessons.filter(o => o.lessonId === lessonId)
+        if (size(viewLesson) > 0) {
+          setCurrentLesson(viewLesson[0])
+          if (!isNil(viewLesson[0].videoUrl)) {
+            setCurrentVideoUrl(viewLesson[0].videoUrl)
           }
         }
       }
     }
-    const getLessonComments = async () => {
-      const result = await getCommentsByLessonId(lessonId)
-      if (result && !isNil(result.comments)) {
-        setComments(result.comments)
-      }
+  }
+
+  const getLessonComments = async () => {
+    const result = await getCommentsByLessonId(lessonId)
+    if (result && !isNil(result.comments)) {
+      setComments(result.comments)
     }
+  }
+
+  useEffect(() => {
     viewCourse()
     getLessonComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,19 +90,21 @@ const AdminCourseLesson = () => {
         <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
           <Space size="large">
             <Button
-              className="bg-success text-white"
+              className="btn btn-success text-white"
               shape="round"
               size="large"
               icon={<CheckOutlined />}
+              disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED}
               onClick={() => approveCourse()}
             >
               {APPROVE_COURSE}
             </Button>
             <Button
-              className="bg-danger text-white"
+              className="btn btn-danger text-white"
               shape="round"
               size="large"
               icon={<CloseOutlined />}
+              disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED}
               onClick={() => rejectCourse()}
             >
               {REJECT_COURSE}

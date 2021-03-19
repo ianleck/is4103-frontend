@@ -18,6 +18,7 @@ import {
   ERROR,
   SUCCESS,
 } from 'constants/notifications'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
 const AdminCourseDetails = () => {
   const { id } = useParams()
@@ -28,6 +29,7 @@ const AdminCourseDetails = () => {
   const approveCourse = async () => {
     const result = await acceptCourseRequest(id)
     if (result && result.success) {
+      getCourseDetails()
       showNotification('success', SUCCESS, COURSE_ACCEPT_SUCCESS)
     } else {
       showNotification('error', ERROR, COURSE_ACCEPT_ERROR)
@@ -37,6 +39,7 @@ const AdminCourseDetails = () => {
   const rejectCourse = async () => {
     const result = await rejectCourseRequest(id)
     if (result && result.success) {
+      getCourseDetails()
       showNotification('success', SUCCESS, COURSE_REJECT_SUCCESS)
     } else {
       showNotification('error', ERROR, COURSE_REJECT_ERROR)
@@ -68,19 +71,21 @@ const AdminCourseDetails = () => {
         <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
           <Space size="large">
             <Button
-              className="bg-success text-white"
+              className="btn btn-success text-white"
               shape="round"
               size="large"
               icon={<CheckOutlined />}
+              disabled={course.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED}
               onClick={() => approveCourse()}
             >
               {APPROVE_COURSE}
             </Button>
             <Button
-              className="bg-danger text-white"
+              className="btn btn-danger text-white"
               shape="round"
               size="large"
               icon={<CloseOutlined />}
+              disabled={course.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED}
               onClick={() => rejectCourse()}
             >
               {REJECT_COURSE}
