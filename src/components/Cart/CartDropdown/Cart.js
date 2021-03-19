@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
+import { Dropdown, Button } from 'antd'
 import { isEmpty } from 'lodash'
-import { ShoppingCartOutlined } from '@ant-design/icons'
+import styles from './style.module.scss'
 import ProductCard from '../ProductCard'
 
-const CartItemList = () => {
+const Cart = () => {
+  const history = useHistory()
   const user = useSelector(state => state.user)
   const [cart, setCart] = useState()
   const [isEmptyCart, setIsEmptyCart] = useState(true)
@@ -32,19 +35,15 @@ const CartItemList = () => {
 
   const cartItems = () => {
     return isEmptyCart ? (
-      <div className="row">
+      <div>
         <div className="card-body d-flex font-size-18 justify-content-center">
-          <div>
-            <ShoppingCartOutlined /> No items in cart
-          </div>
+          <div>No items in cart</div>
         </div>
       </div>
     ) : (
-      <div className="row">
-        <div className="col-12">{cart.Course.length !== 0 && courseItems()}</div>
-        <div className="col-12 mt-2">
-          {cart.MentorshipApplications.length !== 0 && mentorshipItems()}
-        </div>
+      <div>
+        <div className="mt-2">{cart.Course.length !== 0 && courseItems()}</div>
+        <div className="mt-2">{cart.MentorshipApplications.length !== 0 && mentorshipItems()}</div>
       </div>
     )
   }
@@ -55,7 +54,7 @@ const CartItemList = () => {
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
           {cart.Course.map(c => (
-            <ProductCard listing={c} location="CartPage" key={c.courseId} />
+            <ProductCard listing={c} location="CartDropdown" key={c.courseId} />
           ))}
         </div>
       </div>
@@ -64,11 +63,11 @@ const CartItemList = () => {
 
   const mentorshipItems = () => {
     return (
-      <div className="row mt-5">
+      <div className="row">
         <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="col-12 mt-2">
           {cart.MentorshipApplications.map(m => (
-            <ProductCard listing={m} location="CartPage" key={m.mentorshipListingId} />
+            <ProductCard listing={m} location="CartDropdown" key={m.mentorshipListingId} />
           ))}
         </div>
       </div>
@@ -94,21 +93,46 @@ const CartItemList = () => {
     return (
       <div className="d-flex flex-row justify-content-between font-size-18">
         <div>Sub-total</div>
-        <div>$ {parseFloat(getSubTotal()).toFixed(2)}</div>
+        <div>$ {getSubTotal()}</div>
       </div>
     )
   }
 
-  return (
-    <div className="card">
-      <div className="card-header">
-        <div className="font-size-24">MY CART</div>
-      </div>
+  const goToCart = () => {
+    const path = '/cart'
+    history.push(path)
+  }
 
+  const menu = (
+    <div className="card cui__utils__shadow width-350 border-0">
       <div className="card-body">{cartItems()}</div>
+
       <div className="card-body bg-gray-1 border-top">{cartSubTotal()}</div>
+
+      <div className="card-body border-top">
+        <div className="row">
+          <div className="col-6">
+            <Button block size="large" onClick={() => goToCart()}>
+              View Cart
+            </Button>
+          </div>
+          <div className="col-6">
+            <Button block className="bg-success text-white" size="large" onClick={() => goToCart()}>
+              Checkout
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
+  )
+
+  return (
+    <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
+      <div className={styles.dropdown}>
+        <i className={`${styles.icon} fe fe-shopping-cart`} />
+      </div>
+    </Dropdown>
   )
 }
 
-export default CartItemList
+export default Cart

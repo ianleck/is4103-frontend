@@ -107,7 +107,10 @@ const UserMenu = () => {
     if (user.userType === USER_TYPE_ENUM.STUDENT) {
       return '/resources/images/avatars/apprentice.png'
     }
-    return '/resources/images/avatars/master.png'
+    if (user.userType === USER_TYPE_ENUM.SENSEI) {
+      return '/resources/images/avatars/master.png'
+    }
+    return '/resources/images/avatars/administrator.png'
   }
 
   const PendingLoginMenu = () => {

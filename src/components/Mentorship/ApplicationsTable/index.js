@@ -4,6 +4,7 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
   EditOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import {
@@ -28,8 +29,10 @@ import {
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
-import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
-import { formatTime } from 'components/utils'
+import { addMentorshipListingToCart } from 'services/jwt/cart'
+import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import { formatTime, showNotification } from 'components/utils'
+import { MENTORSHIP_ADD, MENTORSHIP_ALR_IN, SUCCESS, UNABLE_ADD } from 'constants/notifications'
 
 const MentorshipApplicationsTable = () => {
   const user = useSelector(state => state.user)
@@ -78,6 +81,18 @@ const MentorshipApplicationsTable = () => {
         getApplications()
       }
     })
+  }
+
+  const addItemToCart = async record => {
+    const response = await addMentorshipListingToCart(record.mentorshipContractId)
+
+    console.log(response)
+
+    if (response && response.success) {
+      showNotification('success', SUCCESS, MENTORSHIP_ADD)
+    } else {
+      showNotification('error', UNABLE_ADD, MENTORSHIP_ALR_IN)
+    }
   }
 
   useEffect(() => {
@@ -218,6 +233,18 @@ const MentorshipApplicationsTable = () => {
             icon={<EditOutlined />}
             onClick={() => editApplication(record)}
           />
+          {record.senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED &&
+            record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
+              <Button
+                type="primary"
+                size="large"
+                shape="circle"
+                onClick={() => {
+                  addItemToCart(record)
+                }}
+                icon={<ShoppingOutlined />}
+              />
+            )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
               title="Are you sure you wish to cancel your application?"
