@@ -105,3 +105,9 @@
 .scroll-menu-arrow--disabled {
   display: none;
 }
+
+.defocus-btn {
+  outline: none;
+  box-shadow: none;
+  cursor: default;
+}
