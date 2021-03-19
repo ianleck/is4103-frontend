@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import BackBtn from 'components/Common/BackBtn'
 import React from 'react'
 
-const ViewTransactionCard = transactionId => {
+const ViewTransactionDetailCard = transactionId => {
   const printIframe = documentId => {
     const iframe = document.frames
       ? document.frames[documentId]
@@ -67,4 +67,4 @@ const ViewTransactionCard = transactionId => {
   )
 }
 
-export default ViewTransactionCard
+export default ViewTransactionDetailCard

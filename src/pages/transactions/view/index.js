@@ -1,10 +1,10 @@
-import ViewTransactionCard from 'components/Student/Transaction/ViewTransactionCard'
+import ViewTransactionDetailCard from 'components/Student/Transaction/ViewTransactionDetailCard'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
 const TransactionView = () => {
   const { id } = useParams()
-  return <ViewTransactionCard transactionId={id} />
+  return <ViewTransactionDetailCard transactionId={id} />
 }
 
 export default TransactionView
