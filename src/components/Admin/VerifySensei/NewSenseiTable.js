@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/jwt/admin'
 import { Tabs, Table, Button } from 'antd'
-import { PRIVACY_PERMISSIONS_ENUM, STATUS_ENUM } from 'constants/constants'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import isNil from 'lodash'
+import { PRIVACY_PERMISSIONS_ENUM_FILTER, STATUS_ENUM_FILTER } from 'constants/filters'
 
 const { TabPane } = Tabs
 
@@ -87,27 +87,14 @@ const NewMentorTable = () => {
         dataIndex: 'chatPrivacy',
         key: 'chatPrivacy',
         responsive: ['lg'],
-        filters: [
-          {
-            text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-            value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-          },
-          { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
-          { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
-        ],
+        filters: PRIVACY_PERMISSIONS_ENUM_FILTER,
         onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
       },
       {
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
-        filters: [
-          {
-            text: STATUS_ENUM.ACTIVE,
-            value: STATUS_ENUM.ACTIVE,
-          },
-          { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
-        ],
+        filters: STATUS_ENUM_FILTER,
         onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
       },
       {

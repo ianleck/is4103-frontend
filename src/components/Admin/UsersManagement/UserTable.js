@@ -3,9 +3,13 @@ import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/jwt/admin'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { ADMIN_VERIFIED_ENUM, PRIVACY_PERMISSIONS_ENUM, STATUS_ENUM } from 'constants/constants'
 import moment from 'moment'
 import { indexOf, isNil, map } from 'lodash'
+import {
+  ADMIN_VERIFIED_ENUM_FILTER,
+  PRIVACY_PERMISSIONS_ENUM_FILTER,
+  STATUS_ENUM_FILTER,
+} from 'constants/filters'
 
 const { TabPane } = Tabs
 
@@ -88,27 +92,14 @@ const UserTable = () => {
         dataIndex: 'chatPrivacy',
         key: 'chatPrivacy',
         responsive: ['lg'],
-        filters: [
-          {
-            text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-            value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-          },
-          { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
-          { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
-        ],
+        filters: PRIVACY_PERMISSIONS_ENUM_FILTER,
         onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
       },
       {
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
-        filters: [
-          {
-            text: STATUS_ENUM.ACTIVE,
-            value: STATUS_ENUM.ACTIVE,
-          },
-          { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
-        ],
+        filters: STATUS_ENUM_FILTER,
         onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
       },
       {
@@ -158,12 +149,7 @@ const UserTable = () => {
         title: 'Admin Verified',
         dataIndex: 'adminVerified',
         key: 'adminVerified',
-        filters: [
-          { text: ADMIN_VERIFIED_ENUM.SHELL, value: ADMIN_VERIFIED_ENUM.SHELL },
-          { text: ADMIN_VERIFIED_ENUM.PENDING, value: ADMIN_VERIFIED_ENUM.PENDING },
-          { text: ADMIN_VERIFIED_ENUM.ACCEPTED, value: ADMIN_VERIFIED_ENUM.ACCEPTED },
-          { text: ADMIN_VERIFIED_ENUM.REJECTED, value: ADMIN_VERIFIED_ENUM.REJECTED },
-        ],
+        filters: ADMIN_VERIFIED_ENUM_FILTER,
         onFilter: (value, record) => record.adminVerified.indexOf(value) === 0,
       },
       {
@@ -183,27 +169,14 @@ const UserTable = () => {
         dataIndex: 'chatPrivacy',
         key: 'chatPrivacy',
         responsive: ['lg'],
-        filters: [
-          {
-            text: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-            value: PRIVACY_PERMISSIONS_ENUM.FOLLOWING_ONLY,
-          },
-          { text: PRIVACY_PERMISSIONS_ENUM.ALL, value: PRIVACY_PERMISSIONS_ENUM.ALL },
-          { text: PRIVACY_PERMISSIONS_ENUM.NONE, value: PRIVACY_PERMISSIONS_ENUM.NONE },
-        ],
+        filters: PRIVACY_PERMISSIONS_ENUM_FILTER,
         onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
       },
       {
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
-        filters: [
-          {
-            text: STATUS_ENUM.ACTIVE,
-            value: STATUS_ENUM.ACTIVE,
-          },
-          { text: STATUS_ENUM.BANNED, value: STATUS_ENUM.BANNED },
-        ],
+        filters: STATUS_ENUM_FILTER,
         onFilter: (value, record) => record.chatPrivacy.indexOf(value) === 0,
       },
       {

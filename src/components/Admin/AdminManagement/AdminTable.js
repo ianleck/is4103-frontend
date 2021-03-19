@@ -5,8 +5,8 @@ import { Button, Tabs, Table } from 'antd'
 import * as jwtAdmin from 'services/jwt/admin'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { indexOf, isNil, map } from 'lodash'
-import { ADMIN_ROLE_ENUM } from 'constants/constants'
 import { formatTime } from 'components/utils'
+import { ADMIN_ROLE_ENUM_FILTER } from 'constants/filters'
 
 const { TabPane } = Tabs
 
@@ -90,14 +90,7 @@ const AdminTable = () => {
         title: 'Role',
         dataIndex: 'role',
         key: 'role',
-        filters: [
-          {
-            text: ADMIN_ROLE_ENUM.SUPERADMIN,
-            value: ADMIN_ROLE_ENUM.SUPERADMIN,
-          },
-          { text: ADMIN_ROLE_ENUM.ADMIN, value: ADMIN_ROLE_ENUM.ADMIN },
-          { text: ADMIN_ROLE_ENUM.FINANCE, value: ADMIN_ROLE_ENUM.FINANCE },
-        ],
+        filters: ADMIN_ROLE_ENUM_FILTER,
         onFilter: (value, record) => record.role.indexOf(value) === 0,
       },
       {
