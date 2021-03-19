@@ -4,9 +4,8 @@ import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { Dropdown, Button } from 'antd'
 import { isEmpty } from 'lodash'
-import MentorshipCard from './MentorshipCard'
-import CourseCard from './CourseCard'
 import styles from './style.module.scss'
+import ProductCard from '../ProductCard'
 
 const Cart = () => {
   const history = useHistory()
@@ -55,7 +54,7 @@ const Cart = () => {
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
           {cart.Course.map(c => (
-            <CourseCard listing={c} key={c.courseId} />
+            <ProductCard listing={c} location="CartDropdown" key={c.courseId} />
           ))}
         </div>
       </div>
@@ -68,7 +67,7 @@ const Cart = () => {
         <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="col-12 mt-2">
           {cart.MentorshipApplications.map(m => (
-            <MentorshipCard listing={m} key={m.mentorshipListingId} />
+            <ProductCard listing={m} location="CartDropdown" key={m.mentorshipListingId} />
           ))}
         </div>
       </div>

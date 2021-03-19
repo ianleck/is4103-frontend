@@ -3,8 +3,7 @@ import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { isEmpty } from 'lodash'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import CourseCard from './CourseCard'
-import MentorshipCard from './MentorshipCard'
+import ProductCard from '../ProductCard'
 
 const CartItemList = () => {
   const user = useSelector(state => state.user)
@@ -56,7 +55,7 @@ const CartItemList = () => {
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
           {cart.Course.map(c => (
-            <CourseCard listing={c} key={c.courseId} />
+            <ProductCard listing={c} location="CartPage" key={c.courseId} />
           ))}
         </div>
       </div>
@@ -69,7 +68,7 @@ const CartItemList = () => {
         <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="col-12 mt-2">
           {cart.MentorshipApplications.map(m => (
-            <MentorshipCard listing={m} key={m.mentorshipListingId} />
+            <ProductCard listing={m} location="CartPage" key={m.mentorshipListingId} />
           ))}
         </div>
       </div>

@@ -4,8 +4,7 @@ import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { LoadingOutlined } from '@ant-design/icons'
 import { isEmpty } from 'lodash'
-import CourseCard from './CourseCard'
-import MentorshipCard from './MentorshipCard'
+import ProductCard from 'components/Cart/ProductCard'
 
 const Success = () => {
   const location = useLocation()
@@ -100,7 +99,7 @@ const Success = () => {
         <div className="row">
           <div className="w-100">
             {courses.map(c => (
-              <CourseCard listing={c} key={c.courseId} />
+              <ProductCard location="SuccessPage" listing={c} key={c.courseId} />
             ))}
           </div>
         </div>
@@ -108,7 +107,7 @@ const Success = () => {
         <div className="row mt-2">
           <div className="w-100">
             {mentorships.map(m => (
-              <MentorshipCard listing={m} key={m.mentorshipListingId} />
+              <ProductCard location="SuccessPage" listing={m} key={m.mentorshipListingId} />
             ))}
           </div>
         </div>
