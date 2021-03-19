@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import CountIconWidget from 'components/Common/CountIconWidget'
-import { isNil } from 'lodash'
+import { isNil, size } from 'lodash'
 import * as jwtAdmin from 'services/jwt/admin'
+import { ADMIN_ROLE_ENUM } from 'constants/constants'
 
 const NormalAdminWidget = () => {
   const [count, setCount] = useState(0)
@@ -14,16 +15,16 @@ const NormalAdminWidget = () => {
     const response = await jwtAdmin.getAllAdmins()
     let counter = 0
 
-    if (response.length > 0) {
-      for (let i = 0; i < response.length; i += 1) {
-        if (!isNil(response[i].permission)) {
-          if (response[i].permission === 'ADMIN') {
+    if (response && size(response) > 0) {
+      for (let i = 0; i < size(response); i += 1) {
+        if (response[i] && !isNil(response[i].role)) {
+          if (response[i].role === ADMIN_ROLE_ENUM.ADMIN) {
             counter += 1
           }
         }
       }
+      setCount(counter)
     }
-    setCount(counter)
   }
 
   return (
