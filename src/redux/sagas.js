@@ -1,11 +1,10 @@
 import { all } from 'redux-saga/effects'
-import admin from './admin/sagas'
+import cart from './cart/sagas'
 import user from './user/sagas'
 import menu from './menu/sagas'
 import settings from './settings/sagas'
 import categories from './categories/sagas'
-import mentorshipListings from './mentorships/mentorshipListing/sagas'
 
 export default function* rootSaga() {
-  yield all([admin(), user(), menu(), settings(), categories(), mentorshipListings()])
+  yield all([cart(), user(), menu(), settings(), categories()])
 }
