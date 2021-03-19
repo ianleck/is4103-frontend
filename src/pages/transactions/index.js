@@ -2,6 +2,7 @@ import { Table, Tag } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
 import TransactionCard from 'components/Student/Transaction'
 import { formatTime, showNotification } from 'components/utils'
+import { BILLING_TYPE_FILTER } from 'constants/filters'
 import {
   ERROR,
   SUCCESS,
@@ -54,28 +55,36 @@ const StudentTransactions = () => {
       title: 'Date of Transaction',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: '10%',
       responsive: ['sm'],
       render: createdAt => formatTime(createdAt),
+      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Transaction Id',
       dataIndex: 'billingId',
       key: 'billingId',
+      width: '10%',
       responsive: ['sm'],
     },
     {
       title: 'Billing Type',
       dataIndex: 'billingType',
       key: 'billingType',
+      width: '10%',
       responsive: ['md'],
       render: record => {
         return <Tag color="geekblue">{record}</Tag>
       },
+      filters: BILLING_TYPE_FILTER,
+      onFilter: (value, record) => record.billingType.indexOf(value) === 0,
     },
     {
       title: 'Product ID',
       dataIndex: 'productId',
       key: 'productId',
+      width: '10%',
       responsive: ['lg'],
       render: record => {
         return isNil(record) ? '-' : record
@@ -85,14 +94,18 @@ const StudentTransactions = () => {
       title: 'Currency',
       dataIndex: 'currency',
       key: 'currency',
+      width: '10%',
       responsive: ['md'],
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      width: '10%',
       responsive: ['md'],
       render: amount => parseFloat(amount).toFixed(2),
+      sorter: (a, b) => a.amount - b.amount,
+      sortDirections: ['ascend', 'descend'],
     },
   ]
 
