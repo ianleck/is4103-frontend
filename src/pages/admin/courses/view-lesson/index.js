@@ -10,7 +10,7 @@ import CourseProgressCard from 'components/Course/ProgressCard'
 import AdditionalContentCard from 'components/Course/AdditionalContentCard'
 import LessonList from 'components/Course/LessonList'
 
-const StudentCourseLesson = () => {
+const AdminCourseLesson = () => {
   const { courseId, lessonId } = useParams()
 
   const [currentCourse, setCurrentCourse] = useState('')
@@ -80,4 +80,4 @@ const StudentCourseLesson = () => {
   )
 }
 
-export default StudentCourseLesson
+export default AdminCourseLesson

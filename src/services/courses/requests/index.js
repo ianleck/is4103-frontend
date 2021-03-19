@@ -26,3 +26,29 @@ export async function getCourseRequestDtls(requestId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function acceptCourseRequest(courseId) {
+  const url = `/course/accept/request/${courseId}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function rejectCourseRequest(courseId) {
+  const url = `/course/reject/request/${courseId}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

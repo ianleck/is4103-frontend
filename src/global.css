@@ -42,11 +42,11 @@
   margin-left: 50%;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
-  height: 200px;
+  height: 220px;
 }
 
 .sensei-course-card-content {
-  height: 160px;
+  height: 180px;
 }
 
 .lesson-list-card {

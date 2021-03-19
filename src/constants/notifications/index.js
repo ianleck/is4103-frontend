@@ -8,6 +8,10 @@ export const ADMIN_PERMISSIONS_CHANGED = 'Only Administrator permissions were up
 
 export const COURSE_IMG_DEL_SUCCESS = 'Course Image removed successfully.'
 export const COURSE_IMG_DEL_ERR = 'There was an error removing your course image.'
+export const COURSE_ACCEPT_SUCCESS = 'The course request was successfully accepted.'
+export const COURSE_ACCEPT_ERROR = 'There was an error accepting the course request.'
+export const COURSE_REJECT_SUCCESS = 'The course request was successfully rejected.'
+export const COURSE_REJECT_ERROR = 'There was an error rejecting the course request.'
 
 export const ASSESSMENT_VID_DELETE_ERR = 'There was an error deleting your assessment video.'
 export const ASSESSMENT_VID_DELETE_SUCCESS = 'Your assessment video was successfully deleted.'

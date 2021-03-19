@@ -172,6 +172,16 @@ const routes = [
     exact: true,
   },
   {
+    path: '/admin/course-content-management/:id',
+    Component: lazy(() => import('pages/admin/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/admin/course-content-management/:courseId/view-lesson/:lessonId',
+    Component: lazy(() => import('pages/admin/courses/view-lesson')),
+    exact: true,
+  },
+  {
     path: '/admin/announcement-content-management',
     Component: lazy(() => import('pages/admin/announcements')),
     exact: true,

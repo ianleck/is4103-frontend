@@ -7,7 +7,7 @@ import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
 
-const StudentCourseDetails = () => {
+const AdminCourseDetails = () => {
   const { id } = useParams()
 
   const [course, setCourse] = useState([])
@@ -93,11 +93,11 @@ const StudentCourseDetails = () => {
       </div>
       <div className="row mt-4 pb-5">
         <div className="col-12">
-          <CourseLessonsList course={course} />
+          <CourseLessonsList course={course} isAdmin />
         </div>
       </div>
     </div>
   )
 }
 
-export default StudentCourseDetails
+export default AdminCourseDetails

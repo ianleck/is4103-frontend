@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { isNil, map, size } from 'lodash'
-import { getCourseRequests } from 'services/courses/requests'
 import {
   ACCEPTED_COURSES,
   COURSE_CONTENT_MGT,
@@ -10,12 +10,33 @@ import {
 } from 'constants/text'
 import { ADMIN_VERIFIED_ENUM, VISIBILITY_ENUM } from 'constants/constants'
 import CountIconWidget from 'components/Common/CountIconWidget'
-import { CheckOutlined, CloseOutlined, ExceptionOutlined } from '@ant-design/icons'
-import { Table } from 'antd'
-import { formatTime } from 'components/utils'
+import {
+  CheckOutlined,
+  CloseOutlined,
+  ExceptionOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons'
+import { Button, Space, Table, Tabs } from 'antd'
+import { formatTime, showNotification } from 'components/utils'
 import StatusTag from 'components/Common/StatusTag'
+import {
+  getCourseRequests,
+  acceptCourseRequest,
+  rejectCourseRequest,
+} from 'services/courses/requests'
+import {
+  COURSE_ACCEPT_ERROR,
+  COURSE_ACCEPT_SUCCESS,
+  COURSE_REJECT_ERROR,
+  COURSE_REJECT_SUCCESS,
+  ERROR,
+  SUCCESS,
+} from 'constants/notifications'
 
 const CourseContentManagement = () => {
+  const { TabPane } = Tabs
+  const history = useHistory()
+
   const [allRequests, setAllRequests] = useState([])
   const [pendingRequests, setPendingRequests] = useState([])
   const [acceptedRequests, setAcceptedRequests] = useState([])
@@ -24,6 +45,26 @@ const CourseContentManagement = () => {
   const [currentFilter, setCurrentFilter] = useState('all')
 
   const [currentTableData, setCurrentTableData] = useState([])
+
+  const approveCourse = async courseId => {
+    const result = await acceptCourseRequest(courseId)
+    if (result && result.success) {
+      retrieveCourseRequests()
+      showNotification('success', SUCCESS, COURSE_ACCEPT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_ACCEPT_ERROR)
+    }
+  }
+
+  const rejectCourse = async courseId => {
+    const result = await rejectCourseRequest(courseId)
+    if (result && result.success) {
+      retrieveCourseRequests()
+      showNotification('success', SUCCESS, COURSE_REJECT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_REJECT_ERROR)
+    }
+  }
 
   const retrieveCourseRequests = async () => {
     const filterCourses = requests => {
@@ -96,7 +137,7 @@ const CourseContentManagement = () => {
       title: 'Created At',
       key: 'createdAt',
       dataIndex: 'createdAt',
-      width: '10%',
+      width: '15%',
       responsive: ['lg'],
       render: record => formatTime(record),
       sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
@@ -114,7 +155,6 @@ const CourseContentManagement = () => {
       title: 'Verification Status',
       dataIndex: 'adminVerified',
       key: 'adminVerified',
-      responsive: ['md'],
       filters: [
         {
           text: ADMIN_VERIFIED_ENUM.PENDING,
@@ -139,6 +179,37 @@ const CourseContentManagement = () => {
         { text: VISIBILITY_ENUM.HIDDEN, value: VISIBILITY_ENUM.HIDDEN },
       ],
       onFilter: (value, record) => record.visibility.indexOf(value) === 0,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: record => (
+        <Space size="large">
+          <Button
+            type="primary"
+            shape="circle"
+            size="large"
+            icon={<InfoCircleOutlined />}
+            onClick={() => history.push(`/admin/course-content-management/${record.courseId}`)}
+          />
+          <Button
+            className="btn btn-success"
+            size="large"
+            shape="circle"
+            icon={<CheckOutlined />}
+            disabled={record.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED}
+            onClick={() => approveCourse(record.courseId)}
+          />
+          <Button
+            type="danger"
+            size="large"
+            shape="circle"
+            icon={<CloseOutlined />}
+            disabled={record.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED}
+            onClick={() => rejectCourse(record.courseId)}
+          />
+        </Space>
+      ),
     },
   ]
 
@@ -170,7 +241,7 @@ const CourseContentManagement = () => {
           />
         </div>
 
-        <div className="col-12 col-md-4">
+        <div className="col-6 col-md-4">
           <CountIconWidget
             title={ACCEPTED_COURSES}
             className={`${currentFilter === 'accepted' ? 'btn btn-light' : 'btn'}`}
@@ -181,7 +252,7 @@ const CourseContentManagement = () => {
           />
         </div>
 
-        <div className="col-12 col-md-4">
+        <div className="col-6 col-md-4">
           <CountIconWidget
             title={REJECTED_COURSES}
             className={`${currentFilter === 'rejected' ? 'btn btn-light' : 'btn'}`}
@@ -193,7 +264,19 @@ const CourseContentManagement = () => {
         </div>
 
         <div className="col-12">
-          <Table className="w-100" dataSource={currentTableData} columns={tableColumns} />
+          <div className="card">
+            <div className="card-header card-header-flex">
+              <div className="d-flex flex-column justify-content-center mr-auto">
+                <h5>List of Courses</h5>
+              </div>
+              <Tabs activeKey="courses" className="kit-tabs">
+                <TabPane tab="Courses" key="courses" />
+              </Tabs>
+            </div>
+            <div className="card-body">
+              <Table className="w-100" dataSource={currentTableData} columns={tableColumns} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
