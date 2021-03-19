@@ -30,7 +30,7 @@ import {
   rejectMentorshipApplication,
 } from 'services/mentorshipApplications'
 import { addMentorshipListingToCart } from 'services/jwt/cart'
-import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import { formatTime, showNotification } from 'components/utils'
 import { MENTORSHIP_ADD, MENTORSHIP_ALR_IN, SUCCESS, UNABLE_ADD } from 'constants/notifications'
 
@@ -233,17 +233,18 @@ const MentorshipApplicationsTable = () => {
             icon={<EditOutlined />}
             onClick={() => editApplication(record)}
           />
-          {record.senseiApproval === 'APPROVED' && record.progress === 'NOT_STARTED' && (
-            <Button
-              type="primary"
-              size="large"
-              shape="circle"
-              onClick={() => {
-                addItemToCart(record)
-              }}
-              icon={<ShoppingOutlined />}
-            />
-          )}
+          {record.senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED &&
+            record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
+              <Button
+                type="primary"
+                size="large"
+                shape="circle"
+                onClick={() => {
+                  addItemToCart(record)
+                }}
+                icon={<ShoppingOutlined />}
+              />
+            )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
               title="Are you sure you wish to cancel your application?"
