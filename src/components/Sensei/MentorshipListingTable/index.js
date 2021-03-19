@@ -28,6 +28,7 @@ import {
   deleteMentorshipListing,
 } from 'services/mentorshipListing'
 import { VISIBILITY_ENUM } from 'constants/constants'
+import { VISIBILITY_ENUM_FILTER } from 'constants/filters'
 
 const SenseiMentorshipListings = () => {
   const user = useSelector(state => state.user)
@@ -169,13 +170,7 @@ const SenseiMentorshipListings = () => {
       dataIndex: 'visibility',
       key: 'visibility',
       responsive: ['md'],
-      filters: [
-        {
-          text: VISIBILITY_ENUM.PUBLISHED,
-          value: VISIBILITY_ENUM.PUBLISHED,
-        },
-        { text: VISIBILITY_ENUM.HIDDEN, value: VISIBILITY_ENUM.HIDDEN },
-      ],
+      filters: VISIBILITY_ENUM_FILTER,
       onFilter: (value, record) => record.visibility.indexOf(value) === 0,
     },
     {
