@@ -62,12 +62,26 @@ export function* DELETE_FROM_CART({ payload }) {
   }
 }
 
+export function* EMPTY_CART({ payload }) {
+  const { courseIds, mentorshipListingIds } = payload
+  const response = yield call(jwtCart.deleteFromCart, courseIds, mentorshipListingIds)
+  if (response && response.success) {
+    if (!isNil(response.updatedCart)) {
+      yield putResolve({
+        type: 'cart/SET_STATE',
+        payload: { ...response.updatedCart },
+      })
+    }
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.LOAD_CURRENT_CART, LOAD_CURRENT_CART),
     takeEvery(actions.ADD_COURSE_TO_CART, ADD_COURSE_TO_CART),
     takeEvery(actions.ADD_MENTORSHIP_LISTING_TO_CART, ADD_MENTORSHIP_LISTING_TO_CART),
     takeEvery(actions.DELETE_FROM_CART, DELETE_FROM_CART),
+    takeEvery(actions.EMPTY_CART, EMPTY_CART),
     LOAD_CURRENT_CART(),
   ])
 }
