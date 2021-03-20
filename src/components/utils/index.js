@@ -1,13 +1,23 @@
-import { notification } from 'antd'
+import { notification, message } from 'antd'
 import { isNil } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
-  return moment(dateTime).format('YYYY-MM-DD h:mm:ss a')
+  return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
 }
 
 export const sortArrByCreatedAtAsc = objArr => {
   return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+}
+
+export const resetCart = {
+  createdAt: '',
+  updatedAt: '',
+  cartId: '',
+  studentId: '',
+  deletedAt: null,
+  Course: [],
+  MentorshipApplications: [],
 }
 
 export const resetUser = {
@@ -105,25 +115,41 @@ export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
   }
 }
 
-export const showNotification = (type, message, description) => {
+export const showNotification = (type, msg, description) => {
   switch (type) {
     case 'success':
       notification.success({
-        message,
+        msg,
         description,
       })
       break
     case 'error':
       notification.error({
-        message,
+        msg,
         description,
       })
       break
     case 'warn':
       notification.warn({
-        message,
+        msg,
         description,
       })
+      break
+    default:
+      break
+  }
+}
+
+export const showMessage = (type, msg) => {
+  switch (type) {
+    case 'success':
+      message.success(msg)
+      break
+    case 'error':
+      message.error(msg)
+      break
+    case 'warning':
+      message.warning(msg)
       break
     default:
       break

@@ -1,17 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Button, Space } from 'antd'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
-import { LESSONS, COURSE_DESC } from 'constants/text'
+import { LESSONS, COURSE_DESC, APPROVE_COURSE, REJECT_COURSE } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
+import { acceptCourseRequest, rejectCourseRequest } from 'services/courses/requests'
+import { showNotification } from 'components/utils'
+import {
+  COURSE_ACCEPT_ERROR,
+  COURSE_ACCEPT_SUCCESS,
+  COURSE_REJECT_ERROR,
+  COURSE_REJECT_SUCCESS,
+  ERROR,
+  SUCCESS,
+} from 'constants/notifications'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
-const StudentCourseDetails = () => {
+const AdminCourseDetails = () => {
   const { id } = useParams()
 
   const [course, setCourse] = useState([])
   const [announcements, setAnnouncements] = useState([])
+
+  const approveCourse = async () => {
+    const result = await acceptCourseRequest(id)
+    if (result && result.success) {
+      getCourseDetails()
+      showNotification('success', SUCCESS, COURSE_ACCEPT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_ACCEPT_ERROR)
+    }
+  }
+
+  const rejectCourse = async () => {
+    const result = await rejectCourseRequest(id)
+    if (result && result.success) {
+      getCourseDetails()
+      showNotification('success', SUCCESS, COURSE_REJECT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_REJECT_ERROR)
+    }
+  }
 
   const getCourseDetails = async () => {
     const courseDetails = await getCourseById(id)
@@ -31,9 +64,33 @@ const StudentCourseDetails = () => {
 
   return (
     <div>
-      <div className="row pt-2">
+      <div className="row pt-2 justify-content-center justify-content-md-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />
+        </div>
+        <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
+          <Space size="large">
+            <Button
+              className="btn btn-success text-white"
+              shape="round"
+              size="large"
+              icon={<CheckOutlined />}
+              disabled={course.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED}
+              onClick={() => approveCourse()}
+            >
+              {APPROVE_COURSE}
+            </Button>
+            <Button
+              className="btn btn-danger text-white"
+              shape="round"
+              size="large"
+              icon={<CloseOutlined />}
+              disabled={course.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED}
+              onClick={() => rejectCourse()}
+            >
+              {REJECT_COURSE}
+            </Button>
+          </Space>
         </div>
       </div>
       <div className="row mt-5">
@@ -93,11 +150,11 @@ const StudentCourseDetails = () => {
       </div>
       <div className="row mt-4 pb-5">
         <div className="col-12">
-          <CourseLessonsList course={course} />
+          <CourseLessonsList course={course} isAdmin />
         </div>
       </div>
     </div>
   )
 }
 
-export default StudentCourseDetails
+export default AdminCourseDetails

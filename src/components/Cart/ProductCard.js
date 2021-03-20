@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { getProfile } from 'services/jwt/index'
 import { Avatar, Button } from 'antd'
-import { deleteFromCart } from 'services/jwt/cart'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
-import { showNotification } from 'components/utils'
-import { ITEM_REMOVE } from 'constants/notifications'
 
 const ProductCard = data => {
+  const dispatch = useDispatch()
   const { listing } = data
   const [sensei, setSensei] = useState([])
   const [isCourse, setIsCourse] = useState(false)
@@ -43,15 +42,25 @@ const ProductCard = data => {
     }
   }
 
-  const removeClick = async e => {
+  const removeClick = e => {
     e.stopPropagation()
 
     if (isCourse) {
-      const response = await deleteFromCart([listing.courseId], [])
-      showNotification('success', ITEM_REMOVE, response.message)
+      dispatch({
+        type: 'cart/DELETE_FROM_CART',
+        payload: {
+          courseIds: [listing.courseId],
+          mentorshipListingIds: [],
+        },
+      })
     } else {
-      const response = await deleteFromCart([], [listing.mentorshipListingId])
-      showNotification('success', ITEM_REMOVE, response.message)
+      dispatch({
+        type: 'cart/DELETE_FROM_CART',
+        payload: {
+          courseIds: [],
+          mentorshipListingIds: [listing.mentorshipListingId],
+        },
+      })
     }
   }
 

@@ -1,9 +1,17 @@
 import React from 'react'
 import { Statistic } from 'antd'
+import { isNil } from 'lodash'
 
-const CountIconWidget = ({ title, count, icon, color }) => {
+const CountIconWidget = ({ title, count, icon, color, className, onClick }) => {
   return (
-    <div className="card text-dark">
+    <div
+      role="button"
+      tabIndex={0}
+      className={`${!isNil(className) ? className : 'defocus-btn text-dark'} card`}
+      onMouseDown={e => e.preventDefault()}
+      onKeyDown={e => e.preventDefault()}
+      onClick={onClick}
+    >
       <div className="card-body">
         <div className="row">
           <div className="col-12 text-center">

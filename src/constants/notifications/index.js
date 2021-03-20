@@ -8,6 +8,10 @@ export const ADMIN_PERMISSIONS_CHANGED = 'Only Administrator permissions were up
 
 export const COURSE_IMG_DEL_SUCCESS = 'Course Image removed successfully.'
 export const COURSE_IMG_DEL_ERR = 'There was an error removing your course image.'
+export const COURSE_ACCEPT_SUCCESS = 'The course request was successfully accepted.'
+export const COURSE_ACCEPT_ERROR = 'There was an error accepting the course request.'
+export const COURSE_REJECT_SUCCESS = 'The course request was successfully rejected.'
+export const COURSE_REJECT_ERROR = 'There was an error rejecting the course request.'
 
 export const ASSESSMENT_VID_DELETE_ERR = 'There was an error deleting your assessment video.'
 export const ASSESSMENT_VID_DELETE_SUCCESS = 'Your assessment video was successfully deleted.'
@@ -44,7 +48,9 @@ export const WARNING = 'Warning'
 export const OOPS = 'Something went wrong.'
 
 export const CART_EMPTY = 'You cannot checkout an empty cart.'
-export const ITEM_REMOVE = 'Item(s) removed'
+export const CART_ITEM_REMOVE = 'Your item was removed successfully.'
+export const CART_COURSE_ADDED = 'Course successfully added to cart.'
+export const CART_MENTORSHIP_ADDED = 'Mentorship successfully added to cart.'
 export const MENTORSHIP_ADD = 'Mentorship Application successfully added to Cart'
 export const UNABLE_ADD = 'Unable to add to Cart'
 export const MENTORSHIP_ALR_IN = 'Mentorship Application is already in Cart'

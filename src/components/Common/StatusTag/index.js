@@ -1,11 +1,14 @@
 import React from 'react'
 import { Tag } from 'antd'
 import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
+import { isNil } from 'lodash'
 
 // Usage: <StatusTag data={course} />
+// OR <StatusTag data={{ adminVerified: record }} />
 const StatusTag = data => {
   let colour
-  switch (data.data.adminVerified) {
+  const dataSource = !isNil(data.data.adminVerified) ? data.data.adminVerified : data.adminVerified
+  switch (dataSource) {
     case ADMIN_VERIFIED_ENUM.ACCEPTED:
       colour = 'processing'
       break

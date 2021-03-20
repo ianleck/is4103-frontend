@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import * as jwtCart from 'services/jwt/cart'
 import { LoadingOutlined } from '@ant-design/icons'
 import { isEmpty } from 'lodash'
@@ -16,6 +16,8 @@ const Success = () => {
   const [cart, setCart] = useState()
   const [isEmptyCart, setIsEmptyCart] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const populateCart = async () => {
@@ -92,7 +94,7 @@ const Success = () => {
     const courses = cart.Course
     const mentorships = cart.MentorshipApplications
 
-    emptyCart(courses, mentorships)
+    emptyCart()
 
     return (
       <div className="col-12">
@@ -115,19 +117,10 @@ const Success = () => {
     )
   }
 
-  const emptyCart = async (courses, mentorships) => {
-    let courseIds = []
-    let mentorshipListingIds = []
-
-    for (let i = 0; i < courses.length; i += 1) {
-      courseIds = [...courseIds, courses[i].courseId]
-    }
-
-    for (let i = 0; i < mentorships.length; i += 1) {
-      mentorshipListingIds = [...mentorshipListingIds, mentorships[i].mentorshipListingId]
-    }
-
-    await jwtCart.deleteFromCart(courseIds, mentorshipListingIds)
+  const emptyCart = async () => {
+    dispatch({
+      type: 'cart/RESET_CART',
+    })
   }
 
   const transactionDetails = () => {
