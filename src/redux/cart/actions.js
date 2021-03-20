@@ -4,7 +4,7 @@ const actions = {
   ADD_COURSE_TO_CART: 'cart/ADD_COURSE_TO_CART',
   ADD_MENTORSHIP_LISTING_TO_CART: 'cart/ADD_MENTORSHIP_LISTING_TO_CART',
   DELETE_FROM_CART: 'cart/DELETE_FROM_CART',
-  EMPTY_CART: 'cart/EMPTY_CART',
+  RESET_CART: 'cart/RESET_CART',
 }
 
 export default actions

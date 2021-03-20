@@ -94,7 +94,7 @@ const Success = () => {
     const courses = cart.Course
     const mentorships = cart.MentorshipApplications
 
-    emptyCart(courses, mentorships)
+    emptyCart()
 
     return (
       <div className="col-12">
@@ -117,21 +117,9 @@ const Success = () => {
     )
   }
 
-  const emptyCart = async (courses, mentorships) => {
-    let courseIds = []
-    let mentorshipListingIds = []
-
-    for (let i = 0; i < courses.length; i += 1) {
-      courseIds = [...courseIds, courses[i].courseId]
-    }
-
-    for (let i = 0; i < mentorships.length; i += 1) {
-      mentorshipListingIds = [...mentorshipListingIds, mentorships[i].mentorshipListingId]
-    }
-
+  const emptyCart = async () => {
     dispatch({
-      type: 'cart/EMPTY_CART',
-      payload: { courseIds, mentorshipListingIds },
+      type: 'cart/RESET_CART',
     })
   }
 

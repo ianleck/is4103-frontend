@@ -62,9 +62,26 @@ export function* DELETE_FROM_CART({ payload }) {
   }
 }
 
-export function* EMPTY_CART({ payload }) {
-  const { courseIds, mentorshipListingIds } = payload
+export function* RESET_CART() {
+  const result = yield call(jwtCart.getCart)
+  const { cart } = result
+
+  const courses = cart.Course
+  const mentorships = cart.MentorshipApplications
+
+  let courseIds = []
+  let mentorshipListingIds = []
+
+  for (let i = 0; i < courses.length; i += 1) {
+    courseIds = [...courseIds, courses[i].courseId]
+  }
+
+  for (let i = 0; i < mentorships.length; i += 1) {
+    mentorshipListingIds = [...mentorshipListingIds, mentorships[i].mentorshipListingId]
+  }
+
   const response = yield call(jwtCart.deleteFromCart, courseIds, mentorshipListingIds)
+
   if (response && response.success) {
     if (!isNil(response.updatedCart)) {
       yield putResolve({
@@ -81,7 +98,7 @@ export default function* rootSaga() {
     takeEvery(actions.ADD_COURSE_TO_CART, ADD_COURSE_TO_CART),
     takeEvery(actions.ADD_MENTORSHIP_LISTING_TO_CART, ADD_MENTORSHIP_LISTING_TO_CART),
     takeEvery(actions.DELETE_FROM_CART, DELETE_FROM_CART),
-    takeEvery(actions.EMPTY_CART, EMPTY_CART),
+    takeEvery(actions.RESET_CART, RESET_CART),
     LOAD_CURRENT_CART(),
   ])
 }
