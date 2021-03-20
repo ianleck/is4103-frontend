@@ -3,18 +3,24 @@ import * as jwt from 'services/jwt'
 import * as jwtCart from 'services/jwt/cart'
 import { showMessage } from 'components/utils'
 import { CART_ITEM_REMOVE, CART_COURSE_ADDED, CART_MENTORSHIP_ADDED } from 'constants/notifications'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import { isEmpty, isNil } from 'lodash'
 import actions from './actions'
 
 export function* LOAD_CURRENT_CART() {
   const currentUser = yield call(jwt.getLocalUserData)
-  if (!isEmpty(currentUser.accessToken)) {
-    const result = yield call(jwtCart.getCart)
-    const { cart } = result
-    yield putResolve({
-      type: 'cart/SET_STATE',
-      payload: { ...cart },
-    })
+  if (!isEmpty(currentUser.accessToken) && currentUser.userType === USER_TYPE_ENUM.STUDENT) {
+    const response = yield call(jwtCart.getCart)
+
+    if (response && response.success) {
+      if (!isNil(response.cart)) {
+        const { cart } = response
+        yield putResolve({
+          type: 'cart/SET_STATE',
+          payload: { ...cart },
+        })
+      }
+    }
   }
 }
 
@@ -99,6 +105,5 @@ export default function* rootSaga() {
     takeEvery(actions.ADD_MENTORSHIP_LISTING_TO_CART, ADD_MENTORSHIP_LISTING_TO_CART),
     takeEvery(actions.DELETE_FROM_CART, DELETE_FROM_CART),
     takeEvery(actions.RESET_CART, RESET_CART),
-    LOAD_CURRENT_CART(),
   ])
 }

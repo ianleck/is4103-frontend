@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { notification } from 'antd'
 import { isNil } from 'lodash'
+import { showNotification } from 'components/utils'
+import { ERROR } from 'constants/notifications'
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -31,11 +33,9 @@ apiClient.interceptors.response.use(undefined, apiResponse => {
           message: apiResponse.response.data.error.message,
         })
       }
-    } else {
-      notification.warning({
-        message: apiResponse.response.data,
-      })
-    }
+    } else if (!isNil(apiResponse.response.data.message))
+      showNotification('warning', ERROR, apiResponse.response.data.message)
+    else showNotification('warning', ERROR, apiResponse.response.data)
   }
   return { success: false }
 })
