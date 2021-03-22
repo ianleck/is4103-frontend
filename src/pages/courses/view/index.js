@@ -61,7 +61,7 @@ const ViewCourseDetailsPublic = () => {
       <div className="row mt-4">
         <div className="col-12 col-lg-8 text-center text-lg-left order-12 order-lg-1">
           <div>
-            <h1 className="text-dark text-uppercase">
+            <h1 className="text-dark text-uppercase text-break">
               <strong>{currentCourse.title}</strong>
             </h1>
           </div>
@@ -84,7 +84,7 @@ const ViewCourseDetailsPublic = () => {
 
           <div className="mt-4">
             <h3>Course Description</h3>
-            <h5 className="mt-4">{currentCourse.description}</h5>
+            <h5 className="mt-4 description-body">{currentCourse.description}</h5>
           </div>
           <hr className="mt-4" />
 
