@@ -2,7 +2,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
 import React from 'react'
 
-const TransactionCard = props => {
+const BillingCard = props => {
   const { children, isIncoming } = props
   return (
     <div className="card">
@@ -13,7 +13,7 @@ const TransactionCard = props => {
               <InfoCircleOutlined className="mx-2" style={{ color: 'black' }} />
             </Tooltip>
             <span className="mb-0 h5 text-dark">
-              Transaction History ({isIncoming ? 'Incoming' : 'Outgoing'})
+              Billing History ({isIncoming ? 'Received' : 'Sent'})
             </span>
           </div>
         </div>
@@ -23,4 +23,4 @@ const TransactionCard = props => {
   )
 }
 
-export default TransactionCard
+export default BillingCard
