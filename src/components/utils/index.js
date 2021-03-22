@@ -119,19 +119,19 @@ export const showNotification = (type, msg, description) => {
   switch (type) {
     case 'success':
       notification.success({
-        msg,
+        message: msg,
         description,
       })
       break
     case 'error':
       notification.error({
-        msg,
+        message: msg,
         description,
       })
       break
     case 'warn':
       notification.warn({
-        msg,
+        message: msg,
         description,
       })
       break
