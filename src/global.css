@@ -1,3 +1,7 @@
+.description-body {
+  white-space: pre-line;
+}
+
 .mentorship-listing-card {
   height: 340px;
 }
