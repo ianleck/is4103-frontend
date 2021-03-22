@@ -254,12 +254,12 @@ const routes = [
   },
   {
     path: '/sensei/wallet',
-    Component: lazy(() => import('pages/transactions')),
+    Component: lazy(() => import('pages/billings')),
     exact: true,
   },
   {
-    path: '/sensei/transaction/view/:id',
-    Component: lazy(() => import('pages/transactions/view')),
+    path: '/sensei/billing/view/:id',
+    Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
   // Student Pages
@@ -319,13 +319,13 @@ const routes = [
     exact: true,
   },
   {
-    path: '/student/dashboard/transactions',
-    Component: lazy(() => import('pages/transactions')),
+    path: '/student/dashboard/billings',
+    Component: lazy(() => import('pages/billings')),
     exact: true,
   },
   {
-    path: '/student/dashboard/transaction/view/:id',
-    Component: lazy(() => import('pages/transactions/view')),
+    path: '/student/dashboard/billing/view/:id',
+    Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
   /*

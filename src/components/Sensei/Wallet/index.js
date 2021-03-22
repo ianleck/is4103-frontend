@@ -79,7 +79,7 @@ const SenseiWallet = ({
     return (
       <div className="row align-items-center justify-content-between mb-4">
         <div className="col-auto">
-          <Tooltip title="For transactions that have passed the 120-day period">
+          <Tooltip title="For billings that have passed the 120-day period">
             <InfoCircleOutlined className="mx-2" />
           </Tooltip>
           <span className="text-dark h3">Confirmed Amount</span>
@@ -96,7 +96,7 @@ const SenseiWallet = ({
   const PendingAmountFooter = () => {
     return (
       <h6 className="text-muted">
-        <Tooltip title="For transactions within the 120-day holding period">
+        <Tooltip title="For billings within the 120-day holding period">
           <InfoCircleOutlined className="mx-2" />
         </Tooltip>
         Pending amount: S${!isNil(pendingAmount) ? parseFloat(pendingAmount).toFixed(2) : '-'}
