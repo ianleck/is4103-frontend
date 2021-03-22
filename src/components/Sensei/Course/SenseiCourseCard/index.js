@@ -31,7 +31,7 @@ const SenseiCourseCard = data => {
           <div className="col-9">
             <div className="card-body">
               <div className="d-flex align-items-start flex-column sensei-course-card-content">
-                <div className="h5 card-title font-weight-bold truncate-2-overflow">
+                <div className="h5 card-title font-weight-bold truncate-2-overflow text-break">
                   {course.title}
                 </div>
                 <p className="card-text text-break truncate-2-overflow">{course.description}</p>
