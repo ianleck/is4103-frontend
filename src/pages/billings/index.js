@@ -1,6 +1,6 @@
 import { Table, Tag } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
-import TransactionCard from 'components/Student/Transaction'
+import BillingCard from 'components/Student/Billing'
 import { formatTime, showNotification } from 'components/utils'
 import { BILLING_TYPE_FILTER, CURRENCY_FILTERS } from 'constants/filters'
 import {
@@ -52,7 +52,7 @@ const StudentTransactions = () => {
 
   const columns = [
     {
-      title: 'Date of Transaction',
+      title: 'Date of Billing',
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: '10%',
@@ -62,7 +62,7 @@ const StudentTransactions = () => {
       sortDirections: ['ascend', 'descend'],
     },
     {
-      title: 'Transaction Id',
+      title: 'Billing Id',
       dataIndex: 'billingId',
       key: 'billingId',
       width: '10%',
@@ -111,31 +111,31 @@ const StudentTransactions = () => {
     },
   ]
 
-  const viewTransaction = record => {
+  const viewBilling = record => {
     return {
       onClick: event => {
         event.preventDefault()
-        const path = `transaction/view/${record.billingId}`
+        const path = `billing/view/${record.billingId}`
         history.push(path)
       },
     }
   }
-  const showTransactions = (transactionFlow, dataSource, tableColumns) => {
-    const numTransactions = size(dataSource)
+  const showBillings = (billingFlow, dataSource, tableColumns) => {
+    const numBillings = size(dataSource)
 
     return (
       <div>
         <div className="row justify-content-between align-items-center mt-2">
           <div className="col-auto">
-            You currently have {numTransactions} {transactionFlow}{' '}
-            {numTransactions === 1 ? 'transaction' : 'transactions'}.
+            You currently have {numBillings} {billingFlow}{' '}
+            {numBillings === 1 ? 'billing' : 'billings'}.
           </div>
         </div>
         <Table
           className="mt-4"
           dataSource={dataSource}
           columns={tableColumns}
-          onRow={record => viewTransaction(record)}
+          onRow={record => viewBilling(record)}
         />
       </div>
     )
@@ -167,17 +167,13 @@ const StudentTransactions = () => {
         />
       )}
       {isSensei && (
-        <TransactionCard isIncoming>
-          {showTransactions('incoming', billingsReceived, columns)}
-        </TransactionCard>
+        <BillingCard isIncoming>{showBillings('incoming', billingsReceived, columns)}</BillingCard>
       )}
-      <TransactionCard isIncoming={false}>
-        {showTransactions('outgoing', billingsSent, columns)}
-      </TransactionCard>
+      <BillingCard isIncoming={false}>
+        {showBillings('outgoing', billingsSent, columns)}
+      </BillingCard>
       {!isSensei && (
-        <TransactionCard isIncoming>
-          {showTransactions('incoming', billingsReceived, columns)}
-        </TransactionCard>
+        <BillingCard isIncoming>{showBillings('incoming', billingsReceived, columns)}</BillingCard>
       )}
     </div>
   )
