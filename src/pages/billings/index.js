@@ -1,6 +1,6 @@
 import { Table, Tag } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
-import BillingCard from 'components/Student/Billing'
+import BillingCard from 'components/Billing'
 import { formatTime, showNotification } from 'components/utils'
 import { BILLING_TYPE_FILTER, CURRENCY_FILTERS } from 'constants/filters'
 import {
