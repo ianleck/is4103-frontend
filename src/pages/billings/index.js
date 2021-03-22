@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { requestWithdrawal, viewWallet } from 'services/wallet'
 
-const StudentTransactions = () => {
+const Billings = () => {
   const history = useHistory()
 
   const user = useSelector(state => state.user)
@@ -179,4 +179,4 @@ const StudentTransactions = () => {
   )
 }
 
-export default StudentTransactions
+export default Billings
