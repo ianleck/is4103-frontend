@@ -29,7 +29,7 @@ import {
   deleteMentorshipListing,
   getSenseiMentorshipListings,
   updateMentorshipListing,
-} from 'services/mentorshipListing'
+} from 'services/mentorship/listings'
 
 const MentorshipListings = () => {
   const { TabPane } = Tabs

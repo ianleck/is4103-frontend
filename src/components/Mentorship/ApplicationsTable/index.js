@@ -28,7 +28,7 @@ import {
   getAllStudentMentorshipApplications,
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
-} from 'services/mentorshipApplications'
+} from 'services/mentorship/applications'
 import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import { formatTime } from 'components/utils'
 

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import moment from 'moment'
 import { isNil } from 'lodash'
-import { getMentorshipListing } from 'services/mentorshipListing'
+import { getMentorshipListing } from 'services/mentorship/listings'
 
 const MentorshipExperienceCard = () => {
   const [experience, setExperience] = useState([])
