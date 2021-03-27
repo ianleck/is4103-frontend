@@ -65,7 +65,7 @@ import {
   LESSON_UPDATE_ERR,
 } from 'constants/notifications'
 import StatusTag from 'components/Common/StatusTag'
-import CourseAnnouncements2 from 'components/Sensei/Course/Create/Announcements'
+import CourseAnnouncements from 'components/Sensei/Course/Announcements'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -854,7 +854,7 @@ const SenseiCreateCourse = () => {
               {currentCourseTab === 'settings' && <CourseSettings />}
               {currentCourseTab === 'lessons' && <CourseLessons />}
               {currentCourseTab === 'announcements' && (
-                <CourseAnnouncements2
+                <CourseAnnouncements
                   currentCourse={currentCourse}
                   isCourseCreated={isCourseCreated}
                 />
