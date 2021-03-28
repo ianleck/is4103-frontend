@@ -176,7 +176,7 @@ export async function getSensei(accountId) {
     .get(`/user/${accountId}`, { withCredentials: true })
     .then(response => {
       if (response && !isNil(response.data)) {
-        if (response.data.success) return response.data.user
+        if (response.data.success) return response.data.userProfile
       }
       return false
     })
@@ -188,7 +188,7 @@ export async function getStudent(accountId) {
     .get(`/user/${accountId}`, { withCredentials: true })
     .then(response => {
       if (response && !isNil(response.data)) {
-        if (response.data.success) return response.data.user
+        if (response.data.success) return response.data.userProfile
       }
       return false
     })

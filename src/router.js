@@ -103,12 +103,12 @@ const routes = [
   },
   {
     path: '/admin/profile',
-    Component: lazy(() => import('pages/admin/profiles/admin-profile')),
+    Component: lazy(() => import('pages/admin/profiles')),
     exact: true,
   },
   {
     path: '/admin/user-management',
-    Component: lazy(() => import('pages/admin/users/main')),
+    Component: lazy(() => import('pages/admin/users')),
     exact: true,
   },
   {

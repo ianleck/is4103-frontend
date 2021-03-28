@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MyAdminProfile from '../../../components/Admin/MyAdminProfile/MyAdminProfile'
+import MyAdminProfile from '../../../components/Admin/MyAdminProfile'
 
 const AdminProfile = () => {
   return (
