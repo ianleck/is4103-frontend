@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Tabs } from 'antd'
-import StudentGrowthChart from './StudentGrowthChart'
-import SenseiGrowthChart from './SenseiGrowthChart'
+import StudentGrowthChart from '../StudentGrowthChart'
+import SenseiGrowthChart from '../SenseiGrowthChart'
 
 const { TabPane } = Tabs
 

@@ -133,7 +133,7 @@ const routes = [
   },
   {
     path: '/admin/admin-management',
-    Component: lazy(() => import('pages/admin/admins/main')),
+    Component: lazy(() => import('pages/admin/admins')),
     exact: true,
   },
   {
@@ -163,7 +163,7 @@ const routes = [
   },
   {
     path: '/admin/mentorship-content-management',
-    Component: lazy(() => import('pages/admin/mentorship/main')),
+    Component: lazy(() => import('pages/admin/mentorship')),
     exact: true,
   },
   {
