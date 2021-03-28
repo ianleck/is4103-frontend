@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getMentorshipListings } from 'services/mentorshipListing'
+import { getMentorshipListings } from 'services/mentorship/listings'
 import { Avatar } from 'antd'
 import ShoppingListCard from 'components/Mentorship/ShoppingListCard'
 

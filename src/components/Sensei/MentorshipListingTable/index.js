@@ -26,7 +26,7 @@ import {
   createMentorshipListing,
   updateMentorshipListing,
   deleteMentorshipListing,
-} from 'services/mentorshipListing'
+} from 'services/mentorship/listings'
 import { VISIBILITY_ENUM } from 'constants/constants'
 import { VISIBILITY_ENUM_FILTER } from 'constants/filters'
 

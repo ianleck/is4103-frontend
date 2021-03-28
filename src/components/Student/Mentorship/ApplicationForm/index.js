@@ -5,7 +5,7 @@ import { useParams, useHistory, useLocation } from 'react-router-dom'
 import {
   createMentorshipApplication,
   updateMentorshipApplication,
-} from 'services/mentorshipApplications'
+} from 'services/mentorship/applications'
 
 const formItemLayout = {
   labelCol: {

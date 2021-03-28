@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { withRouter, Redirect } from 'react-router-dom'
-import CustomLayout from 'components/Layout/CustomLayout'
+import CustomLayout from 'components/CustomLayout'
 import { USER_TYPE_ENUM } from 'constants/constants'
 
 const PublicLayout = ({ children }) => {

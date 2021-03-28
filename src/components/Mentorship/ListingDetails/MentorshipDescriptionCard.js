@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Descriptions } from 'antd'
 import { useParams } from 'react-router-dom'
-import { getMentorshipListing } from 'services/mentorshipListing'
+import { getMentorshipListing } from 'services/mentorship/listings'
 
 const MentorshipDescriptionCard = () => {
   const [listingDescription, setListingDescription] = useState([])
