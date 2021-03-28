@@ -2,9 +2,16 @@ import { all, takeEvery, put, call, select, putResolve } from 'redux-saga/effect
 import { notification } from 'antd'
 import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import { DP_REMOVED, SUCCESS } from 'constants/notifications'
 import { isEmpty, isNil } from 'lodash'
 import * as jwt from 'services/user'
-import { createAdminObj, createUserObj, resetCart, resetUser } from 'components/utils'
+import {
+  createAdminObj,
+  createUserObj,
+  resetCart,
+  resetUser,
+  showNotification,
+} from 'components/utils'
 import actions from './actions'
 import * as selectors from '../selectors'
 
@@ -432,6 +439,40 @@ export function* DELETE_ACCOUNT({ payload }) {
   }
 }
 
+export function* DELETE_DP() {
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: true,
+    },
+  })
+
+  const response = yield call(jwt.removeDp)
+  if (response) {
+    const updatedUser = handleProfileUpdateRsp(response)
+    if (updatedUser) {
+      yield putResolve({
+        type: 'user/SET_STATE',
+        payload: {
+          ...updatedUser,
+        },
+      })
+      jwt.updateLocalUserData(updatedUser)
+
+      showNotification('success', SUCCESS, DP_REMOVED)
+    }
+  }
+  yield putResolve({
+    type: 'menu/GET_DATA',
+  })
+  yield put({
+    type: 'user/SET_STATE',
+    payload: {
+      loading: false,
+    },
+  })
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.LOAD_CURRENT_ACCOUNT, LOAD_CURRENT_ACCOUNT),
@@ -444,6 +485,7 @@ export default function* rootSaga() {
     takeEvery(actions.ADD_EXPERIENCE, ADD_EXPERIENCE),
     takeEvery(actions.EDIT_EXPERIENCE, EDIT_EXPERIENCE),
     takeEvery(actions.DELETE_EXPERIENCE, DELETE_EXPERIENCE),
+    takeEvery(actions.DELETE_DP, DELETE_DP),
     LOAD_CURRENT_ACCOUNT(), // run once on app load to check user auth
   ])
 }
