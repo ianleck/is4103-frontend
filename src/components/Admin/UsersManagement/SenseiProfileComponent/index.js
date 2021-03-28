@@ -38,18 +38,20 @@ const SenseiProfileComponent = () => {
     setTabKey(key)
   }
 
+  const getSensei = async () => {
+    const response = await jwtAdmin.getSensei(userId)
+    setSensei(response)
+  }
+  const getListings = async () => {
+    const response = await jwtAdmin.getMentorMentorshipListings(userId)
+    setMentorshipListings(response)
+  }
+
   useEffect(() => {
-    const getSensei = async () => {
-      const response = await jwtAdmin.getSensei(userId)
-      setSensei(response)
-    }
-    const getListings = async () => {
-      const response = await jwtAdmin.getMentorMentorshipListings(userId)
-      setMentorshipListings(response)
-    }
     getSensei()
     getListings()
-  }, [userId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onBack = e => {
     e.preventDefault()
@@ -61,6 +63,8 @@ const SenseiProfileComponent = () => {
     const response = await jwtAdmin.acceptSensei(userId)
     if (response) {
       if (response.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED) {
+        getSensei()
+        getListings()
         showNotification('success', SUCCESS, ACCEPT_SENSEI_PROFILE)
       }
     } else {
@@ -72,6 +76,8 @@ const SenseiProfileComponent = () => {
     const response = await jwtAdmin.rejectSensei(userId)
     if (response) {
       if (response.adminVerified === 'REJECTED') {
+        getSensei()
+        getListings()
         showNotification('success', SUCCESS, REJECT_SENSEI_PROFILE)
       }
     } else {

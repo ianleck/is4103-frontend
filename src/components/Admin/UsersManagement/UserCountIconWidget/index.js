@@ -14,6 +14,7 @@ const UserCountIconWidget = ({
   allSenseis,
   allStudents,
   currentTab,
+  switchTabs,
   pendingSenseis,
   acceptedSenseis,
   rejectedSenseis,
@@ -34,16 +35,20 @@ const UserCountIconWidget = ({
         <div className="col-12 col-md-4">
           <CountIconWidget
             title="Total Student Accounts"
+            className="btn"
             count={size(allStudents)}
             icon={<BookOutlined />}
+            onClick={() => switchTabs('students')}
           />
         </div>
 
         <div className="col-12 col-md-4">
           <CountIconWidget
             title="Total Sensei Accounts"
+            className="btn"
             count={size(allSenseis)}
             icon={<i className="fa fa-graduation-cap" />}
+            onClick={() => switchTabs('senseis')}
           />
         </div>
       </div>
@@ -53,14 +58,6 @@ const UserCountIconWidget = ({
   const StudentWidgetGroup = () => {
     return (
       <div className="row mt-4">
-        <div className="col-12 col-md-4">
-          <CountIconWidget
-            title="Total Accounts"
-            count={size(allUsers)}
-            icon={<UserSwitchOutlined />}
-          />
-        </div>
-
         <div className="col-12 col-md-4">
           <CountIconWidget
             title="Total Student Accounts"

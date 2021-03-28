@@ -301,6 +301,7 @@ const UsersManagement = () => {
                 allSenseis={allSenseis}
                 allStudents={allStudents}
                 currentTab={currentTab}
+                switchTabs={switchTabs}
                 pendingSenseis={pendingSenseis}
                 acceptedSenseis={acceptedSenseis}
                 rejectedSenseis={rejectedSenseis}
