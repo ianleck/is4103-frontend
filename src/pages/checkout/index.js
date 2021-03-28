@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import Success from 'components/Checkout/Success'
+import Success from 'components/Checkout'
 
 const checkout = () => {
   return (
