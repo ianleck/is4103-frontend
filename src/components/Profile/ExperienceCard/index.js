@@ -3,7 +3,7 @@ import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import { isNil } from 'lodash'
-import * as jwt from 'services/jwt'
+import * as jwt from 'services/user'
 
 const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
   const { TextArea } = Input

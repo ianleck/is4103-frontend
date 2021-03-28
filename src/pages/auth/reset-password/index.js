@@ -3,7 +3,7 @@ import { Button, Form, Input, notification } from 'antd'
 import { LockOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
-import * as jwt from 'services/jwt'
+import * as jwt from 'services/user'
 
 const ResetPasswordPage = () => {
   const history = useHistory()

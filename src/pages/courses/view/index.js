@@ -8,7 +8,7 @@ import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
 import { formatTime } from 'components/utils'
-import { getProfile } from 'services/jwt'
+import { getProfile } from 'services/user'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()

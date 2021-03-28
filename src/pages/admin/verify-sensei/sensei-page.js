@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MentorProfile from '../../../components/Admin/VerifySensei/SenseiProfile'
+import MentorProfile from 'components/Admin/VerifySensei/SenseiProfile'
 
 const MentorPage = () => {
   return (

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import Charting from '../../../components/Admin/AdminDashboard/Charting'
-import Table1 from '../../../components/Admin/AdminDashboard/Table1'
-import Table2 from '../../../components/Admin/AdminDashboard/Table2'
+import StatsTable from '../../../components/Admin/AdminDashboard/StatsTable'
+import ActionableTable from '../../../components/Admin/AdminDashboard/ActionableTable'
 import StudentWidget from '../../../components/Admin/UsersManagement/StudentWidget'
 import SenseiWidget from '../../../components/Admin/UsersManagement/SenseiWidget'
 import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveAdminWidget'
@@ -33,11 +33,11 @@ const AdminDashboard = () => {
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <Table1 />
+          <StatsTable />
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <Table2 />
+          <ActionableTable />
         </div>
       </div>
     </div>

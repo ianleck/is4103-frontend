@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import Actions from './Actions'
 import UserMenu from './UserMenu'
-import Cart from '../Cart/CartDropdown/Cart'
+import Cart from '../Cart/CartDropdown'
 import style from './style.module.scss'
 
 const UserActionGroup = () => {

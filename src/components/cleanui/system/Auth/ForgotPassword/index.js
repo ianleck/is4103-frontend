@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Button, Form, notification } from 'antd'
 import { Link, useHistory } from 'react-router-dom'
-import * as jwt from 'services/jwt'
+import * as jwt from 'services/user'
 
 const ForgotPassword = () => {
   const history = useHistory()
