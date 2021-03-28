@@ -1,6 +1,6 @@
 import { all, call, putResolve, takeEvery } from 'redux-saga/effects'
-import * as jwt from 'services/jwt'
-import * as jwtCart from 'services/jwt/cart'
+import * as jwt from 'services/user'
+import * as jwtCart from 'services/cart'
 import { showMessage } from 'components/utils'
 import { CART_ITEM_REMOVE, CART_COURSE_ADDED, CART_MENTORSHIP_ADDED } from 'constants/notifications'
 import { USER_TYPE_ENUM } from 'constants/constants'

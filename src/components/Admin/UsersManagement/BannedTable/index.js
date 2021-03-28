@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 

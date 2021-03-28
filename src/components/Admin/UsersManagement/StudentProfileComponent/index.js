@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { Button } from 'antd'
 import { StopOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { Button, notification } from 'antd'
 import { CheckOutlined, CloseOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'

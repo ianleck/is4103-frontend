@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import * as jwtCart from 'services/jwt/cart'
+import * as jwtCart from 'services/cart'
 import { Button, notification } from 'antd'
 import { LoadingOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { CART_EMPTY, WARNING } from 'constants/notifications'

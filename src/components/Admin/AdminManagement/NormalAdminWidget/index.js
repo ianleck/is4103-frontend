@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import CountIconWidget from 'components/Common/CountIconWidget'
 import { isNil, size } from 'lodash'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { ADMIN_ROLE_ENUM } from 'constants/constants'
 
 const NormalAdminWidget = () => {

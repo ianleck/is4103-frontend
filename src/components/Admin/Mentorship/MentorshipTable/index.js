@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { Tabs, Table } from 'antd'
 
 const { TabPane } = Tabs

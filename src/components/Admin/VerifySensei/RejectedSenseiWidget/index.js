@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import CountIconWidget from 'components/Common/CountIconWidget'
 import { isNil } from 'lodash'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { CloseOutlined } from '@ant-design/icons'
 
 const RejectedSenseiWidget = () => {

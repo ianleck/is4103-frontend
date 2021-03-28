@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { Button, Input, Form, notification } from 'antd'
 import { ADMIN_ROLE_ENUM } from 'constants/constants'
 

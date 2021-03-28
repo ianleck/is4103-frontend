@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { getProfile } from 'services/jwt/index'
+import { getProfile } from 'services/user/index'
 import { Avatar, Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'

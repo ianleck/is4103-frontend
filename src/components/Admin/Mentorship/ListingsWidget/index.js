@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 
 const ListingsWidget = () => {
   const [count, setCount] = useState(0)

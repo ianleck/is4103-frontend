@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import ChartistGraph from 'react-chartist'
 import ChartistTooltip from 'chartist-plugin-tooltips-updated'
 import { MONTH_NAMES } from 'constants/constants'

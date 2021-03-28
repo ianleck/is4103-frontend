@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 import { Button, Table, Tabs, notification } from 'antd'
 import { ArrowLeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'

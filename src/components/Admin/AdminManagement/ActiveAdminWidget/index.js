@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CountIconWidget from 'components/Common/CountIconWidget'
 import { SafetyCertificateOutlined } from '@ant-design/icons'
 import { size } from 'lodash'
-import * as jwtAdmin from 'services/jwt/admin'
+import * as jwtAdmin from 'services/admin'
 
 const ActiveAdminWidget = () => {
   const [count, setCount] = useState(0)

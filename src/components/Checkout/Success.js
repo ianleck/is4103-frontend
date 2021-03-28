@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import * as jwtCart from 'services/jwt/cart'
+import * as jwtCart from 'services/cart'
 import { LoadingOutlined } from '@ant-design/icons'
 import { isEmpty } from 'lodash'
 import ProductCard from 'components/Cart/ProductCard'
