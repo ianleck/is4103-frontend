@@ -5,14 +5,19 @@ import { EMPTY_LESSON_TITLE, LESSON_LIST } from 'constants/text'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { indexOf, isEmpty, isNil, map, size } from 'lodash'
 
-const LessonList = ({ currentCourse, currentLesson }) => {
+const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
   const history = useHistory()
   let sortedLessonList = []
   let prevLessonId
   let nextLessonId
 
   const sendToLessonUrl = (sendToCourseId, sendToLessonId) => {
-    history.replace(`/student/dashboard/courses/${sendToCourseId}/view-lesson/${sendToLessonId}`)
+    if (!isAdmin)
+      history.replace(`/student/dashboard/courses/${sendToCourseId}/view-lesson/${sendToLessonId}`)
+    else
+      history.replace(
+        `/admin/course-content-management/${sendToCourseId}/view-lesson/${sendToLessonId}`,
+      )
   }
 
   if (!isNil(currentCourse.Lessons)) {

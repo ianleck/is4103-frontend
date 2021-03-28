@@ -8,7 +8,7 @@ import LessonComments from 'components/Course/LessonComments'
 import LessonMainContent from 'components/Course/LessonMainContent'
 import CourseProgressCard from 'components/Course/ProgressCard'
 import AdditionalContentCard from 'components/Course/AdditionalContentCard'
-import LessonList from 'components/Course/LessonPlaylist'
+import LessonPlaylist from 'components/Course/LessonPlaylist'
 
 const StudentCourseLesson = () => {
   const { courseId, lessonId } = useParams()
@@ -73,7 +73,11 @@ const StudentCourseLesson = () => {
             currentVideoUrl={currentVideoUrl}
             setCurrentVideoUrl={setCurrentVideoUrl}
           />
-          <LessonList currentCourse={currentCourse} currentLesson={currentLesson} />
+          <LessonPlaylist
+            currentCourse={currentCourse}
+            currentLesson={currentLesson}
+            isAdmin={false}
+          />
         </div>
       </div>
     </div>
