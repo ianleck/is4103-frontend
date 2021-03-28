@@ -308,7 +308,11 @@ const UsersManagement = () => {
                 currentFilter={currentFilter}
                 setTableData={setTableData}
               />
-              <Table dataSource={currentTableData} columns={tableColumns} />
+              <div className="row">
+                <div className="col-12 overflow-x-scroll">
+                  <Table dataSource={currentTableData} columns={tableColumns} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

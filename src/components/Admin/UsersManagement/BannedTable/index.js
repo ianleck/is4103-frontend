@@ -125,8 +125,12 @@ const BannedTable = () => {
 
       <div className="card-body">
         <BannedWidget />
-        {tabKey === '1' && showBannedStudent()}
-        {tabKey === '2' && showBannedSensei()}
+        <div className="row">
+          <div className="col-12 overflow-x-scroll">
+            {tabKey === '1' && showBannedStudent()}
+            {tabKey === '2' && showBannedSensei()}
+          </div>
+        </div>
       </div>
     </div>
   )
