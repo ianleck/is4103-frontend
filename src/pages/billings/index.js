@@ -1,8 +1,7 @@
-import { Table, Tag } from 'antd'
+import { Table } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
 import BillingCard from 'components/Billing'
-import { formatTime, showNotification } from 'components/utils'
-import { BILLING_TYPE_FILTER, CURRENCY_FILTERS } from 'constants/filters'
+import { showNotification } from 'components/utils'
 import {
   ERROR,
   SUCCESS,
@@ -14,6 +13,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { requestWithdrawal, viewWallet } from 'services/wallet'
+import billingColumns from 'components/Common/TableColumns/Billing'
 
 const Billings = () => {
   const history = useHistory()
@@ -49,67 +49,6 @@ const Billings = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const columns = [
-    {
-      title: 'Date of Billing',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      width: '10%',
-      responsive: ['sm'],
-      render: createdAt => formatTime(createdAt),
-      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      sortDirections: ['ascend', 'descend'],
-    },
-    {
-      title: 'Billing Id',
-      dataIndex: 'billingId',
-      key: 'billingId',
-      width: '10%',
-      responsive: ['sm'],
-    },
-    {
-      title: 'Billing Type',
-      dataIndex: 'billingType',
-      key: 'billingType',
-      width: '10%',
-      responsive: ['md'],
-      render: record => {
-        return <Tag color="geekblue">{record}</Tag>
-      },
-      filters: BILLING_TYPE_FILTER,
-      onFilter: (value, record) => record.billingType.indexOf(value) === 0,
-    },
-    {
-      title: 'Product ID',
-      dataIndex: 'productId',
-      key: 'productId',
-      width: '10%',
-      responsive: ['lg'],
-      render: record => {
-        return isNil(record) ? '-' : record
-      },
-    },
-    {
-      title: 'Currency',
-      dataIndex: 'currency',
-      key: 'currency',
-      width: '10%',
-      responsive: ['md'],
-      filters: CURRENCY_FILTERS,
-      onFilter: (value, record) => record.currency.indexOf(value) === 0,
-    },
-    {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
-      width: '10%',
-      responsive: ['md'],
-      render: amount => parseFloat(amount).toFixed(2),
-      sorter: (a, b) => a.amount - b.amount,
-      sortDirections: ['ascend', 'descend'],
-    },
-  ]
 
   const viewBilling = record => {
     return {
@@ -167,13 +106,17 @@ const Billings = () => {
         />
       )}
       {isSensei && (
-        <BillingCard isIncoming>{showBillings('incoming', billingsReceived, columns)}</BillingCard>
+        <BillingCard isIncoming>
+          {showBillings('incoming', billingsReceived, billingColumns)}
+        </BillingCard>
       )}
       <BillingCard isIncoming={false}>
-        {showBillings('outgoing', billingsSent, columns)}
+        {showBillings('outgoing', billingsSent, billingColumns)}
       </BillingCard>
       {!isSensei && (
-        <BillingCard isIncoming>{showBillings('incoming', billingsReceived, columns)}</BillingCard>
+        <BillingCard isIncoming>
+          {showBillings('incoming', billingsReceived, billingColumns)}
+        </BillingCard>
       )}
     </div>
   )
