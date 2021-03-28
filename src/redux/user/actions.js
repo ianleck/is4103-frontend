@@ -10,6 +10,7 @@ const actions = {
   ADD_EXPERIENCE: 'user/ADD_EXPERIENCE',
   EDIT_EXPERIENCE: 'user/EDIT_EXPERIENCE',
   DELETE_EXPERIENCE: 'user/DELETE_EXPERIENCE',
+  DELETE_DP: 'user/DELETE_DP',
 }
 
 export default actions
