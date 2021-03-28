@@ -269,3 +269,18 @@ export async function deleteAccount(accountId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function removeDp() {
+  return apiClient
+    .delete(`upload/user/dp`, { withCredentials: true })
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data.user
+      }
+      if (response && !isNil(response.data)) {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

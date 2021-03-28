@@ -8,6 +8,7 @@ import { QrcodeOutlined, CameraOutlined, PlusOutlined } from '@ant-design/icons'
 import actions from 'redux/user/actions'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import moment from 'moment'
+import { NO_DP_TO_REMOVE } from 'constants/notifications'
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -74,6 +75,31 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
       </div>
     </div>
   )
+
+  const dpFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowDPModal(false)}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button danger size="large" onClick={() => removeDP()}>
+          Remove Display Picture
+        </Button>
+      </div>
+    </div>
+  )
+
+  const removeDP = () => {
+    if (!isNil(user.profileImgUrl)) {
+      dispatch({
+        type: actions.DELETE_DP,
+      })
+    } else {
+      message.warning(NO_DP_TO_REMOVE)
+    }
+  }
 
   const GetDefaultProfilePic = () => {
     if (user.userType === USER_TYPE_ENUM.STUDENT) {
@@ -321,6 +347,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
             centered
             okButtonProps={{ style: { display: 'none' } }}
             onCancel={() => setShowDPModal(false)}
+            footer={dpFormFooter}
           >
             <div className="row mt-3">
               <div className="col-12 mt-2 text-center">

@@ -54,3 +54,6 @@ export const CART_MENTORSHIP_ADDED = 'Mentorship successfully added to cart.'
 export const MENTORSHIP_ADD = 'Mentorship Application successfully added to Cart'
 export const UNABLE_ADD = 'Unable to add to Cart'
 export const MENTORSHIP_ALR_IN = 'Mentorship Application is already in Cart'
+
+export const DP_REMOVED = 'Your Display Picture was successfully removed.'
+export const NO_DP_TO_REMOVE = 'No Display Picture to remove.'
