@@ -138,6 +138,7 @@ const CourseContentManagement = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
+      width: '40%',
       sorter: (a, b) => a.title.length - b.title.length,
       sortDirections: ['ascend', 'descend'],
     },
@@ -146,6 +147,7 @@ const CourseContentManagement = () => {
       dataIndex: 'adminVerified',
       key: 'adminVerified',
       filters: ADMIN_VERIFIED_ENUM_FILTER,
+      width: '10%',
       onFilter: (value, record) => record.adminVerified.indexOf(value) === 0,
       render: record => (
         <StatusTag data={{ adminVerified: record }} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
@@ -155,6 +157,7 @@ const CourseContentManagement = () => {
       title: 'Visibility',
       dataIndex: 'visibility',
       key: 'visibility',
+      width: '10%',
       responsive: ['md'],
       filters: VISIBILITY_ENUM_FILTER,
       onFilter: (value, record) => record.visibility.indexOf(value) === 0,

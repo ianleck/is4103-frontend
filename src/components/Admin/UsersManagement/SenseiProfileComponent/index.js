@@ -123,7 +123,7 @@ const SenseiProfileComponent = () => {
 
   const showMentorshipListings = () => {
     return (
-      <Table bordered="true" dataSource={mentorshipListings} rowKey="mentorshipListingId">
+      <Table dataSource={mentorshipListings} rowKey="mentorshipListingId">
         <Column
           title="Mentorship Listing Id"
           dataIndex="mentorshipListingId"

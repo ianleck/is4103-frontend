@@ -61,7 +61,7 @@ const BannedTable = () => {
 
   const showBannedStudent = () => {
     return (
-      <Table bordered="true" dataSource={students} rowKey="accountId">
+      <Table dataSource={students} rowKey="accountId">
         <Column title="Account Id" dataIndex="accountId" key="accountId" />
         <Column title="First Name" dataIndex="firstName" key="firstName" />
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
@@ -87,7 +87,7 @@ const BannedTable = () => {
 
   const showBannedSensei = () => {
     return (
-      <Table bordered="true" dataSource={senseis} rowKey="accountId">
+      <Table dataSource={senseis} rowKey="accountId">
         <Column title="Account Id" dataIndex="accountId" key="accountId" />
         <Column title="First Name" dataIndex="firstName" key="firstName" />
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
