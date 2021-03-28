@@ -138,7 +138,7 @@ export async function getProfile(accountId) {
     .get(`/user/${accountId}`)
     .then(response => {
       if (!isNil(response.data)) {
-        if (!isNil(response.data.user)) return response.data.user
+        if (!isNil(response.data.user)) return response.data.userProfile
       } else {
         return false
       }

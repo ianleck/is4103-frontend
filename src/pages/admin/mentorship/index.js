@@ -1,9 +1,9 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MentorshipTable from '../../../components/Admin/Mentorship/MentorshipTable'
-import ListingsWidget from '../../../components/Admin/Mentorship/ListingsWidget'
-import ContractsWidget from '../../../components/Admin/Mentorship/ContractsWidget'
-import ApplicationsWidget from '../../../components/Admin/Mentorship/ApplicationsWidget'
+import MentorshipTable from 'components/Admin/Mentorship/MentorshipTable'
+import ListingsWidget from 'components/Admin/Mentorship/ListingsWidget'
+import ContractsWidget from 'components/Admin/Mentorship/ContractsWidget'
+import ApplicationsWidget from 'components/Admin/Mentorship/ApplicationsWidget'
 
 const MentorshipContentManagement = () => {
   return (

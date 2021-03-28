@@ -3,11 +3,11 @@ import { useHistory } from 'react-router-dom'
 import { Button } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
 import { Helmet } from 'react-helmet'
-import UserTable from '../../../components/Admin/UsersManagement/UserTable'
-import BannedTable from '../../../components/Admin/UsersManagement/BannedTable'
-import StudentWidget from '../../../components/Admin/UsersManagement/StudentWidget'
-import SenseiWidget from '../../../components/Admin/UsersManagement/SenseiWidget'
-import BannedWidget from '../../../components/Admin/UsersManagement/BannedWidget'
+import UserTable from 'components/Admin/UsersManagement/UserTable'
+import BannedTable from 'components/Admin/UsersManagement/BannedTable'
+import StudentWidget from 'components/Admin/UsersManagement/StudentWidget'
+import SenseiWidget from 'components/Admin/UsersManagement/SenseiWidget'
+import BannedWidget from 'components/Admin/UsersManagement/BannedWidget'
 
 const UsersManagement = () => {
   const history = useHistory()
