@@ -5,6 +5,7 @@ export const ADMIN_ROLE_ENUM = {
 }
 
 export const ADMIN_VERIFIED_ENUM = {
+  ENUM_NAME: 'ADMIN_VERIFIED_ENUM',
   SHELL: 'SHELL',
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -53,6 +54,7 @@ export const STATUS_ENUM = {
 }
 
 export const USER_TYPE_ENUM = {
+  ENUM_NAME: 'USER_TYPE_ENUM',
   ADMIN: 'ADMIN',
   STUDENT: 'STUDENT',
   SENSEI: 'SENSEI',

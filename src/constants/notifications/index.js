@@ -39,6 +39,10 @@ export const ANNOUNCEMENT_EDIT_ERR = 'There was an error updating your announcem
 export const ANNOUNCEMENT_DEL_SUCCESS = 'Your announcement was successfully deleted.'
 export const ANNOUNCEMENT_DEL_ERR = 'There was an error deleting your announcement.'
 
+export const ACCEPT_SENSEI_PROFILE = 'Sensei profile successfully accepted.'
+export const REJECT_SENSEI_PROFILE = 'Sensei profile successfully rejected.'
+export const SENSEI_PROFILE_UPDATE_ERR = "There was an error updating this Sensei's profile."
+
 export const WITHDRAWAL_REQUEST_SUCCESS = 'Your withdrawal request was successfully sent.'
 export const WITHDRAWAL_REQUEST_ERR = 'There was an error sending your withdrawal request.'
 

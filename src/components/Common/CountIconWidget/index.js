@@ -7,7 +7,7 @@ const CountIconWidget = ({ title, count, icon, color, className, onClick }) => {
     <div
       role="button"
       tabIndex={0}
-      className={`${!isNil(className) ? className : 'defocus-btn text-dark'} card`}
+      className={`${!isNil(className) ? className : 'defocus-btn text-dark'} card p-0`}
       onMouseDown={e => e.preventDefault()}
       onKeyDown={e => e.preventDefault()}
       onClick={onClick}

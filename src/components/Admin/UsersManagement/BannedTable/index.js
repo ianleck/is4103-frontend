@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/admin'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import BannedWidget from 'components/Admin/UsersManagement/BannedWidget'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -123,6 +124,7 @@ const BannedTable = () => {
       </div>
 
       <div className="card-body">
+        <BannedWidget />
         {tabKey === '1' && showBannedStudent()}
         {tabKey === '2' && showBannedSensei()}
       </div>

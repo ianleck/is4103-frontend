@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtAdmin from 'services/admin'
-import { Button, Table, Tabs, notification } from 'antd'
+import { Button, Table, Tabs } from 'antd'
 import { ArrowLeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'
 import ProfileAboutCard from 'components/Profile/AboutCard'
@@ -14,6 +14,14 @@ import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
 import moment from 'moment'
 import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
+import { showNotification } from 'components/utils'
+import {
+  SUCCESS,
+  ACCEPT_SENSEI_PROFILE,
+  REJECT_SENSEI_PROFILE,
+  SENSEI_PROFILE_UPDATE_ERR,
+  ERROR,
+} from 'constants/notifications'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -52,14 +60,11 @@ const SenseiProfileComponent = () => {
   const onAccept = async () => {
     const response = await jwtAdmin.acceptSensei(userId)
     if (response) {
-      if (response.adminVerified === 'ACCEPTED') {
-        notification.success({ message: 'Success', description: 'Sensei Verified' })
-        const path = '/admin/user-management/verify-senseis/'
-        history.push(path)
-        history.push()
+      if (response.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED) {
+        showNotification('success', SUCCESS, ACCEPT_SENSEI_PROFILE)
       }
     } else {
-      notification.error({ message: 'Error', description: response.message })
+      showNotification('error', ERROR, SENSEI_PROFILE_UPDATE_ERR)
     }
   }
 
@@ -67,12 +72,10 @@ const SenseiProfileComponent = () => {
     const response = await jwtAdmin.rejectSensei(userId)
     if (response) {
       if (response.adminVerified === 'REJECTED') {
-        notification.success({ message: 'Success', description: 'Sensei Rejected' })
-        const path = '/admin/user-management/verify-senseis/'
-        history.push(path)
+        showNotification('success', SUCCESS, REJECT_SENSEI_PROFILE)
       }
     } else {
-      notification.error({ message: 'Error', description: response.message })
+      showNotification('error', ERROR, SENSEI_PROFILE_UPDATE_ERR)
     }
   }
 

@@ -1,5 +1,5 @@
 import { notification, message } from 'antd'
-import { isNil } from 'lodash'
+import { isNil, map } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
@@ -8,6 +8,35 @@ export const formatTime = dateTime => {
 
 export const sortArrByCreatedAtAsc = objArr => {
   return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+}
+
+export const sortDescAndKeyAccId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    user => ({
+      ...user,
+      key: user.accountId,
+    }),
+  )
+}
+
+export const sortDescAndKeyCourseId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    user => ({
+      ...user,
+      key: user.courseId,
+    }),
+  )
+}
+
+export const filterDataByAdminVerified = (data, adminVerified) => {
+  if (!isNil(adminVerified)) {
+    return data.filter(o => {
+      return o.adminVerified === adminVerified
+    })
+  }
+  return data
 }
 
 export const resetCart = {

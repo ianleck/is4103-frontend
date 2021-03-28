@@ -535,7 +535,7 @@ const SenseiCreateCourse = () => {
               Current Course Status:&nbsp;&nbsp;
             </span>
             <span className="align-middle">
-              <StatusTag data={currentCourse} />
+              <StatusTag data={currentCourse} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
             </span>
           </div>
           {currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED && (

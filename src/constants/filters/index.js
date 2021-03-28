@@ -4,6 +4,7 @@ import {
   BILLING_TYPE,
   PRIVACY_PERMISSIONS_ENUM,
   STATUS_ENUM,
+  USER_TYPE_ENUM,
   VISIBILITY_ENUM,
 } from 'constants/constants'
 import { currencyCodes } from 'constants/information'
@@ -59,6 +60,21 @@ export const VISIBILITY_ENUM_FILTER = [
     value: VISIBILITY_ENUM.PUBLISHED,
   },
   { text: VISIBILITY_ENUM.HIDDEN, value: VISIBILITY_ENUM.HIDDEN },
+]
+
+export const USER_TYPE_ENUM_FILTER = [
+  {
+    text: USER_TYPE_ENUM.ADMIN,
+    value: USER_TYPE_ENUM.ADMIN,
+  },
+  {
+    text: USER_TYPE_ENUM.STUDENT,
+    value: USER_TYPE_ENUM.STUDENT,
+  },
+  {
+    text: USER_TYPE_ENUM.SENSEI,
+    value: USER_TYPE_ENUM.SENSEI,
+  },
 ]
 
 export const CURRENCY_FILTERS = map(currencyCodes, c => ({ value: c.code, text: c.code }))

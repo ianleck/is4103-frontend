@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { isNil, map, size } from 'lodash'
+import { isNil, size } from 'lodash'
 import { COURSES, COURSE_CONTENT_MGT } from 'constants/text'
 import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 import { CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { Button, Space } from 'antd'
-import { formatTime, showNotification } from 'components/utils'
+import {
+  filterDataByAdminVerified,
+  formatTime,
+  showNotification,
+  sortDescAndKeyCourseId,
+} from 'components/utils'
 import StatusTag from 'components/Common/StatusTag'
 import {
   getCourseRequests,
@@ -56,63 +61,60 @@ const CourseContentManagement = () => {
   }
 
   const retrieveCourseRequests = async () => {
-    const filterCourses = requests => {
-      setPendingRequests(filterRequests(requests, ADMIN_VERIFIED_ENUM.PENDING))
-      setAcceptedRequests(filterRequests(requests, ADMIN_VERIFIED_ENUM.ACCEPTED))
-      setRejectedRequests(filterRequests(requests, ADMIN_VERIFIED_ENUM.REJECTED))
-    }
-
     const result = await getCourseRequests()
+
     if (result && !isNil(result.requests)) {
-      setCurrentTableData(sortAndKeyRequests(result.requests))
-      setAllRequests(result.requests)
-      filterCourses(result.requests)
-    }
-  }
-
-  const filterRequests = (requests, adminVerified) => {
-    const preparedData = sortAndKeyRequests(requests, 'desc')
-    if (!isNil(adminVerified)) {
-      return preparedData.filter(o => {
-        return o.adminVerified === adminVerified
-      })
-    }
-    return requests
-  }
-
-  const sortAndKeyRequests = (requests, order) => {
-    if (order === 'asc')
-      return map(
-        requests.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
-        course => ({
-          ...course,
-          key: course.courseId,
-        }),
+      const keyAllCourses = sortDescAndKeyCourseId(result.requests)
+      const keyPendingCourses = sortDescAndKeyCourseId(
+        filterDataByAdminVerified(result.requests, ADMIN_VERIFIED_ENUM.PENDING),
       )
-    return map(
-      requests.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-      course => ({
-        ...course,
-        key: course.courseId,
-      }),
-    )
+      const keyAcceptedCourses = sortDescAndKeyCourseId(
+        filterDataByAdminVerified(result.requests, ADMIN_VERIFIED_ENUM.ACCEPTED),
+      )
+      const keyRejectedCourses = sortDescAndKeyCourseId(
+        filterDataByAdminVerified(result.requests, ADMIN_VERIFIED_ENUM.REJECTED),
+      )
+
+      setAllRequests(keyAllCourses)
+      setPendingRequests(keyPendingCourses)
+      setAcceptedRequests(keyAcceptedCourses)
+      setRejectedRequests(keyRejectedCourses)
+
+      switch (currentFilter) {
+        case 'all':
+          setCurrentTableData(keyAllCourses)
+          break
+        case 'pending':
+          setCurrentTableData(keyPendingCourses)
+          break
+        case 'accepted':
+          setCurrentTableData(keyAcceptedCourses)
+          break
+        case 'rejected':
+          setCurrentTableData(keyRejectedCourses)
+          break
+        default:
+          setCurrentTableData(keyAllCourses)
+          break
+      }
+    }
   }
 
   const setTableData = filter => {
     if (currentFilter === filter) {
-      setCurrentTableData(sortAndKeyRequests(allRequests))
+      setCurrentTableData(sortDescAndKeyCourseId(allRequests))
       setCurrentFilter('all')
       return
     }
     switch (filter) {
       case 'pending':
-        setCurrentTableData(filterRequests(allRequests, ADMIN_VERIFIED_ENUM.PENDING))
+        setCurrentTableData(filterDataByAdminVerified(allRequests, ADMIN_VERIFIED_ENUM.PENDING))
         break
       case 'accepted':
-        setCurrentTableData(filterRequests(allRequests, ADMIN_VERIFIED_ENUM.ACCEPTED))
+        setCurrentTableData(filterDataByAdminVerified(allRequests, ADMIN_VERIFIED_ENUM.ACCEPTED))
         break
       case 'rejected':
-        setCurrentTableData(filterRequests(allRequests, ADMIN_VERIFIED_ENUM.REJECTED))
+        setCurrentTableData(filterDataByAdminVerified(allRequests, ADMIN_VERIFIED_ENUM.REJECTED))
         break
       default:
         setCurrentTableData(allRequests)
@@ -145,7 +147,9 @@ const CourseContentManagement = () => {
       key: 'adminVerified',
       filters: ADMIN_VERIFIED_ENUM_FILTER,
       onFilter: (value, record) => record.adminVerified.indexOf(value) === 0,
-      render: record => <StatusTag data={{ adminVerified: record }} />,
+      render: record => (
+        <StatusTag data={{ adminVerified: record }} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
+      ),
     },
     {
       title: 'Visibility',

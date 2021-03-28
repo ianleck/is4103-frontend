@@ -4,6 +4,7 @@ import { Skeleton } from 'antd'
 import { formatTime } from 'components/utils'
 import { isNil } from 'lodash'
 import StatusTag from 'components/Common/StatusTag'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 
 const SenseiCourseCard = data => {
   const history = useHistory()
@@ -37,7 +38,7 @@ const SenseiCourseCard = data => {
                 <p className="card-text text-break truncate-2-overflow">{course.description}</p>
                 <div className="row w-100 align-items-center mt-auto">
                   <div className="col-12">
-                    <StatusTag data={course} />
+                    <StatusTag data={course} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
                   </div>
                   <div className="col-12 mt-1">
                     <small className="text-uppercase text-secondary">
