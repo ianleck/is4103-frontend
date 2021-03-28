@@ -243,7 +243,7 @@ const AboutCard = ({ user, showEditTools }) => {
             <div className="card">
               <div className="card-body">
                 {!editBioMode && showBio && <EmptyInformation />}
-                {!editBioMode && !showBio && user.bio}
+                {!editBioMode && !showBio && <span className="description-body">{user.bio}</span>}
                 {editBioMode && <EditBioField />}
               </div>
             </div>

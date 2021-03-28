@@ -1,13 +1,52 @@
+.announcement-card-body {
+  max-height: 175px;
+}
+
+.course-card-img {
+  width: 100%;
+}
+
+.course-card-img-holder {
+  max-height: 150px;
+}
+
+.course-img-banner-holder {
+  max-height: 200px;
+}
+
+.course-img-banner {
+  width: 100%;
+}
+
+.defocus-btn {
+  outline: none;
+  box-shadow: none;
+  cursor: default;
+}
+
 .description-body {
   white-space: pre-line;
+}
+
+.lesson-list-card {
+  height: 250px;
 }
 
 .mentorship-listing-card {
   height: 340px;
 }
 
+.menu-item {
+  width: 275px;
+  white-space: normal !important;
+}
+
 .overflow-scroll {
   overflow: scroll;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .overflow-x-scroll {
@@ -18,30 +57,6 @@
 .overflow-y-scroll {
   overflow-y: scroll;
   overflow-x: hidden;
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.announcement-card-body {
-  max-height: 175px;
-}
-
-.course-card-img-holder {
-  max-height: 150px;
-}
-
-.course-card-img {
-  width: 100%;
-}
-
-.course-img-banner-holder {
-  max-height: 200px;
-}
-
-.course-img-banner {
-  width: 100%;
 }
 
 .sensei-course-card {
@@ -55,8 +70,8 @@
   height: 180px;
 }
 
-.lesson-list-card {
-  height: 250px;
+.scroll-menu-arrow--disabled {
+  display: none;
 }
 
 .text-2-lines {
@@ -71,16 +86,8 @@
   height: 88px !important;
 }
 
-.truncate-4-overflow {
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-}
-
-.truncate-3-overflow {
-  -webkit-line-clamp: 3;
+.truncate-1-overflow {
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -95,25 +102,18 @@
   display: -webkit-box;
 }
 
-.truncate-1-overflow {
-  -webkit-line-clamp: 1;
+.truncate-3-overflow {
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
 }
 
-.menu-item {
-  width: 275px;
-  white-space: normal !important;
-}
-
-.scroll-menu-arrow--disabled {
-  display: none;
-}
-
-.defocus-btn {
-  outline: none;
-  box-shadow: none;
-  cursor: default;
+.truncate-4-overflow {
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
 }

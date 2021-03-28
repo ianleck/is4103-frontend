@@ -16,7 +16,7 @@ const CourseAnnouncementList = ({ announcements }) => {
         <small className="text-secondary">
           {`${CREATED_AT} ${formatTime(announcement.createdAt)}`}
         </small>
-        <p className="mt-2">{announcement.description}</p>
+        <p className="mt-2 description-body">{announcement.description}</p>
       </div>
     )
   }
