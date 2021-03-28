@@ -8,7 +8,7 @@ import LessonComments from 'components/Course/LessonComments'
 import LessonMainContent from 'components/Course/LessonMainContent'
 import CourseProgressCard from 'components/Course/ProgressCard'
 import AdditionalContentCard from 'components/Course/AdditionalContentCard'
-import LessonList from 'components/Course/LessonList'
+import LessonList from 'components/Course/LessonPlaylist'
 
 const StudentCourseLesson = () => {
   const { courseId, lessonId } = useParams()
