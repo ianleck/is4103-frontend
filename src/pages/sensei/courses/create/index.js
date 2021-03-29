@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { isNil, map, size } from 'lodash'
+import { isEmpty, isNil, map, size } from 'lodash'
 import {
   Button,
   Card,
@@ -33,7 +33,7 @@ import {
 import Axios from 'axios'
 import download from 'js-file-download'
 import ReactPlayer from 'react-player/lazy'
-import { createCourse, getCourseById, updateCourse } from 'services/courses'
+import { createCourse, deleteCourseDraft, getCourseById, updateCourse } from 'services/courses'
 import {
   createLesson,
   deleteLesson,
@@ -64,6 +64,8 @@ import {
   LESSON_DELETE_ERR,
   LESSON_UPDATE_SUCCESS,
   LESSON_UPDATE_ERR,
+  COURSE_DRAFT_DEL_SUCCESS,
+  COURSE_DRAFT_DEL_ERROR,
 } from 'constants/notifications'
 import StatusTag from 'components/Common/StatusTag'
 import CourseAnnouncements from 'components/Sensei/Course/Announcements'
@@ -84,6 +86,7 @@ const SenseiCreateCourse = () => {
   const [isCourseDraft, setIsCourseDraft] = useState(true)
   const [currentCourse, setCurrentCourse] = useState('')
   const [currentCourseTab, setCurrentCourseTab] = useState('settings')
+  const [cfmCourseDelete, setCfmCourseDelete] = useState(false)
 
   const [lessons, setLessons] = useState([])
   const [showEditLesson, setShowEditLesson] = useState(false)
@@ -414,6 +417,17 @@ const SenseiCreateCourse = () => {
     }
   }
 
+  const onCfmCourseDelete = async () => {
+    const result = await deleteCourseDraft(currentCourse.courseId, user.accountId)
+    console.log('result', result)
+    if (result && !isNil(result.success)) {
+      history.goBack()
+      showNotification('success', SUCCESS, COURSE_DRAFT_DEL_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_DRAFT_DEL_ERROR)
+    }
+  }
+
   const submitCourseForApproval = async () => {
     const formValues = {
       adminVerified: ADMIN_VERIFIED_ENUM.PENDING,
@@ -475,7 +489,7 @@ const SenseiCreateCourse = () => {
         categories: result.course.Categories.map(c => c.categoryId),
       })
     }
-    if (!isNil(result.course.Lessons)) {
+    if (result.course && !isNil(result.course.Lessons)) {
       const lessonData = map(result.course.Lessons, res => ({
         ...res,
         key: res.lessonId,
@@ -871,6 +885,29 @@ const SenseiCreateCourse = () => {
                 />
               )}
             </div>
+            {!isEmpty(currentCourse) && isNil(currentCourse.publishedAt) && (
+              <div className="card-footer">
+                <Popconfirm
+                  title="Do you wish to delete your course?"
+                  visible={cfmCourseDelete}
+                  onConfirm={onCfmCourseDelete}
+                  okText="Delete"
+                  okType="danger"
+                  okButtonProps={{ loading: isLoading }}
+                  onCancel={() => setCfmCourseDelete(false)}
+                >
+                  <Button
+                    type="danger"
+                    size="large"
+                    shape="round"
+                    icon={<DeleteOutlined />}
+                    onClick={() => setCfmCourseDelete(true)}
+                  >
+                    Delete Course
+                  </Button>
+                </Popconfirm>
+              </div>
+            )}
           </div>
         </div>
       </div>
