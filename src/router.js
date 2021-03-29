@@ -196,6 +196,11 @@ const routes = [
     Component: lazy(() => import('pages/admin/transactions')),
     exact: true,
   },
+  {
+    path: '/admin/wallets',
+    Component: lazy(() => import('pages/admin/wallets')),
+    exact: true,
+  },
   // Sensei Pages
   {
     path: '/sensei',

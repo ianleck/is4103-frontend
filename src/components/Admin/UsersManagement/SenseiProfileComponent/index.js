@@ -12,9 +12,8 @@ import ProfileExperienceCard from 'components/Profile/ExperienceCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
-import moment from 'moment'
 import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
-import { showNotification } from 'components/utils'
+import { formatTime, showNotification } from 'components/utils'
 import {
   SUCCESS,
   ACCEPT_SENSEI_PROFILE,
@@ -22,6 +21,7 @@ import {
   SENSEI_PROFILE_UPDATE_ERR,
   ERROR,
 } from 'constants/notifications'
+import billingColumns from 'components/Common/TableColumns/Billing'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -33,9 +33,18 @@ const SenseiProfileComponent = () => {
   const [sensei, setSensei] = useState('')
   const [mentorshipListings, setMentorshipListings] = useState('')
 
-  const [tabKey, setTabKey] = useState('1')
-  const changeTab = key => {
-    setTabKey(key)
+  // for future implementation when linking with backend
+  // const [billingsSent, setBillingsSent] = useState([])
+  // const [billingsReceived, setBillingsReceived] = useState([])
+
+  const [listingsTabKey, setListingsTabKey] = useState('listings')
+  const changeListingsTab = key => {
+    setListingsTabKey(key)
+  }
+
+  const [billingsTabKey, setBillingsTabKey] = useState('received')
+  const changeBillingsTab = key => {
+    setBillingsTabKey(key)
   }
 
   const getSensei = async () => {
@@ -136,15 +145,25 @@ const SenseiProfileComponent = () => {
           title="Created At"
           dataIndex="createdAt"
           key="createdAt"
-          render={createdAt => moment(createdAt).format('YYYY-MM-DD h:mm:ss a')}
+          render={createdAt => formatTime(createdAt)}
         />
         <Column
           title="Updated At"
           dataIndex="updatedAt"
           key="updatedAt"
-          render={updatedAt => moment(updatedAt).format('YYYY-MM-DD h:mm:ss a')}
+          render={updatedAt => formatTime(updatedAt)}
         />
       </Table>
+    )
+  }
+
+  const showBillings = (dataSource, tableColumns) => {
+    return (
+      <Table
+        dataSource={dataSource}
+        columns={tableColumns}
+        // onRow={record => viewBilling(record)}
+      />
     )
   }
 
@@ -179,7 +198,7 @@ const SenseiProfileComponent = () => {
           <ProfilePersonalityCard user={sensei} />
         </div>
       </div>
-
+      {/* Mentorship Listings of a Sensei */}
       <div className="row mt-4">
         <div className="col-12">
           <div className="card">
@@ -187,11 +206,33 @@ const SenseiProfileComponent = () => {
               <div className="d-flex flex-column justify-content-center mr-auto">
                 <h5>Mentorship Listings</h5>
               </div>
-              <Tabs activeKey={tabKey} className="kit-tabs" onChange={changeTab}>
-                <TabPane tab="Mentorship Listings" key="1" />
+              <Tabs activeKey={listingsTabKey} className="kit-tabs" onChange={changeListingsTab}>
+                <TabPane tab="Mentorship Listings" key="listings" />
               </Tabs>
             </div>
-            <div className="card-body">{tabKey === '1' && showMentorshipListings()}</div>
+            <div className="card-body">
+              {listingsTabKey === 'listings' && showMentorshipListings()}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Billings of a Sensei */}
+      <div className="row mt-4">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-header card-header-flex">
+              <div className="d-flex flex-column justify-content-center mr-auto">
+                <h5>Billings</h5>
+              </div>
+              <Tabs activeKey={billingsTabKey} className="kit-tabs" onChange={changeBillingsTab}>
+                <TabPane tab="Received" key="received" />
+                <TabPane tab="Sent" key="sent" />
+              </Tabs>
+            </div>
+            <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
+              {billingsTabKey === 'received' && showBillings([], billingColumns)}
+              {billingsTabKey === 'sent' && showBillings([], billingColumns)}
+            </div>
           </div>
         </div>
       </div>

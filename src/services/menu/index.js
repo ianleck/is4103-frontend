@@ -125,6 +125,11 @@ export async function getAdminMenuData() {
           key: 'transactions',
           url: '/admin/transactions',
         },
+        {
+          title: 'Wallets',
+          key: 'wallets',
+          url: '/admin/wallets',
+        },
       ],
     },
   ]

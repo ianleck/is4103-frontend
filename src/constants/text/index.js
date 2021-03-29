@@ -51,3 +51,5 @@ export const WITHDRAWAL_MGT = 'Withdrawal Management'
 export const PENDING_WITHDRAWALS = 'Pending Withdrawals'
 export const APPROVED_WITHDRAWALS = 'Approved Withdrawals'
 export const REJECTED_WITHDRAWALS = 'Rejected Withdrawals'
+
+export const WALLET_MGT = 'Wallet Management'
