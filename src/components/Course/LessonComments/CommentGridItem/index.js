@@ -4,7 +4,7 @@ import { isNil } from 'lodash'
 import moment from 'moment'
 import { MoreOutlined } from '@ant-design/icons'
 
-const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport }) => {
+const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport, isAdmin }) => {
   const commentMenu = () => {
     return (
       <Menu>
@@ -65,11 +65,13 @@ const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport 
           </div>
         </div>
       </div>
-      <div className="col-auto align-self-start">
-        <Dropdown overlay={commentMenu(comment.commentId, comment.accountId)}>
-          <Button type="text" size="large" icon={<MoreOutlined />} />
-        </Dropdown>
-      </div>
+      {!isAdmin && (
+        <div className="col-auto align-self-start">
+          <Dropdown overlay={commentMenu()}>
+            <Button type="text" size="large" icon={<MoreOutlined />} />
+          </Dropdown>
+        </div>
+      )}
     </div>
   )
 }

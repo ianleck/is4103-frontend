@@ -67,8 +67,11 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
     }
     setPaginatedComments(tempPaginatedItems)
     setCurrentPageIdx(1)
-    if (DEFAULT_ITEMS_PER_PAGE < size(result.comments)) setShowLoadMore(true)
-    else setShowLoadMore(false)
+    if (DEFAULT_ITEMS_PER_PAGE < size(result.comments)) {
+      setShowLoadMore(true)
+    } else {
+      setShowLoadMore(false)
+    }
     setTimeout(() => {
       setIsLoading(false)
     }, DEFAULT_TIMEOUT)
@@ -238,7 +241,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
             src={
               user.profileImgUrl
                 ? `${user.profileImgUrl}?${new Date().getTime()}`
-                : '/resources/images/avatars/apprentice.png'
+                : '/resources/images/avatars/avatar-2.png'
             }
           />
         </div>
@@ -270,6 +273,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
                   isLoading={isLoading}
                   handleDelete={handleDelete}
                   handleReport={handleReport}
+                  isAdmin={isAdmin}
                 />
               )
             })
@@ -285,7 +289,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
           onCancel={() => setShowConfirmDelete(false)}
           footer={deleteCommmentFooter}
         >
-          Are you sure you want to delete the comment?
+          Are you sure you want to delete this comment?
         </Modal>
       </div>
 
@@ -324,7 +328,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
                 <Form.Item
                   name="reason"
                   label="Reason"
-                  rules={[{ required: true, message: 'Please input reason' }]}
+                  rules={[{ required: true, message: 'Please select a reason for the complaint.' }]}
                 >
                   <Select placeholder="Select Complaint Reason">
                     {map(reasons, reason => {
