@@ -379,8 +379,11 @@ const AdminProfile = () => {
                     rules={[{ required: true, message: 'Please input role' }]}
                   >
                     <Select placeholder="Select Admin Role">
-                      <Option value="ADMIN">ADMIN</Option>
-                      <Option value="SUPERADMIN">SUPERADMIN</Option>
+                      <Option value={ADMIN_ROLE_ENUM.ADMIN}>{ADMIN_ROLE_ENUM.ADMIN}</Option>
+                      <Option value={ADMIN_ROLE_ENUM.FINANCE}>{ADMIN_ROLE_ENUM.FINANCE}</Option>
+                      <Option value={ADMIN_ROLE_ENUM.SUPERADMIN}>
+                        {ADMIN_ROLE_ENUM.SUPERADMIN}
+                      </Option>
                     </Select>
                   </Form.Item>
                 </div>

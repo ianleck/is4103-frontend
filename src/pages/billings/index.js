@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom'
 import { requestWithdrawal, viewWallet } from 'services/wallet'
 import billingColumns from 'components/Common/TableColumns/Billing'
 import BillingManagement from 'components/Admin/BillingManagement'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const Billings = () => {
   const history = useHistory()
@@ -27,9 +28,9 @@ const Billings = () => {
   const { walletId } = user
   const { confirmedAmount, pendingAmount, totalEarned } = wallet
 
-  const isSensei = user.userType === 'SENSEI'
-  const isAdmin = user.userType === 'ADMIN'
-  const isStudent = user.userType === 'STUDENT'
+  const isSensei = user.userType === USER_TYPE_ENUM.SENSEI
+  const isAdmin = user.userType === USER_TYPE_ENUM.ADMIN
+  const isStudent = user.userType === USER_TYPE_ENUM.STUDENT
 
   const getWallet = async () => {
     const result = await viewWallet(walletId)
