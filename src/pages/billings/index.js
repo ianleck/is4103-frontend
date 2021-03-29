@@ -1,19 +1,20 @@
 import { Table } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
 import BillingCard from 'components/Billing'
-import { showNotification } from 'components/utils'
+import { showNotification, sortDescAndKeyBillingId } from 'components/utils'
 import {
   ERROR,
   SUCCESS,
   WITHDRAWAL_REQUEST_ERR,
   WITHDRAWAL_REQUEST_SUCCESS,
 } from 'constants/notifications'
-import { indexOf, isNil, map, size } from 'lodash'
+import { concat, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { requestWithdrawal, viewWallet } from 'services/wallet'
 import billingColumns from 'components/Common/TableColumns/Billing'
+import BillingManagement from 'components/Admin/BillingManagement'
 
 const Billings = () => {
   const history = useHistory()
@@ -27,21 +28,16 @@ const Billings = () => {
   const { confirmedAmount, pendingAmount, totalEarned } = wallet
 
   const isSensei = user.userType === 'SENSEI'
+  const isAdmin = user.userType === 'ADMIN'
+  const isStudent = user.userType === 'STUDENT'
 
   const getWallet = async () => {
     const result = await viewWallet(walletId)
     setWallet(result.wallet)
-    const billingsSnt = map(result.wallet.BillingsSent, billings => ({
-      ...billings,
-      key: indexOf(result.wallet.BillingsSent, billings),
-    }))
-    setBillingsSent(billingsSnt)
 
-    const billingsRcv = map(result.wallet.BillingsReceived, billings => ({
-      ...billings,
-      key: indexOf(result.wallet.BillingsReceived, billings),
-    }))
-    setBillingsReceived(billingsRcv)
+    setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
+
+    setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
   }
   useEffect(() => {
     if (!isNil(walletId)) {
@@ -65,13 +61,15 @@ const Billings = () => {
     return (
       <div>
         <div className="row justify-content-between align-items-center mt-2">
-          <div className="col-auto">
-            You currently have {numBillings} {billingFlow}{' '}
-            {numBillings === 1 ? 'billing' : 'billings'}.
-          </div>
+          {!isAdmin && (
+            <div className="col-auto">
+              You currently have {numBillings} {billingFlow}{' '}
+              {numBillings === 1 ? 'billing' : 'billings'}.
+            </div>
+          )}
         </div>
         <Table
-          className="mt-4"
+          className={!isAdmin ? 'mt-4' : ''}
           dataSource={dataSource}
           columns={tableColumns}
           onRow={record => viewBilling(record)}
@@ -92,11 +90,12 @@ const Billings = () => {
     }
   }
 
-  // For Sensei, show Wallet followed by Incoming transactions and finally Outgoing transactiosn
+  // For Sensei and Admin, show Wallet followed by Incoming transactions and finally Outgoing transactions
   // For Student, show Outgoing transactions then Incoming transactions
-  return (
-    <div>
-      {isSensei && (
+
+  const showForSensei = () => {
+    return (
+      <div>
         <SenseiWallet
           confirmedAmount={confirmedAmount}
           pendingAmount={pendingAmount}
@@ -104,20 +103,49 @@ const Billings = () => {
           billingsReceived={billingsReceived}
           onWithdraw={handleWithdrawal}
         />
-      )}
-      {isSensei && (
         <BillingCard isIncoming>
           {showBillings('incoming', billingsReceived, billingColumns)}
         </BillingCard>
-      )}
-      <BillingCard isIncoming={false}>
-        {showBillings('outgoing', billingsSent, billingColumns)}
-      </BillingCard>
-      {!isSensei && (
+        <BillingCard isIncoming={false}>
+          {showBillings('outgoing', billingsSent, billingColumns)}
+        </BillingCard>
+      </div>
+    )
+  }
+
+  const showForStudent = () => {
+    return (
+      <div>
+        <BillingCard isIncoming={false}>
+          {showBillings('outgoing', billingsSent, billingColumns)}
+        </BillingCard>
+
         <BillingCard isIncoming>
           {showBillings('incoming', billingsReceived, billingColumns)}
         </BillingCard>
-      )}
+      </div>
+    )
+  }
+
+  const showForAdmin = () => {
+    const allBillings = concat(billingsSent, billingsReceived)
+    return (
+      <div>
+        <BillingManagement
+          allReceived={billingsReceived}
+          allSent={billingsSent}
+          tableColumns={billingColumns}
+          allBillings={allBillings}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {isSensei && showForSensei()}
+      {isStudent && showForStudent()}
+      {isAdmin && showForAdmin()}
     </div>
   )
 }
