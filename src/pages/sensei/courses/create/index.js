@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { isNil, map, size } from 'lodash'
+import { isEmpty, isNil, map, size } from 'lodash'
 import {
   Button,
   Card,
@@ -33,7 +33,7 @@ import {
 import Axios from 'axios'
 import download from 'js-file-download'
 import ReactPlayer from 'react-player/lazy'
-import { createCourse, getCourseById, updateCourse } from 'services/courses'
+import { createCourse, deleteCourseDraft, getCourseById, updateCourse } from 'services/courses'
 import {
   createLesson,
   deleteLesson,
@@ -41,6 +41,7 @@ import {
   deleteLessonVideo,
   deleteAssessmentVideo,
   deleteLessonFile,
+  getCommentsByLessonId,
 } from 'services/courses/lessons'
 import { formatTime, showNotification } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
@@ -63,9 +64,12 @@ import {
   LESSON_DELETE_ERR,
   LESSON_UPDATE_SUCCESS,
   LESSON_UPDATE_ERR,
+  COURSE_DRAFT_DEL_SUCCESS,
+  COURSE_DRAFT_DEL_ERROR,
 } from 'constants/notifications'
 import StatusTag from 'components/Common/StatusTag'
 import CourseAnnouncements from 'components/Sensei/Course/Announcements'
+import LessonComments from 'components/Course/LessonComments'
 
 const SenseiCreateCourse = () => {
   const history = useHistory()
@@ -82,11 +86,13 @@ const SenseiCreateCourse = () => {
   const [isCourseDraft, setIsCourseDraft] = useState(true)
   const [currentCourse, setCurrentCourse] = useState('')
   const [currentCourseTab, setCurrentCourseTab] = useState('settings')
+  const [cfmCourseDelete, setCfmCourseDelete] = useState(false)
 
   const [lessons, setLessons] = useState([])
   const [showEditLesson, setShowEditLesson] = useState(false)
   const [currentLesson, setCurrentLesson] = useState('')
   const [currentLessonTab, setCurrentLessonTab] = useState('lessonVideo')
+  const [lessonComments, setLessonComments] = useState([])
 
   const [courseForm] = Form.useForm()
   const [editLessonForm] = Form.useForm()
@@ -265,9 +271,17 @@ const SenseiCreateCourse = () => {
     }
   }
 
+  const getLessonComments = async lessonId => {
+    const result = await getCommentsByLessonId(lessonId)
+    if (result && !isNil(result.comments)) {
+      setLessonComments(result.comments)
+    }
+  }
+
   const handleEditLesson = record => {
     setCurrentLesson(record)
     setShowEditLesson(true)
+    getLessonComments(record.lessonId)
     editLessonForm.setFieldsValue({
       lessonTitle: record.title,
       lessonDescription: record.description,
@@ -300,6 +314,16 @@ const SenseiCreateCourse = () => {
       }
     } else {
       showNotification('error', ERROR, LESSON_UPDATE_ERR)
+    }
+  }
+
+  const onCfmCourseDelete = async () => {
+    const result = await deleteCourseDraft(currentCourse.courseId, user.accountId)
+    if (result && !isNil(result.success)) {
+      history.goBack()
+      showNotification('success', SUCCESS, COURSE_DRAFT_DEL_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_DRAFT_DEL_ERROR)
     }
   }
 
@@ -464,7 +488,7 @@ const SenseiCreateCourse = () => {
         categories: result.course.Categories.map(c => c.categoryId),
       })
     }
-    if (!isNil(result.course.Lessons)) {
+    if (result.course && !isNil(result.course.Lessons)) {
       const lessonData = map(result.course.Lessons, res => ({
         ...res,
         key: res.lessonId,
@@ -860,11 +884,35 @@ const SenseiCreateCourse = () => {
                 />
               )}
             </div>
+            {!isEmpty(currentCourse) && isNil(currentCourse.publishedAt) && (
+              <div className="card-footer">
+                <Popconfirm
+                  title="Do you wish to delete your course?"
+                  visible={cfmCourseDelete}
+                  onConfirm={onCfmCourseDelete}
+                  okText="Delete"
+                  okType="danger"
+                  okButtonProps={{ loading: isLoading }}
+                  onCancel={() => setCfmCourseDelete(false)}
+                >
+                  <Button
+                    type="danger"
+                    size="large"
+                    shape="round"
+                    icon={<DeleteOutlined />}
+                    onClick={() => setCfmCourseDelete(true)}
+                  >
+                    Delete Course
+                  </Button>
+                </Popconfirm>
+              </div>
+            )}
           </div>
         </div>
       </div>
       <Modal
         title="Edit Lesson"
+        className="w-100"
         visible={showEditLesson}
         cancelText="Close"
         centered
@@ -916,6 +964,12 @@ const SenseiCreateCourse = () => {
               </Radio.Button>
               <Radio.Button value="lessonFile" onClick={() => setCurrentLessonTab('lessonFile')}>
                 Lesson File
+              </Radio.Button>
+              <Radio.Button
+                value="lessonComments"
+                onClick={() => setCurrentLessonTab('lessonComments')}
+              >
+                Comments
               </Radio.Button>
             </Radio.Group>
           </div>
@@ -1009,8 +1063,18 @@ const SenseiCreateCourse = () => {
               </div>
             </div>
           )}
+          {currentLessonTab === 'lessonComments' && (
+            <div className="col-12 mt-5">
+              <LessonComments
+                comments={lessonComments}
+                setComments={setLessonComments}
+                lessonId={currentLesson.lessonId}
+                currentLesson={currentLesson}
+              />
+            </div>
+          )}
         </div>
-        <div className="row mt-2">
+        <div className="row">
           <div className="col-12 text-right">
             <small className="text-secondary text-uppercase">
               <strong>CREATED ON </strong>

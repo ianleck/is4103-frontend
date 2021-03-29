@@ -12,6 +12,8 @@ export const COURSE_ACCEPT_SUCCESS = 'The course request was successfully accept
 export const COURSE_ACCEPT_ERROR = 'There was an error accepting the course request.'
 export const COURSE_REJECT_SUCCESS = 'The course request was successfully rejected.'
 export const COURSE_REJECT_ERROR = 'There was an error rejecting the course request.'
+export const COURSE_DRAFT_DEL_SUCCESS = 'Course Draft deleted successully.'
+export const COURSE_DRAFT_DEL_ERROR = 'There was an error deleting your Course Draft.'
 
 export const ASSESSMENT_VID_DELETE_ERR = 'There was an error deleting your assessment video.'
 export const ASSESSMENT_VID_DELETE_SUCCESS = 'Your assessment video was successfully deleted.'

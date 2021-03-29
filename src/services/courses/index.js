@@ -82,6 +82,19 @@ export async function updateCourse(courseId, payload) {
     .catch(err => console.log(err))
 }
 
+export async function deleteCourseDraft(courseId, accountId) {
+  const url = `/course/${courseId}`
+  return apiClient
+    .delete(url, { accountId })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getAnnouncements(courseId) {
   const url = `course/all/announcement/${courseId}`
   return apiClient
