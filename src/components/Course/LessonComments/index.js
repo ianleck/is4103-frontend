@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Avatar, Button, Divider, Form, Input, Space } from 'antd'
+import { Avatar, Button, Divider, Form, Input, Space, Modal, Select, Descriptions } from 'antd'
 import { ADD_COMMENTS } from 'constants/text'
 import { isNil, map, size } from 'lodash'
 import { showNotification, sortDescAndKeyCommentId } from 'components/utils'
@@ -11,17 +11,25 @@ import {
   COMMENT_DEL_ERR,
   COMMENT_ADD_SUCCESS,
   COMMENT_ADD_ERR,
+  COMPLAINT_SENT,
 } from 'constants/notifications'
 import { getCommentsByLessonId, deleteComment, addCommentToLesson } from 'services/courses/lessons'
+import { getComplaintReasons, postCommentComplaint } from 'services/complaints'
 import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT } from 'constants/constants'
 import PaginationWrapper from 'components/Common/Pagination'
 import CommentGridItem from './CommentGridItem'
 
 const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
+  const { Option } = Select
   const user = useSelector(state => state.user)
 
   const [comments, setComments] = useState([])
   const [showCommentField, setShowCommentField] = useState(false)
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  const [commentToDelete, setCommentToDelete] = useState()
+  const [showReporting, setShowReporting] = useState(false)
+  const [commentToReport, setCommentToReport] = useState()
+  const [reasons, setReasons] = useState([])
 
   const [paginatedComments, setPaginatedComments] = useState([])
   const [currentPageIdx, setCurrentPageIdx] = useState(1)
@@ -35,6 +43,11 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
     console.log('Failed:', errorInfo)
   }
 
+  const getReasons = async () => {
+    const response = await getComplaintReasons()
+    setReasons(response)
+  }
+
   const getLessonComments = async () => {
     setIsLoading(true)
     const result = await getCommentsByLessonId(lessonId)
@@ -42,12 +55,23 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
       setComments(sortDescAndKeyCommentId(result.comments))
     }
     const tempPaginatedItems = []
-    for (let i = 0; i < DEFAULT_ITEMS_PER_PAGE; i += 1) {
+    for (
+      let i = 0;
+      i <
+      (DEFAULT_ITEMS_PER_PAGE < size(result.comments)
+        ? DEFAULT_ITEMS_PER_PAGE
+        : size(result.comments));
+      i += 1
+    ) {
       tempPaginatedItems.push(result.comments[i])
     }
     setPaginatedComments(tempPaginatedItems)
     setCurrentPageIdx(1)
-    setShowLoadMore(true)
+    if (DEFAULT_ITEMS_PER_PAGE < size(result.comments)) {
+      setShowLoadMore(true)
+    } else {
+      setShowLoadMore(false)
+    }
     setTimeout(() => {
       setIsLoading(false)
     }, DEFAULT_TIMEOUT)
@@ -55,6 +79,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
 
   useEffect(() => {
     getLessonComments()
+    getReasons()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -143,6 +168,71 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
     )
   }
 
+  const deleteCommmentFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => reset()}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button danger size="large" onClick={() => deleteConfirmed()}>
+          Delete Comment
+        </Button>
+      </div>
+    </div>
+  )
+
+  const reportCommmentFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => reset()}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button danger form="reportCommentForm" htmlType="submit" size="large">
+          Report Comment
+        </Button>
+      </div>
+    </div>
+  )
+
+  const reset = () => {
+    setShowReporting(false)
+    setCommentToReport()
+    setShowConfirmDelete(false)
+    setCommentToDelete()
+  }
+
+  const handleDelete = comment => {
+    setCommentToDelete(comment)
+    setShowConfirmDelete(true)
+  }
+
+  const deleteConfirmed = () => {
+    deleteCommentFromVideo(commentToDelete.commentId)
+    setCommentToDelete()
+    setShowConfirmDelete(false)
+  }
+
+  const handleReport = comment => {
+    setCommentToReport(comment)
+    setShowReporting(true)
+  }
+
+  const onReportComment = async values => {
+    const payload = { complaintReasonId: values.reason }
+
+    const response = await postCommentComplaint(commentToReport.commentId, payload)
+
+    if (response.success) {
+      showNotification('success', SUCCESS, COMPLAINT_SENT)
+    }
+    setCommentToReport()
+    setShowReporting(false)
+  }
+
   return (
     <div className="row mb-5">
       {!isAdmin && (
@@ -151,7 +241,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
             src={
               user.profileImgUrl
                 ? `${user.profileImgUrl}?${new Date().getTime()}`
-                : '/resources/images/avatars/apprentice.png'
+                : '/resources/images/avatars/avatar-2.png'
             }
           />
         </div>
@@ -181,12 +271,79 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
                   comment={comment}
                   user={user}
                   isLoading={isLoading}
-                  deleteCommentFromVideo={deleteCommentFromVideo}
+                  handleDelete={handleDelete}
+                  handleReport={handleReport}
+                  isAdmin={isAdmin}
                 />
               )
             })
           }
         />
+      </div>
+      <div>
+        <Modal
+          title="Comment Deletion"
+          visible={showConfirmDelete}
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowConfirmDelete(false)}
+          footer={deleteCommmentFooter}
+        >
+          Are you sure you want to delete this comment?
+        </Modal>
+      </div>
+
+      <div>
+        <Modal
+          title="Report Comment"
+          visible={showReporting}
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowReporting(false)}
+          footer={reportCommmentFooter}
+        >
+          <Descriptions title="Comment Information" column={1}>
+            <Descriptions.Item label="ID">
+              {commentToReport ? commentToReport.commentId : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Author">
+              {commentToReport
+                ? `${commentToReport.User.firstName} ${commentToReport.User.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Body">
+              {commentToReport ? commentToReport.body : null}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <Form
+            id="reportCommentForm"
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onReportComment}
+            onFinishFailed={onFinishFailed}
+          >
+            <div className="row">
+              <div className="col-12">
+                <Form.Item
+                  name="reason"
+                  label="Reason"
+                  rules={[{ required: true, message: 'Please select a reason for the complaint.' }]}
+                >
+                  <Select placeholder="Select Complaint Reason">
+                    {map(reasons, reason => {
+                      return (
+                        <Option value={reason.complaintReasonId} key={reason.complaintReasonId}>
+                          {reason.reason}
+                        </Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
       </div>
     </div>
   )

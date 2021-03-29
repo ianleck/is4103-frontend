@@ -68,3 +68,8 @@ export const TRANSCRIPT_REMOVED = 'Your transcript was successfully removed.'
 export const TRANSCRIPT_REMOVED_ERR = 'There was an error removing your transcript.'
 export const CV_REMOVED = 'Your CV was successfully removed.'
 export const CV_REMOVED_ERR = 'There was an error removing your CV.'
+
+export const COMPLAINT_SENT = 'Your complaint has been received.'
+export const COMPLAINT_RESOLVED = 'Complaint has been marked as resolved.'
+export const COMPLAINT_COMMENT_DELETE =
+  'Comment has been deleted and Complaint has been marked as resolved.'
