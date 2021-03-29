@@ -5,13 +5,13 @@ import { ADMIN_VERIFIED_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 import { isNil } from 'lodash'
 import { NA } from 'constants/text'
 
-// Usage: <StatusTag data={course} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
-// OR <StatusTag data={{ adminVerified: record }} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
-// OR <StatusTag data={{ userType: record }} type={USER_TYPE_ENUM.ENUM_NAME} />
+// Usage: <StatusTag data={course} type='ADMIN_VERIFIED_ENUM' />
+// OR <StatusTag data={{ adminVerified: record }} type='ADMIN_VERIFIED_ENUM' />
+// OR <StatusTag data={{ userType: record }} type='USER_TYPE_ENUM' />
 const StatusTag = data => {
   const type = !isNil(data.type) ? data.type : ''
   let colour
-  if (type === ADMIN_VERIFIED_ENUM.ENUM_NAME) {
+  if (type === 'ADMIN_VERIFIED_ENUM') {
     const dataSource = !isNil(data.data.adminVerified)
       ? data.data.adminVerified
       : data.adminVerified
@@ -33,7 +33,7 @@ const StatusTag = data => {
     }
     return <Tag color={colour}>{dataSource}</Tag>
   }
-  if (type === USER_TYPE_ENUM.ENUM_NAME) {
+  if (type === 'USER_TYPE_ENUM') {
     const dataSource = !isNil(data.data.userType) ? data.data.userType : data.userType
     switch (dataSource) {
       case USER_TYPE_ENUM.SENSEI:

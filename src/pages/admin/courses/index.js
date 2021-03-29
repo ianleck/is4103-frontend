@@ -149,9 +149,7 @@ const CourseContentManagement = () => {
       filters: ADMIN_VERIFIED_ENUM_FILTER,
       width: '10%',
       onFilter: (value, record) => record.adminVerified.indexOf(value) === 0,
-      render: record => (
-        <StatusTag data={{ adminVerified: record }} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
-      ),
+      render: record => <StatusTag data={{ adminVerified: record }} type="ADMIN_VERIFIED_ENUM" />,
     },
     {
       title: 'Visibility',

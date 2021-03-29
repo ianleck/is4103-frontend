@@ -11,7 +11,7 @@ import {
   sortDescAndKeyAccId,
 } from 'components/utils'
 import UserCountIconWidget from 'components/Admin/UsersManagement/UserCountIconWidget'
-import { ADMIN_VERIFIED_ENUM, USER_TYPE_ENUM } from 'constants/constants'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 import { ADMIN_VERIFIED_ENUM_FILTER, USER_TYPE_ENUM_FILTER } from 'constants/filters'
 import { isNil } from 'lodash'
 import { CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons'
@@ -74,7 +74,7 @@ const UsersManagement = () => {
       key: 'userType',
       filters: USER_TYPE_ENUM_FILTER,
       onFilter: (value, record) => record.userType.indexOf(value) === 0,
-      render: record => <StatusTag data={{ userType: record }} type={USER_TYPE_ENUM.ENUM_NAME} />,
+      render: record => <StatusTag data={{ userType: record }} type="USER_TYPE_ENUM" />,
     },
     {
       title: 'Admin Verified',
@@ -82,9 +82,7 @@ const UsersManagement = () => {
       key: 'adminVerified',
       filters: ADMIN_VERIFIED_ENUM_FILTER,
       onFilter: (value, record) => record.adminVerified.indexOf(value) === 0,
-      render: record => (
-        <StatusTag data={{ adminVerified: record }} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
-      ),
+      render: record => <StatusTag data={{ adminVerified: record }} type="ADMIN_VERIFIED_ENUM" />,
     },
     {
       title: 'Created At',
