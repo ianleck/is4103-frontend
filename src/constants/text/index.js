@@ -53,3 +53,6 @@ export const APPROVED_WITHDRAWALS = 'Approved Withdrawals'
 export const REJECTED_WITHDRAWALS = 'Rejected Withdrawals'
 
 export const WALLET_MGT = 'Wallet Management'
+
+export const BILLINGS = 'Billings'
+export const BILLING_MGT = 'Billing Management'
