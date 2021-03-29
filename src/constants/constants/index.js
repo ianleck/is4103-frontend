@@ -94,3 +94,8 @@ export const BILLING_STATUS = {
   WITHDRAWN: 'WITHDRAWN',
   ADMIN: 'ADMIN',
 }
+
+export const DIRECTION = {
+  ASC: 'ASCENDING',
+  DESC: 'DESCENDING',
+}
