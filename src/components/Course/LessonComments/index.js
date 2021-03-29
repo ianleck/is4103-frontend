@@ -1,6 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Avatar, Button, Divider, Dropdown, Form, Input, Menu, Space } from 'antd'
+import {
+  Avatar,
+  Button,
+  Divider,
+  Dropdown,
+  Form,
+  Input,
+  Menu,
+  Space,
+  Modal,
+  Select,
+  Descriptions,
+} from 'antd'
 import { ADD_COMMENTS } from 'constants/text'
 import { MoreOutlined } from '@ant-design/icons'
 import { isNil, map, size } from 'lodash'
@@ -12,16 +24,33 @@ import {
   COMMENT_DEL_ERR,
   COMMENT_ADD_SUCCESS,
   COMMENT_ADD_ERR,
+  COMPLAINT_SENT,
 } from 'constants/notifications'
 import { getCommentsByLessonId, deleteComment, addCommentToLesson } from 'services/courses/lessons'
 import moment from 'moment'
+import { getComplaintReasons, postCommentComplaint } from 'services/complaints'
+
+const { Option } = Select
 
 const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
   const user = useSelector(state => state.user)
   const [showCommentField, setShowCommentField] = useState(false)
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  const [commentToDelete, setCommentToDelete] = useState()
+  const [showReporting, setShowReporting] = useState(false)
+  const [commentToReport, setCommentToReport] = useState()
+  const [reasons, setReasons] = useState([])
 
   const { TextArea } = Input
   const [addCommentForm] = Form.useForm()
+
+  useEffect(() => {
+    const getReasons = async () => {
+      const response = await getComplaintReasons()
+      setReasons(response)
+    }
+    getReasons()
+  }, [])
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo)
@@ -123,24 +152,99 @@ const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
     )
   }
 
-  const commentMenu = (commentId, commenterAccId) => {
+  const deleteCommmentFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => reset()}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button danger size="large" onClick={() => deleteConfirmed()}>
+          Delete Comment
+        </Button>
+      </div>
+    </div>
+  )
+
+  const reportCommmentFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => reset()}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button danger form="reportCommentForm" htmlType="submit" size="large">
+          Report Comment
+        </Button>
+      </div>
+    </div>
+  )
+
+  const reset = () => {
+    setShowReporting(false)
+    setCommentToReport()
+    setShowConfirmDelete(false)
+    setCommentToDelete()
+  }
+
+  const handleDelete = comment => {
+    setCommentToDelete(comment)
+    setShowConfirmDelete(true)
+  }
+
+  const deleteConfirmed = () => {
+    deleteCommentFromVideo(commentToDelete.commentId)
+    setCommentToDelete()
+    setShowConfirmDelete(false)
+  }
+
+  const handleReport = comment => {
+    setCommentToReport(comment)
+    setShowReporting(true)
+  }
+
+  const onReportComment = async values => {
+    const payload = { complaintReasonId: values.reason }
+
+    const response = await postCommentComplaint(commentToReport.commentId, payload)
+
+    if (response.success) {
+      showNotification('success', SUCCESS, COMPLAINT_SENT)
+    }
+    setCommentToReport()
+    setShowReporting(false)
+  }
+
+  const commentMenu = comment => {
     return (
       <Menu>
-        {user.accountId === commenterAccId && (
+        {user.accountId === comment.accountId && (
           <Menu.Item>
             <a
               target="_blank"
               role="button"
               tabIndex={0}
-              onClick={() => deleteCommentFromVideo(commentId)}
+              onClick={() => handleDelete(comment)}
               onKeyDown={e => e.preventDefault()}
             >
               Delete Comment
             </a>
           </Menu.Item>
         )}
-        {user.accountId === commenterAccId && <Menu.Divider />}
-        <Menu.Item danger>Report Comment</Menu.Item>
+        {user.accountId === comment.accountId && <Menu.Divider />}
+        <Menu.Item danger>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => handleReport(comment)}
+            onKeyDown={e => e.preventDefault()}
+          >
+            Report Comment
+          </a>
+        </Menu.Item>
       </Menu>
     )
   }
@@ -174,7 +278,7 @@ const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
           </div>
         </div>
         <div className="col-auto align-self-start">
-          <Dropdown overlay={commentMenu(comment.commentId, comment.accountId)}>
+          <Dropdown overlay={commentMenu(comment)}>
             <Button type="text" size="large" icon={<MoreOutlined />} />
           </Dropdown>
         </div>
@@ -202,6 +306,72 @@ const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
           map(sortComments, comment => {
             return <CommentGridItem key={comment.commentId} comment={comment} />
           })}
+      </div>
+
+      <div>
+        <Modal
+          title="Comment Deletion"
+          visible={showConfirmDelete}
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowConfirmDelete(false)}
+          footer={deleteCommmentFooter}
+        >
+          Are you sure you want to delete the comment?
+        </Modal>
+      </div>
+
+      <div>
+        <Modal
+          title="Report Comment"
+          visible={showReporting}
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowReporting(false)}
+          footer={reportCommmentFooter}
+        >
+          <Descriptions title="Comment Information" column={1}>
+            <Descriptions.Item label="ID">
+              {commentToReport ? commentToReport.commentId : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Author">
+              {commentToReport
+                ? `${commentToReport.User.firstName} ${commentToReport.User.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Body">
+              {commentToReport ? commentToReport.body : null}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <Form
+            id="reportCommentForm"
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onReportComment}
+            onFinishFailed={onFinishFailed}
+          >
+            <div className="row">
+              <div className="col-12">
+                <Form.Item
+                  name="reason"
+                  label="reason"
+                  rules={[{ required: true, message: 'Please input reason' }]}
+                >
+                  <Select placeholder="Select Complaint Reason">
+                    {map(reasons, reason => {
+                      return (
+                        <Option value={reason.complaintReasonId} key={reason.complaintReasonId}>
+                          {reason.reason}
+                        </Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
       </div>
     </div>
   )
