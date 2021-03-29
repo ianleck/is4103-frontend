@@ -1,10 +1,20 @@
-import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Upload, message } from 'antd'
+import { DeleteOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Upload, message, Space } from 'antd'
 import Axios from 'axios'
 import { isNil } from 'lodash'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import download from 'js-file-download'
+import { removeFile } from 'services/user'
+import { showNotification } from 'components/utils'
+import {
+  CV_REMOVED,
+  CV_REMOVED_ERR,
+  ERROR,
+  SUCCESS,
+  TRANSCRIPT_REMOVED,
+  TRANSCRIPT_REMOVED_ERR,
+} from 'constants/notifications'
 
 const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
   const dispatch = useDispatch()
@@ -51,6 +61,24 @@ const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
     })
   }
 
+  const removeFileFromServer = async type => {
+    const result = await removeFile(type)
+    if (result) {
+      if (type === 'transcript') {
+        showNotification('success', SUCCESS, TRANSCRIPT_REMOVED)
+      } else {
+        showNotification('success', SUCCESS, CV_REMOVED)
+      }
+      dispatch({
+        type: 'user/LOAD_CURRENT_ACCOUNT',
+      })
+    } else if (type === 'transcript') {
+      showNotification('error', ERROR, TRANSCRIPT_REMOVED_ERR)
+    } else {
+      showNotification('error', ERROR, CV_REMOVED_ERR)
+    }
+  }
+
   const UploadFileComponent = data => {
     return (
       <Upload {...getUploadProps(data.isTranscript)}>
@@ -63,15 +91,27 @@ const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
 
   const DownloadFileComponent = data => {
     return (
-      <Button
-        type="primary"
-        shape="round"
-        icon={<DownloadOutlined />}
-        size="large"
-        onClick={() => downloadFile(data.isTranscript)}
-      >
-        Download
-      </Button>
+      <Space size="large" className="mt-2 mt-sm-0">
+        <Button
+          type="primary"
+          shape="round"
+          icon={<DownloadOutlined />}
+          size="large"
+          onClick={() => downloadFile(data.isTranscript)}
+        >
+          Download
+        </Button>
+        <Button
+          ghost
+          type="danger"
+          shape="round"
+          icon={<DeleteOutlined />}
+          size="large"
+          onClick={() => removeFileFromServer(data.isTranscript ? 'transcript' : 'cv')}
+        >
+          Remove
+        </Button>
+      </Space>
     )
   }
 
