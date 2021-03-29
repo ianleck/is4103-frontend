@@ -31,7 +31,15 @@ const MentorshipListingCard = data => {
         <div className="card-body pt-3 pl-2 pr-2 pb-2">
           <div className="row align-items-center justify-content-start">
             <div className="col-auto">
-              <Avatar size={42} icon={<UserOutlined />} />
+              <Avatar
+                size={42}
+                icon={<UserOutlined />}
+                src={
+                  listing?.Sensei?.profileImgUrl
+                    ? `${listing?.Sensei?.profileImgUrl}?${new Date().getTime()}`
+                    : '/resources/images/avatars/avatar-2.png'
+                }
+              />
             </div>
             <div className="col-auto pl-0">
               <p className="m-0 text-dark text-uppercase text-wrap">
