@@ -317,6 +317,16 @@ const SenseiCreateCourse = () => {
     }
   }
 
+  const onCfmCourseDelete = async () => {
+    const result = await deleteCourseDraft(currentCourse.courseId, user.accountId)
+    if (result && !isNil(result.success)) {
+      history.goBack()
+      showNotification('success', SUCCESS, COURSE_DRAFT_DEL_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_DRAFT_DEL_ERROR)
+    }
+  }
+
   const handleDeleteLessonVideo = async () => {
     const result = await deleteLessonVideo(currentLesson.lessonId)
 
@@ -414,17 +424,6 @@ const SenseiCreateCourse = () => {
         message: 'Error',
         description: 'There was an error removing your course image.',
       })
-    }
-  }
-
-  const onCfmCourseDelete = async () => {
-    const result = await deleteCourseDraft(currentCourse.courseId, user.accountId)
-    console.log('result', result)
-    if (result && !isNil(result.success)) {
-      history.goBack()
-      showNotification('success', SUCCESS, COURSE_DRAFT_DEL_SUCCESS)
-    } else {
-      showNotification('error', ERROR, COURSE_DRAFT_DEL_ERROR)
     }
   }
 
