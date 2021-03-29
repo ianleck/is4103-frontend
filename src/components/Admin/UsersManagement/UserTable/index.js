@@ -115,7 +115,7 @@ const UserTable = () => {
         ),
       },
     ]
-    return <Table bordered="true" dataSource={students} columns={tableColumns} />
+    return <Table dataSource={students} columns={tableColumns} />
   }
 
   const showSensei = () => {
@@ -192,7 +192,7 @@ const UserTable = () => {
         ),
       },
     ]
-    return <Table bordered="true" dataSource={senseis} columns={tableColumns} />
+    return <Table dataSource={senseis} columns={tableColumns} />
   }
 
   return (

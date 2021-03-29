@@ -106,7 +106,7 @@ const AdminTable = () => {
         ),
       },
     ]
-    return <Table bordered="true" dataSource={admins} columns={tableColumns} />
+    return <Table dataSource={admins} columns={tableColumns} />
   }
 
   return (

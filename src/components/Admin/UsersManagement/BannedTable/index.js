@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/admin'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import BannedWidget from 'components/Admin/UsersManagement/BannedWidget'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -60,7 +61,7 @@ const BannedTable = () => {
 
   const showBannedStudent = () => {
     return (
-      <Table bordered="true" dataSource={students} rowKey="accountId">
+      <Table dataSource={students} rowKey="accountId">
         <Column title="Account Id" dataIndex="accountId" key="accountId" />
         <Column title="First Name" dataIndex="firstName" key="firstName" />
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
@@ -86,7 +87,7 @@ const BannedTable = () => {
 
   const showBannedSensei = () => {
     return (
-      <Table bordered="true" dataSource={senseis} rowKey="accountId">
+      <Table dataSource={senseis} rowKey="accountId">
         <Column title="Account Id" dataIndex="accountId" key="accountId" />
         <Column title="First Name" dataIndex="firstName" key="firstName" />
         <Column title="Last Name" dataIndex="lastName" key="lastName" />
@@ -123,8 +124,13 @@ const BannedTable = () => {
       </div>
 
       <div className="card-body">
-        {tabKey === '1' && showBannedStudent()}
-        {tabKey === '2' && showBannedSensei()}
+        <BannedWidget />
+        <div className="row">
+          <div className="col-12 overflow-x-scroll">
+            {tabKey === '1' && showBannedStudent()}
+            {tabKey === '2' && showBannedSensei()}
+          </div>
+        </div>
       </div>
     </div>
   )

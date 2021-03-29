@@ -104,7 +104,7 @@ const ViewCourseDetailsPublic = () => {
                 }))}
                 renderItem={item => (
                   <List.Item>
-                    <Typography.Text>Lesson {item.listNumber}</Typography.Text> {item.title}
+                    <Typography.Text>Lesson {item.listNumber}:</Typography.Text> {item.title}
                   </List.Item>
                 )}
               />

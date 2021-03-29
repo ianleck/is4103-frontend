@@ -39,11 +39,31 @@ const BannedWidget = () => {
   }
 
   return (
-    <CountIconWidget
-      title="Total Banned Accounts"
-      count={count}
-      icon={<i className="fe fe-slash" />}
-    />
+    <div className="row mt-4">
+      <div className="col-12 col-md-4">
+        <CountIconWidget
+          title="Total Banned Students"
+          count={count}
+          icon={<i className="fe fe-slash" />}
+          color="blue"
+        />
+      </div>
+      <div className="col-12 col-md-4">
+        <CountIconWidget
+          title="Total Banned Senseis"
+          count={count}
+          icon={<i className="fe fe-slash" />}
+          color="purple"
+        />
+      </div>
+      <div className="col-12 col-md-4">
+        <CountIconWidget
+          title="Total Banned Accounts"
+          count={count}
+          icon={<i className="fe fe-slash" />}
+        />
+      </div>
+    </div>
   )
 }
 

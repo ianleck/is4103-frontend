@@ -122,16 +122,6 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/user-management/verify-senseis',
-    Component: lazy(() => import('pages/admin/verify-sensei/verify-senseis')),
-    exact: true,
-  },
-  {
-    path: '/admin/user-management/verify-senseis/:mentorId',
-    Component: lazy(() => import('pages/admin/verify-sensei/sensei-page')),
-    exact: true,
-  },
-  {
     path: '/admin/admin-management',
     Component: lazy(() => import('pages/admin/admins')),
     exact: true,

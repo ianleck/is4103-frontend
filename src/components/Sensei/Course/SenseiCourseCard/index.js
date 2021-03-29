@@ -37,7 +37,7 @@ const SenseiCourseCard = data => {
                 <p className="card-text text-break truncate-2-overflow">{course.description}</p>
                 <div className="row w-100 align-items-center mt-auto">
                   <div className="col-12">
-                    <StatusTag data={course} />
+                    <StatusTag data={course} type="ADMIN_VERIFIED_ENUM" />
                   </div>
                   <div className="col-12 mt-1">
                     <small className="text-uppercase text-secondary">

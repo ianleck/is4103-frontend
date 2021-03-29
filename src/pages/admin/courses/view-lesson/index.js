@@ -8,7 +8,7 @@ import LessonComments from 'components/Course/LessonComments'
 import LessonMainContent from 'components/Course/LessonMainContent'
 import CourseProgressCard from 'components/Course/ProgressCard'
 import AdditionalContentCard from 'components/Course/AdditionalContentCard'
-import LessonList from 'components/Course/LessonList'
+import LessonPlaylist from 'components/Course/LessonPlaylist'
 import { Button, Space } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { acceptCourseRequest, rejectCourseRequest } from 'services/courses/requests'
@@ -133,7 +133,7 @@ const AdminCourseLesson = () => {
             currentVideoUrl={currentVideoUrl}
             setCurrentVideoUrl={setCurrentVideoUrl}
           />
-          <LessonList currentCourse={currentCourse} currentLesson={currentLesson} />
+          <LessonPlaylist currentCourse={currentCourse} currentLesson={currentLesson} isAdmin />
         </div>
       </div>
     </div>
