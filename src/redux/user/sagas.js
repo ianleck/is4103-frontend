@@ -447,7 +447,7 @@ export function* DELETE_DP() {
     },
   })
 
-  const response = yield call(jwt.removeDp)
+  const response = yield call(jwt.removeFile, 'dp')
   if (response) {
     const updatedUser = handleProfileUpdateRsp(response)
     if (updatedUser) {

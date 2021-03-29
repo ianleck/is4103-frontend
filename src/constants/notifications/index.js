@@ -61,3 +61,8 @@ export const MENTORSHIP_ALR_IN = 'Mentorship Application is already in Cart'
 
 export const DP_REMOVED = 'Your Display Picture was successfully removed.'
 export const NO_DP_TO_REMOVE = 'No Display Picture to remove.'
+
+export const TRANSCRIPT_REMOVED = 'Your transcript was successfully removed.'
+export const TRANSCRIPT_REMOVED_ERR = 'There was an error removing your transcript.'
+export const CV_REMOVED = 'Your CV was successfully removed.'
+export const CV_REMOVED_ERR = 'There was an error removing your CV.'

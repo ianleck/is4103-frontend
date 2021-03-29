@@ -270,9 +270,13 @@ export async function deleteAccount(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function removeDp() {
+export async function removeFile(type) {
+  if (['dp', 'cv', 'transcript'].indexOf(type) === -1) {
+    return false
+  }
+
   return apiClient
-    .delete(`upload/user/dp`, { withCredentials: true })
+    .delete(`upload/user/${type}`, { withCredentials: true })
     .then(response => {
       if (!isNil(response.data)) {
         if (!isNil(response.data.success)) return response.data.user

@@ -101,7 +101,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
     }
   }
 
-  const GetDefaultProfilePic = () => {
+  const getDefaultProfilePic = () => {
     if (user.userType === USER_TYPE_ENUM.STUDENT) {
       return <img src="/resources/images/avatars/apprentice.png" alt="Display Pic" />
     }
@@ -152,7 +152,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
               {user.profileImgUrl ? (
                 <img src={`${user.profileImgUrl}?${new Date().getTime()}`} alt="Display Pic" />
               ) : (
-                GetDefaultProfilePic()
+                getDefaultProfilePic()
               )}
             </div>
           </div>
