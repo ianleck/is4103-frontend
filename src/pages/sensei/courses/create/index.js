@@ -81,6 +81,7 @@ const SenseiCreateCourse = () => {
   const { TextArea } = Input
 
   const [isLoading, setIsLoading] = useState(false)
+  const [showDiscardMsg, setShowDiscardMsg] = useState(true)
 
   const [isCourseCreated, setIsCourseCreated] = useState(false)
   const [isCourseDraft, setIsCourseDraft] = useState(true)
@@ -369,7 +370,6 @@ const SenseiCreateCourse = () => {
   const saveCourseDraft = async () => {
     setIsLoading(true)
     const values = courseForm.getFieldsValue()
-    console.log('values.visibility', values)
     const formValues = {
       title: values.title,
       subTitle: values.subTitle,
@@ -400,6 +400,7 @@ const SenseiCreateCourse = () => {
     if (!isNil(result.course)) {
       setCourseFormValues(result.course)
       setIsCourseDraft(result.course.adminVerified === ADMIN_VERIFIED_ENUM.DRAFT)
+      setShowDiscardMsg(false)
     }
     setTimeout(() => {
       setIsLoading(false)
@@ -436,6 +437,7 @@ const SenseiCreateCourse = () => {
       if (result.course) {
         setCurrentCourse(result.course)
         setIsCourseDraft(result.course.adminVerified === ADMIN_VERIFIED_ENUM.DRAFT)
+        setShowDiscardMsg(false)
         notification.success({
           message: 'Success',
           description: `Your course was submitted for approval.`,
@@ -584,15 +586,6 @@ const SenseiCreateCourse = () => {
               layout="vertical"
               hideRequiredMark
               onFinish={saveCourseDraft}
-              initialValues={{
-                title: 'Test',
-                subTitle: 'TestSubtitle',
-                description: 'Test',
-                level: LEVEL_ENUM.BEGINNER,
-                language: 'English',
-                currency: 'SGD',
-                visibility: false,
-              }}
             >
               <Form.Item
                 name="title"
@@ -787,17 +780,31 @@ const SenseiCreateCourse = () => {
     <div>
       <div className="row pt-2">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
-          <Popconfirm
-            title="Do you wish to discard your changes?"
-            placement="bottom"
-            onConfirm={onBack}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button block type="primary" size="large" shape="round" icon={<ArrowLeftOutlined />}>
+          {showDiscardMsg && (
+            <Popconfirm
+              title="Do you wish to discard your changes?"
+              placement="bottom"
+              onConfirm={onBack}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button block type="primary" size="large" shape="round" icon={<ArrowLeftOutlined />}>
+                Back
+              </Button>
+            </Popconfirm>
+          )}
+          {!showDiscardMsg && (
+            <Button
+              block
+              type="primary"
+              size="large"
+              shape="round"
+              icon={<ArrowLeftOutlined />}
+              onClick={onBack}
+            >
               Back
             </Button>
-          </Popconfirm>
+          )}
         </div>
       </div>
 
