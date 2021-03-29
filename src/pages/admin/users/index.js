@@ -141,6 +141,7 @@ const UsersManagement = () => {
 
   const switchTabs = key => {
     setCurrentTab(key)
+    setCurrentFilter('all')
     switch (key) {
       case 'all':
         setCurrentTableData(allUsers)

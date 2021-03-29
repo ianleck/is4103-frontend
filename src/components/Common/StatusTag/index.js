@@ -5,8 +5,9 @@ import { ADMIN_VERIFIED_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 import { isNil } from 'lodash'
 import { NA } from 'constants/text'
 
-// Usage: <StatusTag data={course} />
-// OR <StatusTag data={{ adminVerified: record }} />
+// Usage: <StatusTag data={course} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
+// OR <StatusTag data={{ adminVerified: record }} type={ADMIN_VERIFIED_ENUM.ENUM_NAME} />
+// OR <StatusTag data={{ userType: record }} type={USER_TYPE_ENUM.ENUM_NAME} />
 const StatusTag = data => {
   const type = !isNil(data.type) ? data.type : ''
   let colour

@@ -1,8 +1,7 @@
-import { CheckOutlined, CloseOutlined, ExceptionOutlined } from '@ant-design/icons'
-import { Table, Tabs } from 'antd'
-import CountIconWidget from 'components/Common/CountIconWidget'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Table, Tabs } from 'antd'
+import CountIconWidgetGroup from 'components/Common/CountIconWidgetGroup'
 
 const ManagementSkeleton = ({
   currentFilter,
@@ -29,40 +28,18 @@ const ManagementSkeleton = ({
         </div>
       </div>
 
-      <div className="row mt-4">
-        <div className="col-12 col-md-4">
-          <CountIconWidget
-            title={`Pending ${objectType}`}
-            className={`${currentFilter === 'pending' ? 'btn btn-light' : 'btn'}`}
-            count={numPendingRequests}
-            icon={<ExceptionOutlined />}
-            onClick={handlePendingWidgetOnClick}
-            color="orange"
-          />
-        </div>
+      <CountIconWidgetGroup
+        objectType={objectType}
+        currentFilter={currentFilter}
+        numAccepted={numAcceptedRequests}
+        numPending={numPendingRequests}
+        numRejected={numRejectedRequests}
+        handleAcceptedWidgetOnClick={handleAcceptedWidgetOnClick}
+        handlePendingWidgetOnClick={handlePendingWidgetOnClick}
+        handleRejectedWidgetOnClick={handleRejectedWidgetOnClick}
+      />
 
-        <div className="col-6 col-md-4">
-          <CountIconWidget
-            title={`Accepted ${objectType}`}
-            className={`${currentFilter === 'accepted' ? 'btn btn-light' : 'btn'}`}
-            count={numAcceptedRequests}
-            icon={<CheckOutlined />}
-            onClick={handleAcceptedWidgetOnClick}
-            color="green"
-          />
-        </div>
-
-        <div className="col-6 col-md-4">
-          <CountIconWidget
-            title={`Rejected ${objectType}`}
-            className={`${currentFilter === 'rejected' ? 'btn btn-light' : 'btn'}`}
-            count={numRejectedRequests}
-            icon={<CloseOutlined />}
-            onClick={handleRejectedWidgetOnClick}
-            color="red"
-          />
-        </div>
-
+      <div className="row mt-2">
         <div className="col-12">
           <div className="card">
             <div className="card-header card-header-flex">

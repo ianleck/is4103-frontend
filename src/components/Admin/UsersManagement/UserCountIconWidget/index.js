@@ -1,13 +1,8 @@
 import React from 'react'
 import { size } from 'lodash'
-import {
-  BookOutlined,
-  CheckOutlined,
-  CloseOutlined,
-  ExceptionOutlined,
-  UserSwitchOutlined,
-} from '@ant-design/icons'
+import { BookOutlined, UserSwitchOutlined } from '@ant-design/icons'
 import CountIconWidget from 'components/Common/CountIconWidget'
+import CountIconWidgetGroup from 'components/Common/CountIconWidgetGroup'
 
 const UserCountIconWidget = ({
   allUsers,
@@ -26,14 +21,6 @@ const UserCountIconWidget = ({
       <div className="row mt-4">
         <div className="col-12 col-md-4">
           <CountIconWidget
-            title="Total Accounts"
-            count={size(allUsers)}
-            icon={<UserSwitchOutlined />}
-          />
-        </div>
-
-        <div className="col-12 col-md-4">
-          <CountIconWidget
             title="Total Student Accounts"
             className="btn"
             count={size(allStudents)}
@@ -49,6 +36,14 @@ const UserCountIconWidget = ({
             count={size(allSenseis)}
             icon={<i className="fa fa-graduation-cap" />}
             onClick={() => switchTabs('senseis')}
+          />
+        </div>
+
+        <div className="col-12 col-md-4">
+          <CountIconWidget
+            title="Total Accounts"
+            count={size(allUsers)}
+            icon={<UserSwitchOutlined />}
           />
         </div>
       </div>
@@ -71,40 +66,16 @@ const UserCountIconWidget = ({
 
   const SenseiWidgetGroup = () => {
     return (
-      <div className="row mt-4">
-        <div className="col-12 col-md-4">
-          <CountIconWidget
-            title="Pending Senseis"
-            className={`${currentFilter === 'pending' ? 'btn btn-light' : 'btn'}`}
-            count={size(pendingSenseis)}
-            icon={<ExceptionOutlined />}
-            onClick={() => setTableData('pending')}
-            color="orange"
-          />
-        </div>
-
-        <div className="col-12 col-md-4">
-          <CountIconWidget
-            title="Accepted Senseis"
-            className={`${currentFilter === 'accepted' ? 'btn btn-light' : 'btn'}`}
-            count={size(acceptedSenseis)}
-            icon={<CheckOutlined />}
-            onClick={() => setTableData('accepted')}
-            color="green"
-          />
-        </div>
-
-        <div className="col-12 col-md-4">
-          <CountIconWidget
-            title="Rejected Senseis"
-            className={`${currentFilter === 'rejected' ? 'btn btn-light' : 'btn'}`}
-            count={size(rejectedSenseis)}
-            icon={<CloseOutlined />}
-            onClick={() => setTableData('rejected')}
-            color="red"
-          />
-        </div>
-      </div>
+      <CountIconWidgetGroup
+        objectType="Senseis"
+        currentFilter={currentFilter}
+        numAccepted={size(acceptedSenseis)}
+        numPending={size(pendingSenseis)}
+        numRejected={size(rejectedSenseis)}
+        handleAcceptedWidgetOnClick={() => setTableData('accepted')}
+        handlePendingWidgetOnClick={() => setTableData('pending')}
+        handleRejectedWidgetOnClick={() => setTableData('rejected')}
+      />
     )
   }
 
