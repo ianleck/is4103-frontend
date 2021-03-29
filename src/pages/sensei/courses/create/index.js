@@ -1064,7 +1064,7 @@ const SenseiCreateCourse = () => {
             </div>
           )}
           {currentLessonTab === 'lessonComments' && (
-            <div className="col-12 mt-5 overflow-y-scroll comment-container">
+            <div className="col-12 mt-5">
               <LessonComments
                 comments={lessonComments}
                 setComments={setLessonComments}

@@ -36,6 +36,13 @@ export const sortDescAndKeyBillingId = data => {
   }))
 }
 
+export const sortDescAndKeyCommentId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), comment => ({
+    ...comment,
+    key: comment.commentId,
+  }))
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {

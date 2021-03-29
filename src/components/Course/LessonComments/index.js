@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Avatar, Button, Divider, Dropdown, Form, Input, Menu, Space } from 'antd'
+import { Avatar, Button, Divider, Form, Input, Space } from 'antd'
 import { ADD_COMMENTS } from 'constants/text'
-import { MoreOutlined } from '@ant-design/icons'
 import { isNil, map, size } from 'lodash'
-import { showNotification } from 'components/utils'
+import { showNotification, sortDescAndKeyCommentId } from 'components/utils'
 import {
   ERROR,
   SUCCESS,
@@ -14,11 +13,20 @@ import {
   COMMENT_ADD_ERR,
 } from 'constants/notifications'
 import { getCommentsByLessonId, deleteComment, addCommentToLesson } from 'services/courses/lessons'
-import moment from 'moment'
+import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT } from 'constants/constants'
+import PaginationWrapper from 'components/Common/Pagination'
+import CommentGridItem from './CommentGridItem'
 
-const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
+const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
   const user = useSelector(state => state.user)
+
+  const [comments, setComments] = useState([])
   const [showCommentField, setShowCommentField] = useState(false)
+
+  const [paginatedComments, setPaginatedComments] = useState([])
+  const [currentPageIdx, setCurrentPageIdx] = useState(1)
+  const [showLoadMore, setShowLoadMore] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { TextArea } = Input
   const [addCommentForm] = Form.useForm()
@@ -27,16 +35,28 @@ const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
     console.log('Failed:', errorInfo)
   }
 
-  const sortComments = comments.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  )
-
   const getLessonComments = async () => {
+    setIsLoading(true)
     const result = await getCommentsByLessonId(lessonId)
     if (result && !isNil(result.comments)) {
-      setComments(result.comments)
+      setComments(sortDescAndKeyCommentId(result.comments))
     }
+    const tempPaginatedItems = []
+    for (let i = 0; i < DEFAULT_ITEMS_PER_PAGE; i += 1) {
+      tempPaginatedItems.push(result.comments[i])
+    }
+    setPaginatedComments(tempPaginatedItems)
+    setCurrentPageIdx(1)
+    setShowLoadMore(true)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, DEFAULT_TIMEOUT)
   }
+
+  useEffect(() => {
+    getLessonComments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const addCommentToVideo = async values => {
     const formValues = {
@@ -123,85 +143,50 @@ const LessonComments = ({ comments, setComments, lessonId, currentLesson }) => {
     )
   }
 
-  const commentMenu = (commentId, commenterAccId) => {
-    return (
-      <Menu>
-        {user.accountId === commenterAccId && (
-          <Menu.Item>
-            <a
-              target="_blank"
-              role="button"
-              tabIndex={0}
-              onClick={() => deleteCommentFromVideo(commentId)}
-              onKeyDown={e => e.preventDefault()}
-            >
-              Delete Comment
-            </a>
-          </Menu.Item>
-        )}
-        {user.accountId === commenterAccId && <Menu.Divider />}
-        <Menu.Item danger>Report Comment</Menu.Item>
-      </Menu>
-    )
-  }
-
-  const CommentGridItem = data => {
-    const { comment } = data
-    return (
-      <div className="row align-items-center mb-4">
+  return (
+    <div className="row mb-5">
+      {!isAdmin && (
         <div className="col-auto">
           <Avatar
             src={
-              comment.User?.profileImgUrl
+              user.profileImgUrl
                 ? `${user.profileImgUrl}?${new Date().getTime()}`
-                : '/resources/images/avatars/avatar-2.png'
+                : '/resources/images/avatars/apprentice.png'
             }
           />
         </div>
-        <div className="col">
-          <div className="row text-dark">
-            <div className="col-12">
-              <span className="h5 font-weight-bold">
-                {`${!isNil(comment.User?.firstName) ? comment.User?.firstName : 'Anonymous'} ${
-                  !isNil(comment.User?.lastName) ? comment.User?.lastName : 'Pigeon'
-                }`}
-              </span>
-              <span className="text-muted">&nbsp;&nbsp;{moment(comment.createdAt).fromNow()}</span>
-            </div>
-            <div className="col-12">
-              <span>{comment.body}</span>
-            </div>
-          </div>
+      )}
+      {!isAdmin && (
+        <div className="col pl-0">
+          {!showCommentField && <ToggleCommentField />}
+          {showCommentField && <AddCommentField />}
         </div>
-        <div className="col-auto align-self-start">
-          <Dropdown overlay={commentMenu(comment.commentId, comment.accountId)}>
-            <Button type="text" size="large" icon={<MoreOutlined />} />
-          </Dropdown>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="row mb-5">
-      <div className="col-auto">
-        <Avatar
-          src={
-            user.profileImgUrl
-              ? `${user.profileImgUrl}?${new Date().getTime()}`
-              : '/resources/images/avatars/apprentice.png'
+      )}
+      <div className="col-12 mt-5 mt-lg-4">
+        <PaginationWrapper
+          setIsLoading={setIsLoading}
+          totalData={comments}
+          paginatedData={paginatedComments}
+          setPaginatedData={setPaginatedComments}
+          currentPageIdx={currentPageIdx}
+          setCurrentPageIdx={setCurrentPageIdx}
+          showLoadMore={showLoadMore}
+          setShowLoadMore={setShowLoadMore}
+          wrapperContent={
+            size(paginatedComments) > 0 &&
+            map(paginatedComments, comment => {
+              return (
+                <CommentGridItem
+                  key={comment.commentId}
+                  comment={comment}
+                  user={user}
+                  isLoading={isLoading}
+                  deleteCommentFromVideo={deleteCommentFromVideo}
+                />
+              )
+            })
           }
         />
-      </div>
-      <div className="col pl-0">
-        {!showCommentField && <ToggleCommentField />}
-        {showCommentField && <AddCommentField />}
-      </div>
-      <div className="col-12 mt-5 mt-lg-4">
-        {size(sortComments) > 0 &&
-          map(sortComments, comment => {
-            return <CommentGridItem key={comment.commentId} comment={comment} />
-          })}
       </div>
     </div>
   )
