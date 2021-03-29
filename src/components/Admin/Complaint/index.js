@@ -143,7 +143,7 @@ const Complaint = () => {
       render: record => (
         <Space size="large">
           <Popconfirm
-            title="Do you wish to delete comment?"
+            title="Do you wish to delete this comment?"
             onConfirm={() => handleDelete(record)}
             okText="Delete"
             okType="danger"
@@ -158,7 +158,7 @@ const Complaint = () => {
           </Popconfirm>
 
           <Popconfirm
-            title="Do you wish to mark as resolve?"
+            title="Do you wish to mark this complaint as resolved?"
             onConfirm={() => handleMarkAsResolved(record)}
             okText="Mark as Resolved"
           >
@@ -232,7 +232,7 @@ const Complaint = () => {
         <div className="col-12 col-md-6">
           <CountIconWidget
             title="Resolved Complaints"
-            className={`${currentFilter === 'accepted' ? 'btn btn-light' : 'btn'}`}
+            className={`${currentFilter === 'resolved' ? 'btn btn-light' : 'btn'}`}
             count={size(resolvedComplaints)}
             icon={<CheckOutlined />}
             onClick={handlerResolvedWidgetOnClick}

@@ -4,25 +4,35 @@ import { isNil } from 'lodash'
 import moment from 'moment'
 import { MoreOutlined } from '@ant-design/icons'
 
-const CommentGridItem = ({ comment, user, isLoading, deleteCommentFromVideo }) => {
-  const commentMenu = (commentId, commenterAccId) => {
+const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport }) => {
+  const commentMenu = () => {
     return (
       <Menu>
-        {user.accountId === commenterAccId && (
+        {user.accountId === comment.accountId && (
           <Menu.Item>
             <a
               target="_blank"
               role="button"
               tabIndex={0}
-              onClick={() => deleteCommentFromVideo(commentId)}
+              onClick={() => handleDelete(comment)}
               onKeyDown={e => e.preventDefault()}
             >
               Delete Comment
             </a>
           </Menu.Item>
         )}
-        {user.accountId === commenterAccId && <Menu.Divider />}
-        <Menu.Item danger>Report Comment</Menu.Item>
+        {user.accountId === comment.accountId && <Menu.Divider />}
+        <Menu.Item danger>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => handleReport(comment)}
+            onKeyDown={e => e.preventDefault()}
+          >
+            Report Comment
+          </a>
+        </Menu.Item>
       </Menu>
     )
   }
