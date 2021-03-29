@@ -61,3 +61,8 @@ export const MENTORSHIP_ALR_IN = 'Mentorship Application is already in Cart'
 
 export const DP_REMOVED = 'Your Display Picture was successfully removed.'
 export const NO_DP_TO_REMOVE = 'No Display Picture to remove.'
+
+export const COMPLAINT_SENT = 'Your complaint has been received.'
+export const COMPLAINT_RESOLVED = 'Complaint has been marked as resolved.'
+export const COMPLAINT_COMMENT_DELETE =
+  'Comment has been deleted and Complaint has been marked as resolved.'
