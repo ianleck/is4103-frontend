@@ -1,4 +1,5 @@
 import { notification, message } from 'antd'
+import { DIRECTION } from 'constants/constants'
 import { isNil, map } from 'lodash'
 import moment from 'moment'
 
@@ -6,28 +7,33 @@ export const formatTime = dateTime => {
   return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
 }
 
-export const sortArrByCreatedAtAsc = objArr => {
-  return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+export const sortArrByCreatedAt = (objArr, direction) => {
+  if (direction === DIRECTION.ASC) {
+    return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+  }
+  // for descending
+  return objArr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
 export const sortDescAndKeyAccId = data => {
-  return map(
-    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    user => ({
-      ...user,
-      key: user.accountId,
-    }),
-  )
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), user => ({
+    ...user,
+    key: user.accountId,
+  }))
 }
 
 export const sortDescAndKeyCourseId = data => {
-  return map(
-    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    user => ({
-      ...user,
-      key: user.courseId,
-    }),
-  )
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), user => ({
+    ...user,
+    key: user.courseId,
+  }))
+}
+
+export const sortDescAndKeyBillingId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), billing => ({
+    ...billing,
+    key: billing.billingId,
+  }))
 }
 
 export const filterDataByAdminVerified = (data, adminVerified) => {
