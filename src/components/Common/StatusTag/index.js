@@ -50,6 +50,24 @@ const StatusTag = data => {
     }
     return <Tag color={colour}>{dataSource}</Tag>
   }
+
+  if (type === 'COMPLAINT_STATUS_ENUM') {
+    const dataSource = !isNil(data.data.record) ? data.data.record : null
+    let text = ''
+    switch (dataSource) {
+      case false:
+        colour = 'red'
+        text = 'PENDING'
+        break
+      case true:
+        colour = 'green'
+        text = 'RESOLVED'
+        break
+      default:
+        break
+    }
+    return <Tag color={colour}>{text}</Tag>
+  }
   return <Tag>{NA}</Tag>
 }
 
