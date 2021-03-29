@@ -31,7 +31,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
       accountId: user.accountId,
       firstName: values.firstName.trim(),
       lastName: values.lastName.trim(),
-      contactNumber: values.contactNumber.trim(),
+      contactNumber: !isNil(values.contactNumber) ? values.contactNumber.trim() : null,
     }
     dispatch({
       type: actions.UPDATE_PROFILE,
@@ -309,11 +309,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
                   </Form.Item>
                 </div>
                 <div className="col-12">
-                  <Form.Item
-                    name="contactNumber"
-                    label="Contact Number"
-                    rules={[{ required: true, message: 'Please input a valid Contact Number' }]}
-                  >
+                  <Form.Item name="contactNumber" label="Contact Number">
                     <Input type="number" />
                   </Form.Item>
                 </div>

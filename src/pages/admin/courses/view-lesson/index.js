@@ -124,6 +124,7 @@ const AdminCourseLesson = () => {
             setComments={setComments}
             lessonId={lessonId}
             currentLesson={currentLesson}
+            isAdmin
           />
         </div>
         <div className="col-12 col-lg-4">

@@ -14,6 +14,8 @@ export const ADMIN_VERIFIED_ENUM = {
 
 export const DEFAULT_TIMEOUT = 550
 
+export const DEFAULT_ITEMS_PER_PAGE = 10
+
 export const MENTORSHIP_CONTRACT_APPROVAL = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
