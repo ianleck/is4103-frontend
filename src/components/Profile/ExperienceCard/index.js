@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import * as jwt from 'services/user'
 
 const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
@@ -181,11 +181,22 @@ const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
           <div className="row mt-2 text-dark align-items-center">
             <div className="col-12 h4 font-weight-bold">
               <a
+                role="button"
+                tabIndex={0}
                 className="text-dark align-items-center"
-                href={!isNil(item.companyUrl) ? item.companyUrl : '#'}
+                onClick={() => {
+                  if (!isEmpty(item.companyUrl)) {
+                    if (!item.companyUrl.match(/^https?:\/\//i)) {
+                      window.open(`http://${item.companyUrl}`)
+                    } else {
+                      window.open(item.companyUrl)
+                    }
+                  }
+                }}
+                onKeyDown={e => e.preventDefault()}
               >
                 {item.companyName}&nbsp;&nbsp;
-                {!isNil(item.companyUrl) ? (
+                {!isEmpty(item.companyUrl) ? (
                   <span className="badge badge-pill badge-dark  align-top">View</span>
                 ) : (
                   ''
