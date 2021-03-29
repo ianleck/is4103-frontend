@@ -192,8 +192,13 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/transactions',
-    Component: lazy(() => import('pages/admin/transactions')),
+    path: '/admin/billings',
+    Component: lazy(() => import('pages/billings')),
+    exact: true,
+  },
+  {
+    path: '/admin/billing/view/:id',
+    Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
   {

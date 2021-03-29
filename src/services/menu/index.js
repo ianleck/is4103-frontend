@@ -121,9 +121,9 @@ export async function getAdminMenuData() {
           url: '/admin/refunds',
         },
         {
-          title: 'Transactions',
-          key: 'transactions',
-          url: '/admin/transactions',
+          title: 'Billings',
+          key: 'billings',
+          url: '/admin/billings',
         },
         {
           title: 'Wallets',
