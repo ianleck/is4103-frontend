@@ -135,7 +135,7 @@ const Complaint = () => {
       key: 'isResolved',
       width: '10%',
       onFilter: (value, record) => record.isResolved.indexOf(value) === 0,
-      render: record => <StatusTag data={{ record }} type="COMPLAINT_STATUS_ENUM" />,
+      render: record => <StatusTag data={{ isResolved: record }} type="COMPLAINT_STATUS_ENUM" />,
     },
     {
       title: 'Action',

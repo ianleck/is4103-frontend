@@ -52,7 +52,7 @@ const StatusTag = data => {
   }
 
   if (type === 'COMPLAINT_STATUS_ENUM') {
-    const dataSource = !isNil(data.data.record) ? data.data.record : null
+    const dataSource = !isNil(data.data.isResolved) ? data.data.isResolved : data.isResolved
     let text = ''
     switch (dataSource) {
       case false:
