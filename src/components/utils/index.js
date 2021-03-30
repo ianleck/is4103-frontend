@@ -36,6 +36,13 @@ export const sortDescAndKeyBillingId = data => {
   }))
 }
 
+export const sortDescAndKeyCommentId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), comment => ({
+    ...comment,
+    key: comment.commentId,
+  }))
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {
@@ -43,6 +50,25 @@ export const filterDataByAdminVerified = (data, adminVerified) => {
     })
   }
   return data
+}
+
+export const filterDataByComplaintStatus = (data, complaintStatus) => {
+  if (!isNil(complaintStatus)) {
+    return data.filter(o => {
+      return o.isResolved === complaintStatus
+    })
+  }
+  return data
+}
+
+export const sortDescAndKeyComplaintId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    complaint => ({
+      ...complaint,
+      key: complaint.complaintId,
+    }),
+  )
 }
 
 export const resetCart = {
