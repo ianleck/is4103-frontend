@@ -1,7 +1,9 @@
-import { notification, message } from 'antd'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { notification, message, Button } from 'antd'
 import { DIRECTION } from 'constants/constants'
 import { isNil, map } from 'lodash'
 import moment from 'moment'
+import React from 'react'
 
 export const formatTime = dateTime => {
   return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
@@ -214,5 +216,21 @@ export const showMessage = (type, msg) => {
       break
     default:
       break
+  }
+}
+
+export const getDetailsColumn = viewItem => {
+  return {
+    title: 'Details',
+    key: 'details',
+    width: '10%',
+    render: record => (
+      <Button
+        type="primary"
+        shape="round"
+        onClick={() => viewItem(record)}
+        icon={<InfoCircleOutlined />}
+      />
+    ),
   }
 }
