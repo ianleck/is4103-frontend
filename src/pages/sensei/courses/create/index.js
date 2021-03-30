@@ -868,11 +868,16 @@ const SenseiCreateCourse = () => {
                     <Radio.Button value="settings" onClick={() => setCurrentCourseTab('settings')}>
                       Settings
                     </Radio.Button>
-                    <Radio.Button value="lessons" onClick={() => setCurrentCourseTab('lessons')}>
+                    <Radio.Button
+                      value="lessons"
+                      disabled={!isCourseCreated}
+                      onClick={() => setCurrentCourseTab('lessons')}
+                    >
                       Lessons
                     </Radio.Button>
                     <Radio.Button
                       value="announcements"
+                      disabled={!isCourseCreated}
                       onClick={() => setCurrentCourseTab('announcements')}
                     >
                       Announcements
