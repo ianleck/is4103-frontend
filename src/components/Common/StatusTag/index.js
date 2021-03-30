@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tag } from 'antd'
-import { ADMIN_VERIFIED_ENUM, USER_TYPE_ENUM } from 'constants/constants'
+import { ADMIN_VERIFIED_ENUM, BILLING_STATUS_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 
 import { isNil } from 'lodash'
 import { NA } from 'constants/text'
@@ -67,6 +67,34 @@ const StatusTag = data => {
         break
     }
     return <Tag color={colour}>{text}</Tag>
+  }
+  if (type === 'BILLING_STATUS_ENUM') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case BILLING_STATUS_ENUM.ADMIN:
+        colour = 'processing'
+        break
+      case BILLING_STATUS_ENUM.FAILED:
+      case BILLING_STATUS_ENUM.REJECTED:
+        colour = 'red'
+        break
+      case BILLING_STATUS_ENUM.PENDING_120_DAYS:
+      case BILLING_STATUS_ENUM.PENDING_PAYMENT:
+      case BILLING_STATUS_ENUM.PENDING_WITHDRAWAL:
+        colour = 'warning'
+        break
+
+      case BILLING_STATUS_ENUM.SUCCESS:
+      case BILLING_STATUS_ENUM.WITHDRAWN:
+      case BILLING_STATUS_ENUM.CONFIRMED:
+        colour = 'green'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
   }
   return <Tag>{NA}</Tag>
 }
