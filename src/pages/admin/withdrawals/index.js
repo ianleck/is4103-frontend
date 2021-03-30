@@ -1,24 +1,116 @@
 import { CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { Button, Space, Tag } from 'antd'
 import ManagementSkeleton from 'components/Admin/ManagementSkeleton'
-import { formatTime } from 'components/utils'
-import { BILLING_STATUS } from 'constants/constants'
+import { formatTime, showNotification, sortDescAndKeyBillingId } from 'components/utils'
+import { BILLING_STATUS, BILLING_TYPE } from 'constants/constants'
 import { BILLING_STATUS_FILTER } from 'constants/filters'
+import {
+  APPROVE_WITHDRAWAL_REQ,
+  APPROVE_WITHDRAWAL_REQ_ERR,
+  ERROR,
+  SUCCESS,
+} from 'constants/notifications'
 import { WITHDRAWALS, WITHDRAWAL_MGT } from 'constants/text'
-import { size } from 'lodash'
-import React from 'react'
+import { filter, isNil, size } from 'lodash'
+import React, { useEffect, useState } from 'react'
+import { approveWithdrawalRequest, rejectWithdrawalRequest, viewBillings } from 'services/wallet'
 
 const WithdrawalManagement = () => {
-  const currentTableData = []
-  const currentFilter = 'all'
+  const [currentTableData, setCurrentTableData] = useState([])
+  const [currentFilter, setCurrentFilter] = useState('all')
 
-  const pendingRequests = []
-  const acceptedRequests = []
-  const rejectedRequests = []
+  const [allRequests, setAllRequests] = useState([])
+  const [pendingRequests, setPendingRequests] = useState([])
+  const [acceptedRequests, setAcceptedRequests] = useState([])
+  const [rejectedRequests, setRejectedRequests] = useState([])
 
-  const handleAcceptedWidgetOnClick = () => {}
-  const handlePendingWidgetOnClick = () => {}
-  const handleRejectedWidgetOnClick = () => {}
+  const handleAcceptedWidgetOnClick = () => {
+    setTableData('accepted')
+  }
+  const handlePendingWidgetOnClick = () => {
+    setTableData('pending')
+  }
+  const handleRejectedWidgetOnClick = () => {
+    setTableData('rejected')
+  }
+
+  const approveWithdrawal = async billingId => {
+    const result = await approveWithdrawalRequest(billingId)
+    if (result && result.success) {
+      getBillings()
+      setCurrentFilter('accepted')
+      showNotification('success', SUCCESS, APPROVE_WITHDRAWAL_REQ)
+    } else {
+      showNotification('error', ERROR, APPROVE_WITHDRAWAL_REQ_ERR)
+    }
+  }
+  const rejectWithdrawal = async billingId => {
+    const result = await rejectWithdrawalRequest(billingId)
+    if (result && result.success) {
+      getBillings()
+      setCurrentFilter('rejected')
+      showNotification('success', SUCCESS, APPROVE_WITHDRAWAL_REQ)
+    } else {
+      showNotification('error', ERROR, APPROVE_WITHDRAWAL_REQ_ERR)
+    }
+  }
+
+  const getBillings = async () => {
+    const result = await viewBillings({ filter: { billingType: BILLING_TYPE.WITHDRAWAL } })
+    if (result && !isNil(result.billings)) {
+      const allWithdrawals = sortDescAndKeyBillingId(result.billings)
+      setAllRequests(allWithdrawals)
+      setPendingRequests(filter(allWithdrawals, { status: BILLING_STATUS.PENDING_WITHDRAWAL }))
+      setAcceptedRequests(filter(allWithdrawals, { status: BILLING_STATUS.WITHDRAWN }))
+      setRejectedRequests(filter(allWithdrawals, { status: BILLING_STATUS.REJECTED }))
+
+      switch (currentFilter) {
+        case 'all':
+          setCurrentTableData(allWithdrawals)
+          break
+        case 'pending':
+          setCurrentTableData(pendingRequests)
+          break
+        case 'accepted':
+          setCurrentTableData(acceptedRequests)
+          break
+        case 'rejected':
+          setCurrentTableData(rejectedRequests)
+          break
+        default:
+          setCurrentTableData(allRequests)
+          break
+      }
+    }
+  }
+
+  const setTableData = inputFilter => {
+    if (currentFilter === inputFilter) {
+      setCurrentTableData(allRequests)
+      setCurrentFilter('all')
+      return
+    }
+    switch (inputFilter) {
+      case 'pending':
+        setCurrentTableData(pendingRequests)
+        break
+      case 'accepted':
+        setCurrentTableData(acceptedRequests)
+        break
+      case 'rejected':
+        setCurrentTableData(rejectedRequests)
+        break
+      default:
+        setCurrentTableData(allRequests)
+        break
+    }
+    setCurrentFilter(inputFilter)
+  }
+
+  useEffect(() => {
+    getBillings()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const tableColumns = [
     {
@@ -73,16 +165,16 @@ const WithdrawalManagement = () => {
             size="large"
             shape="circle"
             icon={<CheckOutlined />}
-            // disabled={record.status !== BILLING_STATUS.PENDING_WITHDRAWAL}
-            onClick={() => {}} // for approve withdrawal request
+            disabled={record.status !== BILLING_STATUS.PENDING_WITHDRAWAL}
+            onClick={() => approveWithdrawal(record.billingId)}
           />
           <Button
             type="danger"
             size="large"
             shape="circle"
             icon={<CloseOutlined />}
-            // disabled={record.status !== BILLING_STATUS.PENDING_WITHDRAWAL}
-            onClick={() => {}} // for reject withdrawal request
+            disabled={record.status !== BILLING_STATUS.PENDING_WITHDRAWAL}
+            onClick={() => rejectWithdrawal(record.billingId)}
           />
         </Space>
       ),

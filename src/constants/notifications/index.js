@@ -69,6 +69,11 @@ export const TRANSCRIPT_REMOVED_ERR = 'There was an error removing your transcri
 export const CV_REMOVED = 'Your CV was successfully removed.'
 export const CV_REMOVED_ERR = 'There was an error removing your CV.'
 
+export const APPROVE_WITHDRAWAL_REQ = 'The withdrawal request was successfully approved.'
+export const APPROVE_WITHDRAWAL_REQ_ERR = 'There was an error approving the withdrawal request.'
+export const REJECT_WITHDRAWAL_REQ = 'The withdrawal request was successfully rejected.'
+export const REJECT_WITHDRAWAL_REQ_ERR = 'There was an error rejecting the withdrawal request.'
+
 export const COMPLAINT_SENT = 'Your complaint has been received.'
 export const COMPLAINT_RESOLVED = 'Complaint has been marked as resolved.'
 export const COMPLAINT_COMMENT_DELETE =
