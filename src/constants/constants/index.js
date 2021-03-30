@@ -86,7 +86,7 @@ export const BILLING_TYPE = {
   WITHDRAWAL: 'WITHDRAWAL',
 }
 
-export const BILLING_STATUS = {
+export const BILLING_STATUS_ENUM = {
   ADMIN: 'ADMIN',
   CONFIRMED: 'CONFIRMED',
   FAILED: 'FAILED',

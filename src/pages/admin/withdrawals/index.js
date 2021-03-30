@@ -2,7 +2,7 @@ import { CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/ic
 import { Button, Space, Tag } from 'antd'
 import ManagementSkeleton from 'components/Admin/ManagementSkeleton'
 import { formatTime, showNotification, sortDescAndKeyBillingId } from 'components/utils'
-import { BILLING_STATUS, BILLING_TYPE } from 'constants/constants'
+import { BILLING_STATUS_ENUM, BILLING_TYPE } from 'constants/constants'
 import { BILLING_STATUS_FILTER } from 'constants/filters'
 import {
   APPROVE_WITHDRAWAL_REQ,
@@ -60,9 +60,9 @@ const WithdrawalManagement = () => {
     if (result && !isNil(result.billings)) {
       const allWithdrawals = sortDescAndKeyBillingId(result.billings)
       setAllRequests(allWithdrawals)
-      setPendingRequests(filter(allWithdrawals, { status: BILLING_STATUS.PENDING_WITHDRAWAL }))
-      setAcceptedRequests(filter(allWithdrawals, { status: BILLING_STATUS.WITHDRAWN }))
-      setRejectedRequests(filter(allWithdrawals, { status: BILLING_STATUS.REJECTED }))
+      setPendingRequests(filter(allWithdrawals, { status: BILLING_STATUS_ENUM.PENDING_WITHDRAWAL }))
+      setAcceptedRequests(filter(allWithdrawals, { status: BILLING_STATUS_ENUM.WITHDRAWN }))
+      setRejectedRequests(filter(allWithdrawals, { status: BILLING_STATUS_ENUM.REJECTED }))
 
       switch (currentFilter) {
         case 'all':
@@ -136,9 +136,9 @@ const WithdrawalManagement = () => {
       onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: billingStatus => {
         let color
-        if (billingStatus === BILLING_STATUS.WITHDRAWN) {
+        if (billingStatus === BILLING_STATUS_ENUM.WITHDRAWN) {
           color = 'success'
-        } else if (billingStatus === BILLING_STATUS.PENDING_WITHDRAWAL) {
+        } else if (billingStatus === BILLING_STATUS_ENUM.PENDING_WITHDRAWAL) {
           color = 'warning'
         } else {
           color = 'error'
@@ -165,7 +165,7 @@ const WithdrawalManagement = () => {
             size="large"
             shape="circle"
             icon={<CheckOutlined />}
-            disabled={record.status !== BILLING_STATUS.PENDING_WITHDRAWAL}
+            disabled={record.status !== BILLING_STATUS_ENUM.PENDING_WITHDRAWAL}
             onClick={() => approveWithdrawal(record.billingId)}
           />
           <Button
@@ -173,7 +173,7 @@ const WithdrawalManagement = () => {
             size="large"
             shape="circle"
             icon={<CloseOutlined />}
-            disabled={record.status !== BILLING_STATUS.PENDING_WITHDRAWAL}
+            disabled={record.status !== BILLING_STATUS_ENUM.PENDING_WITHDRAWAL}
             onClick={() => rejectWithdrawal(record.billingId)}
           />
         </Space>
