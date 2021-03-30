@@ -4,6 +4,8 @@ import { Button, List, Space, Typography } from 'antd'
 import { EMPTY_LESSON_TITLE, LESSON_LIST } from 'constants/text'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { indexOf, isEmpty, isNil, map, size } from 'lodash'
+import { sortArrByCreatedAt } from 'components/utils'
+import { DIRECTION } from 'constants/constants'
 
 const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
   const history = useHistory()
@@ -21,9 +23,7 @@ const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
   }
 
   if (!isNil(currentCourse.Lessons)) {
-    sortedLessonList = currentCourse.Lessons.sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
+    sortedLessonList = sortArrByCreatedAt(currentCourse.Lessons, DIRECTION.ASC)
     const currentLessonIdx = indexOf(sortedLessonList, currentLesson)
     if (!isNil(sortedLessonList) && currentLessonIdx !== -1) {
       if (currentLessonIdx + 1 <= size(sortedLessonList) - 1)
@@ -68,7 +68,7 @@ const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
               itemLayout="horizontal"
               dataSource={map(currentCourse.Lessons, lesson => ({
                 ...lesson,
-                listNumber: indexOf(sortedLessonList, lesson),
+                listNumber: indexOf(sortedLessonList, lesson) + 1,
               }))}
               renderItem={item => (
                 <List.Item>

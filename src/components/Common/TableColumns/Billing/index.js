@@ -35,6 +35,15 @@ const billingColumns = [
     onFilter: (value, record) => record.billingType.indexOf(value) === 0,
   },
   {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    width: '10%',
+    render: record => {
+      return <Tag>{record}</Tag>
+    },
+  },
+  {
     title: 'Product ID',
     dataIndex: 'productId',
     key: 'productId',
