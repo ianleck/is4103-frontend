@@ -6,7 +6,7 @@ import MentorshipDescriptionCard from 'components/Mentorship/ListingDetails/Ment
 import MentorshipProfileHeader from 'components/Mentorship/ListingDetails/MentorshipProfileHeader'
 import MentorshipPricingCard from 'components/Mentorship/ListingDetails/MentorshipPricingCard'
 
-const viewListing = () => {
+const ViewListing = () => {
   return (
     <div>
       <Helmet title="View Mentorship Listing" />
@@ -31,4 +31,4 @@ const viewListing = () => {
   )
 }
 
-export default viewListing
+export default ViewListing

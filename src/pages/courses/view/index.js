@@ -8,7 +8,6 @@ import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
 import { formatTime } from 'components/utils'
-import { getProfile } from 'services/user'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -24,8 +23,7 @@ const ViewCourseDetailsPublic = () => {
       const result = await getCourseById(id)
       if (result && !isNil(result.course)) {
         setCurrentCourse(result.course)
-        const senseiProfile = await getProfile(result.course.accountId)
-        setCurrentSensei(senseiProfile)
+        setCurrentSensei(result.course.Sensei)
       }
     }
     viewCourse()
@@ -174,9 +172,6 @@ const ViewCourseDetailsPublic = () => {
                       size="small"
                       column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
                     >
-                      <Descriptions.Item label="Industry">
-                        {!isNil(currentSensei.industry) ? currentSensei.industry : NA}
-                      </Descriptions.Item>
                       <Descriptions.Item label="Occupation">
                         {!isNil(currentSensei.occupation) ? currentSensei.occupation : NA}
                       </Descriptions.Item>

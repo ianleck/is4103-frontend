@@ -69,6 +69,9 @@ export function* LOAD_CURRENT_ACCOUNT() {
   yield putResolve({
     type: 'cart/LOAD_CURRENT_CART',
   })
+  yield putResolve({
+    type: 'categories/GET_CATEGORIES',
+  })
   yield put({
     type: 'user/SET_STATE',
     payload: {
