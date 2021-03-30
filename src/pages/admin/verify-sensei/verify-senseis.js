@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import NewMentorTable from '../../../components/Admin/VerifySensei/NewSenseiTable'
-import UnverifiedWidget from '../../../components/Admin/VerifySensei/UnverifiedWidget'
-import VerifiedWidget from '../../../components/Admin/VerifySensei/VerifiedWidget'
-import RejectedSenseiWidget from '../../../components/Admin/VerifySensei/RejectedSenseiWidget'
+import NewMentorTable from 'components/Admin/VerifySensei/NewSenseiTable'
+import UnverifiedWidget from 'components/Admin/VerifySensei/UnverifiedWidget'
+import VerifiedWidget from 'components/Admin/VerifySensei/VerifiedWidget'
+import RejectedSenseiWidget from 'components/Admin/VerifySensei/RejectedSenseiWidget'
 
 // const { TabPane } = Tabs
 // const mapStateToProps = ({ user }) => ({ user })
@@ -47,18 +47,15 @@ const VerifyMentors = () => {
       </div>
 
       <div className="row mt-4">
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <VerifiedWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <UnverifiedWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <RejectedSenseiWidget />
         </div>
-
         <div className="col-xl-12 col-lg-12">
           <NewMentorTable />
         </div>

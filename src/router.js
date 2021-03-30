@@ -23,6 +23,27 @@ const routes = [
     Component: lazy(() => import('pages/mentorships')),
     exact: true,
   },
+  {
+    path: '/courses',
+    Component: lazy(() => import('pages/courses')),
+    exact: true,
+  },
+  {
+    path: '/courses/:id',
+    Component: lazy(() => import('pages/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/cart',
+    Component: lazy(() => import('pages/cart')),
+    exact: true,
+  },
+
+  {
+    path: '/success',
+    Component: lazy(() => import('pages/checkout')),
+    exact: true,
+  },
   // Auth Pages
   {
     path: '/auth/login',
@@ -82,12 +103,12 @@ const routes = [
   },
   {
     path: '/admin/profile',
-    Component: lazy(() => import('pages/admin/profiles/admin-profile')),
+    Component: lazy(() => import('pages/admin/profiles')),
     exact: true,
   },
   {
     path: '/admin/user-management',
-    Component: lazy(() => import('pages/admin/users/main')),
+    Component: lazy(() => import('pages/admin/users')),
     exact: true,
   },
   {
@@ -101,18 +122,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/user-management/verify-senseis',
-    Component: lazy(() => import('pages/admin/verify-sensei/verify-senseis')),
-    exact: true,
-  },
-  {
-    path: '/admin/user-management/verify-senseis/:mentorId',
-    Component: lazy(() => import('pages/admin/verify-sensei/sensei-page')),
-    exact: true,
-  },
-  {
     path: '/admin/admin-management',
-    Component: lazy(() => import('pages/admin/admins/main')),
+    Component: lazy(() => import('pages/admin/admins')),
     exact: true,
   },
   {
@@ -142,12 +153,22 @@ const routes = [
   },
   {
     path: '/admin/mentorship-content-management',
-    Component: lazy(() => import('pages/admin/mentorship/main')),
+    Component: lazy(() => import('pages/admin/mentorship')),
     exact: true,
   },
   {
     path: '/admin/course-content-management',
     Component: lazy(() => import('pages/admin/courses')),
+    exact: true,
+  },
+  {
+    path: '/admin/course-content-management/:id',
+    Component: lazy(() => import('pages/admin/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/admin/course-content-management/:courseId/view-lesson/:lessonId',
+    Component: lazy(() => import('pages/admin/courses/view-lesson')),
     exact: true,
   },
   {
@@ -171,8 +192,18 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/transactions',
-    Component: lazy(() => import('pages/admin/transactions')),
+    path: '/admin/billings',
+    Component: lazy(() => import('pages/billings')),
+    exact: true,
+  },
+  {
+    path: '/admin/billing/view/:id',
+    Component: lazy(() => import('pages/billings/view')),
+    exact: true,
+  },
+  {
+    path: '/admin/wallets',
+    Component: lazy(() => import('pages/admin/wallets')),
     exact: true,
   },
   // Sensei Pages
@@ -197,8 +228,38 @@ const routes = [
     exact: true,
   },
   {
-    path: '/sensei/mentorship/review-applications',
-    Component: lazy(() => import('pages/sensei/mentorship/review-applications')),
+    path: '/sensei/courses',
+    Component: lazy(() => import('pages/sensei/courses')),
+    exact: true,
+  },
+  {
+    path: '/sensei/courses/create/:id',
+    Component: lazy(() => import('pages/sensei/courses/create')),
+    exact: true,
+  },
+  {
+    path: '/sensei/courses/create',
+    Component: lazy(() => import('pages/sensei/courses/create')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorships/',
+    Component: lazy(() => import('pages/sensei/mentorships')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorships/applications',
+    Component: lazy(() => import('pages/sensei/mentorships/applications')),
+    exact: true,
+  },
+  {
+    path: '/sensei/wallet',
+    Component: lazy(() => import('pages/billings')),
+    exact: true,
+  },
+  {
+    path: '/sensei/billing/view/:id',
+    Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
   // Student Pages
@@ -213,6 +274,21 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/dashboard/courses',
+    Component: lazy(() => import('pages/student/dashboard/courses')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/courses/:id',
+    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/courses/:courseId/view-lesson/:lessonId',
+    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    exact: true,
+  },
+  {
     path: '/student/profile',
     Component: lazy(() => import('pages/student/profile')),
     exact: true,
@@ -223,8 +299,13 @@ const routes = [
     exact: true,
   },
   {
-    path: '/student/mentorship-listing/:mentorshipListingId',
-    Component: lazy(() => import('pages/mentorships/viewListing')),
+    path: '/student/mentorship/view/:id',
+    Component: lazy(() => import('pages/student/mentorships/view')),
+    exact: true,
+  },
+  {
+    path: '/student/mentorship/apply/:id',
+    Component: lazy(() => import('pages/student/mentorships/apply')),
     exact: true,
   },
   {
@@ -232,10 +313,20 @@ const routes = [
     Component: lazy(() => import('pages/student/dashboard/mentorship-applications')),
     exact: true,
   },
-  // Common Pages
   {
-    path: '/mentorship/apply/:id',
-    Component: lazy(() => import('pages/mentorships/ApplyListing')),
+    path: '/student/dashboard/mentorship-subscriptions',
+    Component: lazy(() => import('pages/student/dashboard/mentorship-subscriptions')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/billings',
+    Component: lazy(() => import('pages/billings')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/billing/view/:id',
+    Component: lazy(() => import('pages/billings/view')),
+    exact: true,
   },
   /*
 

@@ -1,14 +1,24 @@
-import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Upload, message } from 'antd'
+import { DeleteOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Upload, message, Space } from 'antd'
 import Axios from 'axios'
 import { isNil } from 'lodash'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import download from 'js-file-download'
+import { removeFile } from 'services/user'
+import { showNotification } from 'components/utils'
+import {
+  CV_REMOVED,
+  CV_REMOVED_ERR,
+  ERROR,
+  SUCCESS,
+  TRANSCRIPT_REMOVED,
+  TRANSCRIPT_REMOVED_ERR,
+} from 'constants/notifications'
 
-const VerifyProfileCard = () => {
-  const user = useSelector(state => state.user)
+const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
   const dispatch = useDispatch()
+  const useToken = isNil(accessToken) ? user.accessToken : accessToken
 
   const getUploadProps = isTranscript => {
     return {
@@ -38,7 +48,7 @@ const VerifyProfileCard = () => {
   const downloadFile = isTranscript => {
     Axios.get(isTranscript ? user.transcriptUrl : user.cvUrl, {
       headers: {
-        authorization: `Bearer ${user.accessToken}`,
+        authorization: `Bearer ${useToken}`,
       },
       responseType: 'blob', // Important
     }).then(resp => {
@@ -49,6 +59,24 @@ const VerifyProfileCard = () => {
           : `cv.${user.cvUrl.split('.').pop()}`,
       )
     })
+  }
+
+  const removeFileFromServer = async type => {
+    const result = await removeFile(type)
+    if (result) {
+      if (type === 'transcript') {
+        showNotification('success', SUCCESS, TRANSCRIPT_REMOVED)
+      } else {
+        showNotification('success', SUCCESS, CV_REMOVED)
+      }
+      dispatch({
+        type: 'user/LOAD_CURRENT_ACCOUNT',
+      })
+    } else if (type === 'transcript') {
+      showNotification('error', ERROR, TRANSCRIPT_REMOVED_ERR)
+    } else {
+      showNotification('error', ERROR, CV_REMOVED_ERR)
+    }
   }
 
   const UploadFileComponent = data => {
@@ -63,15 +91,27 @@ const VerifyProfileCard = () => {
 
   const DownloadFileComponent = data => {
     return (
-      <Button
-        type="primary"
-        shape="round"
-        icon={<DownloadOutlined />}
-        size="large"
-        onClick={() => downloadFile(data.isTranscript)}
-      >
-        Download
-      </Button>
+      <Space size="large" className="mt-2 mt-sm-0">
+        <Button
+          type="primary"
+          shape="round"
+          icon={<DownloadOutlined />}
+          size="large"
+          onClick={() => downloadFile(data.isTranscript)}
+        >
+          Download
+        </Button>
+        <Button
+          ghost
+          type="danger"
+          shape="round"
+          icon={<DeleteOutlined />}
+          size="large"
+          onClick={() => removeFileFromServer(data.isTranscript ? 'transcript' : 'cv')}
+        >
+          Remove
+        </Button>
+      </Space>
     )
   }
 
@@ -80,32 +120,32 @@ const VerifyProfileCard = () => {
       <div className="card-header pb-1">
         <div className="row align-items-center justify-content-between mb-2">
           <div className="col-auto">
-            <span className="h3 font-weight-bold text-dark">Upload Supporting Documents</span>
+            <span className="h3 font-weight-bold text-dark">Supporting Documents</span>
           </div>
         </div>
       </div>
       <div className="card-body">
         <div className="row align-items-center">
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-4">
             <span className="h4">Transcript</span>
           </div>
           <div className="col-auto mt-2 mt-sm-0">
-            <UploadFileComponent isTranscript />
+            {!!showUploadButton && <UploadFileComponent isTranscript />}
           </div>
-          <div className="col-auto">
+          <div className="col-auto mt-2 mt-sm-0">
             {user.transcriptUrl !== '' && !isNil(user.transcriptUrl) && (
               <DownloadFileComponent isTranscript />
             )}
           </div>
         </div>
         <div className="row align-items-center mt-4">
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-4">
             <span className="h4">CV</span>
           </div>
           <div className="col-auto mt-2 mt-sm-0">
-            <UploadFileComponent isTranscript={false} />
+            {!!showUploadButton && <UploadFileComponent isTranscript={false} />}
           </div>
-          <div className="col-auto">
+          <div className="col-auto mt-2 mt-sm-0">
             {user.cvUrl !== '' && !isNil(user.cvUrl) && (
               <DownloadFileComponent isTranscript={false} />
             )}

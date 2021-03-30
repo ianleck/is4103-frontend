@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import FadeIn from 'react-fade-in'
-import { PRIVACY_PERMISSIONS_ENUM, USER_TYPE_ENUM } from 'constants/constants'
+import { PRIVACY_PERMISSIONS_ENUM } from 'constants/constants'
 
 const StudentSettings = () => {
   const { Option } = Select
@@ -55,35 +55,41 @@ const StudentSettings = () => {
     })
   }
 
-  const onAccSettingsChange = () => {
+  const onAccSettingsChange = payload => {
+    payload.changeAccSettings = true
     dispatch({
-      type: 'user/UPDATE_ACCOUNT_SETTINGS',
-      payload: {
-        accountId: user.accountId,
-        isStudent: user.userType === USER_TYPE_ENUM.STUDENT,
-        isPrivateProfile: isPrivateUser,
-        emailNotification: isEmailNotifOn,
-        chatPrivacy: currentMessagePriv,
-      },
+      type: 'user/UPDATE_PROFILE',
+      payload,
     })
   }
 
   const onChangePrivacy = () => {
     setTogglePrivacy(!togglePrivacy)
     isPrivateUser = !isPrivateUser
-    console.log('privacy', isPrivateUser)
-    onAccSettingsChange()
+    const payload = {
+      accountId: user.accountId,
+      isPrivateProfile: isPrivateUser,
+    }
+    onAccSettingsChange(payload)
   }
 
   const onChangeEmailNotif = () => {
     setToggleEmailNotif(!toggleEmailNotif)
     isEmailNotifOn = !isEmailNotifOn
-    onAccSettingsChange()
+    const payload = {
+      accountId: user.accountId,
+      emailNotification: isEmailNotifOn,
+    }
+    onAccSettingsChange(payload)
   }
 
   const onChangeMsgPrivileges = value => {
     currentMessagePriv = value
-    onAccSettingsChange()
+    const payload = {
+      accountId: user.accountId,
+      chatPrivacy: currentMessagePriv,
+    }
+    onAccSettingsChange(payload)
   }
 
   const PrivateProfileToggleMsg = () => {

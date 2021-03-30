@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { Button, DatePicker, Empty, Form, Input, Modal, Popconfirm } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
+import { useDispatch } from 'react-redux'
 import moment from 'moment'
-import { isNil } from 'lodash'
-import * as jwt from 'services/jwt'
+import { isEmpty, isNil } from 'lodash'
+import * as jwt from 'services/user'
 
-const ExperienceCard = () => {
+const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
   const { TextArea } = Input
 
-  const user = useSelector(state => state.user)
   let isExperienceEmpty = false
   if (!isNil(user.Experience)) isExperienceEmpty = user.Experience.length === 0
   const dispatch = useDispatch()
+  // Add Experience Modal
   const [showAddExperience, setShowAddExperience] = useState(false)
+  // Edit Experience Modal
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
-  const [isConfirmDelete, setIsConfirmDelete] = useState(false)
-
   const [editExperienceForm] = Form.useForm()
 
   useEffect(() => {
     const getProfile = async () => {
-      if (!isNil(user.accountId)) {
+      if (!isAdmin && !isNil(user.accountId)) {
         const userRsp = await jwt.getProfile(user.accountId)
         dispatch({
           type: 'user/SET_STATE',
@@ -32,7 +31,7 @@ const ExperienceCard = () => {
       }
     }
     getProfile()
-  }, [dispatch, user.accountId])
+  }, [dispatch, isAdmin, user.accountId])
 
   const sortExperienceByDate = () => {
     if (user) {
@@ -49,21 +48,50 @@ const ExperienceCard = () => {
     console.log('Failed:', errorInfo)
   }
 
+  const validateDates = (dateStart, dateEnd) => {
+    if (!isNil(dateStart) && !isNil(dateEnd)) {
+      if (
+        moment(dateEnd)
+          .startOf('day')
+          .isSameOrAfter(moment(dateStart).startOf('day'))
+      ) {
+        return true
+      }
+    }
+    return false
+  }
+
   const onAddExperience = values => {
-    values.accountId = user.accountId
+    const formValues = {
+      accountId: user.accountId,
+      role: values.role.trim(),
+      dateStart: values.dateStart,
+      dateEnd: values.dateEnd,
+      description: values.description.trim(),
+      companyName: values.companyName.trim(),
+      companyUrl: values.companyUrl ? values.companyUrl.trim() : '',
+    }
     dispatch({
       type: 'user/ADD_EXPERIENCE',
-      payload: values,
+      payload: formValues,
     })
     setShowAddExperience(false)
   }
 
   const onEditExperience = values => {
-    values.accountId = user.accountId
-    values.experienceId = currentEditExpObj.experienceId
+    const formValues = {
+      accountId: user.accountId,
+      experienceId: currentEditExpObj.experienceId,
+      role: values.role.trim(),
+      dateStart: values.dateStart,
+      dateEnd: values.dateEnd,
+      description: values.description.trim(),
+      companyName: values.companyName.trim(),
+      companyUrl: values.companyUrl ? values.companyUrl.trim() : '',
+    }
     dispatch({
       type: 'user/EDIT_EXPERIENCE',
-      payload: values,
+      payload: formValues,
     })
     setShowEditExperience(false)
   }
@@ -78,37 +106,33 @@ const ExperienceCard = () => {
         },
       })
       setShowEditExperience(false)
-      setIsConfirmDelete(false)
     }
   }
 
-  const showPopconfirm = () => {
-    setIsConfirmDelete(true)
-  }
-
-  const handleCancel = () => {
-    setIsConfirmDelete(false)
-  }
-
   const showEditExperienceModal = experience => {
-    setCurrentEditExpObj(experience)
-    editExperienceForm.setFieldsValue({
-      role: experience.role,
-      description: experience.description,
-      dateStart: moment(experience.dateStart),
-      dateEnd: moment(experience.dateEnd),
-      companyName: experience.companyName,
-      companyUrl: experience.companyUrl,
-    })
-    setShowEditExperience(true)
+    if (!isNil(experience)) {
+      setCurrentEditExpObj(experience)
+      editExperienceForm.setFieldsValue({
+        role: experience.role,
+        description: experience.description,
+        dateStart: moment(experience.dateStart),
+        dateEnd: moment(experience.dateEnd),
+        companyName: experience.companyName,
+        companyUrl: experience.companyUrl,
+      })
+      setShowEditExperience(true)
+    } else {
+      notification.error({
+        message: 'Error editing currently selected experience.',
+      })
+    }
   }
 
   const editExpFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowEditExperience(false)}
           className=""
@@ -143,23 +167,36 @@ const ExperienceCard = () => {
               </span>
             </div>
             <div className="col-auto">
-              <Button
-                type="default"
-                icon={<i className="fe fe-edit" />}
-                onClick={() => showEditExperienceModal(item)}
-              >
-                &nbsp;&nbsp;Edit
-              </Button>
+              {!!showEditTools && (
+                <Button
+                  type="default"
+                  icon={<i className="fe fe-edit" />}
+                  onClick={() => showEditExperienceModal(item)}
+                >
+                  &nbsp;&nbsp;Edit
+                </Button>
+              )}
             </div>
           </div>
           <div className="row mt-2 text-dark align-items-center">
             <div className="col-12 h4 font-weight-bold">
               <a
+                role="button"
+                tabIndex={0}
                 className="text-dark align-items-center"
-                href={!isNil(item.companyUrl) ? item.companyUrl : '#'}
+                onClick={() => {
+                  if (!isEmpty(item.companyUrl)) {
+                    if (!item.companyUrl.match(/^https?:\/\//i)) {
+                      window.open(`http://${item.companyUrl}`)
+                    } else {
+                      window.open(item.companyUrl)
+                    }
+                  }
+                }}
+                onKeyDown={e => e.preventDefault()}
               >
                 {item.companyName}&nbsp;&nbsp;
-                {!isNil(item.companyUrl) ? (
+                {!isEmpty(item.companyUrl) ? (
                   <span className="badge badge-pill badge-dark  align-top">View</span>
                 ) : (
                   ''
@@ -182,8 +219,7 @@ const ExperienceCard = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
-          ghost
-          type="primary"
+          type="default"
           size="large"
           onClick={() => setShowAddExperience(false)}
           className=""
@@ -207,16 +243,18 @@ const ExperienceCard = () => {
             <span className="h3 font-weight-bold text-dark">My Experience</span>
           </div>
           <div className="col-auto">
-            <Button
-              ghost
-              type="primary"
-              shape="round"
-              size="large"
-              icon={<i className="fe fe-plus" />}
-              onClick={() => setShowAddExperience(true)}
-            >
-              &nbsp;&nbsp;Add
-            </Button>
+            {!!showEditTools && (
+              <Button
+                ghost
+                type="primary"
+                shape="round"
+                size="large"
+                icon={<i className="fe fe-plus" />}
+                onClick={() => setShowAddExperience(true)}
+              >
+                &nbsp;&nbsp;Add
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -237,6 +275,7 @@ const ExperienceCard = () => {
           id="addExperienceForm"
           layout="vertical"
           hideRequiredMark
+          onSubmit={e => e.preventDefault()}
           onFinish={onAddExperience}
           onFinishFailed={onFinishFailed}
         >
@@ -254,6 +293,7 @@ const ExperienceCard = () => {
               <Form.Item
                 name="dateStart"
                 label="Date Start"
+                hasFeedback
                 rules={[{ required: true, message: 'Start date of experience is required.' }]}
               >
                 <DatePicker
@@ -265,7 +305,17 @@ const ExperienceCard = () => {
               <Form.Item
                 name="dateEnd"
                 label="Date Ended"
-                rules={[{ required: true, message: 'End date of experience is required.' }]}
+                dependencies={['dateStart']}
+                hasFeedback
+                rules={[
+                  { required: true, message: 'End date of experience is required.' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (validateDates(getFieldValue('dateStart'), value)) return Promise.resolve()
+                      return Promise.reject(new Error('Date End cannot be earlier than Date Start'))
+                    },
+                  }),
+                ]}
               >
                 <DatePicker
                   renderExtraFooter={() => 'Enter the date you end/will end your experience.'}
@@ -358,7 +408,17 @@ const ExperienceCard = () => {
               <Form.Item
                 name="dateEnd"
                 label="Date Ended"
-                rules={[{ required: true, message: 'End date of experience is required.' }]}
+                dependencies={['dateStart']}
+                hasFeedback
+                rules={[
+                  { required: true, message: 'End date of experience is required.' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (validateDates(getFieldValue('dateStart'), value)) return Promise.resolve()
+                      return Promise.reject(new Error('Date End cannot be earlier than Date Start'))
+                    },
+                  }),
+                ]}
               >
                 <DatePicker
                   renderExtraFooter={() => 'Enter the date you end/will end your experience.'}
@@ -393,14 +453,12 @@ const ExperienceCard = () => {
               <Form.Item className="mb-1">
                 <Popconfirm
                   title="Do you wish to delete this experience?"
-                  visible={isConfirmDelete}
                   onConfirm={onDeleteExperience}
                   okText="Delete"
                   okType="danger"
                   okButtonProps={{ loading: user.loading }}
-                  onCancel={handleCancel}
                 >
-                  <Button block type="danger" onClick={showPopconfirm}>
+                  <Button block type="danger">
                     Delete experience
                   </Button>
                 </Popconfirm>

@@ -1,76 +1,43 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import Charting from '../../../components/Admin/AdminDashboard/Charting'
-import Table1 from '../../../components/Admin/AdminDashboard/Table1'
-import Table2 from '../../../components/Admin/AdminDashboard/Table2'
+import StatsTable from '../../../components/Admin/AdminDashboard/StatsTable'
+import ActionableTable from '../../../components/Admin/AdminDashboard/ActionableTable'
 import StudentWidget from '../../../components/Admin/UsersManagement/StudentWidget'
 import SenseiWidget from '../../../components/Admin/UsersManagement/SenseiWidget'
 import ActiveAdminWidget from '../../../components/Admin/AdminManagement/ActiveAdminWidget'
 
 const AdminDashboard = () => {
   return (
-    <div>
+    <div className="container">
       <Helmet title="Admin Overview" />
       <div className="cui__utils__heading">
         <strong>Admin Dashboard</strong>
       </div>
 
-      <div className="row">
-        <div className="col-xl-4 col-lg-12">
+      <div className="row mt-4">
+        <div className="col-12 col-sm-4">
           <StudentWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <SenseiWidget />
         </div>
-
-        <div className="col-xl-4 col-lg-12">
+        <div className="col-12 col-sm-4">
           <ActiveAdminWidget />
         </div>
+      </div>
 
-        <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center text-primary">
-                Widget
-              </h4>
-              <h6 className="d-flex align-items-center justify-content-center">Revenue</h6>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center text-success">
-                Widget
-              </h4>
-              <h6 className="d-flex align-items-center justify-content-center">Profits</h6>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-4 col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="d-flex align-items-center justify-content-center text-danger">
-                Widget
-              </h4>
-              <h6 className="d-flex align-items-center justify-content-center">Refunds</h6>
-            </div>
-          </div>
-        </div>
-
+      <div className="row">
         <div className="col-xl-12 col-lg-12">
           <Charting />
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <Table1 />
+          <StatsTable />
         </div>
 
         <div className="col-xl-12 col-lg-12">
-          <Table2 />
+          <ActionableTable />
         </div>
       </div>
     </div>

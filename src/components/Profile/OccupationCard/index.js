@@ -1,17 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select } from 'antd'
 import { occupations } from 'constants/information'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { isNil } from 'lodash'
 
-const OccupationCard = () => {
+const OccupationCard = ({ user, showEditTools }) => {
   const { Option } = Select
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentOccupation, setCurrentOccupation] = useState(user.occupation)
   const [showOccupation, setShowOccupation] = useState(isNil(user.occupation))
   const [editOccupationMode, setEditOccupationMode] = useState(false)
+
+  useEffect(() => {
+    if (user.occupation) {
+      setShowOccupation(isNil(user.occupation))
+    }
+  }, [user.occupation])
 
   const onChangeOccupation = values => {
     setCurrentOccupation(values)
@@ -32,6 +37,27 @@ const OccupationCard = () => {
     }
   }
 
+  const onSaveOccupation = values => {
+    const formValues = {
+      accountId: user.accountId,
+      occupation: values.occupation,
+    }
+    dispatch({
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
+    })
+    setShowOccupation(false)
+    setCurrentOccupation(values.occupation)
+    if (isNil(values.occupation)) {
+      setShowOccupation(true)
+    }
+    setEditOccupationMode(false)
+  }
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
   const EditOccupationButton = () => {
     return (
       <Button
@@ -45,25 +71,6 @@ const OccupationCard = () => {
         &nbsp;&nbsp;Edit
       </Button>
     )
-  }
-
-  const onSaveOccupation = values => {
-    values.accountId = user.accountId
-    values.isIndustry = false
-    dispatch({
-      type: 'user/UPDATE_WORK_DETAILS',
-      payload: values,
-    })
-    setShowOccupation(false)
-    setCurrentOccupation(values.occupation)
-    if (isNil(values.occupation)) {
-      setShowOccupation(true)
-    }
-    setEditOccupationMode(false)
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const SaveOccupationButtons = () => {
@@ -113,7 +120,10 @@ const OccupationCard = () => {
           occupation: currentOccupation,
         }}
       >
-        <Form.Item name="occupation" rules={[{ required: true }]}>
+        <Form.Item
+          name="occupation"
+          rules={[{ required: true, message: 'Please select your current occupation.' }]}
+        >
           <Select
             showSearch
             className="w-100"
@@ -142,7 +152,9 @@ const OccupationCard = () => {
           <div className="col-auto">
             <span className="h3 font-weight-bold text-dark">Occupation</span>
           </div>
-          <div className="col-auto">{!editOccupationMode && <EditOccupationButton />}</div>
+          <div className="col-auto">
+            {!editOccupationMode && !!showEditTools && <EditOccupationButton />}
+          </div>
         </div>
       </div>
       <div className="card-body">

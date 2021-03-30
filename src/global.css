@@ -1,0 +1,119 @@
+.announcement-card-body {
+  max-height: 175px;
+}
+
+.course-card-img {
+  width: 100%;
+}
+
+.course-card-img-holder {
+  max-height: 150px;
+}
+
+.course-img-banner-holder {
+  max-height: 200px;
+}
+
+.course-img-banner {
+  width: 100%;
+}
+
+.defocus-btn {
+  outline: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.description-body {
+  white-space: pre-line;
+}
+
+.lesson-list-card {
+  height: 250px;
+}
+
+.mentorship-listing-card {
+  height: 340px;
+}
+
+.menu-item {
+  width: 275px;
+  white-space: normal !important;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.sensei-course-card {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  height: 220px;
+}
+
+.sensei-course-card-content {
+  height: 180px;
+}
+
+.scroll-menu-arrow--disabled {
+  display: none;
+}
+
+.text-2-lines {
+  height: 45px !important;
+}
+
+.text-2-bold-lines {
+  height: 54px !important;
+}
+
+.text-4-lines {
+  height: 88px !important;
+}
+
+.truncate-1-overflow {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
+
+.truncate-2-overflow {
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
+
+.truncate-3-overflow {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
+
+.truncate-4-overflow {
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}

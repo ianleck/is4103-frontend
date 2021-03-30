@@ -20,7 +20,7 @@ const initialState = {
   lastName: '',
   occupation: '',
   paypalId: '',
-  permission: '',
+  role: '',
   personality: '',
   profileImgUrl: '',
   status: '',
@@ -28,6 +28,7 @@ const initialState = {
   updatedAt: '',
   userType: '',
   username: '',
+  walletId: '',
   // Local Attributes
   accessToken: '',
   authorized: process.env.REACT_APP_AUTHENTICATED || false,

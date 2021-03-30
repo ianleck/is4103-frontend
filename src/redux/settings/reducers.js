@@ -28,7 +28,7 @@ const initialState = {
     leftMenuWidth: 256,
     isMenuUnfixed: false,
     isMenuShadow: false,
-    isTopbarFixed: false,
+    isTopbarFixed: true,
     isGrayTopbar: false,
     isContentMaxWidth: true,
     isAppMaxWidth: false,

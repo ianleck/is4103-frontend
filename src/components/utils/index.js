@@ -1,4 +1,85 @@
-import { isNil } from 'lodash'
+import { notification, message } from 'antd'
+import { DIRECTION } from 'constants/constants'
+import { isNil, map } from 'lodash'
+import moment from 'moment'
+
+export const formatTime = dateTime => {
+  return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
+}
+
+export const sortArrByCreatedAt = (objArr, direction) => {
+  if (direction === DIRECTION.ASC) {
+    return objArr.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+  }
+  // for descending
+  return objArr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+export const sortDescAndKeyAccId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), user => ({
+    ...user,
+    key: user.accountId,
+  }))
+}
+
+export const sortDescAndKeyCourseId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), user => ({
+    ...user,
+    key: user.courseId,
+  }))
+}
+
+export const sortDescAndKeyBillingId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), billing => ({
+    ...billing,
+    key: billing.billingId,
+  }))
+}
+
+export const sortDescAndKeyCommentId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), comment => ({
+    ...comment,
+    key: comment.commentId,
+  }))
+}
+
+export const filterDataByAdminVerified = (data, adminVerified) => {
+  if (!isNil(adminVerified)) {
+    return data.filter(o => {
+      return o.adminVerified === adminVerified
+    })
+  }
+  return data
+}
+
+export const filterDataByComplaintStatus = (data, complaintStatus) => {
+  if (!isNil(complaintStatus)) {
+    return data.filter(o => {
+      return o.isResolved === complaintStatus
+    })
+  }
+  return data
+}
+
+export const sortDescAndKeyComplaintId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    complaint => ({
+      ...complaint,
+      key: complaint.complaintId,
+    }),
+  )
+}
+
+export const resetCart = {
+  createdAt: '',
+  updatedAt: '',
+  cartId: '',
+  studentId: '',
+  deletedAt: null,
+  Course: [],
+  MentorshipApplications: [],
+}
 
 export const resetUser = {
   accountId: '',
@@ -20,7 +101,7 @@ export const resetUser = {
   lastName: '',
   occupation: '',
   paypalId: '',
-  permission: '',
+  role: '',
   personality: '',
   profileImgUrl: '',
   status: '',
@@ -28,6 +109,7 @@ export const resetUser = {
   updatedAt: '',
   userType: '',
   username: '',
+  walletId: '',
   // Local Attributes
   accessToken: '',
   authorized: false,
@@ -63,6 +145,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     updatedAt: currentUser.updatedAt,
     userType: currentUser.userType,
     username: currentUser.username,
+    walletId: currentUser.walletId,
     // Local Attributes
     accessToken: currentUser.accessToken,
     authorized: isAuthorized,
@@ -82,14 +165,54 @@ export const createAdminObj = (currentAdmin, isAuthorized, isLoading) => {
     firstName: currentAdmin.firstName,
     lastName: currentAdmin.lastName,
     paypalId: currentAdmin.paypalId,
-    permission: currentAdmin.permission,
-    status: currentAdmin.status,
-    updatedAt: currentAdmin.updatedAt,
+    role: currentAdmin.role,
     userType: currentAdmin.userType,
     username: currentAdmin.username,
+    walletId: currentAdmin.walletId,
     // Local Attributes
     accessToken: currentAdmin.accessToken,
     authorized: isAuthorized,
     loading: isLoading,
+  }
+}
+
+export const showNotification = (type, msg, description) => {
+  switch (type) {
+    case 'success':
+      notification.success({
+        message: msg,
+        description,
+      })
+      break
+    case 'error':
+      notification.error({
+        message: msg,
+        description,
+      })
+      break
+    case 'warn':
+      notification.warn({
+        message: msg,
+        description,
+      })
+      break
+    default:
+      break
+  }
+}
+
+export const showMessage = (type, msg) => {
+  switch (type) {
+    case 'success':
+      message.success(msg)
+      break
+    case 'error':
+      message.error(msg)
+      break
+    case 'warning':
+      message.warning(msg)
+      break
+    default:
+      break
   }
 }

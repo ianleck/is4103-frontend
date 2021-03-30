@@ -10,7 +10,7 @@ export async function getPublicMenuData() {
       title: 'Courses',
       key: 'courses',
       icon: 'fa fa-cubes',
-      url: '/browse/courses',
+      url: '/courses',
     },
   ]
 }
@@ -27,7 +27,7 @@ export async function getStudentMenuData() {
       title: 'Courses',
       key: 'courses',
       icon: 'fa fa-cubes',
-      url: '/browse/courses',
+      url: '/courses',
     },
     {
       title: 'My Dashboard',
@@ -59,7 +59,7 @@ export async function getAdminMenuData() {
     {
       title: 'Business Management',
       key: 'businessManagement',
-      icon: 'fe fe-printer',
+      icon: 'fe fe-briefcase',
       children: [
         {
           title: 'Revenue',
@@ -81,7 +81,7 @@ export async function getAdminMenuData() {
     {
       title: 'Content Management',
       key: 'contentManagement',
-      icon: 'fe fe-music',
+      icon: 'fe fe-film',
       children: [
         {
           title: 'Mentorship',
@@ -108,7 +108,7 @@ export async function getAdminMenuData() {
     {
       title: 'Finance Management',
       key: 'financeManagement',
-      icon: 'fe fe-thermometer',
+      icon: 'fe fe-dollar-sign',
       children: [
         {
           title: 'Withdrawals',
@@ -121,9 +121,14 @@ export async function getAdminMenuData() {
           url: '/admin/refunds',
         },
         {
-          title: 'Transactions',
-          key: 'transactions',
-          url: '/admin/transactions',
+          title: 'Billings',
+          key: 'billings',
+          url: '/admin/billings',
+        },
+        {
+          title: 'Wallets',
+          key: 'wallets',
+          url: '/admin/wallets',
         },
       ],
     },
@@ -138,9 +143,14 @@ export async function getSenseiMenuData() {
       icon: 'fe fe-user',
       children: [
         {
-          title: 'Review Applications',
-          key: 'reviewApplications',
-          url: '/sensei/mentorship/review-applications',
+          title: 'Mentorship Listings',
+          key: 'mentorshipListings',
+          url: '/sensei/mentorships/',
+        },
+        {
+          title: 'Mentorship Applications',
+          key: 'mentorshipApplications',
+          url: '/sensei/mentorships/applications',
         },
         {
           title: 'Mentee Overview',
@@ -211,7 +221,7 @@ export async function getSenseiMenuData() {
         {
           title: 'My Wallet',
           key: 'myWallet',
-          url: '/sensei/myWallet',
+          url: '/sensei/wallet',
         },
       ],
     },

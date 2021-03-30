@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Button, Form, Input } from 'antd'
 import { isNil } from 'lodash'
 
-const AboutCard = () => {
+const AboutCard = ({ user, showEditTools }) => {
   const { TextArea } = Input
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [currentHeadline, setCurrentHeadline] = useState(user.headline)
@@ -15,6 +14,15 @@ const AboutCard = () => {
   const [currentBio, setCurrentBio] = useState(user.bio)
   const [showBio, setShowBio] = useState(isNil(user.bio))
   const [editBioMode, setEditBioMode] = useState(false)
+
+  useEffect(() => {
+    if (user.headline) {
+      setShowHeadline(isNil(user.headline))
+    }
+    if (user.bio) {
+      setShowBio(isNil(user.bio))
+    }
+  }, [user.headline, user.bio])
 
   const EmptyInformation = () => {
     return <span className="font-italic text-secondary">No information provided.</span>
@@ -34,8 +42,10 @@ const AboutCard = () => {
   }
 
   const onEditHeadline = values => {
-    values.accountId = user.accountId
-    values.updateHeadline = true
+    const formValues = {
+      accountId: user.accountId,
+      headline: values.headline.trim(),
+    }
     setShowHeadline(false)
     setCurrentHeadline(values.headline)
     if (isNil(values.headline)) {
@@ -43,8 +53,8 @@ const AboutCard = () => {
     }
     setEditHeadlineMode(false)
     dispatch({
-      type: 'user/UPDATE_ABOUT',
-      payload: values,
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
     })
   }
 
@@ -62,8 +72,10 @@ const AboutCard = () => {
   }
 
   const onEditBio = values => {
-    values.accountId = user.accountId
-    values.updateHeadline = false
+    const formValues = {
+      accountId: user.accountId,
+      bio: values.bio.trim(),
+    }
     setShowBio(false)
     setCurrentBio(values.bio)
     if (isNil(values.bio)) {
@@ -71,8 +83,8 @@ const AboutCard = () => {
     }
     setEditBioMode(false)
     dispatch({
-      type: 'user/UPDATE_ABOUT',
-      payload: values,
+      type: 'user/UPDATE_PROFILE',
+      payload: formValues,
     })
   }
 
@@ -186,7 +198,7 @@ const AboutCard = () => {
             <span className="h4 text-dark">Headline</span>
           </div>
           <div className="col-auto">
-            {!editHeadlineMode && (
+            {!editHeadlineMode && !!showEditTools && (
               <Button
                 ghost
                 type="primary"
@@ -214,7 +226,7 @@ const AboutCard = () => {
             <span className="h4 text-dark">Bio</span>
           </div>
           <div className="col-auto">
-            {!editBioMode && (
+            {!editBioMode && !!showEditTools && (
               <Button
                 ghost
                 type="primary"
@@ -231,7 +243,7 @@ const AboutCard = () => {
             <div className="card">
               <div className="card-body">
                 {!editBioMode && showBio && <EmptyInformation />}
-                {!editBioMode && !showBio && user.bio}
+                {!editBioMode && !showBio && <span className="description-body">{user.bio}</span>}
                 {editBioMode && <EditBioField />}
               </div>
             </div>
