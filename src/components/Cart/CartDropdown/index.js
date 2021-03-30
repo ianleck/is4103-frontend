@@ -64,7 +64,7 @@ const Cart = () => {
         amt += cart.MentorshipApplications[i].priceAmount
       }
     }
-    return amt
+    return parseFloat(amt).toFixed(2)
   }
 
   const cartSubTotal = () => {
