@@ -24,9 +24,7 @@ function checkProfileUpdateRqd(user) {
     user.firstName === '' ||
     isNil(user.firstName) ||
     user.lastName === '' ||
-    isNil(user.lastName) ||
-    user.contactNumber === '' ||
-    isNil(user.contactNumber)
+    isNil(user.lastName)
 
   return user.requiresProfileUpdate
 }
