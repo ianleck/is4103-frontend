@@ -44,7 +44,6 @@ const ProductCard = data => {
 
   const removeClick = e => {
     e.stopPropagation()
-
     if (isCourse) {
       dispatch({
         type: 'cart/DELETE_FROM_CART',
@@ -62,6 +61,7 @@ const ProductCard = data => {
         },
       })
     }
+    if (currLocation === 'CartPage') window.location.reload()
   }
 
   const GetDefaultProfilePic = () => {
