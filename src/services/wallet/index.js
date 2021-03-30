@@ -16,10 +16,10 @@ export async function viewWallet(walletId) {
 }
 
 // only for Admin
-export async function viewBillings() {
-  const url = `/wallet/billings`
+export async function viewBillings(body) {
+  const url = `/admin/withdrawals/filter`
   return apiClient
-    .get(url)
+    .get(url, { params: { ...body } })
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data
@@ -33,6 +33,32 @@ export async function viewBillings() {
 // this sends a withdrawal request to the admin
 export async function requestWithdrawal(walletId) {
   const url = `/wallet/${walletId}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function approveWithdrawalRequest(billingId) {
+  const url = `/admin/withdrawal/approve/${billingId}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function rejectWithdrawalRequest(billingId) {
+  const url = `/admin/withdrawal/reject/${billingId}`
   return apiClient
     .put(url)
     .then(response => {
