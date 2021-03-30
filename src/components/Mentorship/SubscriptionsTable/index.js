@@ -52,7 +52,7 @@ const MentorshipSubscriptionsTable = () => {
               icon={<QuestionCircleOutlined className="text-danger" />}
               onConfirm={() => {}}
             >
-              <Button type="danger" shape="circle" icon={<CloseOutlined />} />
+              <Button type="danger" shape="circle" size="large" icon={<CloseOutlined />} />
             </Popconfirm>
           )}
         </Space>

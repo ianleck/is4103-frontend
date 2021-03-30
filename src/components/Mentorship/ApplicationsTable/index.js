@@ -245,7 +245,7 @@ const MentorshipApplicationsTable = () => {
               icon={<QuestionCircleOutlined className="text-danger" />}
               onConfirm={() => cancelApplication(record.mentorshipContractId)}
             >
-              <Button type="danger" shape="circle" icon={<CloseOutlined />} />
+              <Button type="danger" shape="circle" size="large" icon={<CloseOutlined />} />
             </Popconfirm>
           )}
         </Space>
