@@ -66,3 +66,8 @@ export const TRANSCRIPT_REMOVED = 'Your transcript was successfully removed.'
 export const TRANSCRIPT_REMOVED_ERR = 'There was an error removing your transcript.'
 export const CV_REMOVED = 'Your CV was successfully removed.'
 export const CV_REMOVED_ERR = 'There was an error removing your CV.'
+
+export const APPROVE_WITHDRAWAL_REQ = 'The withdrawal request was successfully approved.'
+export const APPROVE_WITHDRAWAL_REQ_ERR = 'There was an error approving the withdrawal request.'
+export const REJECT_WITHDRAWAL_REQ = 'The withdrawal request was successfully rejected.'
+export const REJECT_WITHDRAWAL_REQ_ERR = 'There was an error rejecting the withdrawal request.'
