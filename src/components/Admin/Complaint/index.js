@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { Table, Tabs, Button, Space, Popconfirm } from 'antd'
-import { getAllComplaints, markComplaintAsResolved } from 'services/complaints'
+import { Table, Tabs, Button, Space, Popconfirm, Modal, Form, Input, Descriptions } from 'antd'
+import { getAllComplaints, markComplaintAsResolved, postComplaintReason } from 'services/complaints'
 import { deleteComment } from 'services/courses/lessons'
-import { CheckOutlined, DeleteOutlined, ExceptionOutlined } from '@ant-design/icons'
+import {
+  CheckOutlined,
+  DeleteOutlined,
+  ExceptionOutlined,
+  InfoCircleOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons'
 import {
   formatTime,
   filterDataByComplaintStatus,
@@ -11,9 +17,15 @@ import {
   showNotification,
 } from 'components/utils'
 import StatusTag from 'components/Common/StatusTag'
-import { isNil, size } from 'lodash'
+import { isEmpty, isNil, size } from 'lodash'
 import CountIconWidget from 'components/Common/CountIconWidget'
-import { SUCCESS, COMPLAINT_RESOLVED, COMPLAINT_COMMENT_DELETE } from 'constants/notifications'
+import {
+  SUCCESS,
+  COMPLAINT_RESOLVED,
+  COMPLAINT_COMMENT_DELETE,
+  NEW_COMPLAINT_REASON,
+} from 'constants/notifications'
+import { getProfile } from 'services/user'
 
 const Complaint = () => {
   const { TabPane } = Tabs
@@ -21,6 +33,10 @@ const Complaint = () => {
   const [allComplaints, setAllComplaints] = useState([])
   const [pendingComplaints, setPendingComplaints] = useState([])
   const [resolvedComplaints, setResolvedComplaints] = useState([])
+  const [showAddComplaint, setShowAddComplaint] = useState(false)
+  const [showComplaintDetails, setShowComplaintDetails] = useState(false)
+  const [complaintDetails, setComplaintDetails] = useState([])
+  const [commentAuthor, setCommentAuthor] = useState([])
 
   const [currentFilter, setCurrentFilter] = useState('all')
   const [currentTableData, setCurrentTableData] = useState([])
@@ -142,6 +158,15 @@ const Complaint = () => {
       key: 'action',
       render: record => (
         <Space size="large">
+          <Button
+            disabled={record.isResolved}
+            type="primary"
+            shape="circle"
+            size="large"
+            onClick={() => showInformation(record)}
+            icon={<InfoCircleOutlined />}
+          />
+
           <Popconfirm
             title="Do you wish to delete this comment?"
             onConfirm={() => handleDelete(record)}
@@ -201,6 +226,49 @@ const Complaint = () => {
     }
   }
 
+  const addNewComplaintReasonFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <button
+          type="button"
+          onClick={() => setShowAddComplaint(false)}
+          className="btn btn-outline-default"
+        >
+          Cancel
+        </button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="addNewComplaintReasonForm" htmlType="submit" size="large">
+          Add new Complaint Reason
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const onAddNewReason = async values => {
+    const payload = { ...values }
+    const response = await postComplaintReason(payload)
+    if (response.success) {
+      showNotification('success', SUCCESS, NEW_COMPLAINT_REASON)
+    }
+  }
+
+  const showInformation = async record => {
+    console.log(record)
+    const user = await getProfile(record.Comment.accountId)
+    setCommentAuthor(user)
+    setComplaintDetails(record)
+    setShowComplaintDetails(true)
+  }
+
+  const onCloseDetails = () => {
+    setShowComplaintDetails(false)
+  }
+
   useEffect(() => {
     retrieveComplaints()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,6 +282,21 @@ const Complaint = () => {
           <div className="text-dark text-uppercase h3">
             <strong>Complaint Management</strong>
           </div>
+        </div>
+      </div>
+
+      <div className="row mt-4">
+        <div className="col-12">
+          <Button
+            className="float-right"
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => setShowAddComplaint(true)}
+            icon={<PlusCircleOutlined />}
+          >
+            Add New Complaint Reason
+          </Button>
         </div>
       </div>
 
@@ -257,6 +340,84 @@ const Complaint = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Add a New Complaint Reason"
+          visible={showAddComplaint}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowAddComplaint(false)}
+          footer={addNewComplaintReasonFormFooter}
+        >
+          <Form
+            id="addNewComplaintReasonForm"
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onAddNewReason}
+            onFinishFailed={onFinishFailed}
+          >
+            <div className="row">
+              <div className="col-md-12">
+                <Form.Item
+                  name="reason"
+                  label="Reason"
+                  rules={[{ required: true, message: 'Please input Reason' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+              <div className="col-md-12">
+                <Form.Item
+                  name="description"
+                  label="Description"
+                  rules={[{ required: true, message: 'Please input Description' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Complaint Details"
+          visible={showComplaintDetails}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => onCloseDetails()}
+        >
+          <Descriptions column={1}>
+            <Descriptions.Item label="Comment ID">{complaintDetails.commentId}</Descriptions.Item>
+            <Descriptions.Item label="Comment">
+              {!isEmpty(complaintDetails) ? complaintDetails.Comment.body : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Commenter">
+              {!isEmpty(commentAuthor)
+                ? `${commentAuthor.firstName} ${commentAuthor.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint ID">
+              {complaintDetails.complaintId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint Writer">
+              {!isEmpty(complaintDetails)
+                ? `${complaintDetails.User.firstName} ${complaintDetails.User.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint Reason">
+              {!isEmpty(complaintDetails) ? complaintDetails.ComplaintReason.reason : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint Created At">
+              {formatTime(complaintDetails.createdAt)}
+            </Descriptions.Item>
+          </Descriptions>
+        </Modal>
       </div>
     </div>
   )
