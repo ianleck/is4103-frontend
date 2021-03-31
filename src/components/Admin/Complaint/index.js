@@ -389,11 +389,7 @@ const Complaint = () => {
                     listNumber: indexOf(complaintReasons, reason) + 1,
                   }))}
                   renderItem={item => (
-                    <List.Item>
-                      {`Complaint Reason ${item.listNumber}: ${
-                        !isEmpty(item.reason) ? item.reason : null
-                      }`}
-                    </List.Item>
+                    <List.Item>{`${!isEmpty(item.reason) ? item.reason : null}`}</List.Item>
                   )}
                 />
               </div>
