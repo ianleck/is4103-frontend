@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { getProfile } from 'services/user/index'
 import { Avatar, Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
+import { getCourseById } from 'services/courses'
 
 const ProductCard = data => {
   const dispatch = useDispatch()
@@ -15,9 +15,9 @@ const ProductCard = data => {
   const currLocation = data.location
 
   useEffect(() => {
-    getProfile(listing.accountId).then(res => {
-      if (res) {
-        setSensei(res)
+    getCourseById(listing.courseId).then(res => {
+      if (res && !isNil(res.course?.Sensei)) {
+        setSensei(res.course.Sensei)
       }
     })
 
