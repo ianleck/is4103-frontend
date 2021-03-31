@@ -1,5 +1,7 @@
 export const CREATOR_INFO = 'Creator Information'
 export const VIEW_PROFILE = 'View Profile'
+export const DIGI_DOJO_SENSEI = 'Digi Dojo Sensei'
+export const DIGI_DOJO_STUDENT = 'Digi Dojo Student'
 
 export const ANNOUNCEMENTS = 'Announcements'
 
@@ -57,3 +59,8 @@ export const WALLET_MGT = 'Wallet Management'
 
 export const BILLINGS = 'Billings'
 export const BILLING_MGT = 'Billing Management'
+
+export const FOLLOW = 'Follow'
+export const FLW_REQ_SENT = 'Follow Request Sent'
+export const CANCEL_FLW_REQ = 'Cancel Follow Request'
+export const UNFOLLOW = 'Unfollow'

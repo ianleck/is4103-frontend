@@ -102,3 +102,8 @@ export const DIRECTION = {
   ASC: 'ASCENDING',
   DESC: 'DESCENDING',
 }
+
+export const FOLLOWING_ENUM = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+}

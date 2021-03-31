@@ -6,8 +6,18 @@ import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
-import { formatTime } from 'components/utils'
+import {
+  ADD_TO_CART,
+  CANCEL_FLW_REQ,
+  CREATOR_INFO,
+  CURRENT_PRICE,
+  DIGI_DOJO_SENSEI,
+  FOLLOW,
+  NA,
+  UNFOLLOW,
+} from 'constants/text'
+import { formatTime, sendToSocialProfile } from 'components/utils'
+import { FOLLOWING_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -37,6 +47,98 @@ const ViewCourseDetailsPublic = () => {
         payload: { courseId: id },
       })
     else history.push('/auth/login')
+  }
+
+  const FollowButton = ({ targetAccountId }) => {
+    const social = useSelector(state => state.social)
+
+    const socialAction = actionType => {
+      const getAction = () => {
+        switch (actionType) {
+          case 'follow':
+            return 'social/FOLLOW_USER'
+          case 'unfollow':
+            return 'social/UNFOLLOW_USER'
+          case 'cancel_follow_request':
+            return 'social/CANCEL_FOLLOW_REQUEST'
+          default:
+            return ''
+        }
+      }
+      if (['follow', 'unfollow', 'cancel_follow_request'].indexOf(actionType) !== -1) {
+        dispatch({
+          type: getAction(),
+          payload: {
+            targetAccountId,
+          },
+        })
+      }
+
+      getCurrentFollowStatus()
+    }
+
+    const getCurrentFollowStatus = () => {
+      if (
+        social.pendingAndFollowingList.findIndex(
+          o => o.followingId === targetAccountId && o.followingStatus === FOLLOWING_ENUM.PENDING,
+        ) >= 0
+      )
+        return 'pending'
+      if (
+        social.pendingAndFollowingList.findIndex(
+          o => o.followingId === targetAccountId && o.followingStatus === FOLLOWING_ENUM.APPROVED,
+        ) >= 0
+      )
+        return 'following'
+      return false
+    }
+
+    const getButtonElements = type => {
+      const followingStatus = getCurrentFollowStatus()
+      switch (followingStatus) {
+        case 'pending':
+          if (type === 'className') return 'btn btn-default'
+          if (type === 'onClick') {
+            socialAction('cancel_follow_request')
+          }
+          if (type === 'buttonLabel') return CANCEL_FLW_REQ
+          break
+        case 'following':
+          if (type === 'className') return 'btn btn-primary'
+          if (type === 'onClick') {
+            socialAction('unfollow')
+          }
+          if (type === 'buttonLabel') return UNFOLLOW
+          break
+        default:
+          if (type === 'className') return 'btn btn-light'
+          if (type === 'onClick') {
+            socialAction('follow')
+          }
+          if (type === 'buttonLabel') return FOLLOW
+          break
+      }
+      return false
+    }
+
+    useEffect(() => {
+      dispatch({
+        type: 'social/LOAD_CURRENT_SOCIAL',
+      })
+      getCurrentFollowStatus()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return (
+      <Button
+        block
+        className={getButtonElements('className')}
+        size="large"
+        onClick={() => getButtonElements('onClick')}
+      >
+        {getButtonElements('buttonLabel')}
+      </Button>
+    )
   }
 
   return (
@@ -156,16 +258,25 @@ const ViewCourseDetailsPublic = () => {
                 </div>
                 <div className="row">
                   <div className="col-12">
-                    <a className="h3 font-weight-bold" href="#" onClick={() => history.goBack()}>
+                    <a
+                      className="h3 font-weight-bold"
+                      href="#"
+                      onClick={() =>
+                        sendToSocialProfile(history, USER_TYPE_ENUM.SENSEI, currentCourse.accountId)
+                      }
+                    >
                       {`${isNil(currentSensei.firstName) ? 'Anonymous' : currentSensei.firstName} ${
                         isNil(currentSensei.lastName) ? 'Pigeon' : currentSensei.lastName
                       }`}
                     </a>
                   </div>
                   <div className="col-12 mt-2">
-                    <div className="h5 text-uppercase">Digi Dojo {currentSensei.userType}</div>
+                    <div className="h5 text-uppercase">{DIGI_DOJO_SENSEI}</div>
                   </div>
                   <div className="col-12 mt-2">
+                    <FollowButton targetAccountId={currentCourse.accountId} />
+                  </div>
+                  <div className="col-12 mt-4">
                     <Descriptions
                       title="Credentials"
                       bordered

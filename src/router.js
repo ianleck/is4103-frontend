@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import Layout from 'layouts'
 
 const routes = [
-  // Landing Pages
+  // Common Pages
   {
     path: '/',
     Component: lazy(() => import('pages/')),
@@ -38,10 +38,14 @@ const routes = [
     Component: lazy(() => import('pages/cart')),
     exact: true,
   },
-
   {
     path: '/success',
     Component: lazy(() => import('pages/checkout')),
+    exact: true,
+  },
+  {
+    path: '/social/sensei/:accountId',
+    Component: lazy(() => import('pages/social/sensei')),
     exact: true,
   },
   // Auth Pages

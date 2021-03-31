@@ -14,10 +14,36 @@ export async function getFollowingList(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function acceptFollowingRequest(accountId) {
-  const url = `/social/following/accept/${accountId}`
+export async function followUser(targetAccountId) {
+  const url = `/social/following/follow/${targetAccountId}`
   return apiClient
-    .put(url)
+    .post(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function unfollowUser(targetAccountId) {
+  const url = `/social/following/unfollow/${targetAccountId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function cancelFollowRequest(targetAccountId) {
+  const url = `/social/following/request/${targetAccountId}`
+  return apiClient
+    .delete(url)
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data

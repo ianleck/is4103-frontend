@@ -124,6 +124,9 @@ export function* LOGIN({ payload }) {
     yield putResolve({
       type: 'cart/LOAD_CURRENT_CART',
     })
+    yield putResolve({
+      type: 'social/LOAD_CURRENT_SOCIAL',
+    })
   }
   yield putResolve({
     type: 'user/SET_STATE',

@@ -45,6 +45,13 @@ export const sortDescAndKeyCommentId = data => {
   }))
 }
 
+export const sortDescAndKeyFollowingId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), following => ({
+    ...following,
+    key: following.followingId,
+  }))
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {
@@ -58,6 +65,15 @@ export const filterDataByComplaintStatus = (data, complaintStatus) => {
   if (!isNil(complaintStatus)) {
     return data.filter(o => {
       return o.isResolved === complaintStatus
+    })
+  }
+  return data
+}
+
+export const filterDataByFollowingStatus = (data, followingStatus) => {
+  if (!isNil(followingStatus)) {
+    return data.filter(o => {
+      return o.followingStatus === followingStatus
     })
   }
   return data
@@ -233,4 +249,8 @@ export const getDetailsColumn = viewItem => {
       />
     ),
   }
+}
+
+export const sendToSocialProfile = (history, userType, accountId) => {
+  history.push(`/social/${userType.toLowerCase()}/${accountId}`)
 }
