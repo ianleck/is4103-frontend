@@ -28,6 +28,10 @@
   white-space: pre-line;
 }
 
+.complaint-reason-list-card {
+  height: 120px;
+}
+
 .lesson-list-card {
   height: 250px;
 }

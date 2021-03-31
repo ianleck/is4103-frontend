@@ -1,6 +1,18 @@
 import apiClient from 'services/axios'
 import { isNil } from 'lodash'
 
+export async function postComplaintReason(complaintReason) {
+  return apiClient
+    .post(`/complaint/reason/`, { complaintReason }, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getComplaintReasons() {
   return apiClient
     .get(`/complaint/reason`, { withCredentials: true })

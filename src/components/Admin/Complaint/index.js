@@ -1,9 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { Table, Tabs, Button, Space, Popconfirm } from 'antd'
-import { getAllComplaints, markComplaintAsResolved } from 'services/complaints'
+import {
+  Table,
+  Tabs,
+  Button,
+  Space,
+  Popconfirm,
+  Modal,
+  Form,
+  Input,
+  Descriptions,
+  List,
+  Divider,
+} from 'antd'
+import {
+  getAllComplaints,
+  getComplaintReasons,
+  markComplaintAsResolved,
+  postComplaintReason,
+} from 'services/complaints'
 import { deleteComment } from 'services/courses/lessons'
-import { CheckOutlined, DeleteOutlined, ExceptionOutlined } from '@ant-design/icons'
+import {
+  CheckOutlined,
+  DeleteOutlined,
+  ExceptionOutlined,
+  InfoCircleOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons'
 import {
   formatTime,
   filterDataByComplaintStatus,
@@ -11,9 +34,15 @@ import {
   showNotification,
 } from 'components/utils'
 import StatusTag from 'components/Common/StatusTag'
-import { isNil, size } from 'lodash'
+import { indexOf, isEmpty, isNil, map, size } from 'lodash'
 import CountIconWidget from 'components/Common/CountIconWidget'
-import { SUCCESS, COMPLAINT_RESOLVED, COMPLAINT_COMMENT_DELETE } from 'constants/notifications'
+import {
+  SUCCESS,
+  COMPLAINT_RESOLVED,
+  COMPLAINT_COMMENT_DELETE,
+  NEW_COMPLAINT_REASON,
+} from 'constants/notifications'
+import { getProfile } from 'services/user'
 
 const Complaint = () => {
   const { TabPane } = Tabs
@@ -21,6 +50,11 @@ const Complaint = () => {
   const [allComplaints, setAllComplaints] = useState([])
   const [pendingComplaints, setPendingComplaints] = useState([])
   const [resolvedComplaints, setResolvedComplaints] = useState([])
+  const [showAddComplaint, setShowAddComplaint] = useState(false)
+  const [showComplaintDetails, setShowComplaintDetails] = useState(false)
+  const [complaintDetails, setComplaintDetails] = useState([])
+  const [commentAuthor, setCommentAuthor] = useState([])
+  const [complaintReasons, setComplaintReasons] = useState([])
 
   const [currentFilter, setCurrentFilter] = useState('all')
   const [currentTableData, setCurrentTableData] = useState([])
@@ -56,6 +90,11 @@ const Complaint = () => {
           break
       }
     }
+  }
+
+  const retrieveComplaintReasons = async () => {
+    const response = await getComplaintReasons()
+    setComplaintReasons(response)
   }
 
   const setTableData = filter => {
@@ -142,6 +181,15 @@ const Complaint = () => {
       key: 'action',
       render: record => (
         <Space size="large">
+          <Button
+            disabled={record.isResolved}
+            type="primary"
+            shape="circle"
+            size="large"
+            onClick={() => showInformation(record)}
+            icon={<InfoCircleOutlined />}
+          />
+
           <Popconfirm
             title="Do you wish to delete this comment?"
             onConfirm={() => handleDelete(record)}
@@ -201,8 +249,53 @@ const Complaint = () => {
     }
   }
 
+  const addNewComplaintReasonFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <button
+          type="button"
+          onClick={() => setShowAddComplaint(false)}
+          className="btn btn-outline-default"
+        >
+          Cancel
+        </button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="addNewComplaintReasonForm" htmlType="submit" size="large">
+          Add new Complaint Reason
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const onAddNewReason = async values => {
+    const payload = { ...values }
+    const response = await postComplaintReason(payload)
+    if (response.success) {
+      showNotification('success', SUCCESS, NEW_COMPLAINT_REASON)
+      retrieveComplaintReasons()
+    }
+  }
+
+  const showInformation = async record => {
+    console.log(record)
+    const user = await getProfile(record.Comment.accountId)
+    setCommentAuthor(user)
+    setComplaintDetails(record)
+    setShowComplaintDetails(true)
+  }
+
+  const onCloseDetails = () => {
+    setShowComplaintDetails(false)
+  }
+
   useEffect(() => {
     retrieveComplaints()
+    retrieveComplaintReasons()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -214,6 +307,20 @@ const Complaint = () => {
           <div className="text-dark text-uppercase h3">
             <strong>Complaint Management</strong>
           </div>
+        </div>
+      </div>
+
+      <div className="row mt-4">
+        <div className="col-12 text-right">
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => setShowAddComplaint(true)}
+            icon={<PlusCircleOutlined />}
+          >
+            Add New Complaint Reason
+          </Button>
         </div>
       </div>
 
@@ -257,6 +364,111 @@ const Complaint = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Add a New Complaint Reason"
+          visible={showAddComplaint}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowAddComplaint(false)}
+          footer={addNewComplaintReasonFormFooter}
+        >
+          <p className="text-dark">
+            <strong>List of Existing Complaint Reasons</strong>
+          </p>
+          <div className="card-body complaint-reason-list-card overflow-y-scroll pt-1 mt-2">
+            <div className="row">
+              <div className="col-12">
+                <List
+                  itemLayout="horizontal"
+                  dataSource={map(complaintReasons, reason => ({
+                    ...reason,
+                    listNumber: indexOf(complaintReasons, reason) + 1,
+                  }))}
+                  renderItem={item => (
+                    <List.Item>{`${!isEmpty(item.reason) ? item.reason : null}`}</List.Item>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Divider />
+
+          <p className="text-dark">
+            <strong>New Complaint Reason details</strong>
+          </p>
+
+          <Form
+            id="addNewComplaintReasonForm"
+            layout="vertical"
+            className="mt-4"
+            hideRequiredMark
+            onFinish={onAddNewReason}
+            onFinishFailed={onFinishFailed}
+          >
+            <div className="row">
+              <div className="col-md-12">
+                <Form.Item
+                  name="reason"
+                  label="Reason"
+                  rules={[{ required: true, message: 'Please input a valid reason' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+              <div className="col-md-12">
+                <Form.Item
+                  name="description"
+                  label="Description"
+                  rules={[{ required: true, message: 'Please input a valid description' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Complaint Details"
+          visible={showComplaintDetails}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => onCloseDetails()}
+        >
+          <Descriptions column={1}>
+            <Descriptions.Item label="Comment ID">{complaintDetails.commentId}</Descriptions.Item>
+            <Descriptions.Item label="Comment">
+              {!isEmpty(complaintDetails) ? complaintDetails.Comment.body : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Comment Author">
+              {!isEmpty(commentAuthor)
+                ? `${commentAuthor.firstName} ${commentAuthor.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint ID">
+              {complaintDetails.complaintId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Reporter">
+              {!isEmpty(complaintDetails)
+                ? `${complaintDetails.User.firstName} ${complaintDetails.User.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint Reason">
+              {!isEmpty(complaintDetails) ? complaintDetails.ComplaintReason.reason : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Complaint Created At">
+              {formatTime(complaintDetails.createdAt)}
+            </Descriptions.Item>
+          </Descriptions>
+        </Modal>
       </div>
     </div>
   )

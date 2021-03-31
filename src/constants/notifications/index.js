@@ -74,6 +74,7 @@ export const APPROVE_WITHDRAWAL_REQ_ERR = 'There was an error approving the with
 export const REJECT_WITHDRAWAL_REQ = 'The withdrawal request was successfully rejected.'
 export const REJECT_WITHDRAWAL_REQ_ERR = 'There was an error rejecting the withdrawal request.'
 
+export const NEW_COMPLAINT_REASON = 'New Complaint Reason has been added.'
 export const COMPLAINT_SENT = 'Your complaint has been received.'
 export const COMPLAINT_RESOLVED = 'Complaint has been marked as resolved.'
 export const COMPLAINT_COMMENT_DELETE =
