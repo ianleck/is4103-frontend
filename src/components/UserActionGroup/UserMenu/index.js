@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { SolutionOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar } from 'antd'
-import { USER_TYPE_ENUM } from 'constants/constants'
+import { Menu, Dropdown, Avatar, Modal } from 'antd'
+import { DIRECTION, USER_TYPE_ENUM } from 'constants/constants'
+import { getFollowingList } from 'services/social'
+import { isNil, size } from 'lodash'
+import { sortArrByCreatedAt } from 'components/utils'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
@@ -13,6 +16,10 @@ const UserMenu = () => {
   const history = useHistory()
 
   const { firstName, lastName, username, userType } = user
+
+  const [followingList, setFollowingList] = useState([])
+  // eslint-disable-next-line no-unused-vars
+  const [showSocialModal, setShowSocialModal] = useState(false)
 
   const redirectToLogin = isStudent => e => {
     e.preventDefault()
@@ -45,6 +52,25 @@ const UserMenu = () => {
     history.push(path)
   }
 
+  const getUserFollowingList = async () => {
+    const response = await getFollowingList(user.accountId)
+    if (response && !isNil(response.followingList)) {
+      setFollowingList(sortArrByCreatedAt(response.followingList, DIRECTION.DESC))
+    }
+  }
+
+  const showFollowingList = () => {
+    setShowSocialModal(true)
+  }
+
+  const FollowingList = () => {
+    return (
+      <div>
+        <span>Following List</span>
+      </div>
+    )
+  }
+
   const menu = (
     <Menu selectable={false}>
       <div className="row pt-2 pb-2 pl-3 pr-5">
@@ -56,11 +82,17 @@ const UserMenu = () => {
         </div>
       </div>
       <Menu.Divider />
-      <div className="row ml-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left">
+      <div
+        role="button"
+        tabIndex={0}
+        className="row ml-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
+        onClick={() => showFollowingList()}
+        onKeyDown={e => e.preventDefault()}
+      >
         <div className="col-12 pl-0">
           <span className="mb-5">Following</span>
           <div className="mt-2 font-size-18">
-            <span className="font-weight-bold">1090</span>
+            <span className="font-weight-bold">{size(followingList)}</span>
           </div>
         </div>
       </div>
@@ -140,9 +172,14 @@ const UserMenu = () => {
     )
   }
 
+  useEffect(() => {
+    getUserFollowingList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   if (user.authorized) {
     return (
-      <Dropdown overlay={menu} trigger={['click']}>
+      <Dropdown overlay={menu}>
         <div className={styles.dropdown}>
           <Avatar
             src={
@@ -155,6 +192,17 @@ const UserMenu = () => {
             size="large"
             icon={<UserOutlined />}
           />
+          <Modal
+            title="Following List"
+            visible={showSocialModal}
+            cancelText="Close"
+            centered
+            okButtonProps={{ style: { display: 'none' } }}
+            onCancel={() => setShowSocialModal(false)}
+            zIndex="1051"
+          >
+            <FollowingList />
+          </Modal>
         </div>
       </Dropdown>
     )
