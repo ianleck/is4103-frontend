@@ -1,19 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { UserOutlined } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar, Badge } from 'antd'
+import { SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import { Menu, Dropdown, Avatar } from 'antd'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
-  const [count, setCount] = useState(7)
   const history = useHistory()
 
-  const { username, userType } = user
+  const { firstName, lastName, username, userType } = user
 
   const redirectToLogin = isStudent => e => {
     e.preventDefault()
@@ -46,36 +45,56 @@ const UserMenu = () => {
     history.push(path)
   }
 
-  const addCount = () => {
-    setCount(count + 1)
-  }
-
   const menu = (
     <Menu selectable={false}>
-      <Menu.Item className="pt-2 pb-2 pl-3 pr-5">
-        <div className="row">
-          <div className="col-12">
-            <span className="mb-5">Signed in as</span>
-          </div>
-          <div className="mt-2 col-12 font-size-18">
-            <span className="font-weight-bold">{username}</span>
+      <div className="row pt-2 pb-2 pl-3 pr-5">
+        <div className="col-12">
+          <span className="mb-5">Welcome,</span>
+        </div>
+        <div className="mt-2 col-12 font-size-18">
+          <span className="font-weight-bold">{`${firstName} ${lastName} [${username}]`}</span>
+        </div>
+      </div>
+      <Menu.Divider />
+      <div className="row ml-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left">
+        <div className="col-12 pl-0">
+          <span className="mb-5">Following</span>
+          <div className="mt-2 font-size-18">
+            <span className="font-weight-bold">1090</span>
           </div>
         </div>
-      </Menu.Item>
-      <Menu.Divider />
+      </div>
+      <div className="row ml-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left">
+        <div className="col-12 pl-0">
+          <span className="mb-5">Followers</span>
+          <div className="mt-2 font-size-18">
+            <span className="font-weight-bold">22</span>
+          </div>
+        </div>
+      </div>
       <Menu.Item>
         <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
-          Your profile
+          My profile
         </a>
       </Menu.Item>
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={() => history.push(`/student/profile`)}>
+            <SolutionOutlined className="mr-2" />
+            My feed
+          </a>
+        </Menu.Item>
+      )}
       <Menu.Divider />
-      <Menu.Item>
-        <a href="#" onClick={viewSettings}>
-          <i className="fe fe-settings mr-2" />
-          Settings
-        </a>
-      </Menu.Item>
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={viewSettings}>
+            <i className="fe fe-settings mr-2" />
+            Settings
+          </a>
+        </Menu.Item>
+      )}
       <Menu.Item>
         <a href="#" onClick={logout}>
           <i className="fe fe-log-out mr-2" />
@@ -123,21 +142,19 @@ const UserMenu = () => {
 
   if (user.authorized) {
     return (
-      <Dropdown overlay={menu} trigger={['click']} onVisibleChange={addCount}>
+      <Dropdown overlay={menu} trigger={['click']}>
         <div className={styles.dropdown}>
-          <Badge count={count}>
-            <Avatar
-              src={
-                user.profileImgUrl
-                  ? `${user.profileImgUrl}?${new Date().getTime()}`
-                  : GetDefaultProfilePic()
-              }
-              className={styles.avatar}
-              shape="square"
-              size="large"
-              icon={<UserOutlined />}
-            />
-          </Badge>
+          <Avatar
+            src={
+              user.profileImgUrl
+                ? `${user.profileImgUrl}?${new Date().getTime()}`
+                : GetDefaultProfilePic()
+            }
+            className={styles.avatar}
+            shape="square"
+            size="large"
+            icon={<UserOutlined />}
+          />
         </div>
       </Dropdown>
     )

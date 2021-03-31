@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Dropdown, Button } from 'antd'
+import { Dropdown, Button, Badge } from 'antd'
 import { map, size } from 'lodash'
 import styles from './style.module.scss'
 import ProductCard from '../ProductCard'
@@ -107,7 +107,9 @@ const Cart = () => {
   return (
     <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
       <div className={styles.dropdown}>
-        <i className={`${styles.icon} fe fe-shopping-cart`} />
+        <Badge count={size(cart.Course) + size(cart.MentorshipApplications)} size="small">
+          <i className={`${styles.icon} fe fe-shopping-cart`} />
+        </Badge>
       </div>
     </Dropdown>
   )
