@@ -376,7 +376,7 @@ const Complaint = () => {
           onCancel={() => setShowAddComplaint(false)}
           footer={addNewComplaintReasonFormFooter}
         >
-          <p>
+          <p className="text-dark">
             <strong>List of Existing Complaint Reasons</strong>
           </p>
           <div className="card-body complaint-reason-list-card overflow-y-scroll pt-1 mt-2">
@@ -398,7 +398,7 @@ const Complaint = () => {
 
           <Divider />
 
-          <p>
+          <p className="text-dark">
             <strong>New Complaint Reason details</strong>
           </p>
 
