@@ -397,7 +397,7 @@ const Complaint = () => {
             <Descriptions.Item label="Comment">
               {!isEmpty(complaintDetails) ? complaintDetails.Comment.body : null}
             </Descriptions.Item>
-            <Descriptions.Item label="Commenter">
+            <Descriptions.Item label="Comment Author">
               {!isEmpty(commentAuthor)
                 ? `${commentAuthor.firstName} ${commentAuthor.lastName}`
                 : null}
@@ -405,7 +405,7 @@ const Complaint = () => {
             <Descriptions.Item label="Complaint ID">
               {complaintDetails.complaintId}
             </Descriptions.Item>
-            <Descriptions.Item label="Complaint Writer">
+            <Descriptions.Item label="Reporter">
               {!isEmpty(complaintDetails)
                 ? `${complaintDetails.User.firstName} ${complaintDetails.User.lastName}`
                 : null}
