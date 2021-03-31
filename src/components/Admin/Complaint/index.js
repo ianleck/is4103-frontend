@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { Table, Tabs, Button, Space, Popconfirm, Modal, Form, Input, Descriptions } from 'antd'
-import { getAllComplaints, markComplaintAsResolved, postComplaintReason } from 'services/complaints'
+import {
+  Table,
+  Tabs,
+  Button,
+  Space,
+  Popconfirm,
+  Modal,
+  Form,
+  Input,
+  Descriptions,
+  List,
+  Divider,
+} from 'antd'
+import {
+  getAllComplaints,
+  getComplaintReasons,
+  markComplaintAsResolved,
+  postComplaintReason,
+} from 'services/complaints'
 import { deleteComment } from 'services/courses/lessons'
 import {
   CheckOutlined,
@@ -17,7 +34,7 @@ import {
   showNotification,
 } from 'components/utils'
 import StatusTag from 'components/Common/StatusTag'
-import { isEmpty, isNil, size } from 'lodash'
+import { indexOf, isEmpty, isNil, map, size } from 'lodash'
 import CountIconWidget from 'components/Common/CountIconWidget'
 import {
   SUCCESS,
@@ -37,6 +54,7 @@ const Complaint = () => {
   const [showComplaintDetails, setShowComplaintDetails] = useState(false)
   const [complaintDetails, setComplaintDetails] = useState([])
   const [commentAuthor, setCommentAuthor] = useState([])
+  const [complaintReasons, setComplaintReasons] = useState([])
 
   const [currentFilter, setCurrentFilter] = useState('all')
   const [currentTableData, setCurrentTableData] = useState([])
@@ -72,6 +90,11 @@ const Complaint = () => {
           break
       }
     }
+  }
+
+  const retrieveComplaintReasons = async () => {
+    const response = await getComplaintReasons()
+    setComplaintReasons(response)
   }
 
   const setTableData = filter => {
@@ -254,6 +277,7 @@ const Complaint = () => {
     const response = await postComplaintReason(payload)
     if (response.success) {
       showNotification('success', SUCCESS, NEW_COMPLAINT_REASON)
+      retrieveComplaintReasons()
     }
   }
 
@@ -271,6 +295,7 @@ const Complaint = () => {
 
   useEffect(() => {
     retrieveComplaints()
+    retrieveComplaintReasons()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -286,9 +311,8 @@ const Complaint = () => {
       </div>
 
       <div className="row mt-4">
-        <div className="col-12">
+        <div className="col-12 text-right">
           <Button
-            className="float-right"
             type="primary"
             shape="round"
             size="large"
@@ -352,9 +376,40 @@ const Complaint = () => {
           onCancel={() => setShowAddComplaint(false)}
           footer={addNewComplaintReasonFormFooter}
         >
+          <p>
+            <strong>List of Existing Complaint Reasons</strong>
+          </p>
+          <div className="card-body complaint-reason-list-card overflow-y-scroll pt-1 mt-2">
+            <div className="row">
+              <div className="col-12">
+                <List
+                  itemLayout="horizontal"
+                  dataSource={map(complaintReasons, reason => ({
+                    ...reason,
+                    listNumber: indexOf(complaintReasons, reason) + 1,
+                  }))}
+                  renderItem={item => (
+                    <List.Item>
+                      {`Complaint Reason ${item.listNumber}: ${
+                        !isEmpty(item.reason) ? item.reason : null
+                      }`}
+                    </List.Item>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Divider />
+
+          <p>
+            <strong>New Complaint Reason details</strong>
+          </p>
+
           <Form
             id="addNewComplaintReasonForm"
             layout="vertical"
+            className="mt-4"
             hideRequiredMark
             onFinish={onAddNewReason}
             onFinishFailed={onFinishFailed}
@@ -364,7 +419,7 @@ const Complaint = () => {
                 <Form.Item
                   name="reason"
                   label="Reason"
-                  rules={[{ required: true, message: 'Please input Reason' }]}
+                  rules={[{ required: true, message: 'Please input a valid reason' }]}
                 >
                   <Input />
                 </Form.Item>
@@ -373,7 +428,7 @@ const Complaint = () => {
                 <Form.Item
                   name="description"
                   label="Description"
-                  rules={[{ required: true, message: 'Please input Description' }]}
+                  rules={[{ required: true, message: 'Please input a valid description' }]}
                 >
                   <Input />
                 </Form.Item>
