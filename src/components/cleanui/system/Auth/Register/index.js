@@ -58,7 +58,7 @@ const Register = () => {
     return (
       <div className="row">
         <div className="col-12 text-center mt-4">
-          <img src="../resources/images/digidojo_logo.svg" alt="Digi Dojo Logo" />
+          <img src="../resources/images/digidojo_logo.svg" width="172" alt="Digi Dojo Logo" />
         </div>
         <div className="col-12">
           <div className="text-center mt-4 mb-4">
@@ -110,7 +110,7 @@ const Register = () => {
     return (
       <div className="col-12 col-md-6">
         <div className="col-12 text-center text-md-left mt-4">
-          <img src="../resources/images/digidojo_logo.svg" alt="Digi Dojo Logo" />
+          <img src="../resources/images/digidojo_logo.svg" width="172" alt="Digi Dojo Logo" />
         </div>
         <div className="col-12">
           <div className="text-center text-md-left mt-4 mb-4">

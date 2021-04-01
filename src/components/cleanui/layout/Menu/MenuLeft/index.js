@@ -189,7 +189,7 @@ const MenuLeft = ({
       >
         <div className={style.logoContainer}>
           <div className={style.logo}>
-            <img src="/resources/images/logo.svg" className="mr-2" alt="Digi Dojo" />
+            <img src="/resources/images/logo.svg" width="32" className="mr-2" alt="Digi Dojo" />
             <div className={style.name}>{logo}</div>
           </div>
         </div>
