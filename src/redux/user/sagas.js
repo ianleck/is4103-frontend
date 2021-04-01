@@ -65,10 +65,13 @@ export function* LOAD_CURRENT_ACCOUNT() {
     type: 'menu/GET_DATA',
   })
   yield putResolve({
+    type: 'categories/GET_CATEGORIES',
+  })
+  yield putResolve({
     type: 'cart/LOAD_CURRENT_CART',
   })
   yield putResolve({
-    type: 'categories/GET_CATEGORIES',
+    type: 'social/LOAD_CURRENT_SOCIAL',
   })
   yield put({
     type: 'user/SET_STATE',
@@ -120,6 +123,9 @@ export function* LOGIN({ payload }) {
     })
     yield putResolve({
       type: 'menu/GET_DATA',
+    })
+    yield putResolve({
+      type: 'categories/GET_CATEGORIES',
     })
     yield putResolve({
       type: 'cart/LOAD_CURRENT_CART',

@@ -1,5 +1,4 @@
 import { Button } from 'antd'
-import { FOLLOWING_ENUM } from 'constants/constants'
 import { CANCEL_FLW_REQ, FOLLOW, UNFOLLOW } from 'constants/text'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,17 +33,9 @@ const FollowBtn = ({ targetAccountId }) => {
   }
 
   const getCurrentFollowStatus = () => {
-    if (
-      social.pendingAndFollowingList.findIndex(
-        o => o.followingId === targetAccountId && o.followingStatus === FOLLOWING_ENUM.PENDING,
-      ) >= 0
-    )
+    if (social.pendingFollowingList.findIndex(o => o.followingId === targetAccountId) >= 0)
       return 'pending'
-    if (
-      social.pendingAndFollowingList.findIndex(
-        o => o.followingId === targetAccountId && o.followingStatus === FOLLOWING_ENUM.APPROVED,
-      ) >= 0
-    )
+    if (social.followingList.findIndex(o => o.followingId === targetAccountId) >= 0)
       return 'following'
     return false
   }

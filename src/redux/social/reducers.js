@@ -3,7 +3,7 @@ import actions from './actions'
 const initialState = {
   followingList: [],
   followerList: [],
-  pendingAndFollowingList: [],
+  pendingFollowingList: [],
 }
 
 export default function socialReducer(state = initialState, action) {
