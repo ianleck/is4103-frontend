@@ -1,4 +1,6 @@
 import { Button, Card, Empty, notification, Progress } from 'antd'
+import { showNotification } from 'components/utils'
+import { SUCCESS } from 'constants/notifications'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -59,7 +61,7 @@ const TaskComponent = () => {
     if (res) {
       const buckets = [...taskBuckets]
       buckets.push(res.newBucket)
-      notification.success({ message: res.message })
+      showNotification('success', SUCCESS, res.message)
       setTaskBuckets(buckets)
     }
   }
@@ -86,7 +88,7 @@ const TaskComponent = () => {
   const deleteOneTaskBucket = async taskBucketId => {
     const res = await deleteTaskBucket(taskBucketId)
     if (res) {
-      notification.success({ message: res.message })
+      showNotification('success', SUCCESS, res.message)
       getTaskBucketsData(id)
       setActiveTaskBucket({
         bucket: {},
@@ -107,7 +109,7 @@ const TaskComponent = () => {
         bucket: activeTaskBucket.bucket,
         tasks: updatedTasks,
       }
-      notification.success({ message: res.message })
+      showNotification('success', SUCCESS, res.message)
       setActiveTaskBucket(updatedTaskBucket)
       getTaskBucketsData(id)
     }
@@ -129,7 +131,7 @@ const TaskComponent = () => {
       progress,
     })
     if (res) {
-      notification.success({ message: res.message })
+      showNotification('success', SUCCESS, res.message)
       updateActiveTasks(task)
       getTaskBucketsData(id)
     }
@@ -138,7 +140,7 @@ const TaskComponent = () => {
   const deleteOneTask = async taskId => {
     const res = await deleteTask(taskId)
     if (res) {
-      notification.success({ message: res.message })
+      showNotification('success', SUCCESS, res.message)
       getTaskBucketsData(id)
     }
   }
