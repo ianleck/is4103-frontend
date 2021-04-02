@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtAdmin from 'services/admin'
-import { Button, Table, Tabs } from 'antd'
+import { Button, Popconfirm, Table, Tabs } from 'antd'
 import { CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'
 import ProfileAboutCard from 'components/Profile/AboutCard'
@@ -181,29 +181,22 @@ const SenseiProfileComponent = () => {
           <BackBtn />
         </div>
         <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
-          {sensei.status === STATUS_ENUM.ACTIVE ? (
-            <Button
-              danger
-              block
-              shape="round"
-              size="large"
-              icon={<StopOutlined />}
-              onClick={() => onBan()}
-            >
-              Ban Account
-            </Button>
-          ) : (
-            <Button
-              danger
-              block
-              shape="round"
-              size="large"
-              icon={<StopOutlined />}
-              onClick={() => onBan()}
-            >
-              Unban Account
-            </Button>
-          )}
+          <Popconfirm
+            title="Do you wish to change account status?"
+            onConfirm={onBan}
+            okText="Confirm"
+            okType="danger"
+          >
+            {sensei.status === STATUS_ENUM.ACTIVE ? (
+              <Button danger block shape="round" size="large" icon={<StopOutlined />}>
+                Ban Account
+              </Button>
+            ) : (
+              <Button danger block shape="round" size="large" icon={<StopOutlined />}>
+                Unban Account
+              </Button>
+            )}
+          </Popconfirm>
         </div>
       </div>
 
