@@ -1,14 +1,38 @@
-import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { CloseOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Button, ConfigProvider, Empty, Popconfirm, Space, Table, Tabs } from 'antd'
 import { filter, size } from 'lodash'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
+import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
+import { useSelector } from 'react-redux'
 
 const MentorshipSubscriptionsTable = () => {
   const { TabPane } = Tabs
+  const history = useHistory()
+  const user = useSelector(state => state.user)
   const [tabKey, setTabKey] = useState('ongoing')
+  const [mentorshipSubscriptions, setSubscriptions] = useState([])
+  const getSubscriptions = async () => {
+    const test = await getAllStudentMentorshipApplications(user.accountId)
+    if (test) {
+      // in order to filter M subscriptions instead of M applications
+      const contracts = test.contracts.filter(c => c.senseiApproval === 'APPROVED')
+      setSubscriptions(contracts)
+    }
+  }
+  useEffect(() => {
+    getSubscriptions()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.accountId])
   const changeTab = key => {
     setTabKey(key)
+  }
+
+  const viewListing = listing => {
+    history.push({
+      pathname: `/student/mentorship/subscription/${listing.mentorshipContractId}`,
+    })
   }
 
   const tableColumns = [
@@ -33,10 +57,10 @@ const MentorshipSubscriptionsTable = () => {
     },
     {
       title: 'Monthly Subscription Price (S$)',
-      dataIndex: 'price',
+      dataIndex: 'MentorshipListing',
       key: 'price',
       responsive: ['md'],
-      render: record => record.toFixed(2),
+      render: record => record.priceAmount.toFixed(2),
       sorter: (a, b) => a.price - b.price,
       sortDirections: ['ascend', 'descend'],
     },
@@ -45,6 +69,12 @@ const MentorshipSubscriptionsTable = () => {
       key: 'action',
       render: record => (
         <Space size="large">
+          <Button
+            type="default"
+            shape="circle"
+            icon={<EyeOutlined />}
+            onClick={() => viewListing(record)}
+          />
           {record.progress ===
             (CONTRACT_PROGRESS_ENUM.ONGOING || CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
             <Popconfirm
@@ -57,41 +87,6 @@ const MentorshipSubscriptionsTable = () => {
           )}
         </Space>
       ),
-    },
-  ]
-
-  const mentorshipSubscriptions = [
-    {
-      createdAt: '2020-01-01',
-      name: 'adfadfadf',
-      mentorshipContractId: '999999999',
-      price: 123.0,
-      progress: 'ONGOING',
-      key: 1,
-    },
-    {
-      createdAt: '2020 - 01 - 01',
-      name: 'adfadfadf',
-      mentorshipContractId: '999999999',
-      price: 123.0,
-      progress: 'CANCELLED',
-      key: 2,
-    },
-    {
-      createdAt: '2020 - 01 - 02',
-      name: 'Zdfadfadf',
-      mentorshipContractId: '999999999',
-      price: 123.0,
-      progress: 'CANCELLED',
-      key: 3,
-    },
-    {
-      createdAt: '2020 - 01 - 01',
-      name: 'adfadfadf',
-      mentorshipContractId: '999999999',
-      price: 123.0,
-      progress: 'COMPLETED',
-      key: 4,
     },
   ]
 
@@ -125,7 +120,12 @@ const MentorshipSubscriptionsTable = () => {
           )}
         </div>
         <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-          <Table className="mt-4" dataSource={dataSource} columns={columns} />
+          <Table
+            className="mt-4"
+            dataSource={dataSource}
+            columns={columns}
+            rowKey="mentorshipContractId"
+          />
         </ConfigProvider>
       </div>
     )

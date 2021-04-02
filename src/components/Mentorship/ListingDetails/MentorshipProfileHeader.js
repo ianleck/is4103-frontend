@@ -7,7 +7,7 @@ import QRCode from 'react-qr-code'
 import { FacebookIcon, FacebookShareButton } from 'react-share'
 import { useSelector } from 'react-redux'
 
-const MentorshipProfileHeader = () => {
+const MentorshipProfileHeader = (isSubscription = false) => {
   const { id } = useParams()
   const history = useHistory()
   const user = useSelector(state => state.user)
@@ -42,29 +42,31 @@ const MentorshipProfileHeader = () => {
           Back
         </Button>
       </div>
-      <div className="col-auto d-flex justify-content-center">
-        <FacebookShareButton className="mr-4" url={shareUrl} quote={title} hashtag="DigiDojo">
-          <FacebookIcon size={38} round />
-        </FacebookShareButton>
+      {!isSubscription ? (
+        <div className="col-auto d-flex justify-content-center">
+          <FacebookShareButton className="mr-4" url={shareUrl} quote={title} hashtag="DigiDojo">
+            <FacebookIcon size={38} round />
+          </FacebookShareButton>
 
-        <Button
-          className="mr-4"
-          type="primary"
-          shape="round"
-          icon={<QrcodeOutlined />}
-          size="large"
-          onClick={() => setShowQRCode(true)}
-        />
-        <Button
-          type="primary"
-          size="large"
-          shape="round"
-          onClick={onAdd}
-          icon={<CheckSquareOutlined />}
-        >
-          Apply for Mentorship
-        </Button>
-      </div>
+          <Button
+            className="mr-4"
+            type="primary"
+            shape="round"
+            icon={<QrcodeOutlined />}
+            size="large"
+            onClick={() => setShowQRCode(true)}
+          />
+          <Button
+            type="primary"
+            size="large"
+            shape="round"
+            onClick={onAdd}
+            icon={<CheckSquareOutlined />}
+          >
+            Apply for Mentorship
+          </Button>
+        </div>
+      ) : null}
       <Modal
         title="View QR"
         visible={showQRCode}
