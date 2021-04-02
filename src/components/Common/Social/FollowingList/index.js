@@ -25,7 +25,7 @@ const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModa
       setShowLoadMore,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [followingList])
 
   const socialProfileOverride = accountId => {
     sendToSocialProfile(history, accountId)
