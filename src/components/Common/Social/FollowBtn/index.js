@@ -1,5 +1,5 @@
 import { Button } from 'antd'
-import { CANCEL_FLW_REQ, FOLLOW, UNFOLLOW } from 'constants/text'
+import { FOLLOW, REQUESTED, UNFOLLOW } from 'constants/text'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -48,7 +48,7 @@ const FollowBtn = ({ targetAccountId }) => {
         if (type === 'onClick') {
           socialAction('cancel_follow_request')
         }
-        if (type === 'buttonLabel') return CANCEL_FLW_REQ
+        if (type === 'buttonLabel') return REQUESTED
         break
       case 'following':
         if (type === 'className') return 'btn btn-primary'

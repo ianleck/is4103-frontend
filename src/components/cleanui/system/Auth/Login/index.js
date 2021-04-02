@@ -196,8 +196,8 @@ const Login = () => {
       <div className="container">
         {SelectUserType}
         <div className="row justify-content-between align-items-center">
-          <div className="col-12 col-md-6 text-center">{LogoWithDescription}</div>
-          <div className="col-12 col-md-6 mt-3 mt-md-0">
+          <div className="col-12 col-lg-5 text-center">{LogoWithDescription}</div>
+          <div className="col-12 col-lg-7 mt-3 mt-lg-0">
             <LoginForm />
           </div>
         </div>

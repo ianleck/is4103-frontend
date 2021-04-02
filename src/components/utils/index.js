@@ -254,6 +254,6 @@ export const getDetailsColumn = viewItem => {
   }
 }
 
-export const sendToSocialProfile = (history, userType, accountId) => {
-  history.push(`/social/${userType.toLowerCase()}/${accountId}`)
+export const sendToSocialProfile = (history, accountId) => {
+  history.push(`/social/profile/${accountId}`)
 }

@@ -32,6 +32,10 @@
   height: 120px;
 }
 
+.invisible-btn {
+  cursor: pointer;
+}
+
 .lesson-list-card {
   height: 250px;
 }
@@ -68,6 +72,21 @@
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
   height: 220px;
+}
+
+.social-card-banner {
+  width: 100%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  opacity: 0.2;
+}
+
+.social-card-avatar {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -webkit-transform: translate(-50%, -50%);
 }
 
 .sensei-course-card-content {

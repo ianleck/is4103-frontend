@@ -44,8 +44,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/social/sensei/:accountId',
-    Component: lazy(() => import('pages/social/sensei')),
+    path: '/social/profile/:accountId',
+    Component: lazy(() => import('pages/social/profile')),
     exact: true,
   },
   // Auth Pages

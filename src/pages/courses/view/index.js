@@ -8,7 +8,6 @@ import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO_SENSEI, NA } from 'constants/text'
 import { formatTime, sendToSocialProfile } from 'components/utils'
-import { USER_TYPE_ENUM } from 'constants/constants'
 import FollowBtn from 'components/Common/Social/FollowBtn'
 
 const ViewCourseDetailsPublic = () => {
@@ -161,9 +160,7 @@ const ViewCourseDetailsPublic = () => {
                     <a
                       className="h3 font-weight-bold"
                       href="#"
-                      onClick={() =>
-                        sendToSocialProfile(history, USER_TYPE_ENUM.SENSEI, currentCourse.accountId)
-                      }
+                      onClick={() => sendToSocialProfile(history, currentCourse.accountId)}
                     >
                       {`${isNil(currentSensei.firstName) ? 'Anonymous' : currentSensei.firstName} ${
                         isNil(currentSensei.lastName) ? 'Pigeon' : currentSensei.lastName

@@ -21,7 +21,6 @@ export function* LOAD_CURRENT_SOCIAL() {
   const currentUser = yield call(jwt.getLocalUserData)
   if (!isEmpty(currentUser.accessToken) && currentUser.userType === USER_TYPE_ENUM.STUDENT) {
     const followingRsp = yield call(social.getFollowingList, currentUser.accountId)
-    console.log(followingRsp)
     if (followingRsp && followingRsp.success) {
       if (!isNil(followingRsp.followingList)) {
         const followingList = sortDescAndKeyFollowingId(followingRsp.followingList)
@@ -34,7 +33,6 @@ export function* LOAD_CURRENT_SOCIAL() {
     }
 
     const followerRsp = yield call(social.getFollowerList, currentUser.accountId)
-    console.log(followerRsp)
     if (followerRsp && followerRsp.success) {
       if (!isNil(followerRsp.followerList)) {
         const followerList = sortDescAndKeyFollowingId(followerRsp.followerList)
@@ -47,7 +45,6 @@ export function* LOAD_CURRENT_SOCIAL() {
     }
 
     const pendingRsp = yield call(social.getPendingList, currentUser.accountId)
-    console.log(pendingRsp)
     if (pendingRsp && pendingRsp.success) {
       if (!isNil(pendingRsp.pendingFollowingList)) {
         const pendingFollowingList = sortDescAndKeyFollowingId(pendingRsp.pendingFollowingList)
