@@ -194,7 +194,7 @@ const SenseiProfileComponent = () => {
             </Popconfirm>
           ) : (
             <Popconfirm
-              title="Do you wish to ban this sensei?"
+              title="Do you wish to unban this sensei?"
               onConfirm={onBan}
               okText="Confirm"
               okType="danger"
