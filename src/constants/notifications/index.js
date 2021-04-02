@@ -12,6 +12,8 @@ export const COURSE_ACCEPT_SUCCESS = 'The course request was successfully accept
 export const COURSE_ACCEPT_ERROR = 'There was an error accepting the course request.'
 export const COURSE_REJECT_SUCCESS = 'The course request was successfully rejected.'
 export const COURSE_REJECT_ERROR = 'There was an error rejecting the course request.'
+export const COURSE_DRAFT_DEL_SUCCESS = 'Course Draft deleted successully.'
+export const COURSE_DRAFT_DEL_ERROR = 'There was an error deleting your Course Draft.'
 
 export const ASSESSMENT_VID_DELETE_ERR = 'There was an error deleting your assessment video.'
 export const ASSESSMENT_VID_DELETE_SUCCESS = 'Your assessment video was successfully deleted.'
@@ -66,3 +68,14 @@ export const TRANSCRIPT_REMOVED = 'Your transcript was successfully removed.'
 export const TRANSCRIPT_REMOVED_ERR = 'There was an error removing your transcript.'
 export const CV_REMOVED = 'Your CV was successfully removed.'
 export const CV_REMOVED_ERR = 'There was an error removing your CV.'
+
+export const APPROVE_WITHDRAWAL_REQ = 'The withdrawal request was successfully approved.'
+export const APPROVE_WITHDRAWAL_REQ_ERR = 'There was an error approving the withdrawal request.'
+export const REJECT_WITHDRAWAL_REQ = 'The withdrawal request was successfully rejected.'
+export const REJECT_WITHDRAWAL_REQ_ERR = 'There was an error rejecting the withdrawal request.'
+
+export const NEW_COMPLAINT_REASON = 'New Complaint Reason has been added.'
+export const COMPLAINT_SENT = 'Your complaint has been received.'
+export const COMPLAINT_RESOLVED = 'Complaint has been marked as resolved.'
+export const COMPLAINT_COMMENT_DELETE =
+  'Comment has been deleted and Complaint has been marked as resolved.'

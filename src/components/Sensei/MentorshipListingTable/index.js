@@ -349,6 +349,7 @@ const SenseiMentorshipListings = () => {
               parser={value => value.replace(/\$\s?|(,*)/g, '')}
               step="0.01"
               min={0}
+              className="w-50"
             />
           </Form.Item>
           <Form.Item label="Visibility" name="visibility" valuePropName="checked">
@@ -435,6 +436,7 @@ const SenseiMentorshipListings = () => {
               parser={value => value.replace(/\$\s?|(,*)/g, '')}
               step="0.01"
               min={0}
+              className="w-50"
             />
           </Form.Item>
           <Form.Item label="Visibility" name="visibility" valuePropName="checked">

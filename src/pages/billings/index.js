@@ -1,7 +1,7 @@
 import { Table } from 'antd'
 import SenseiWallet from 'components/Sensei/Wallet'
 import BillingCard from 'components/Billing'
-import { showNotification, sortDescAndKeyBillingId } from 'components/utils'
+import { getDetailsColumn, showNotification, sortDescAndKeyBillingId } from 'components/utils'
 import {
   ERROR,
   SUCCESS,
@@ -48,13 +48,8 @@ const Billings = () => {
   }, [])
 
   const viewBilling = record => {
-    return {
-      onClick: event => {
-        event.preventDefault()
-        const path = `billing/view/${record.billingId}`
-        history.push(path)
-      },
-    }
+    const path = `billing/view/${record.billingId}`
+    history.push(path)
   }
   const showBillings = (billingFlow, dataSource, tableColumns) => {
     const numBillings = size(dataSource)
@@ -69,12 +64,7 @@ const Billings = () => {
             </div>
           )}
         </div>
-        <Table
-          className={!isAdmin ? 'mt-4' : ''}
-          dataSource={dataSource}
-          columns={tableColumns}
-          onRow={record => viewBilling(record)}
-        />
+        <Table className={!isAdmin ? 'mt-4' : ''} dataSource={dataSource} columns={tableColumns} />
       </div>
     )
   }
@@ -94,6 +84,7 @@ const Billings = () => {
   // For Sensei and Admin, show Wallet followed by Incoming transactions and finally Outgoing transactions
   // For Student, show Outgoing transactions then Incoming transactions
 
+  const billingColumnsWithDetail = concat(billingColumns, getDetailsColumn(viewBilling))
   const showForSensei = () => {
     return (
       <div>
@@ -105,10 +96,10 @@ const Billings = () => {
           onWithdraw={handleWithdrawal}
         />
         <BillingCard isIncoming>
-          {showBillings('incoming', billingsReceived, billingColumns)}
+          {showBillings('incoming', billingsReceived, billingColumnsWithDetail)}
         </BillingCard>
         <BillingCard isIncoming={false}>
-          {showBillings('outgoing', billingsSent, billingColumns)}
+          {showBillings('outgoing', billingsSent, billingColumnsWithDetail)}
         </BillingCard>
       </div>
     )
@@ -118,11 +109,11 @@ const Billings = () => {
     return (
       <div>
         <BillingCard isIncoming={false}>
-          {showBillings('outgoing', billingsSent, billingColumns)}
+          {showBillings('outgoing', billingsSent, billingColumnsWithDetail)}
         </BillingCard>
 
         <BillingCard isIncoming>
-          {showBillings('incoming', billingsReceived, billingColumns)}
+          {showBillings('incoming', billingsReceived, billingColumnsWithDetail)}
         </BillingCard>
       </div>
     )
@@ -135,7 +126,7 @@ const Billings = () => {
         <BillingManagement
           allReceived={billingsReceived}
           allSent={billingsSent}
-          tableColumns={billingColumns}
+          tableColumns={billingColumnsWithDetail}
           allBillings={allBillings}
         />
       </div>

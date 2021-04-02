@@ -1,7 +1,7 @@
 import { Tag } from 'antd'
+import StatusTag from 'components/Common/StatusTag'
 import { formatTime } from 'components/utils'
-import { BILLING_TYPE_FILTER, CURRENCY_FILTERS } from 'constants/filters'
-import { isNil } from 'lodash'
+import { BILLING_STATUS_FILTER, BILLING_TYPE_FILTER, CURRENCY_FILTERS } from 'constants/filters'
 import React from 'react'
 
 const billingColumns = [
@@ -20,14 +20,12 @@ const billingColumns = [
     dataIndex: 'billingId',
     key: 'billingId',
     width: '10%',
-    responsive: ['sm'],
   },
   {
     title: 'Billing Type',
     dataIndex: 'billingType',
     key: 'billingType',
     width: '10%',
-    responsive: ['md'],
     render: record => {
       return <Tag color="geekblue">{record}</Tag>
     },
@@ -35,21 +33,23 @@ const billingColumns = [
     onFilter: (value, record) => record.billingType.indexOf(value) === 0,
   },
   {
-    title: 'Product ID',
-    dataIndex: 'productId',
-    key: 'productId',
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
     width: '10%',
-    responsive: ['lg'],
+    responsive: ['md'],
     render: record => {
-      return isNil(record) ? '-' : record
+      return <StatusTag data={record} type="BILLING_STATUS_ENUM" />
     },
+    filters: BILLING_STATUS_FILTER,
+    onFilter: (value, record) => record.status.indexOf(value) === 0,
   },
   {
     title: 'Currency',
     dataIndex: 'currency',
     key: 'currency',
     width: '10%',
-    responsive: ['md'],
+    responsive: ['lg'],
     filters: CURRENCY_FILTERS,
     onFilter: (value, record) => record.currency.indexOf(value) === 0,
   },
@@ -58,7 +58,7 @@ const billingColumns = [
     dataIndex: 'amount',
     key: 'amount',
     width: '10%',
-    responsive: ['md'],
+    responsive: ['lg'],
     render: amount => parseFloat(amount).toFixed(2),
     sorter: (a, b) => a.amount - b.amount,
     sortDirections: ['ascend', 'descend'],

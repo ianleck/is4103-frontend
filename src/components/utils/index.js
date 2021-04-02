@@ -1,7 +1,9 @@
-import { notification, message } from 'antd'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { notification, message, Button } from 'antd'
 import { DIRECTION } from 'constants/constants'
 import { isNil, map } from 'lodash'
 import moment from 'moment'
+import React from 'react'
 
 export const formatTime = dateTime => {
   return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
@@ -36,6 +38,13 @@ export const sortDescAndKeyBillingId = data => {
   }))
 }
 
+export const sortDescAndKeyCommentId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), comment => ({
+    ...comment,
+    key: comment.commentId,
+  }))
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {
@@ -43,6 +52,25 @@ export const filterDataByAdminVerified = (data, adminVerified) => {
     })
   }
   return data
+}
+
+export const filterDataByComplaintStatus = (data, complaintStatus) => {
+  if (!isNil(complaintStatus)) {
+    return data.filter(o => {
+      return o.isResolved === complaintStatus
+    })
+  }
+  return data
+}
+
+export const sortDescAndKeyComplaintId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    complaint => ({
+      ...complaint,
+      key: complaint.complaintId,
+    }),
+  )
 }
 
 export const resetCart = {
@@ -188,5 +216,21 @@ export const showMessage = (type, msg) => {
       break
     default:
       break
+  }
+}
+
+export const getDetailsColumn = viewItem => {
+  return {
+    title: 'Details',
+    key: 'details',
+    width: '10%',
+    render: record => (
+      <Button
+        type="primary"
+        shape="round"
+        onClick={() => viewItem(record)}
+        icon={<InfoCircleOutlined />}
+      />
+    ),
   }
 }

@@ -8,6 +8,8 @@ import { ADMIN_VERIFIED_ENUM, DEFAULT_TIMEOUT, VISIBILITY_ENUM } from 'constants
 import { useSelector } from 'react-redux'
 import { isEmpty, isNil, size } from 'lodash'
 import SenseiCourseCard from 'components/Sensei/Course/SenseiCourseCard'
+import CountIconWidgetGroup from 'components/Common/CountIconWidgetGroup'
+import { COURSES } from 'constants/text'
 
 const SenseiCourses = () => {
   const history = useHistory()
@@ -18,6 +20,10 @@ const SenseiCourses = () => {
   const [pageTitle, setPageTitle] = useState('Published Courses')
   const [currentSortOrder, setCurrentSortOrder] = useState('desc')
   const [isLoading, setIsLoading] = useState(false)
+
+  const [numPendingCourses, setNumPendingCourses] = useState(0)
+  const [numAcceptedCourses, setNumAcceptedCourses] = useState(0)
+  const [numRejectedCourses, setNumRejectedCourses] = useState(0)
 
   const { Option } = Select
   const { Search } = Input
@@ -51,8 +57,48 @@ const SenseiCourses = () => {
     }
   }
 
+  const getCourseStats = async () => {
+    const draftCoursesRsp = await getSenseiCourses(user.accountId, ADMIN_VERIFIED_ENUM.DRAFT, null)
+    const pendingCoursesRsp = await getSenseiCourses(
+      user.accountId,
+      ADMIN_VERIFIED_ENUM.PENDING,
+      null,
+    )
+    const acceptedCoursesRsp = await getSenseiCourses(
+      user.accountId,
+      ADMIN_VERIFIED_ENUM.ACCEPTED,
+      null,
+    )
+    const rejectedCoursesRsp = await getSenseiCourses(
+      user.accountId,
+      ADMIN_VERIFIED_ENUM.REJECTED,
+      null,
+    )
+
+    setNumPendingCourses(
+      pendingCoursesRsp &&
+        !isNil(pendingCoursesRsp.courses) &&
+        draftCoursesRsp &&
+        !isNil(draftCoursesRsp.courses)
+        ? size(pendingCoursesRsp.courses) + size(draftCoursesRsp.courses)
+        : 0,
+    )
+
+    setNumAcceptedCourses(
+      acceptedCoursesRsp && !isNil(acceptedCoursesRsp.courses)
+        ? size(acceptedCoursesRsp.courses)
+        : 0,
+    )
+    setNumRejectedCourses(
+      rejectedCoursesRsp && !isNil(rejectedCoursesRsp.courses)
+        ? size(rejectedCoursesRsp.courses)
+        : 0,
+    )
+  }
+
   const getCourses = async tabKey => {
     setLoadingIndicator(true)
+    getCourseStats()
     switch (tabKey) {
       case 'drafts':
         {
@@ -160,12 +206,19 @@ const SenseiCourses = () => {
 
   useEffect(() => {
     getCourses('published')
+    getCourseStats()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div className="container">
       <Helmet title="My Courses" />
+      <CountIconWidgetGroup
+        objectType={COURSES}
+        numAccepted={numAcceptedCourses}
+        numPending={numPendingCourses}
+        numRejected={numRejectedCourses}
+      />
       <div className="row align-items-center">
         <div className="col-12 mt-2 text-center text-md-right">
           <Button

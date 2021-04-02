@@ -43,6 +43,7 @@ export const NA = 'N.A.'
 export const EXPAND = 'EXPAND'
 export const COLLAPSE = 'COLLAPSE'
 export const CLOSE = 'Close'
+export const LOAD_MORE = 'Load More'
 
 export const WITHDRAWALS = 'Withdrawals'
 export const APPROVE_WITHDRAWAL = 'Approve Withrdrawal Request'
