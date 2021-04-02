@@ -1,9 +1,14 @@
+import React from 'react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT, DIRECTION } from 'constants/constants'
+import {
+  DEFAULT_ITEMS_PER_PAGE,
+  DEFAULT_TIMEOUT,
+  DIRECTION,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import { isNil, map, size } from 'lodash'
 import moment from 'moment'
-import React from 'react'
 
 export const formatTime = dateTime => {
   return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
@@ -261,8 +266,9 @@ export const getDetailsColumn = viewItem => {
   }
 }
 
-export const sendToSocialProfile = (history, accountId) => {
-  history.push(`/social/profile/${accountId}`)
+export const sendToSocialProfile = (history, user, accountId) => {
+  if (user.userType === USER_TYPE_ENUM.SENSEI) history.push(`/sensei/social/profile/${accountId}`)
+  else history.push(`/social/profile/${accountId}`)
 }
 
 export const initPageItems = (

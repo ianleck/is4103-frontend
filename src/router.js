@@ -257,6 +257,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/sensei/social/profile/:accountId',
+    Component: lazy(() => import('pages/social/profile')),
+    exact: true,
+  },
+  {
     path: '/sensei/wallet',
     Component: lazy(() => import('pages/billings')),
     exact: true,

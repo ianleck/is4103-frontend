@@ -160,7 +160,7 @@ const ViewCourseDetailsPublic = () => {
                     <a
                       className="h3 font-weight-bold"
                       href="#"
-                      onClick={() => sendToSocialProfile(history, currentCourse.accountId)}
+                      onClick={() => sendToSocialProfile(history, user, currentCourse.accountId)}
                     >
                       {`${isNil(currentSensei.firstName) ? 'Anonymous' : currentSensei.firstName} ${
                         isNil(currentSensei.lastName) ? 'Pigeon' : currentSensei.lastName

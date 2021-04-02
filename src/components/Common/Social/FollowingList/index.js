@@ -5,11 +5,12 @@ import { Avatar, Button } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
 import { initPageItems, sendToSocialProfile } from 'components/utils'
 import { isNil, map, size } from 'lodash'
-
+import { useSelector } from 'react-redux'
 import SocialFollowBtn from '../FollowBtn'
 
 const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModal }) => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
 
   const [isLoading, setIsLoading] = useState(false)
   const [paginatedFollowing, setPaginatedFollowing] = useState([])
@@ -28,7 +29,7 @@ const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModa
   }, [followingList])
 
   const socialProfileOverride = accountId => {
-    sendToSocialProfile(history, accountId)
+    sendToSocialProfile(history, user, accountId)
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
   }
 
