@@ -1,74 +1,80 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as jwtAdmin from 'services/admin'
-import { Button } from 'antd'
-import { StopOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { Button, Popconfirm } from 'antd'
+import { StopOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'
 import ProfileAboutCard from 'components/Profile/AboutCard'
 import ProfileOccupationCard from 'components/Profile/OccupationCard'
 import ProfileIndustryCard from 'components/Profile/IndustryCard'
 import ProfileExperienceCard from 'components/Profile/ExperienceCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
+import BackBtn from 'components/Common/BackBtn'
+import { showNotification } from 'components/utils'
+import { SUCCESS, USER_BANNED, USER_UNBANNED } from 'constants/notifications'
+import { STATUS_ENUM } from 'constants/constants'
 
 const StudentProfileComponent = () => {
   const { userId } = useParams()
-  const history = useHistory()
   const [student, setStudent] = useState('')
 
-  useEffect(() => {
-    const getStudent = async () => {
-      const response = await jwtAdmin.getStudent(userId)
-      setStudent(response)
-    }
-    getStudent()
-  }, [userId])
-
-  const onBack = e => {
-    e.preventDefault()
-    const path = '/admin/user-management/'
-    history.push(path)
+  const getStudent = async () => {
+    const response = await jwtAdmin.getStudent(userId)
+    setStudent(response)
   }
 
-  const BanAccountActionCard = () => {
-    return (
-      <div className="card">
-        <div className="card-header pb-1">
-          <div className="h3 font-weight-bold text-dark">Ban Account</div>
-        </div>
-        <div className="card-body">
-          <div className="row justify-content-start align-items-center">
-            <div className="col-auto">
-              <Button block type="danger" size="large" shape="round" icon={<StopOutlined />}>
-                Ban Account
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+  useEffect(() => {
+    getStudent()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+  const onBan = async () => {
+    const response = await jwtAdmin.banUser(userId)
+
+    if (response.success && student.status === STATUS_ENUM.ACTIVE) {
+      showNotification('success', SUCCESS, USER_BANNED)
+    } else if (response.success && student.status === STATUS_ENUM.BANNED) {
+      showNotification('success', SUCCESS, USER_UNBANNED)
+    }
+    getStudent()
   }
 
   return (
     <div>
-      <div className="row">
+      <div className="row pt-2 justify-content-md-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
-          <Button
-            block
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={onBack}
-            icon={<ArrowLeftOutlined />}
-          >
-            Back
-          </Button>
+          <BackBtn />
+        </div>
+        <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
+          {student.status === STATUS_ENUM.ACTIVE ? (
+            <Popconfirm
+              title="Do you wish to ban this student?"
+              onConfirm={onBan}
+              okText="Confirm"
+              okType="danger"
+            >
+              <Button danger block shape="round" size="large" icon={<StopOutlined />}>
+                Ban Account
+              </Button>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="Do you wish to unban this student?"
+              onConfirm={onBan}
+              okText="Confirm"
+              okType="danger"
+            >
+              <Button danger block shape="round" size="large" icon={<StopOutlined />}>
+                Unban Account
+              </Button>
+            </Popconfirm>
+          )}
         </div>
       </div>
 
       <div className="row mt-4">
         <div className="col-12 col-md-6">
           <ProfilePersonalInfoCard user={student} isAdmin />
-          <BanAccountActionCard />
           <ProfileExperienceCard user={student} isAdmin />
         </div>
         <div className="col-12 col-md-6">
