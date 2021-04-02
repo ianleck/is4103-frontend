@@ -1,7 +1,7 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import { DIRECTION } from 'constants/constants'
-import { isNil, map } from 'lodash'
+import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT, DIRECTION } from 'constants/constants'
+import { isNil, map, size } from 'lodash'
 import moment from 'moment'
 import React from 'react'
 
@@ -256,4 +256,31 @@ export const getDetailsColumn = viewItem => {
 
 export const sendToSocialProfile = (history, accountId) => {
   history.push(`/social/profile/${accountId}`)
+}
+
+export const initPageItems = (
+  setIsLoading,
+  totalData,
+  setPaginatedItems,
+  setCurrentPageIdx,
+  setShowLoadMore,
+) => {
+  const tempPaginatedItems = []
+  for (
+    let i = 0;
+    i < (DEFAULT_ITEMS_PER_PAGE < size(totalData) ? DEFAULT_ITEMS_PER_PAGE : size(totalData));
+    i += 1
+  ) {
+    tempPaginatedItems.push(totalData[i])
+  }
+  setPaginatedItems(tempPaginatedItems)
+  setCurrentPageIdx(1)
+  if (DEFAULT_ITEMS_PER_PAGE < size(totalData)) {
+    setShowLoadMore(true)
+  } else {
+    setShowLoadMore(false)
+  }
+  setTimeout(() => {
+    setIsLoading(false)
+  }, DEFAULT_TIMEOUT)
 }

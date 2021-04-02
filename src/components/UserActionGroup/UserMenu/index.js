@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { SolutionOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar, Modal } from 'antd'
+import { Menu, Dropdown, Avatar, Modal, Button } from 'antd'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { size } from 'lodash'
+import { map, size } from 'lodash'
+import { initPageItems } from 'components/utils'
+import PaginationWrapper from 'components/Common/Pagination'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
@@ -55,11 +57,59 @@ const UserMenu = () => {
     setShowSocialModal(true)
   }
 
-  const FollowingList = () => {
+  const FollowingList = ({ followingList }) => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [paginatedFollowing, setPaginatedFollowing] = useState([])
+    const [currentPageIdx, setCurrentPageIdx] = useState(1)
+    const [showLoadMore, setShowLoadMore] = useState(false)
+
+    useEffect(() => {
+      initPageItems(
+        setIsLoading,
+        followingList,
+        setPaginatedFollowing,
+        setCurrentPageIdx,
+        setShowLoadMore,
+      )
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const FollowingListItem = ({ followingListItem }) => {
+      console.log('followingListItem', followingListItem)
+      return (
+        <div className="row">
+          <div className="col-9">
+            <span>username</span>
+          </div>
+          <div className="col-3 text-right">
+            <Button type="primary" />
+          </div>
+        </div>
+      )
+    }
     return (
-      <div>
-        <span>Following List</span>
-      </div>
+      <PaginationWrapper
+        setIsLoading={setIsLoading}
+        totalData={followingList}
+        paginatedData={paginatedFollowing}
+        setPaginatedData={setPaginatedFollowing}
+        currentPageIdx={currentPageIdx}
+        setCurrentPageIdx={setCurrentPageIdx}
+        showLoadMore={showLoadMore}
+        setShowLoadMore={setShowLoadMore}
+        wrapperContent={
+          size(paginatedFollowing) > 0 &&
+          map(paginatedFollowing, followingListItem => {
+            return (
+              <FollowingListItem
+                key={followingListItem.followershipId}
+                followingListItem={followingListItem}
+                isLoading={isLoading}
+              />
+            )
+          })
+        }
+      />
     )
   }
 
@@ -92,7 +142,7 @@ const UserMenu = () => {
         <div className="col-12 pl-0">
           <span className="mb-5">Followers</span>
           <div className="mt-2 font-size-18">
-            <span className="font-weight-bold">22</span>
+            <span className="font-weight-bold">{size(social.followerList)}</span>
           </div>
         </div>
       </div>
@@ -188,7 +238,7 @@ const UserMenu = () => {
             onCancel={() => setShowSocialModal(false)}
             zIndex="1051"
           >
-            <FollowingList />
+            <FollowingList followingList={social.followingList} />
           </Modal>
         </div>
       </Dropdown>

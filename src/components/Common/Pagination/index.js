@@ -6,23 +6,49 @@ import { LOAD_MORE } from 'constants/text'
 
 /* Usage
   1. On items to be paginated, do an initial load for the first page of items.
-    setIsLoading(true)
-    const result = await getCommentsByLessonId(lessonId)
-    if (result && !isNil(result.comments)) {
-      setComments(sortDescAndKeyCommentId(result.comments))
-    }
-    const tempPaginatedItems = []
-    for (let i = 0; i < DEFAULT_ITEMS_PER_PAGE; i += 1) {
-      tempPaginatedItems.push(result.comments[i])
-    }
-    setPaginatedComments(tempPaginatedItems)
-    setCurrentPageIdx(1)
-    setShowLoadMore(true)
-    setTimeout(() => {
-      setIsLoading(false)
-    }, DEFAULT_TIMEOUT)
+    import { initPageItems } from 'components/utils'
+
+    const [isLoading, setIsLoading] = useState(false)
+    const [paginatedFollowing, setPaginatedFollowing] = useState([])
+    const [currentPageIdx, setCurrentPageIdx] = useState(1)
+    const [showLoadMore, setShowLoadMore] = useState(false)
+
+    useEffect(() => {
+      initPageItems(
+        setIsLoading,
+        followingList,
+        setPaginatedFollowing,
+        setCurrentPageIdx,
+        setShowLoadMore,
+      )
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     
   2. Pass the props for the initial loaded state into PaginationWrapper to follow up.
+
+      <PaginationWrapper
+        setIsLoading={setIsLoading}
+        totalData={followingList}
+        paginatedData={paginatedFollowing}
+        setPaginatedData={setPaginatedFollowing}
+        currentPageIdx={currentPageIdx}
+        setCurrentPageIdx={setCurrentPageIdx}
+        showLoadMore={showLoadMore}
+        setShowLoadMore={setShowLoadMore}
+        wrapperContent={
+          size(paginatedFollowing) > 0 &&
+          map(paginatedFollowing, followingListItem => {
+            return (
+              <FollowingListItem
+                key={followingListItem.followershipId}
+                followingListItem={followingListItem}
+                user={user}
+                isLoading={isLoading}
+              />
+            )
+          })
+        }
+      />
 */
 
 const PaginationWrapper = ({

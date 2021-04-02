@@ -19,7 +19,7 @@ import actions from './actions'
 
 export function* LOAD_CURRENT_SOCIAL() {
   const currentUser = yield call(jwt.getLocalUserData)
-  if (!isEmpty(currentUser.accessToken) && currentUser.userType === USER_TYPE_ENUM.STUDENT) {
+  if (!isEmpty(currentUser.accessToken) && currentUser.userType !== USER_TYPE_ENUM.ADMIN) {
     const followingRsp = yield call(social.getFollowingList, currentUser.accountId)
     if (followingRsp && followingRsp.success) {
       if (!isNil(followingRsp.followingList)) {

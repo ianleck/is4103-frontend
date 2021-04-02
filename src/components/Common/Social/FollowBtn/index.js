@@ -3,7 +3,7 @@ import { FOLLOW, REQUESTED, UNFOLLOW } from 'constants/text'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const FollowBtn = ({ targetAccountId }) => {
+const SocialFollowBtn = ({ targetAccountId }) => {
   const dispatch = useDispatch()
   const social = useSelector(state => state.social)
 
@@ -88,4 +88,4 @@ const FollowBtn = ({ targetAccountId }) => {
   )
 }
 
-export default FollowBtn
+export default SocialFollowBtn

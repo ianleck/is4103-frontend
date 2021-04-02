@@ -8,7 +8,7 @@ import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO_SENSEI, NA } from 'constants/text'
 import { formatTime, sendToSocialProfile } from 'components/utils'
-import FollowBtn from 'components/Common/Social/FollowBtn'
+import SocialFollowBtn from 'components/Common/Social/FollowBtn'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -171,7 +171,7 @@ const ViewCourseDetailsPublic = () => {
                     <div className="h5 text-uppercase">{DIGI_DOJO_SENSEI}</div>
                   </div>
                   <div className="col-12 mt-2">
-                    <FollowBtn targetAccountId={currentCourse.accountId} />
+                    <SocialFollowBtn targetAccountId={currentCourse.accountId} />
                   </div>
                   <div className="col-12 mt-4">
                     <Descriptions

@@ -7,6 +7,11 @@ export async function getFollowingList(accountId) {
     .get(url)
     .then(response => {
       if (response && !isNil(response.data)) {
+        const fakeFollowingList = []
+        for (let i = 0; i < 21; i += 1) {
+          fakeFollowingList.push(...response.data.followingList)
+        }
+        response.data.followingList = [...fakeFollowingList]
         return response.data
       }
       return false
