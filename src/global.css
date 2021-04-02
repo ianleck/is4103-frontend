@@ -2,6 +2,10 @@
   max-height: 175px;
 }
 
+.clickable:hover {
+  cursor: pointer;
+}
+
 .course-card-img {
   width: 100%;
 }
@@ -59,6 +63,14 @@
   overflow-x: hidden;
 }
 
+.rst__rowLabel {
+  width: 100%;
+}
+
+.rst__tree {
+  width: 100%;
+}
+
 .sensei-course-card {
   margin-left: 50%;
   transform: translateX(-50%);
@@ -72,6 +84,35 @@
 
 .scroll-menu-arrow--disabled {
   display: none;
+}
+
+.bucket-items:hover {
+  background-color: #d8e8fa;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+}
+
+.bucket-items:focus {
+  background-color: #d8e8fa;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+}
+
+.bucket-item-active {
+  background-color: #d8e8fa;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+}
+
+.task__remove-icon {
+  background-color: #d8e8fa !important;
+}
+
+.task__remove-icon-hidden {
+  display: none !important;
 }
 
 .text-2-lines {
