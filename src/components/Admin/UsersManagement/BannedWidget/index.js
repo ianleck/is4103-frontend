@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import CountIconWidget from 'components/Common/CountIconWidget'
-import { isNil } from 'lodash'
-import * as jwtAdmin from 'services/admin'
+import { getAllBannedSensei, getAllBannedStudent } from 'services/admin'
 
 const BannedWidget = () => {
   const [count, setCount] = useState(0)
+  const [studentCount, setStudentCount] = useState(0)
+  const [senseiCount, setSenseiCount] = useState(0)
 
   useEffect(() => {
     populateBanned()
@@ -12,27 +13,17 @@ const BannedWidget = () => {
 
   const populateBanned = async () => {
     // change endpoint
-    const studentRsp = await jwtAdmin.getAllStudents()
-    const senseiRsp = await jwtAdmin.getAllSenseis()
+    const studentRsp = await getAllBannedStudent()
+    const senseiRsp = await getAllBannedSensei()
     let counter = 0
 
     if (studentRsp.length > 0) {
-      for (let i = 0; i < studentRsp.length; i += 1) {
-        if (!isNil(studentRsp[i].status)) {
-          if (studentRsp[i].status === 'DEACTIVATED') {
-            counter += 1
-          }
-        }
-      }
+      counter += studentRsp.length
+      setStudentCount(studentRsp.length)
     }
     if (senseiRsp.length > 0) {
-      for (let i = 0; i < senseiRsp.length; i += 1) {
-        if (!isNil(senseiRsp[i].status)) {
-          if (senseiRsp[i].status === 'DEACTIVATED') {
-            counter += 1
-          }
-        }
-      }
+      counter += senseiRsp.length
+      setSenseiCount(senseiRsp.length)
     }
 
     setCount(counter)
@@ -43,7 +34,7 @@ const BannedWidget = () => {
       <div className="col-12 col-md-4">
         <CountIconWidget
           title="Total Banned Students"
-          count={count}
+          count={studentCount}
           icon={<i className="fe fe-slash" />}
           color="blue"
         />
@@ -51,7 +42,7 @@ const BannedWidget = () => {
       <div className="col-12 col-md-4">
         <CountIconWidget
           title="Total Banned Senseis"
-          count={count}
+          count={senseiCount}
           icon={<i className="fe fe-slash" />}
           color="purple"
         />

@@ -79,3 +79,6 @@ export const COMPLAINT_SENT = 'Your complaint has been received.'
 export const COMPLAINT_RESOLVED = 'Complaint has been marked as resolved.'
 export const COMPLAINT_COMMENT_DELETE =
   'Comment has been deleted and Complaint has been marked as resolved.'
+
+export const USER_BANNED = 'User has been banned.'
+export const USER_UNBANNED = 'User has been unbanned.'
