@@ -69,9 +69,6 @@ const SocialFollowBtn = ({ targetAccountId }) => {
   }
 
   useEffect(() => {
-    dispatch({
-      type: 'social/LOAD_CURRENT_SOCIAL',
-    })
     getCurrentFollowStatus()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

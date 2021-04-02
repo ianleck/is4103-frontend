@@ -52,6 +52,13 @@ export const sortDescAndKeyFollowingId = data => {
   }))
 }
 
+export const sortDescAndKeyFollowershipId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), followership => ({
+    ...followership,
+    key: followership.followershipId,
+  }))
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {

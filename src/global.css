@@ -2,6 +2,10 @@
   max-height: 175px;
 }
 
+.complaint-reason-list-card {
+  height: 120px;
+}
+
 .course-card-img {
   width: 100%;
 }
@@ -28,11 +32,14 @@
   white-space: pre-line;
 }
 
-.complaint-reason-list-card {
-  height: 120px;
+.following-list-container {
+  height: 450px;
+  max-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.invisible-btn {
+.invisible-btn:hover {
   cursor: pointer;
 }
 

@@ -20,7 +20,6 @@ const SocialProfileCard = ({ user }) => {
   }
 
   useEffect(() => {
-    console.log('user', user)
     if (!isEmpty(user)) getUserSocials()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])

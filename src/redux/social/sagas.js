@@ -3,7 +3,7 @@ import { FOLLOWING_ENUM, USER_TYPE_ENUM } from 'constants/constants'
 import { isEmpty, isNil } from 'lodash'
 import * as jwt from 'services/user'
 import * as social from 'services/social'
-import { showNotification, sortDescAndKeyFollowingId } from 'components/utils'
+import { showNotification, sortDescAndKeyFollowershipId } from 'components/utils'
 import {
   ERROR,
   FOLLOW_SUCCESS,
@@ -23,7 +23,7 @@ export function* LOAD_CURRENT_SOCIAL() {
     const followingRsp = yield call(social.getFollowingList, currentUser.accountId)
     if (followingRsp && followingRsp.success) {
       if (!isNil(followingRsp.followingList)) {
-        const followingList = sortDescAndKeyFollowingId(followingRsp.followingList)
+        const followingList = sortDescAndKeyFollowershipId(followingRsp.followingList)
 
         yield putResolve({
           type: 'social/SET_STATE',
@@ -35,7 +35,7 @@ export function* LOAD_CURRENT_SOCIAL() {
     const followerRsp = yield call(social.getFollowerList, currentUser.accountId)
     if (followerRsp && followerRsp.success) {
       if (!isNil(followerRsp.followerList)) {
-        const followerList = sortDescAndKeyFollowingId(followerRsp.followerList)
+        const followerList = sortDescAndKeyFollowershipId(followerRsp.followerList)
 
         yield putResolve({
           type: 'social/SET_STATE',
@@ -47,7 +47,7 @@ export function* LOAD_CURRENT_SOCIAL() {
     const pendingRsp = yield call(social.getPendingList, currentUser.accountId)
     if (pendingRsp && pendingRsp.success) {
       if (!isNil(pendingRsp.pendingFollowingList)) {
-        const pendingFollowingList = sortDescAndKeyFollowingId(pendingRsp.pendingFollowingList)
+        const pendingFollowingList = sortDescAndKeyFollowershipId(pendingRsp.pendingFollowingList)
 
         yield putResolve({
           type: 'social/SET_STATE',

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { SolutionOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar, Modal, Button } from 'antd'
+import { Menu, Dropdown, Avatar, Modal } from 'antd'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { map, size } from 'lodash'
-import { initPageItems } from 'components/utils'
-import PaginationWrapper from 'components/Common/Pagination'
+import { size } from 'lodash'
+import SocialFollowingList from 'components/Common/Social/FollowingList'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
@@ -19,8 +18,8 @@ const UserMenu = () => {
 
   const { firstName, lastName, username, userType } = user
 
-  // eslint-disable-next-line no-unused-vars
   const [showSocialModal, setShowSocialModal] = useState(false)
+  const [showFollowingList, setShowFollowingList] = useState(false)
 
   const redirectToLogin = isStudent => e => {
     e.preventDefault()
@@ -53,64 +52,10 @@ const UserMenu = () => {
     history.push(path)
   }
 
-  const showFollowingList = () => {
+  const displayFollowingList = type => {
+    if (type === 'following') setShowFollowingList(true)
+    else setShowFollowingList(false)
     setShowSocialModal(true)
-  }
-
-  const FollowingList = ({ followingList }) => {
-    const [isLoading, setIsLoading] = useState(false)
-    const [paginatedFollowing, setPaginatedFollowing] = useState([])
-    const [currentPageIdx, setCurrentPageIdx] = useState(1)
-    const [showLoadMore, setShowLoadMore] = useState(false)
-
-    useEffect(() => {
-      initPageItems(
-        setIsLoading,
-        followingList,
-        setPaginatedFollowing,
-        setCurrentPageIdx,
-        setShowLoadMore,
-      )
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    const FollowingListItem = ({ followingListItem }) => {
-      console.log('followingListItem', followingListItem)
-      return (
-        <div className="row">
-          <div className="col-9">
-            <span>username</span>
-          </div>
-          <div className="col-3 text-right">
-            <Button type="primary" />
-          </div>
-        </div>
-      )
-    }
-    return (
-      <PaginationWrapper
-        setIsLoading={setIsLoading}
-        totalData={followingList}
-        paginatedData={paginatedFollowing}
-        setPaginatedData={setPaginatedFollowing}
-        currentPageIdx={currentPageIdx}
-        setCurrentPageIdx={setCurrentPageIdx}
-        showLoadMore={showLoadMore}
-        setShowLoadMore={setShowLoadMore}
-        wrapperContent={
-          size(paginatedFollowing) > 0 &&
-          map(paginatedFollowing, followingListItem => {
-            return (
-              <FollowingListItem
-                key={followingListItem.followershipId}
-                followingListItem={followingListItem}
-                isLoading={isLoading}
-              />
-            )
-          })
-        }
-      />
-    )
   }
 
   const menu = (
@@ -128,7 +73,7 @@ const UserMenu = () => {
         role="button"
         tabIndex={0}
         className="row ml-2 mr-1 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
-        onClick={() => showFollowingList()}
+        onClick={() => displayFollowingList('following')}
         onKeyDown={e => e.preventDefault()}
       >
         <div className="col-12 pl-0">
@@ -138,7 +83,13 @@ const UserMenu = () => {
           </div>
         </div>
       </div>
-      <div className="row ml-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left">
+      <div
+        role="button"
+        tabIndex={0}
+        className="row ml-2 mr-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
+        onClick={() => displayFollowingList('followers')}
+        onKeyDown={e => e.preventDefault()}
+      >
         <div className="col-12 pl-0">
           <span className="mb-5">Followers</span>
           <div className="mt-2 font-size-18">
@@ -230,7 +181,7 @@ const UserMenu = () => {
             icon={<UserOutlined />}
           />
           <Modal
-            title="Following List"
+            title={`${showFollowingList ? 'Following' : 'Follower'} List`}
             visible={showSocialModal}
             cancelText="Close"
             centered
@@ -238,7 +189,13 @@ const UserMenu = () => {
             onCancel={() => setShowSocialModal(false)}
             zIndex="1051"
           >
-            <FollowingList followingList={social.followingList} />
+            <div className="following-list-container">
+              <SocialFollowingList
+                followingList={showFollowingList ? social.followingList : social.followerList}
+                isFollowingList={showFollowingList}
+                setShowSocialModal={setShowSocialModal}
+              />
+            </div>
           </Modal>
         </div>
       </Dropdown>
