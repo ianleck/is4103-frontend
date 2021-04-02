@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CountIconWidget from 'components/Common/CountIconWidget'
-import { getAllBannedSensei, getAllBannedStudent } from 'services/admin'
+import { getAllBannedSenseis, getAllBannedStudents } from 'services/admin'
 
 const BannedWidget = () => {
   const [count, setCount] = useState(0)
@@ -13,8 +13,8 @@ const BannedWidget = () => {
 
   const populateBanned = async () => {
     // change endpoint
-    const studentRsp = await getAllBannedStudent()
-    const senseiRsp = await getAllBannedSensei()
+    const studentRsp = await getAllBannedStudents()
+    const senseiRsp = await getAllBannedSenseis()
     let counter = 0
 
     if (studentRsp.length > 0) {

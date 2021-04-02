@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import BannedWidget from 'components/Admin/UsersManagement/BannedWidget'
-import { getAllBannedStudent, getAllBannedSensei } from 'services/admin'
+import { getAllBannedSenseis, getAllBannedStudents } from 'services/admin'
 import { USER_TYPE_ENUM } from 'constants/constants'
 
 const { TabPane } = Tabs
@@ -18,21 +18,17 @@ const BannedTable = () => {
   const [senseis, setSenseis] = useState()
   const history = useHistory()
 
-  // console.log('user', user)
-  // console.log('students', students)
-  // console.log('History', history)
-
   useEffect(() => {
     populateStudents()
     populateSenseis()
   }, [])
 
   const populateStudents = async () => {
-    const response = await getAllBannedStudent()
+    const response = await getAllBannedStudents()
     setStudents(response)
   }
   const populateSenseis = async () => {
-    const response = await getAllBannedSensei()
+    const response = await getAllBannedSenseis()
     setSenseis(response)
   }
 

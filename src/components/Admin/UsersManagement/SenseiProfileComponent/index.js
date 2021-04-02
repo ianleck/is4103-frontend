@@ -181,22 +181,29 @@ const SenseiProfileComponent = () => {
           <BackBtn />
         </div>
         <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
-          <Popconfirm
-            title="Do you wish to change account status?"
-            onConfirm={onBan}
-            okText="Confirm"
-            okType="danger"
-          >
-            {sensei.status === STATUS_ENUM.ACTIVE ? (
+          {sensei.status === STATUS_ENUM.ACTIVE ? (
+            <Popconfirm
+              title="Do you wish to ban this sensei?"
+              onConfirm={onBan}
+              okText="Confirm"
+              okType="danger"
+            >
               <Button danger block shape="round" size="large" icon={<StopOutlined />}>
                 Ban Account
               </Button>
-            ) : (
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="Do you wish to ban this sensei?"
+              onConfirm={onBan}
+              okText="Confirm"
+              okType="danger"
+            >
               <Button danger block shape="round" size="large" icon={<StopOutlined />}>
                 Unban Account
               </Button>
-            )}
-          </Popconfirm>
+            </Popconfirm>
+          )}
         </div>
       </div>
 

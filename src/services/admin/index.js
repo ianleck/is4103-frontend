@@ -221,7 +221,7 @@ export async function getAllMentorshipContracts() {
     .catch(err => console.log(err))
 }
 
-export async function getAllBannedStudent() {
+export async function getAllBannedStudents() {
   return apiClient
     .get(`/admin/all/user?userType=STUDENT&status=BANNED`, { withCredentials: true })
     .then(response => {
@@ -233,7 +233,7 @@ export async function getAllBannedStudent() {
     .catch(err => console.log(err))
 }
 
-export async function getAllBannedSensei() {
+export async function getAllBannedSenseis() {
   return apiClient
     .get(`/admin/all/user?userType=SENSEI&status=BANNED`, { withCredentials: true })
     .then(response => {
