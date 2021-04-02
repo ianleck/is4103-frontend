@@ -46,7 +46,7 @@ const StudentProfileComponent = () => {
           <BackBtn />
         </div>
         <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
-          {student.status === 'ACTIVE' ? (
+          {student.status === STATUS_ENUM.ACTIVE ? (
             <Button
               danger
               block
