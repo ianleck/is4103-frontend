@@ -69,3 +69,16 @@ export async function rejectWithdrawalRequest(billingId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function viewWalletList() {
+  const url = `/admin/wallets/sensei`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
