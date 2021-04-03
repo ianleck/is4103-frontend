@@ -88,7 +88,7 @@ const SocialFeed = () => {
           <div className="card-body pt-0 pb-0 description-body">{post.content}</div>
           <div className="card-footer border-0">
             <div className="row">
-              <div className="col-6 col-md-4 col-lg-3">
+              <div className="col-6 col-md-4 col-lg-3 order-11 order-md-1">
                 <Button
                   block
                   type={isLiked ? 'primary' : 'default'}
@@ -99,12 +99,14 @@ const SocialFeed = () => {
                   {isLiked ? UNLIKE : LIKE}
                 </Button>
               </div>
-              <div className="col-6 col-md-4 col-lg-3">
+              <div className="col-6 col-md-4 col-lg-3 order-12 order-md-2">
                 <Button block type="default" size="small" icon={<CommentOutlined />}>
                   Comment
                 </Button>
               </div>
-              <div className="col-12 col-md text-right mt-2 mt-md-0">2 comments</div>
+              <div className="invisible-btn col-12 col-md text-left text-md-right mt-2 mb-3 mt-md-0 mb-md-0 order-1 order-md-12">
+                2 comments
+              </div>
             </div>
           </div>
         </div>

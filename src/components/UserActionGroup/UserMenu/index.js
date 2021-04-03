@@ -40,6 +40,11 @@ const UserMenu = () => {
     })
   }
 
+  const viewFeed = e => {
+    e.preventDefault()
+    history.push(`/social/feed`)
+  }
+
   const viewProfile = e => {
     e.preventDefault()
     const path = `/${userType.toLowerCase()}/profile`
@@ -105,7 +110,7 @@ const UserMenu = () => {
       </Menu.Item>
       {user.userType !== USER_TYPE_ENUM.ADMIN && (
         <Menu.Item>
-          <a href="#" onClick={() => history.push(`/social/feed`)}>
+          <a href="#" onClick={viewFeed}>
             <SolutionOutlined className="mr-2" />
             My feed
           </a>
