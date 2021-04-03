@@ -1,5 +1,6 @@
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Input, Popconfirm } from 'antd'
+import { map } from 'lodash'
 import React, { useState } from 'react'
 
 const TaskBucket = ({
@@ -16,7 +17,7 @@ const TaskBucket = ({
       className="col-12"
       style={{ paddingRight: '20px', borderRight: '1px solid #e8e8e8' }}
     >
-      {taskBuckets.map((tb, i) => {
+      {map(taskBuckets, (tb, i) => {
         return (
           <div
             role="menuitem"
@@ -31,7 +32,7 @@ const TaskBucket = ({
           >
             {tb.title}
             <Popconfirm
-              title="Do you wish to delete admin account?"
+              title="Do you wish to delete this task group?"
               onConfirm={() => deleteOneTaskBucket(tb.taskBucketId)}
               okText="Delete"
               okType="danger"
