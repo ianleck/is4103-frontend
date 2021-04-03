@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, Modal, Typography } from 'antd'
 
-import { CheckSquareOutlined, ArrowLeftOutlined, QrcodeOutlined } from '@ant-design/icons'
+import { CheckSquareOutlined, QrcodeOutlined } from '@ant-design/icons'
 import QRCode from 'react-qr-code'
 import { FacebookIcon, FacebookShareButton } from 'react-share'
 import { useSelector } from 'react-redux'
+import BackBtn from 'components/Common/BackBtn'
 
 const MentorshipProfileHeader = (isSubscription = false) => {
   const { id } = useParams()
@@ -18,11 +19,6 @@ const MentorshipProfileHeader = (isSubscription = false) => {
   const shareUrl = `http://digi.dojo/mentorship/view/${id}`
   const title = `${user.firstName} is sharing a Digi Dojo mentorship listing with you!`
 
-  const onBack = e => {
-    e.preventDefault()
-    history.goBack()
-  }
-
   const onAdd = e => {
     e.preventDefault()
     const path = `/student/mentorship/apply/${id}`
@@ -32,17 +28,9 @@ const MentorshipProfileHeader = (isSubscription = false) => {
   return (
     <div className="row justify-content-between ">
       <div className="col-auto">
-        <Button
-          type="primary"
-          size="large"
-          shape="round"
-          onClick={onBack}
-          icon={<ArrowLeftOutlined />}
-        >
-          Back
-        </Button>
+        <BackBtn />
       </div>
-      {!isSubscription ? (
+      {!isSubscription && (
         <div className="col-auto d-flex justify-content-center">
           <FacebookShareButton className="mr-4" url={shareUrl} quote={title} hashtag="DigiDojo">
             <FacebookIcon size={38} round />
@@ -66,7 +54,7 @@ const MentorshipProfileHeader = (isSubscription = false) => {
             Apply for Mentorship
           </Button>
         </div>
-      ) : null}
+      )}
       <Modal
         title="View QR"
         visible={showQRCode}
