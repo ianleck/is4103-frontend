@@ -61,7 +61,6 @@ const ProductCard = data => {
         },
       })
     }
-    if (currLocation === 'CartPage') window.location.reload()
   }
 
   const GetDefaultProfilePic = () => {
