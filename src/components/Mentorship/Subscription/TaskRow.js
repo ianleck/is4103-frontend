@@ -1,6 +1,7 @@
 import { DeleteOutlined, FileOutlined, MoreOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Dropdown, Input, Menu, message, Popconfirm, Tag, Upload } from 'antd'
+import { Button, DatePicker, Dropdown, Input, Menu, message, Popconfirm, Upload } from 'antd'
 import Axios from 'axios'
+import StatusTag from 'components/Common/StatusTag'
 import download from 'js-file-download'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
@@ -59,13 +60,6 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
     }
   }
 
-  let tagColor = 'error'
-  if (data.progress === 'COMPLETED') {
-    tagColor = 'success'
-  } else if (data.progress === 'ONGOING') {
-    tagColor = 'processing'
-  }
-
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="COMPLETED">COMPLETED</Menu.Item>
@@ -80,13 +74,12 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
         <div className="col-12 col-md-4 d-flex ">
           <Dropdown overlay={menu} trigger={['click']} placement="topRight" className="clickable">
             <div style={{ width: '100%' }} className="d-flex align-items-center">
-              <Tag
-                color={tagColor}
+              <StatusTag
+                data={data.progress}
                 style={{ marginRight: 0, width: '100%', padding: '0px' }}
                 className="d-flex justify-content-center"
-              >
-                {data.progress}
-              </Tag>
+                type="TASK_PROGRESS"
+              />
               <MoreOutlined />
             </div>
           </Dropdown>
@@ -135,7 +128,7 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
           onClick={() => downloadFile(data.attachmentUrl)}
         />
         <Popconfirm
-          title="Do you wish to delete admin account?"
+          title="Do you wish to delete the task?"
           onConfirm={() => deleteOneTask(data.taskId)}
           okText="Delete"
           okType="danger"
