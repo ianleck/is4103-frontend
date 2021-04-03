@@ -12,7 +12,6 @@ const Failed = () => {
   const token = new URLSearchParams(location.search).get('token')
 
   const cart = useSelector(state => state.cart)
-  console.log('cart', cart)
   const isEmptyCart = size(cart.Courses) === 0 && size(cart.MentorPasses) === 0
 
   const getSubTotal = () => {

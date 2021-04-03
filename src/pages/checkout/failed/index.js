@@ -7,7 +7,7 @@ const checkout = () => {
     <div>
       <Helmet title="Checkout" />
 
-      <div className="row d-flex justify-content-center">
+      <div className="row justify-content-center">
         <div className="col-12 col-xl-8 font-size-18">
           <Failed />
         </div>
