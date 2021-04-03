@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtAdmin from 'services/admin'
 import { Button, Popconfirm, Table, Tabs } from 'antd'
@@ -13,7 +13,12 @@ import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
 import { ADMIN_VERIFIED_ENUM, STATUS_ENUM } from 'constants/constants'
-import { formatTime, showNotification } from 'components/utils'
+import {
+  formatTime,
+  getDetailsColumn,
+  showNotification,
+  sortDescAndKeyBillingId,
+} from 'components/utils'
 import {
   SUCCESS,
   ACCEPT_SENSEI_PROFILE,
@@ -25,19 +30,22 @@ import {
 } from 'constants/notifications'
 import billingColumns from 'components/Common/TableColumns/Billing'
 import BackBtn from 'components/Common/BackBtn'
+import { viewWallet } from 'services/wallet'
+import { concat, isNil } from 'lodash'
 
 const { TabPane } = Tabs
 const { Column } = Table
 
 const SenseiProfileComponent = () => {
+  const history = useHistory()
   const { userId } = useParams()
   const user = useSelector(state => state.user)
+  const { walletId } = user
+
   const [sensei, setSensei] = useState('')
   const [mentorshipListings, setMentorshipListings] = useState('')
-
-  // for future implementation when linking with backend
-  // const [billingsSent, setBillingsSent] = useState([])
-  // const [billingsReceived, setBillingsReceived] = useState([])
+  const [billingsSent, setBillingsSent] = useState([])
+  const [billingsReceived, setBillingsReceived] = useState([])
 
   const [listingsTabKey, setListingsTabKey] = useState('listings')
   const changeListingsTab = key => {
@@ -58,9 +66,22 @@ const SenseiProfileComponent = () => {
     setMentorshipListings(response)
   }
 
+  const getWallet = async () => {
+    const result = await viewWallet(walletId)
+    if (result) {
+      if (!isNil(result.wallet.BillingsSent)) {
+        setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
+      }
+      if (!isNil(result.wallet.BillingsReceived)) {
+        setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
+      }
+    }
+  }
+
   useEffect(() => {
     getSensei()
     getListings()
+    getWallet()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -89,6 +110,12 @@ const SenseiProfileComponent = () => {
       showNotification('error', ERROR, SENSEI_PROFILE_UPDATE_ERR)
     }
   }
+
+  const viewBilling = record => {
+    const path = `/admin/billing/view/${record.billingId}`
+    history.push(path)
+  }
+  const billingColumnsWithDetail = concat(billingColumns, getDetailsColumn(viewBilling))
 
   const AdminVerificationCard = () => {
     return (
@@ -154,13 +181,7 @@ const SenseiProfileComponent = () => {
   }
 
   const showBillings = (dataSource, tableColumns) => {
-    return (
-      <Table
-        dataSource={dataSource}
-        columns={tableColumns}
-        // onRow={record => viewBilling(record)}
-      />
-    )
+    return <Table dataSource={dataSource} columns={tableColumns} />
   }
 
   const onBan = async () => {
@@ -253,8 +274,9 @@ const SenseiProfileComponent = () => {
               </Tabs>
             </div>
             <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
-              {billingsTabKey === 'received' && showBillings([], billingColumns)}
-              {billingsTabKey === 'sent' && showBillings([], billingColumns)}
+              {billingsTabKey === 'received' &&
+                showBillings(billingsReceived, billingColumnsWithDetail)}
+              {billingsTabKey === 'sent' && showBillings(billingsSent, billingColumnsWithDetail)}
             </div>
           </div>
         </div>
