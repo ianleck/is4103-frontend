@@ -105,7 +105,7 @@ const UserMenu = () => {
       </Menu.Item>
       {user.userType !== USER_TYPE_ENUM.ADMIN && (
         <Menu.Item>
-          <a href="#" onClick={() => history.push(`/student/profile`)}>
+          <a href="#" onClick={() => history.push(`/social/feed`)}>
             <SolutionOutlined className="mr-2" />
             My feed
           </a>

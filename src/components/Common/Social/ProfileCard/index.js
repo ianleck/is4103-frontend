@@ -2,10 +2,13 @@ import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Button } from 'antd'
 import { isEmpty, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { getFollowerList, getFollowingList } from 'services/social'
 import SocialFollowBtn from '../FollowBtn'
 
 const SocialProfileCard = ({ user }) => {
+  const currentUser = useSelector(state => state.user)
+
   const [followerList, setFollowerList] = useState([])
   const [followingList, setFollowingList] = useState([])
 
@@ -20,7 +23,7 @@ const SocialProfileCard = ({ user }) => {
   }
 
   useEffect(() => {
-    if (!isEmpty(user)) getUserSocials()
+    if (!isEmpty(user) && !user.isPrivateProfile) getUserSocials()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
@@ -62,16 +65,18 @@ const SocialProfileCard = ({ user }) => {
             <h5 className="text-dark font-weight-bold">{size(followerList)}</h5>
           </div>
         </div>
-        <div className="row mt-2">
-          <div className="col-6">
-            <SocialFollowBtn targetAccountId={user.accountId} />
+        {currentUser.accountId !== user.accountId && (
+          <div className="row mt-2">
+            <div className="col-6">
+              <SocialFollowBtn targetAccountId={user.accountId} />
+            </div>
+            <div className="col-6">
+              <Button block type="default" size="large">
+                Message
+              </Button>
+            </div>
           </div>
-          <div className="col-6">
-            <Button block type="default" size="large">
-              Message
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )

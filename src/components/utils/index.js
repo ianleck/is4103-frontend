@@ -64,6 +64,16 @@ export const sortDescAndKeyFollowershipId = data => {
   }))
 }
 
+export const sortDescAndKeyPostId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    post => ({
+      ...post,
+      key: post.postId,
+    }),
+  )
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {
@@ -278,6 +288,7 @@ export const initPageItems = (
   setCurrentPageIdx,
   setShowLoadMore,
 ) => {
+  setIsLoading(true)
   const tempPaginatedItems = []
   for (
     let i = 0;
@@ -296,4 +307,8 @@ export const initPageItems = (
   setTimeout(() => {
     setIsLoading(false)
   }, DEFAULT_TIMEOUT)
+}
+
+export const onFinishFailed = errorInfo => {
+  console.log('Failed:', errorInfo)
 }

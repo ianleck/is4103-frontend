@@ -44,6 +44,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/social/feed',
+    Component: lazy(() => import('pages/social/feed')),
+    exact: true,
+  },
+  {
     path: '/social/profile/:accountId',
     Component: lazy(() => import('pages/social/profile')),
     exact: true,

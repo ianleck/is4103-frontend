@@ -88,3 +88,10 @@ export const FLW_REQ_SUCCESS = 'Successfully sent a follow request to this user.
 export const FLW_REQ_ERR = 'There was an error sending a follow request to this user.'
 export const FLW_REQ_CANCEL_SUCCESS = 'Follow request has been successfully cancelled.'
 export const FLW_REQ_CANCEL_ERR = 'There was an error cancelling this follow request.'
+
+export const POST_ADD_SUCCESS = 'Your post was successfully created.'
+export const POST_ADD_ERR = 'There was an error creating your new post.'
+export const POST_EDIT_SUCCESS = 'Your post was successfully updated.'
+export const POST_EDIT_ERR = 'There was an error editing your post.'
+export const POST_DEL_SUCCESS = 'Your post was successfully deleted.'
+export const POST_DEL_ERR = 'There was an error deleting your post.'

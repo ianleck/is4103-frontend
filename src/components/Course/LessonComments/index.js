@@ -126,6 +126,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
                   autoSize={{ minRows: 2, maxRows: 6 }}
                   size="large"
                   placeholder={ADD_COMMENTS}
+                  ref={input => input && input.focus()}
                 />
               </div>
             </div>
