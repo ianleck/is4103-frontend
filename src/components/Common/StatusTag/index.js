@@ -3,6 +3,7 @@ import { Tag } from 'antd'
 import {
   ADMIN_VERIFIED_ENUM,
   BILLING_STATUS_ENUM,
+  STATUS_ENUM,
   TASK_PROGRESS,
   USER_TYPE_ENUM,
 } from 'constants/constants'
@@ -121,6 +122,23 @@ const StatusTag = data => {
         {dataSource}
       </Tag>
     )
+  }
+
+  if (type === 'STATUS_TYPE_ENUM') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case STATUS_ENUM.ACTIVE:
+        colour = 'processing'
+        break
+      case STATUS_ENUM.BANNED:
+        colour = 'error'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
   }
   return <Tag>{NA}</Tag>
 }
