@@ -6,7 +6,7 @@ import ProductCard from '../../ProductCard'
 
 const CartItemList = () => {
   const cart = useSelector(state => state.cart)
-  const isEmptyCart = size(cart.Course) === 0 && size(cart.MentorshipApplications) === 0
+  const isEmptyCart = size(cart.Courses) === 0 && size(cart.MentorPasses) === 0
 
   const cartItems = () => {
     return isEmptyCart ? (
@@ -19,10 +19,8 @@ const CartItemList = () => {
       </div>
     ) : (
       <div className="row">
-        <div className="col-12">{cart.Course.length !== 0 && courseItems()}</div>
-        <div className="col-12 mt-2">
-          {cart.MentorshipApplications.length !== 0 && mentorshipItems()}
-        </div>
+        <div className="col-12">{cart.Courses.length !== 0 && courseItems()}</div>
+        <div className="col-12 mt-2">{cart.MentorPasses.length !== 0 && mentorshipItems()}</div>
       </div>
     )
   }
@@ -32,7 +30,7 @@ const CartItemList = () => {
       <div className="row">
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
-          {cart.Course.map(c => (
+          {cart.Courses.map(c => (
             <ProductCard listing={c} location="CartPage" key={c.courseId} />
           ))}
         </div>
@@ -45,7 +43,7 @@ const CartItemList = () => {
       <div className="row mt-5">
         <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="col-12 mt-2">
-          {cart.MentorshipApplications.map(m => (
+          {cart.MentorPasses.map(m => (
             <ProductCard listing={m} location="CartPage" key={m.mentorshipListingId} />
           ))}
         </div>
@@ -57,12 +55,12 @@ const CartItemList = () => {
     let amt = 0
 
     if (!isEmptyCart) {
-      for (let i = 0; i < cart.Course.length; i += 1) {
-        amt += cart.Course[i].priceAmount
+      for (let i = 0; i < cart.Courses.length; i += 1) {
+        amt += cart.Courses[i].priceAmount
       }
 
-      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
-        amt += cart.MentorshipApplications[i].priceAmount
+      for (let i = 0; i < cart.MentorPasses.length; i += 1) {
+        amt += cart.MentorPasses[i].priceAmount
       }
     }
     return amt
