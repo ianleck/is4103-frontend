@@ -1,31 +1,72 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { Button, Table, Tabs } from 'antd'
+import StatusTag from 'components/Common/StatusTag'
+import { STATUS_ENUM_FILTER } from 'constants/filters'
 import { WALLET_MGT } from 'constants/text'
-import React from 'react'
+import { concat, isNil, map } from 'lodash'
+import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory } from 'react-router-dom'
+import { viewWalletList } from 'services/wallet'
 
 const WalletManagement = () => {
   const { TabPane } = Tabs
   const history = useHistory()
+  const [wallets, setWallets] = useState([])
 
   const onButtonClick = record => {
     const path = `/admin/user-management/sensei/${record.accountId}`
     history.push(path)
   }
-  const currentTableData = []
+
+  const viewSenseiWallets = async () => {
+    const result = await viewWalletList()
+    if (result && !isNil(result.userWallets)) {
+      setWallets(
+        map(result.userWallets, wallet => ({
+          ...wallet.Wallet,
+          name: concat(wallet.firstName, ' ', wallet.lastName),
+          status: wallet.status,
+          key: wallet.createdAt,
+        })),
+      )
+    }
+  }
+
+  useEffect(() => {
+    viewSenseiWallets()
+  }, [])
+
   const tableColumns = [
     {
       title: 'Wallet Id',
       key: 'walletId',
       dataIndex: 'walletId',
       width: '15%',
-      responsive: ['lg'],
+      responsive: ['md'],
     },
     {
       title: 'Account Id',
       dataIndex: 'accountId',
       key: 'accountId',
+      width: '15%',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      responsive: ['lg'],
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      responsive: ['lg'],
+      filters: STATUS_ENUM_FILTER,
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+      render: record => <StatusTag data={record} type="STATUS_TYPE_ENUM" />,
     },
     {
       title: 'Pending Amount',
@@ -86,7 +127,7 @@ const WalletManagement = () => {
               </Tabs>
             </div>
             <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
-              <Table className="w-100" dataSource={currentTableData} columns={tableColumns} />
+              <Table className="w-100" dataSource={wallets} columns={tableColumns} />
             </div>
           </div>
         </div>
