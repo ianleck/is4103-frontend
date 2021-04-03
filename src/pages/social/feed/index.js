@@ -37,7 +37,11 @@ const SocialFeed = () => {
   }
 
   const PostListItem = ({ post }) => {
-    const { LikePost } = post
+    const { Comment, LikePost } = post
+
+    // eslint-disable-next-line no-unused-vars
+    const [numComments, setNumComments] = useState(size(Comment))
+    const [numLikePosts, setNumLikePosts] = useState(size(LikePost))
 
     const [isLiked, setIsLiked] = useState(
       size(LikePost.filter(o => o.accountId === user.accountId)) > 0,
@@ -46,15 +50,15 @@ const SocialFeed = () => {
     const postAction = async (postId, type) => {
       if (type === 'like') {
         const response = await likePost(postId)
-        console.log(response)
         if (response && response.success) {
           setIsLiked(true)
+          setNumLikePosts(numLikePosts + 1)
         }
       } else {
         const response = await unlikePost(postId)
-        console.log(response)
         if (response && response.success) {
           setIsLiked(false)
+          setNumLikePosts(numLikePosts - 1)
         }
       }
     }
@@ -105,7 +109,9 @@ const SocialFeed = () => {
                 </Button>
               </div>
               <div className="invisible-btn col-12 col-md text-left text-md-right mt-2 mb-3 mt-md-0 mb-md-0 order-1 order-md-12">
-                2 comments
+                {numLikePosts === 1 ? `${numLikePosts} like` : `${numLikePosts} likes`}
+                {' • '}
+                {numComments === 1 ? `${numComments} comment` : `${numComments} comments`}
               </div>
             </div>
           </div>
