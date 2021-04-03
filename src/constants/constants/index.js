@@ -102,3 +102,8 @@ export const DIRECTION = {
   ASC: 'ASCENDING',
   DESC: 'DESCENDING',
 }
+
+export const TASK_PROGRESS = {
+  ONGOING: 'ONGOING',
+  COMPLETED: 'COMPLETED',
+}

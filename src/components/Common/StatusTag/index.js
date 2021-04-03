@@ -1,6 +1,11 @@
 import React from 'react'
 import { Tag } from 'antd'
-import { ADMIN_VERIFIED_ENUM, BILLING_STATUS_ENUM, USER_TYPE_ENUM } from 'constants/constants'
+import {
+  ADMIN_VERIFIED_ENUM,
+  BILLING_STATUS_ENUM,
+  TASK_PROGRESS,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 
 import { isNil } from 'lodash'
 import { NA } from 'constants/text'
@@ -95,6 +100,27 @@ const StatusTag = data => {
         break
     }
     return <Tag color={colour}>{dataSource}</Tag>
+  }
+
+  if (type === 'TASK_PROGRESS') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case TASK_PROGRESS.ONGOING:
+        colour = 'processing'
+        break
+      case TASK_PROGRESS.COMPLETED:
+        colour = 'success'
+        break
+      default:
+        colour = 'error'
+        break
+    }
+    return (
+      <Tag color={colour} style={data.style} className={data.className}>
+        {dataSource}
+      </Tag>
+    )
   }
   return <Tag>{NA}</Tag>
 }
