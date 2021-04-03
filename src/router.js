@@ -41,7 +41,12 @@ const routes = [
 
   {
     path: '/success',
-    Component: lazy(() => import('pages/checkout')),
+    Component: lazy(() => import('pages/checkout/success')),
+    exact: true,
+  },
+  {
+    path: '/err',
+    Component: lazy(() => import('pages/checkout/failed')),
     exact: true,
   },
   // Auth Pages
