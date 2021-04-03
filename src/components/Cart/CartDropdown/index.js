@@ -9,7 +9,7 @@ import ProductCard from '../ProductCard'
 const Cart = () => {
   const history = useHistory()
   const cart = useSelector(state => state.cart)
-  const isEmptyCart = size(cart.Course) === 0 && size(cart.MentorshipApplications) === 0
+  const isEmptyCart = size(cart.Courses) === 0 && size(cart.MentorPasses) === 0
 
   const cartItems = () => {
     return isEmptyCart ? (
@@ -20,8 +20,8 @@ const Cart = () => {
       </div>
     ) : (
       <div>
-        <div className="mt-2">{cart.Course.length !== 0 && courseItems()}</div>
-        <div className="mt-2">{cart.MentorshipApplications.length !== 0 && mentorshipItems()}</div>
+        <div className="mt-2">{cart.Courses.length !== 0 && courseItems()}</div>
+        <div className="mt-2">{cart.MentorPasses.length !== 0 && mentorshipItems()}</div>
       </div>
     )
   }
@@ -31,7 +31,7 @@ const Cart = () => {
       <div className="row">
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
-          {map(cart.Course, c => (
+          {map(cart.Courses, c => (
             <ProductCard listing={c} location="CartDropdown" key={c.courseId} />
           ))}
         </div>
@@ -44,7 +44,7 @@ const Cart = () => {
       <div className="row">
         <div className="col-12 mt-2 font-weight-bold">Mentorship(s)</div>
         <div className="col-12 mt-2">
-          {map(cart.MentorshipApplications, m => (
+          {map(cart.MentorPasses, m => (
             <ProductCard listing={m} location="CartDropdown" key={m.mentorshipListingId} />
           ))}
         </div>
@@ -56,12 +56,12 @@ const Cart = () => {
     let amt = 0
 
     if (!isEmptyCart) {
-      for (let i = 0; i < cart.Course.length; i += 1) {
-        amt += cart.Course[i].priceAmount
+      for (let i = 0; i < cart.Courses.length; i += 1) {
+        amt += cart.Courses[i].priceAmount
       }
 
-      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
-        amt += cart.MentorshipApplications[i].priceAmount
+      for (let i = 0; i < cart.MentorPasses.length; i += 1) {
+        amt += cart.MentorPasses[i].priceAmount
       }
     }
     return parseFloat(amt).toFixed(2)

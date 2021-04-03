@@ -6,8 +6,8 @@ const initialState = {
   cartId: '',
   studentId: '',
   deletedAt: null,
-  Course: [],
-  MentorshipApplications: [],
+  Courses: [],
+  MentorPasses: [],
 }
 
 export default function cartReducer(state = initialState, action) {
