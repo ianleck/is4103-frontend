@@ -82,3 +82,16 @@ export async function viewWalletList() {
     })
     .catch(err => console.log(err))
 }
+
+export async function viewBilling(body) {
+  const url = `/wallet/billings/filter`
+  return apiClient
+    .get(url, { params: { filter: { ...body } } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
