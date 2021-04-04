@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getPosts, likePost, unlikePost } from 'services/social/posts'
-import { isNil, map, size } from 'lodash'
-import { Avatar, Button, Skeleton, Typography } from 'antd'
-import { CommentOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
+import { getPosts } from 'services/social/posts'
+import { isNil } from 'lodash'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
 import SocialAddPostCard from 'components/Common/Social/AddPostCard'
-import PaginationWrapper from 'components/Common/Pagination'
 import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
-import moment from 'moment'
-import { LIKE, UNLIKE } from 'constants/text'
-import PostComments from 'components/Common/Social/PostComment'
+import SocialPostList from 'components/Common/Social/PostList'
 
 const SocialFeed = () => {
   const user = useSelector(state => state.user)
@@ -37,138 +32,6 @@ const SocialFeed = () => {
     }
   }
 
-  const PostListItem = ({ post }) => {
-    const { Paragraph } = Typography
-    const { LikePost } = post
-
-    const [numComments, setNumComments] = useState(size(post.Comments))
-    const [numLikePosts, setNumLikePosts] = useState(size(LikePost))
-    const [showInteractionBox, setShowInteractionBox] = useState(false)
-
-    const [isLiked, setIsLiked] = useState(
-      size(LikePost.filter(o => o.accountId === user.accountId)) > 0,
-    )
-
-    const postAction = async (postId, type) => {
-      if (type === 'like') {
-        const response = await likePost(postId)
-        if (response && response.success) {
-          setIsLiked(true)
-          setNumLikePosts(numLikePosts + 1)
-        }
-      } else {
-        const response = await unlikePost(postId)
-        if (response && response.success) {
-          setIsLiked(false)
-          setNumLikePosts(numLikePosts - 1)
-        }
-      }
-    }
-
-    return (
-      <Skeleton active loading={isLoading}>
-        <div className="card">
-          <div className="card-header border-0">
-            <div className="row align-items-center">
-              <div className="col-auto">
-                <Avatar
-                  size="large"
-                  src={
-                    post.User?.profileImgUrl
-                      ? `${post.User?.profileImgUrl}?${new Date().getTime()}`
-                      : '/resources/images/avatars/avatar-2.png'
-                  }
-                />
-              </div>
-              <div className="col">
-                <span className="font-weight-bold">
-                  {`${!isNil(post.User?.firstName) ? post.User?.firstName : 'Anonymous'} ${
-                    !isNil(post.User?.lastName) ? post.User?.lastName : 'Pigeon'
-                  }`}
-                </span>
-                <br />
-                <small className="text-muted">{moment(post.createdAt).fromNow()}</small>
-              </div>
-            </div>
-          </div>
-          <div className="card-body pt-0 pb-0 description-body">
-            <Paragraph
-              ellipsis={{
-                rows: 1,
-                expandable: true,
-                symbol: 'More',
-              }}
-            >
-              {post.content}
-            </Paragraph>
-          </div>
-          <div className="card-footer border-0">
-            <div className="row">
-              <div className="col-6 col-md-4 col-lg-3 order-11 order-md-1">
-                <Button
-                  block
-                  type={isLiked ? 'primary' : 'default'}
-                  size="small"
-                  icon={isLiked ? <LikeFilled /> : <LikeOutlined />}
-                  onClick={() => postAction(post.postId, isLiked ? 'unlike' : 'like')}
-                >
-                  {isLiked ? UNLIKE : LIKE}
-                </Button>
-              </div>
-              <div className="col-6 col-md-4 col-lg-3 order-12 order-md-2">
-                <Button
-                  block
-                  type="default"
-                  size="small"
-                  icon={<CommentOutlined />}
-                  onClick={() => setShowInteractionBox(!showInteractionBox)}
-                >
-                  Comment
-                </Button>
-              </div>
-              <div
-                role="button"
-                tabIndex={0}
-                className="invisible-btn defocus-btn col-12 col-md text-left text-md-right mt-2 mb-3 mt-md-0 mb-md-0 order-1 order-md-12"
-                onClick={() => setShowInteractionBox(!showInteractionBox)}
-                onKeyDown={e => e.preventDefault()}
-              >
-                {numLikePosts === 1 ? `${numLikePosts} like` : `${numLikePosts} likes`}
-                {' • '}
-                {numComments === 1 ? `${numComments} comment` : `${numComments} comments`}
-              </div>
-            </div>
-          </div>
-          {showInteractionBox && (
-            <PostComments user={user} post={post} setNumComments={setNumComments} />
-          )}
-        </div>
-      </Skeleton>
-    )
-  }
-
-  const PostList = () => {
-    return (
-      <PaginationWrapper
-        setIsLoading={setIsLoading}
-        totalData={posts}
-        paginatedData={paginatedPosts}
-        setPaginatedData={setPaginatedPosts}
-        currentPageIdx={currentPageIdx}
-        setCurrentPageIdx={setCurrentPageIdx}
-        showLoadMore={showLoadMore}
-        setShowLoadMore={setShowLoadMore}
-        buttonStyle="primary"
-        wrapperContent={
-          size(paginatedPosts) > 0 &&
-          map(paginatedPosts, post => {
-            return <PostListItem key={post.postId} post={post} user={user} isLoading={isLoading} />
-          })
-        }
-      />
-    )
-  }
-
   return (
     <div className="container">
       <div className="row">
@@ -177,7 +40,18 @@ const SocialFeed = () => {
         </div>
         <div className="col-12 col-md-7">
           <SocialAddPostCard user={user} getPostsSvc={getPostsSvc} />
-          <PostList />
+          <SocialPostList
+            user={user}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            posts={posts}
+            paginatedPosts={paginatedPosts}
+            setPaginatedPosts={setPaginatedPosts}
+            currentPageIdx={currentPageIdx}
+            setCurrentPageIdx={setCurrentPageIdx}
+            showLoadMore={showLoadMore}
+            setShowLoadMore={setShowLoadMore}
+          />
         </div>
       </div>
     </div>
