@@ -41,10 +41,8 @@ const SocialFeed = () => {
     const { Paragraph } = Typography
     const { LikePost } = post
 
-    // eslint-disable-next-line no-unused-vars
     const [numComments, setNumComments] = useState(size(post.Comments))
     const [numLikePosts, setNumLikePosts] = useState(size(LikePost))
-    // eslint-disable-next-line no-unused-vars
     const [showInteractionBox, setShowInteractionBox] = useState(false)
 
     const [isLiked, setIsLiked] = useState(
@@ -118,18 +116,32 @@ const SocialFeed = () => {
                 </Button>
               </div>
               <div className="col-6 col-md-4 col-lg-3 order-12 order-md-2">
-                <Button block type="default" size="small" icon={<CommentOutlined />}>
+                <Button
+                  block
+                  type="default"
+                  size="small"
+                  icon={<CommentOutlined />}
+                  onClick={() => setShowInteractionBox(!showInteractionBox)}
+                >
                   Comment
                 </Button>
               </div>
-              <div className="invisible-btn col-12 col-md text-left text-md-right mt-2 mb-3 mt-md-0 mb-md-0 order-1 order-md-12">
+              <div
+                role="button"
+                tabIndex={0}
+                className="invisible-btn defocus-btn col-12 col-md text-left text-md-right mt-2 mb-3 mt-md-0 mb-md-0 order-1 order-md-12"
+                onClick={() => setShowInteractionBox(!showInteractionBox)}
+                onKeyDown={e => e.preventDefault()}
+              >
                 {numLikePosts === 1 ? `${numLikePosts} like` : `${numLikePosts} likes`}
                 {' • '}
                 {numComments === 1 ? `${numComments} comment` : `${numComments} comments`}
               </div>
             </div>
           </div>
-          <PostComments user={user} post={post} setNumComments={setNumComments} />
+          {showInteractionBox && (
+            <PostComments user={user} post={post} setNumComments={setNumComments} />
+          )}
         </div>
       </Skeleton>
     )
