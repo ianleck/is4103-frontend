@@ -46,6 +46,7 @@ export const EXPAND = 'EXPAND'
 export const COLLAPSE = 'COLLAPSE'
 export const CLOSE = 'Close'
 export const LOAD_MORE = 'Load More'
+export const ALL_LOADED = 'All Items Loaded'
 
 export const WITHDRAWALS = 'Withdrawals'
 export const APPROVE_WITHDRAWAL = 'Approve Withrdrawal Request'

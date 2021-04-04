@@ -99,6 +99,7 @@ const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModa
       setCurrentPageIdx={setCurrentPageIdx}
       showLoadMore={showLoadMore}
       setShowLoadMore={setShowLoadMore}
+      buttonStyle="primary"
       wrapperContent={
         size(paginatedFollowing) > 0 &&
         map(paginatedFollowing, followingListItem => {

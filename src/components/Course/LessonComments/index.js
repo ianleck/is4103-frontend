@@ -242,6 +242,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
           setCurrentPageIdx={setCurrentPageIdx}
           showLoadMore={showLoadMore}
           setShowLoadMore={setShowLoadMore}
+          buttonStyle="primary"
           wrapperContent={
             size(paginatedComments) > 0 &&
             map(paginatedComments, comment => {

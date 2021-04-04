@@ -2,7 +2,7 @@ import React from 'react'
 import { size } from 'lodash'
 import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT } from 'constants/constants'
 import { Button } from 'antd'
-import { LOAD_MORE } from 'constants/text'
+import { ALL_LOADED, LOAD_MORE } from 'constants/text'
 
 /* Usage
   1. On items to be paginated, do an initial load for the first page of items.
@@ -35,6 +35,7 @@ import { LOAD_MORE } from 'constants/text'
         setCurrentPageIdx={setCurrentPageIdx}
         showLoadMore={showLoadMore}
         setShowLoadMore={setShowLoadMore}
+        buttonStyle='link'
         wrapperContent={
           size(paginatedFollowing) > 0 &&
           map(paginatedFollowing, followingListItem => {
@@ -60,6 +61,7 @@ const PaginationWrapper = ({
   setCurrentPageIdx,
   showLoadMore,
   setShowLoadMore,
+  buttonStyle,
   wrapperContent,
 }) => {
   const numTotalData = size(totalData)
@@ -91,16 +93,17 @@ const PaginationWrapper = ({
   return (
     <div>
       {wrapperContent}
-      <Button
-        block
-        ghost
-        type="primary"
-        size="large"
-        disabled={!showLoadMore}
-        onClick={() => loadNextPage()}
-      >
-        {LOAD_MORE}
-      </Button>
+      {numTotalData > DEFAULT_ITEMS_PER_PAGE && (
+        <Button
+          block
+          ghost={buttonStyle !== 'link'}
+          type={buttonStyle}
+          disabled={!showLoadMore}
+          onClick={() => loadNextPage()}
+        >
+          {showLoadMore ? LOAD_MORE : ALL_LOADED}
+        </Button>
+      )}
     </div>
   )
 }

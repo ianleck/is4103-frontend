@@ -73,3 +73,20 @@ export async function unlikePost(postId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function addCommentToPost(postId, payload) {
+  const url = `/comment/post/${postId}`
+  return apiClient
+    .post(url, {
+      comment: {
+        ...payload,
+      },
+    })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getPosts, likePost, unlikePost } from 'services/social/posts'
 import { isNil, map, size } from 'lodash'
-import { Avatar, Button, Skeleton } from 'antd'
+import { Avatar, Button, Skeleton, Typography } from 'antd'
 import { CommentOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
 import SocialAddPostCard from 'components/Common/Social/AddPostCard'
@@ -10,6 +10,7 @@ import PaginationWrapper from 'components/Common/Pagination'
 import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
 import moment from 'moment'
 import { LIKE, UNLIKE } from 'constants/text'
+import PostComments from 'components/Common/Social/PostComment'
 
 const SocialFeed = () => {
   const user = useSelector(state => state.user)
@@ -37,11 +38,14 @@ const SocialFeed = () => {
   }
 
   const PostListItem = ({ post }) => {
-    const { Comment, LikePost } = post
+    const { Paragraph } = Typography
+    const { LikePost } = post
 
     // eslint-disable-next-line no-unused-vars
-    const [numComments, setNumComments] = useState(size(Comment))
+    const [numComments, setNumComments] = useState(size(post.Comments))
     const [numLikePosts, setNumLikePosts] = useState(size(LikePost))
+    // eslint-disable-next-line no-unused-vars
+    const [showInteractionBox, setShowInteractionBox] = useState(false)
 
     const [isLiked, setIsLiked] = useState(
       size(LikePost.filter(o => o.accountId === user.accountId)) > 0,
@@ -79,7 +83,7 @@ const SocialFeed = () => {
                 />
               </div>
               <div className="col">
-                <span>
+                <span className="font-weight-bold">
                   {`${!isNil(post.User?.firstName) ? post.User?.firstName : 'Anonymous'} ${
                     !isNil(post.User?.lastName) ? post.User?.lastName : 'Pigeon'
                   }`}
@@ -89,7 +93,17 @@ const SocialFeed = () => {
               </div>
             </div>
           </div>
-          <div className="card-body pt-0 pb-0 description-body">{post.content}</div>
+          <div className="card-body pt-0 pb-0 description-body">
+            <Paragraph
+              ellipsis={{
+                rows: 1,
+                expandable: true,
+                symbol: 'More',
+              }}
+            >
+              {post.content}
+            </Paragraph>
+          </div>
           <div className="card-footer border-0">
             <div className="row">
               <div className="col-6 col-md-4 col-lg-3 order-11 order-md-1">
@@ -115,6 +129,7 @@ const SocialFeed = () => {
               </div>
             </div>
           </div>
+          <PostComments user={user} post={post} setNumComments={setNumComments} />
         </div>
       </Skeleton>
     )
@@ -131,6 +146,7 @@ const SocialFeed = () => {
         setCurrentPageIdx={setCurrentPageIdx}
         showLoadMore={showLoadMore}
         setShowLoadMore={setShowLoadMore}
+        buttonStyle="primary"
         wrapperContent={
           size(paginatedPosts) > 0 &&
           map(paginatedPosts, post => {
