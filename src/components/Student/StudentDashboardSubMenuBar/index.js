@@ -44,9 +44,9 @@ const mapStateToProps = ({ settings, user }) => ({
       url: '/student/dashboard/mentorship-applications',
     },
     {
-      title: 'Mentorship Subscriptions',
-      key: 'mentorshipSubscriptions',
-      url: '/student/dashboard/mentorship-subscriptions',
+      title: 'Mentorship Contracts',
+      key: 'mentorshipContracts',
+      url: '/student/dashboard/mentorship-contracts',
     },
     {
       title: 'Billings',

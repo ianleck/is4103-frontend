@@ -7,22 +7,22 @@ import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector } from 'react-redux'
 
-const MentorshipSubscriptionsTable = () => {
+const MentorshipContractsTable = () => {
   const { TabPane } = Tabs
   const history = useHistory()
   const user = useSelector(state => state.user)
   const [tabKey, setTabKey] = useState('ongoing')
-  const [mentorshipSubscriptions, setSubscriptions] = useState([])
-  const getSubscriptions = async () => {
+  const [mentorshipContracts, setContracts] = useState([])
+  const getContracts = async () => {
     const test = await getAllStudentMentorshipApplications(user.accountId)
     if (test) {
       // in order to filter M subscriptions instead of M applications
       const contracts = test.contracts.filter(c => c.senseiApproval === 'APPROVED')
-      setSubscriptions(contracts)
+      setContracts(contracts)
     }
   }
   useEffect(() => {
-    getSubscriptions()
+    getContracts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.accountId])
   const changeTab = key => {
@@ -37,7 +37,7 @@ const MentorshipSubscriptionsTable = () => {
 
   const tableColumns = [
     {
-      title: 'Mentorship Subscription ID',
+      title: 'Mentorship Contract ID',
       dataIndex: 'mentorshipContractId',
       key: 'mentorshipContractId',
     },
@@ -90,7 +90,7 @@ const MentorshipSubscriptionsTable = () => {
     },
   ]
 
-  const showSubscriptions = (subscriptionStatus, dataSource, columns) => {
+  const showContracts = (subscriptionStatus, dataSource, columns) => {
     const numSubscriptions = size(dataSource)
     const isRenderEmpty = numSubscriptions === 0
 
@@ -135,7 +135,7 @@ const MentorshipSubscriptionsTable = () => {
     <div className="card">
       <div className="card-header card-header-flex overflow-x-scroll">
         <div className="col-auto mt-4 justify-content-center mr-auto">
-          <h5 className="mb-0">Mentorship Subscriptions</h5>
+          <h5 className="mb-0">Mentorship Contracts</h5>
         </div>
         <Tabs activeKey={tabKey} className="kit-tabs" onChange={changeTab}>
           <TabPane tab="Not Started" key="notStarted" />
@@ -147,27 +147,27 @@ const MentorshipSubscriptionsTable = () => {
       <div className="card-body">
         {' '}
         {tabKey === 'notStarted' &&
-          showSubscriptions(
+          showContracts(
             CONTRACT_PROGRESS_ENUM.NOT_STARTED,
-            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.NOT_STARTED]),
+            filter(mentorshipContracts, ['progress', CONTRACT_PROGRESS_ENUM.NOT_STARTED]),
             tableColumns,
           )}
         {tabKey === 'ongoing' &&
-          showSubscriptions(
+          showContracts(
             CONTRACT_PROGRESS_ENUM.ONGOING,
-            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.ONGOING]),
+            filter(mentorshipContracts, ['progress', CONTRACT_PROGRESS_ENUM.ONGOING]),
             tableColumns,
           )}
         {tabKey === 'completed' &&
-          showSubscriptions(
+          showContracts(
             CONTRACT_PROGRESS_ENUM.COMPLETED,
-            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.COMPLETED]),
+            filter(mentorshipContracts, ['progress', CONTRACT_PROGRESS_ENUM.COMPLETED]),
             tableColumns,
           )}
         {tabKey === 'cancelled' &&
-          showSubscriptions(
+          showContracts(
             CONTRACT_PROGRESS_ENUM.CANCELLED,
-            filter(mentorshipSubscriptions, ['progress', CONTRACT_PROGRESS_ENUM.CANCELLED]),
+            filter(mentorshipContracts, ['progress', CONTRACT_PROGRESS_ENUM.CANCELLED]),
             tableColumns,
           )}
       </div>
@@ -175,4 +175,4 @@ const MentorshipSubscriptionsTable = () => {
   )
 }
 
-export default MentorshipSubscriptionsTable
+export default MentorshipContractsTable
