@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, Modal, Typography } from 'antd'
-
+import { size } from 'lodash'
 import { CheckSquareOutlined, QrcodeOutlined } from '@ant-design/icons'
 import QRCode from 'react-qr-code'
 import { FacebookIcon, FacebookShareButton } from 'react-share'
 import { useSelector } from 'react-redux'
 import BackBtn from 'components/Common/BackBtn'
+import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
+import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 
-const MentorshipProfileHeader = (isSubscription = false) => {
+const MentorshipProfileHeader = () => {
   const { id } = useParams()
   const history = useHistory()
   const user = useSelector(state => state.user)
   const [showQRCode, setShowQRCode] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   const { Paragraph } = Typography
 
@@ -25,36 +28,55 @@ const MentorshipProfileHeader = (isSubscription = false) => {
     history.push(path)
   }
 
+  useEffect(() => {
+    const checkSubscribed = async () => {
+      const response = await getAllStudentMentorshipApplications(user.accountId)
+
+      if (response && size(response.contracts) > 0) {
+        for (let i = 0; i < size(response.contracts); i += 1) {
+          if (
+            id === response.contracts[i].mentorshipListingId &&
+            response.contracts[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.PENDING
+          ) {
+            setIsSubscribed(true)
+          }
+        }
+      }
+    }
+    checkSubscribed()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className="row justify-content-between ">
       <div className="col-auto">
         <BackBtn />
       </div>
-      {!isSubscription && (
-        <div className="col-auto d-flex justify-content-center">
-          <FacebookShareButton className="mr-4" url={shareUrl} quote={title} hashtag="DigiDojo">
-            <FacebookIcon size={38} round />
-          </FacebookShareButton>
 
-          <Button
-            className="mr-4"
-            type="primary"
-            shape="round"
-            icon={<QrcodeOutlined />}
-            size="large"
-            onClick={() => setShowQRCode(true)}
-          />
-          <Button
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={onAdd}
-            icon={<CheckSquareOutlined />}
-          >
-            Apply for Mentorship
-          </Button>
-        </div>
-      )}
+      <div className="col-auto d-flex justify-content-center">
+        <FacebookShareButton className="mr-4" url={shareUrl} quote={title} hashtag="DigiDojo">
+          <FacebookIcon size={38} round />
+        </FacebookShareButton>
+
+        <Button
+          className="mr-4"
+          type="primary"
+          shape="round"
+          icon={<QrcodeOutlined />}
+          size="large"
+          onClick={() => setShowQRCode(true)}
+        />
+        <Button
+          type="primary"
+          size="large"
+          disabled={isSubscribed}
+          shape="round"
+          onClick={onAdd}
+          icon={<CheckSquareOutlined />}
+        >
+          Apply for Mentorship
+        </Button>
+      </div>
       <Modal
         title="View QR"
         visible={showQRCode}
