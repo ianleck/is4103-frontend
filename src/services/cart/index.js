@@ -70,7 +70,6 @@ export async function capturePayment(paymentId, token, payerID, cartId) {
       },
     )
     .then(response => {
-      console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
       }
