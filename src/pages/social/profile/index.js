@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { isNil } from 'lodash'
 import { getProfile } from 'services/user'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
@@ -7,10 +7,13 @@ import { getPosts } from 'services/social/posts'
 import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
 import SocialPostList from 'components/Common/Social/PostList'
 import { useSelector } from 'react-redux'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const SenseiSocialProfile = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
   const { accountId } = useParams()
+
   const [viewUser, setViewUser] = useState('')
 
   const [posts, setPosts] = useState([])
@@ -40,6 +43,17 @@ const SenseiSocialProfile = () => {
   }
 
   useEffect(() => {
+    if (user.accountId === accountId)
+      switch (user.userType) {
+        case USER_TYPE_ENUM.SENSEI:
+          history.replace(`/sensei/social/feed`)
+          break
+        case USER_TYPE_ENUM.STUDENT:
+          history.replace(`/social/feed`)
+          break
+        default:
+          break
+      }
     getUserProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

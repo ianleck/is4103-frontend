@@ -133,13 +133,6 @@ const PostComments = ({ user, post, setNumComments }) => {
     <div className="row">
       <div className="col-12">
         <div className="card mt-0 mb-0 border-0 bg-light">
-          <div className="card-header border-0 pb-0">
-            <div className="btn btn-block btn-light text-left">
-              {size(post.LikePost) === 1
-                ? `${size(post.LikePost)} like`
-                : `${size(post.LikePost)} likes`}
-            </div>
-          </div>
           <div className="card-body">
             <div className="row mb-3">
               <div className="col-auto">
