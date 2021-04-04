@@ -28,19 +28,7 @@ const CheckoutCard = () => {
       })
     } else {
       setIsLoading(true)
-      let courseIds = []
-      let mentorshipListingIds = []
-
-      for (let i = 0; i < cart.Courses.length; i += 1) {
-        courseIds = [...courseIds, cart.Courses[i].courseId]
-      }
-
-      for (let i = 0; i < cart.MentorPasses.length; i += 1) {
-        mentorshipListingIds = [...mentorshipListingIds, cart.MentorPasses[i].mentorshipListingId]
-      }
-
-      const response = await jwtCart.checkOut(courseIds, mentorshipListingIds)
-      setIsLoading(false)
+      const response = await jwtCart.checkOut(cart.cartId)
       window.location = response.paypalUrl
     }
   }
