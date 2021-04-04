@@ -49,9 +49,9 @@ export async function deleteFromCart(courseIds, mentorshipListingIds) {
     .catch(err => console.log(err))
 }
 
-export async function checkOut(courseIds, mentorshipListingIds) {
+export async function checkOut(cartId) {
   return apiClient
-    .post(`/paypal/order/create`, { courseIds, mentorshipListingIds }, { withCredentials: true })
+    .post(`/paypal/order/create`, { cartId }, { withCredentials: true })
     .then(response => {
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
@@ -61,12 +61,16 @@ export async function checkOut(courseIds, mentorshipListingIds) {
     .catch(err => console.log(err))
 }
 
-export async function capturePayment(paymentId, token, payerID) {
+export async function capturePayment(paymentId, token, payerID, cartId) {
   return apiClient
-    .post(`/paypal/order/capture?paymentId=${paymentId}&token=${token}&PayerID=${payerID}`, {
-      withCredentials: true,
-    })
+    .post(
+      `/paypal/order/capture?paymentId=${paymentId}&token=${token}&PayerID=${payerID}&cartId=${cartId}`,
+      {
+        withCredentials: true,
+      },
+    )
     .then(response => {
+      console.log(response)
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
       }

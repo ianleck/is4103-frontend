@@ -16,6 +16,7 @@ const Success = () => {
 
   const user = useSelector(state => state.user)
   const [cart, setCart] = useState()
+  const [cartId, setCartId] = useState()
   const [isEmptyCart, setIsEmptyCart] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -26,6 +27,7 @@ const Success = () => {
       if (user.accountId !== '') {
         const response = await jwtCart.getCart()
         setCart(response.cart)
+        setCartId(response.cart.cartId)
 
         if (
           (isEmpty(response.cart.Courses) && isEmpty(response.cart.MentorPasses)) ||
@@ -39,7 +41,7 @@ const Success = () => {
     }
 
     const updateBackend = async () => {
-      const response = await jwtCart.capturePayment(paymentId, token, payerID)
+      const response = await jwtCart.capturePayment(paymentId, token, payerID, cartId)
       if (response) {
         setIsLoading(false)
       }
@@ -47,7 +49,7 @@ const Success = () => {
 
     populateCart()
     updateBackend()
-  }, [user, paymentId, token, payerID])
+  }, [user, paymentId, token, payerID, cartId])
 
   const getSubTotal = () => {
     let amt = 0
