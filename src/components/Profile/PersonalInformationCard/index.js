@@ -157,13 +157,15 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
             </div>
           </div>
           <div className="col-auto d-flex justify-content-center mt-2">
-            <Button
-              type="primary"
-              shape="round"
-              size="middle"
-              icon={<CameraOutlined />}
-              onClick={() => setShowDPModal(true)}
-            />
+            {!isAdmin && (
+              <Button
+                type="primary"
+                shape="round"
+                size="middle"
+                icon={<CameraOutlined />}
+                onClick={() => setShowDPModal(true)}
+              />
+            )}
             <Button
               className="ml-2"
               type="primary"
@@ -326,9 +328,15 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
           >
             <div className="row mt-3">
               <div className="col-12 text-center">
-                <QRCode value={`http://localhost:3000/profile/${user.accountId}`} />
+                <QRCode value={`http://localhost:3000/social/profile/${user.accountId}`} />
                 <div className="mt-3">
-                  <Paragraph copyable={{ text: `http://localhost:3000/profile/${user.accountId}` }}>
+                  <Paragraph
+                    copyable={{
+                      text: isAdmin
+                        ? `http://localhost:3000/admin/social/profile/${user.accountId}`
+                        : `http://localhost:3000/social/profile/${user.accountId}`,
+                    }}
+                  >
                     Share Link
                   </Paragraph>
                 </div>

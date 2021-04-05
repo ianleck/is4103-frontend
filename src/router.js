@@ -215,6 +215,11 @@ const routes = [
     Component: lazy(() => import('pages/admin/wallets')),
     exact: true,
   },
+  {
+    path: '/admin/social/profile/:accountId',
+    Component: lazy(() => import('pages/social/profile')),
+    exact: true,
+  },
   // Sensei Pages
   {
     path: '/sensei',
