@@ -1,6 +1,6 @@
 import ViewBillingDetailCard from 'components/Billing/ViewBillingDetailCard'
 import { BILLING_TYPE } from 'constants/constants'
-import { isNil, size } from 'lodash'
+import { filter, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSensei } from 'services/admin'
@@ -11,6 +11,7 @@ import { viewBilling, viewWallet } from 'services/wallet'
 const BillingView = () => {
   const { id } = useParams()
   const [mainBilling, setMainBilling] = useState([])
+  const [secondaryBillings, setSecondaryBillings] = useState([])
   const [product, setProduct] = useState([])
   const [user, setUser] = useState([])
 
@@ -19,12 +20,17 @@ const BillingView = () => {
     if (result && !isNil(result.billings) && size(result.billings) === 1) {
       setMainBilling(result.billings[0])
 
-      // to be checked when able to checkout multiple items at once
+      // for other billing(s) in same paypal payment transaction
       if (!isNil(result.billings[0].paypalPaymentId)) {
         const otherBillings = await viewBilling({
           paypalPaymentId: result.billings[0].paypalPaymentId,
         })
-        console.log('other billings is, ', otherBillings)
+        if (otherBillings && !isNil(otherBillings.billings)) {
+          const filteredResult = filter(otherBillings.billings, b => {
+            return b.billingId !== id
+          })
+          setSecondaryBillings(filteredResult)
+        }
       }
 
       // for COURSE billing
@@ -59,7 +65,14 @@ const BillingView = () => {
     viewBillingDetail()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  return <ViewBillingDetailCard billing={mainBilling} product={product} recipient={user} />
+  return (
+    <ViewBillingDetailCard
+      billing={mainBilling}
+      product={product}
+      recipient={user}
+      otherBillings={secondaryBillings}
+    />
+  )
 }
 
 export default BillingView
