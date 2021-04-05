@@ -125,7 +125,7 @@ const ViewBillingDetailCard = data => {
         </div>
         <div className="col-3">
           <Button type="link" onClick={() => viewOtherBilling(otherBilling)}>
-            More
+            View this billing
           </Button>
         </div>
       </div>
