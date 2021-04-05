@@ -31,7 +31,11 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
   const amIFollowingThisUser = isFollowing(social.followingList, user.accountId)
 
   useEffect(() => {
-    if (!isEmpty(user) && (amIFollowingThisUser || !user.isPrivateProfile)) getUserSocials()
+    if (
+      !isEmpty(user) &&
+      (amIFollowingThisUser || !user.isPrivateProfile || currentUser.accountId === user.accountId)
+    )
+      getUserSocials()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
@@ -72,7 +76,11 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
             <span>Following</span>
             <br />
             <h5 className="text-dark font-weight-bold">
-              {!amIFollowingThisUser && user.isPrivateProfile ? '-' : size(followingList)}
+              {!amIFollowingThisUser &&
+              user.isPrivateProfile &&
+              currentUser.accountId !== user.accountId
+                ? '-'
+                : size(followingList)}
             </h5>
           </div>
           <div
@@ -85,7 +93,11 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
             <span>Followers</span>
             <br />
             <h5 className="text-dark font-weight-bold">
-              {!amIFollowingThisUser && user.isPrivateProfile ? '-' : size(followerList)}
+              {!amIFollowingThisUser &&
+              user.isPrivateProfile &&
+              currentUser.accountId !== user.accountId
+                ? '-'
+                : size(followerList)}
             </h5>
           </div>
         </div>
