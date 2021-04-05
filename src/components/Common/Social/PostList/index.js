@@ -50,7 +50,6 @@ const SocialPostList = ({
         setShowPostModal(false)
         posts.find(post => post.postId === currentPost.postId).content = response.post.content
         const allPosts = sortDescAndKeyPostId(posts)
-        console.log(allPosts)
         setPosts(allPosts)
         initPageItems(setIsLoading, allPosts, setPaginatedPosts, setCurrentPageIdx, setShowLoadMore)
       } else {
@@ -83,17 +82,16 @@ const SocialPostList = ({
     setCurrentPost(post)
     switch (type) {
       case 'edit':
-        setShowPostModal(true)
         editPostForm.setFieldsValue({
           content: post.content,
         })
         break
       case 'delete':
-        setShowPostModal(true)
         break
       default:
         break
     }
+    setShowPostModal(true)
   }
 
   const postModalAction = type => {
@@ -210,6 +208,7 @@ const SocialPostList = ({
         title={getPostModalElements('title')}
         visible={showPostModal}
         centered
+        destroyOnClose
         okButtonProps={{ style: { display: 'none' } }}
         onCancel={() => setShowPostModal(false)}
         footer={getPostModalElements('footer')}

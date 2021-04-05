@@ -103,3 +103,33 @@ export async function addCommentToPost(postId, payload) {
     })
     .catch(err => console.log(err))
 }
+
+export async function editCommentOnPost(commentId, payload) {
+  const url = `/comment/${commentId}`
+  return apiClient
+    .put(url, {
+      editedComment: {
+        ...payload,
+      },
+    })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function deleteCommentOnPost(commentId) {
+  const url = `/comment/${commentId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

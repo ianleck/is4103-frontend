@@ -22,29 +22,27 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions })
     size(LikePost.filter(o => o.accountId === user.accountId)) > 0,
   )
 
-  const PostMenu = ({ currentPost }) => {
+  const PostMenu = () => {
     return (
       <Menu>
-        {
-          <Menu.Item>
-            <a
-              target="_blank"
-              role="button"
-              tabIndex={0}
-              onClick={() => showPostModalWithOptions('edit', currentPost)}
-              onKeyDown={e => e.preventDefault()}
-            >
-              Edit Post
-            </a>
-          </Menu.Item>
-        }
-        {<Menu.Divider />}
+        <Menu.Item>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => showPostModalWithOptions('edit', post)}
+            onKeyDown={e => e.preventDefault()}
+          >
+            Edit Post
+          </a>
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Item danger>
           <a
             target="_blank"
             role="button"
             tabIndex={0}
-            onClick={() => showPostModalWithOptions('delete', currentPost)}
+            onClick={() => showPostModalWithOptions('delete', post)}
             onKeyDown={e => e.preventDefault()}
           >
             Delete Post
@@ -101,7 +99,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions })
               <small className="text-muted">{moment(post.createdAt).fromNow()}</small>
             </div>
             <div className="col-auto align-self-start">
-              <Dropdown overlay={<PostMenu currentPost={post} />} trigger={['click']}>
+              <Dropdown overlay={<PostMenu />} trigger={['click']}>
                 <Button
                   type="default"
                   size="large"
@@ -161,7 +159,12 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions })
           </div>
         </div>
         {showInteractionBox && (
-          <PostComments user={user} post={post} setNumComments={setNumComments} />
+          <PostComments
+            user={user}
+            post={post}
+            setNumComments={setNumComments}
+            showPostModalWithOptions={showPostModalWithOptions}
+          />
         )}
       </div>
     </Skeleton>

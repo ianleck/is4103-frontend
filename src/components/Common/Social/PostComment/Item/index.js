@@ -7,23 +7,45 @@ import { sendToSocialProfile } from 'components/utils'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-const PostCommentItem = ({ comment, isLoading }) => {
+const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) => {
   const user = useSelector(state => state.user)
   const history = useHistory()
 
   const CommentMenu = () => {
     return (
       <Menu>
-        {
-          <Menu.Item>
-            <a target="_blank" role="button" tabIndex={0} onKeyDown={e => e.preventDefault()}>
-              Delete Comment
-            </a>
-          </Menu.Item>
-        }
-        {<Menu.Divider />}
+        <Menu.Item>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => showCommentModalWithOptions('edit', comment)}
+            onKeyDown={e => e.preventDefault()}
+          >
+            Edit Comment
+          </a>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => showCommentModalWithOptions('delete', comment)}
+            onKeyDown={e => e.preventDefault()}
+          >
+            Delete Comment
+          </a>
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Item danger>
-          <a target="_blank" role="button" tabIndex={0} onKeyDown={e => e.preventDefault()}>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => showCommentModalWithOptions('report', comment)}
+            onKeyDown={e => e.preventDefault()}
+          >
             Report Comment
           </a>
         </Menu.Item>
