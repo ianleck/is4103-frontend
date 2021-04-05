@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { getFollowerList, getFollowingList } from 'services/social'
 import SocialFollowBtn from '../FollowBtn'
 
-const SocialProfileCard = ({ user }) => {
+const SocialProfileCard = ({ user, setCurrentTab }) => {
   const currentUser = useSelector(state => state.user)
 
   const [followerList, setFollowerList] = useState([])
@@ -20,6 +20,10 @@ const SocialProfileCard = ({ user }) => {
       setFollowingList(followingListRsp.followingList)
     if (followerListRsp && !isNil(followerListRsp.followerList))
       setFollowerList(followerListRsp.followerList)
+  }
+
+  const showSocialTab = tabKey => {
+    if (!isNil(setCurrentTab)) setCurrentTab(tabKey)
   }
 
   useEffect(() => {
@@ -54,12 +58,24 @@ const SocialProfileCard = ({ user }) => {
       </div>
       <div className="card-body">
         <div className="row">
-          <div className="col-6 invisible-btn">
+          <div
+            role="button"
+            tabIndex={0}
+            className="col-6 invisible-btn defocus-btn"
+            onClick={() => showSocialTab('following')}
+            onKeyDown={e => e.preventDefault()}
+          >
             <span>Following</span>
             <br />
             <h5 className="text-dark font-weight-bold">{size(followingList)}</h5>
           </div>
-          <div className="col-6 text-right invisible-btn">
+          <div
+            role="button"
+            tabIndex={0}
+            className="col-6 text-right invisible-btn defocus-btn"
+            onClick={() => showSocialTab('follower')}
+            onKeyDown={e => e.preventDefault()}
+          >
             <span>Followers</span>
             <br />
             <h5 className="text-dark font-weight-bold">{size(followerList)}</h5>

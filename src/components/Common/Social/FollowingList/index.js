@@ -3,12 +3,19 @@ import { useHistory } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Button } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
-import { initPageItems, sendToSocialProfile } from 'components/utils'
+import { initPageItems, sendToSocialProfile, showNotification } from 'components/utils'
 import { isNil, map, size } from 'lodash'
 import { useSelector } from 'react-redux'
+import { removeFollower } from 'services/social'
+import {
+  SUCCESS,
+  FOLLOWER_REMOVED_SUCCESS,
+  ERROR,
+  FOLLOWER_REMOVED_ERR,
+} from 'constants/notifications'
 import SocialFollowBtn from '../FollowBtn'
 
-const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModal }) => {
+const SocialFollowingList = ({ followingList, isFollowingList, isOwnList, setShowSocialModal }) => {
   const history = useHistory()
   const user = useSelector(state => state.user)
 
@@ -33,6 +40,19 @@ const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModa
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
   }
 
+  const removeFollowerSvc = async accountId => {
+    if (!isNil(accountId)) {
+      const response = await removeFollower(accountId)
+      if (response && response.success) {
+        showNotification('success', SUCCESS, FOLLOWER_REMOVED_SUCCESS)
+        setShowSocialModal(false)
+      } else {
+        showNotification('error', ERROR, FOLLOWER_REMOVED_ERR)
+        setShowSocialModal(false)
+      }
+    }
+  }
+
   const FollowingListItem = ({ followingListItem }) => {
     const FollowingListItemRow = ({ userRowItem }) => {
       return (
@@ -40,7 +60,7 @@ const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModa
           <div
             role="button"
             tabIndex={0}
-            className="col-7 col-md-9 invisible-btn"
+            className="col-7 col-md-9 invisible-btn defocus-btn"
             onClick={() => socialProfileOverride(userRowItem.accountId)}
             onKeyDown={e => e.preventDefault()}
           >
@@ -68,9 +88,15 @@ const SocialFollowingList = ({ followingList, isFollowingList, setShowSocialModa
             </div>
           </div>
           <div className="col-5 col-md-3 text-right">
-            {isFollowingList && <SocialFollowBtn targetAccountId={userRowItem.accountId} />}
-            {!isFollowingList && (
-              <Button type="default" size="large">
+            {isFollowingList && user.accountId !== userRowItem.accountId && (
+              <SocialFollowBtn targetAccountId={userRowItem.accountId} />
+            )}
+            {!isFollowingList && user.accountId !== userRowItem.accountId && isOwnList && (
+              <Button
+                type="default"
+                size="large"
+                onClick={() => removeFollowerSvc(userRowItem.accountId)}
+              >
                 Remove
               </Button>
             )}

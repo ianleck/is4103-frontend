@@ -74,34 +74,38 @@ const UserMenu = () => {
         </div>
       </div>
       <Menu.Divider />
-      <div
-        role="button"
-        tabIndex={0}
-        className="row ml-2 mr-1 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
-        onClick={() => displayFollowingList('following')}
-        onKeyDown={e => e.preventDefault()}
-      >
-        <div className="col-12 pl-0">
-          <span className="mb-5">Following</span>
-          <div className="mt-2 font-size-18">
-            <span className="font-weight-bold">{size(social.followingList)}</span>
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <div
+          role="button"
+          tabIndex={0}
+          className="row ml-2 mr-1 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
+          onClick={() => displayFollowingList('following')}
+          onKeyDown={e => e.preventDefault()}
+        >
+          <div className="col-12 pl-0">
+            <span className="mb-5">Following</span>
+            <div className="mt-2 font-size-18">
+              <span className="font-weight-bold">{size(social.followingList)}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        role="button"
-        tabIndex={0}
-        className="row ml-2 mr-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
-        onClick={() => displayFollowingList('followers')}
-        onKeyDown={e => e.preventDefault()}
-      >
-        <div className="col-12 pl-0">
-          <span className="mb-5">Followers</span>
-          <div className="mt-2 font-size-18">
-            <span className="font-weight-bold">{size(social.followerList)}</span>
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <div
+          role="button"
+          tabIndex={0}
+          className="row ml-2 mr-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
+          onClick={() => displayFollowingList('followers')}
+          onKeyDown={e => e.preventDefault()}
+        >
+          <div className="col-12 pl-0">
+            <span className="mb-5">Followers</span>
+            <div className="mt-2 font-size-18">
+              <span className="font-weight-bold">{size(social.followerList)}</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <Menu.Item>
         <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
@@ -198,6 +202,7 @@ const UserMenu = () => {
               <SocialFollowingList
                 followingList={showFollowingList ? social.followingList : social.followerList}
                 isFollowingList={showFollowingList}
+                isOwnList
                 setShowSocialModal={setShowSocialModal}
               />
             </div>

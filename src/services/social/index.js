@@ -7,11 +7,6 @@ export async function getFollowingList(accountId) {
     .get(url)
     .then(response => {
       if (response && !isNil(response.data)) {
-        const fakeFollowingList = []
-        for (let i = 0; i < 21; i += 1) {
-          fakeFollowingList.push(...response.data.followingList)
-        }
-        response.data.followingList = [...fakeFollowingList]
         return response.data
       }
       return false
@@ -73,6 +68,19 @@ export async function unfollowUser(targetAccountId) {
 
 export async function cancelFollowRequest(targetAccountId) {
   const url = `/social/following/request/${targetAccountId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function removeFollower(targetAccountId) {
+  const url = `/social/following/remove/${targetAccountId}`
   return apiClient
     .delete(url)
     .then(response => {

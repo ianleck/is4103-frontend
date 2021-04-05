@@ -99,14 +99,16 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions })
               <small className="text-muted">{moment(post.createdAt).fromNow()}</small>
             </div>
             <div className="col-auto align-self-start">
-              <Dropdown overlay={<PostMenu />} trigger={['click']}>
-                <Button
-                  type="default"
-                  size="large"
-                  className="border-0 p-0"
-                  icon={<MoreOutlined />}
-                />
-              </Dropdown>
+              {user.accountId === post.accountId && (
+                <Dropdown overlay={<PostMenu />} trigger={['click']}>
+                  <Button
+                    type="default"
+                    size="large"
+                    className="border-0 p-0"
+                    icon={<MoreOutlined />}
+                  />
+                </Dropdown>
+              )}
             </div>
           </div>
         </div>

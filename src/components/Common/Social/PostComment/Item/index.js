@@ -14,30 +14,34 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
   const CommentMenu = () => {
     return (
       <Menu>
-        <Menu.Item>
-          <a
-            target="_blank"
-            role="button"
-            tabIndex={0}
-            onClick={() => showCommentModalWithOptions('edit', comment)}
-            onKeyDown={e => e.preventDefault()}
-          >
-            Edit Comment
-          </a>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item>
-          <a
-            target="_blank"
-            role="button"
-            tabIndex={0}
-            onClick={() => showCommentModalWithOptions('delete', comment)}
-            onKeyDown={e => e.preventDefault()}
-          >
-            Delete Comment
-          </a>
-        </Menu.Item>
-        <Menu.Divider />
+        {user.accountId === comment.accountId && (
+          <Menu.Item>
+            <a
+              target="_blank"
+              role="button"
+              tabIndex={0}
+              onClick={() => showCommentModalWithOptions('edit', comment)}
+              onKeyDown={e => e.preventDefault()}
+            >
+              Edit Comment
+            </a>
+          </Menu.Item>
+        )}
+        {user.accountId === comment.accountId && <Menu.Divider />}
+        {user.accountId === comment.accountId && (
+          <Menu.Item>
+            <a
+              target="_blank"
+              role="button"
+              tabIndex={0}
+              onClick={() => showCommentModalWithOptions('delete', comment)}
+              onKeyDown={e => e.preventDefault()}
+            >
+              Delete Comment
+            </a>
+          </Menu.Item>
+        )}
+        {user.accountId === comment.accountId && <Menu.Divider />}
         <Menu.Item danger>
           <a
             target="_blank"

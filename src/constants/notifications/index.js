@@ -90,6 +90,9 @@ export const FLW_REQ_SUCCESS = 'Successfully sent a follow request to this user.
 export const FLW_REQ_ERR = 'There was an error sending a follow request to this user.'
 export const FLW_REQ_CANCEL_SUCCESS = 'Follow request has been successfully cancelled.'
 export const FLW_REQ_CANCEL_ERR = 'There was an error cancelling this follow request.'
+export const FOLLOWER_REMOVED_SUCCESS =
+  'This user has been successfully removed from your followers.'
+export const FOLLOWER_REMOVED_ERR = 'There was an error removing this user from your followers.'
 
 export const POST_ADD_SUCCESS = 'Your post was successfully created.'
 export const POST_ADD_ERR = 'There was an error creating your new post.'
