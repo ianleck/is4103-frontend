@@ -86,12 +86,11 @@ const StatusTag = data => {
         colour = 'red'
         break
       case BILLING_STATUS_ENUM.PENDING_120_DAYS:
-      case BILLING_STATUS_ENUM.PENDING_PAYMENT:
       case BILLING_STATUS_ENUM.PENDING_WITHDRAWAL:
         colour = 'warning'
         break
 
-      case BILLING_STATUS_ENUM.SUCCESS:
+      case BILLING_STATUS_ENUM.PAID:
       case BILLING_STATUS_ENUM.WITHDRAWN:
       case BILLING_STATUS_ENUM.CONFIRMED:
         colour = 'green'
