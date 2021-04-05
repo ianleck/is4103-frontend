@@ -40,6 +40,19 @@ export async function getFollowerList(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function getFollowRequests(accountId) {
+  const url = `/social/pending-followers/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function followUser(targetAccountId) {
   const url = `/social/following/follow/${targetAccountId}`
   return apiClient
@@ -55,6 +68,32 @@ export async function followUser(targetAccountId) {
 
 export async function unfollowUser(targetAccountId) {
   const url = `/social/following/unfollow/${targetAccountId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function acceptFollowRequest(targetAccountId) {
+  const url = `/social/following/accept/${targetAccountId}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function rejectFollowRequest(targetAccountId) {
+  const url = `/social/following/reject/${targetAccountId}`
   return apiClient
     .delete(url)
     .then(response => {

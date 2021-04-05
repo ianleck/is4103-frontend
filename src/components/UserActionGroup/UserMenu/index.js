@@ -2,11 +2,17 @@ import React, { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { SolutionOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar, Modal } from 'antd'
+import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  SolutionOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
+import { Menu, Dropdown, Avatar, Modal, Button } from 'antd'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import { size } from 'lodash'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
+import FollowerRequestList from 'components/Common/Social/FollowerRequestList'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
@@ -20,6 +26,8 @@ const UserMenu = () => {
 
   const [showSocialModal, setShowSocialModal] = useState(false)
   const [showFollowingList, setShowFollowingList] = useState(false)
+
+  const [showFollowerRequests, setShowFollowerRequests] = useState(false)
 
   const redirectToLogin = isStudent => e => {
     e.preventDefault()
@@ -198,14 +206,49 @@ const UserMenu = () => {
             onCancel={() => setShowSocialModal(false)}
             zIndex="1051"
           >
-            <div className="following-list-container">
-              <SocialFollowingList
-                followingList={showFollowingList ? social.followingList : social.followerList}
-                isFollowingList={showFollowingList}
-                isOwnList
-                setShowSocialModal={setShowSocialModal}
-              />
-            </div>
+            {!showFollowerRequests && (
+              <div
+                role="button"
+                tabIndex={0}
+                className="text-dark btn btn-block text-left border-0 mb-4 pl-0 d-flex justify-content-between align-items-center"
+                onClick={() => setShowFollowerRequests(true)}
+                onKeyDown={e => e.preventDefault()}
+              >
+                <span className="font-weight-bold font-size-18">Follower requests</span>
+                <ArrowRightOutlined className="float-right" />
+              </div>
+            )}
+            {!showFollowerRequests && (
+              <div className="following-list-container">
+                <SocialFollowingList
+                  followingList={showFollowingList ? social.followingList : social.followerList}
+                  isFollowingList={showFollowingList}
+                  isOwnList
+                  setShowSocialModal={setShowSocialModal}
+                />
+              </div>
+            )}
+            {showFollowerRequests && (
+              <div className="following-list-container">
+                <div className="row pt-2">
+                  <div className="col-4 mb-4">
+                    <Button
+                      block
+                      type="primary"
+                      shape="round"
+                      icon={<ArrowLeftOutlined />}
+                      onClick={() => setShowFollowerRequests(false)}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </div>
+                <FollowerRequestList
+                  pendingFollowerList={social.pendingFollowerList}
+                  setShowSocialModal={setShowSocialModal}
+                />
+              </div>
+            )}
           </Modal>
         </div>
       </Dropdown>

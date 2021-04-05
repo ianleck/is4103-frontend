@@ -90,6 +90,10 @@ export const FLW_REQ_SUCCESS = 'Successfully sent a follow request to this user.
 export const FLW_REQ_ERR = 'There was an error sending a follow request to this user.'
 export const FLW_REQ_CANCEL_SUCCESS = 'Follow request has been successfully cancelled.'
 export const FLW_REQ_CANCEL_ERR = 'There was an error cancelling this follow request.'
+export const FLW_REQ_ACCEPTED = 'Follow request accepted.'
+export const FLW_REQ_ACCEPTED_ERR = 'There was an error accepting this follow request.'
+export const FLW_REQ_REJECTED = 'Follow request rejected.'
+export const FLW_REQ_REJECTED_ERR = 'There was an error rejecting this follow request.'
 export const FOLLOWER_REMOVED_SUCCESS =
   'This user has been successfully removed from your followers.'
 export const FOLLOWER_REMOVED_ERR = 'There was an error removing this user from your followers.'

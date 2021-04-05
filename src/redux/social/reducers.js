@@ -4,6 +4,7 @@ const initialState = {
   followingList: [],
   followerList: [],
   pendingFollowingList: [],
+  pendingFollowerList: [],
 }
 
 export default function socialReducer(state = initialState, action) {

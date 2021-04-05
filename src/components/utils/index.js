@@ -276,6 +276,10 @@ export const getDetailsColumn = viewItem => {
   }
 }
 
+export const isFollowing = (followingList, accountId) => {
+  return size(followingList.filter(following => following.followingId === accountId)) === 1
+}
+
 export const sendToSocialProfile = (history, user, accountId) => {
   if (user.userType === USER_TYPE_ENUM.SENSEI) history.push(`/sensei/social/profile/${accountId}`)
   else history.push(`/social/profile/${accountId}`)

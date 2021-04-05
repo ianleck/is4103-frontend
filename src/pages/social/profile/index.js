@@ -4,11 +4,11 @@ import { isNil } from 'lodash'
 import { getProfile } from 'services/user'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
 import { getPosts } from 'services/social/posts'
-import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
+import { initPageItems, isFollowing, sortDescAndKeyPostId } from 'components/utils'
 import SocialPostList from 'components/Common/Social/PostList'
 import { useSelector } from 'react-redux'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { Button } from 'antd'
+import { Button, Empty } from 'antd'
 import AboutCard from 'components/Profile/AboutCard'
 import PersonalInformationCard from 'components/Profile/PersonalInformationCard'
 import IndustryCard from 'components/Profile/IndustryCard'
@@ -17,9 +17,11 @@ import ExperienceCard from 'components/Profile/ExperienceCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
 import { getFollowingList, getFollowerList } from 'services/social'
+import { LockFilled } from '@ant-design/icons'
 
 const SocialProfile = () => {
   const user = useSelector(state => state.user)
+  const social = useSelector(state => state.social)
   const history = useHistory()
   const { accountId } = useParams()
 
@@ -38,13 +40,19 @@ const SocialProfile = () => {
 
   const changeCurrentTab = tabKey => {
     setCurrentTab(tabKey)
+    if (tabKey === 'socialfeed') getPostsSvc(viewUser)
   }
+
+  const amIFollowingThisUser = isFollowing(social.followingList, accountId)
 
   const getUserProfile = async () => {
     if (!isNil(accountId)) {
       const response = await getProfile(accountId)
       if (response) setViewUser(response)
-      getPostsSvc(response)
+      if (amIFollowingThisUser || !response.isPrivateProfile) {
+        getPostsSvc(response)
+        getSocialInfo()
+      }
     }
   }
 
@@ -61,6 +69,7 @@ const SocialProfile = () => {
   const getPostsSvc = async userToGetPosts => {
     if (userToGetPosts && !isNil(userToGetPosts.accountId)) {
       const response = await getPosts(userToGetPosts.accountId)
+      console.log(response)
       if (response && !isNil(response.listOfPost)) {
         const allPosts = sortDescAndKeyPostId(response.listOfPost)
         setPosts(allPosts)
@@ -82,9 +91,8 @@ const SocialProfile = () => {
           break
       }
     getUserProfile()
-    getSocialInfo()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [social])
 
   return (
     <div className="container">
@@ -97,6 +105,7 @@ const SocialProfile = () => {
                 block
                 className={`${currentTab === 'socialfeed' ? 'btn btn-light' : 'btn'} border-0`}
                 onClick={() => changeCurrentTab('socialfeed')}
+                disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
                 size="large"
                 ref={button => button && button.blur()}
               >
@@ -106,6 +115,7 @@ const SocialProfile = () => {
                 block
                 className={`${currentTab === 'profile' ? 'btn btn-light' : 'btn'} border-0`}
                 onClick={() => changeCurrentTab('profile')}
+                disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
                 size="large"
                 ref={button => button && button.blur()}
               >
@@ -115,6 +125,7 @@ const SocialProfile = () => {
                 block
                 className={`${currentTab === 'achievements' ? 'btn btn-light' : 'btn'} border-0`}
                 onClick={() => changeCurrentTab('achievements')}
+                disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
                 size="large"
                 ref={button => button && button.blur()}
               >
@@ -124,7 +135,23 @@ const SocialProfile = () => {
           </div>
         </div>
         <div className="col-12 col-md-7">
-          {currentTab === 'socialfeed' && (
+          {!amIFollowingThisUser && viewUser.isPrivateProfile && (
+            <div className="card">
+              <div className="card-body">
+                <Empty
+                  image={<LockFilled style={{ fontSize: '100px' }} />}
+                  description={
+                    <>
+                      <span className="text-dark font-weight-bold">This account is private.</span>
+                      <br />
+                      <span className="text-muted">Follow this account to see their posts.</span>
+                    </>
+                  }
+                />
+              </div>
+            </div>
+          )}
+          {currentTab === 'socialfeed' && amIFollowingThisUser && (
             <SocialPostList
               user={user}
               isLoading={isLoading}
@@ -139,7 +166,7 @@ const SocialProfile = () => {
               setShowLoadMore={setShowLoadMore}
             />
           )}
-          {currentTab === 'profile' && (
+          {currentTab === 'profile' && amIFollowingThisUser && (
             <div>
               <PersonalInformationCard user={viewUser} />
               <AboutCard user={viewUser} />
@@ -149,7 +176,7 @@ const SocialProfile = () => {
               <PersonalityCard user={viewUser} />
             </div>
           )}
-          {currentTab === 'following' && (
+          {currentTab === 'following' && amIFollowingThisUser && (
             <div className="card">
               <div className="card-header pb-2">
                 <h3>Following</h3>
@@ -163,7 +190,7 @@ const SocialProfile = () => {
               </div>
             </div>
           )}
-          {currentTab === 'follower' && (
+          {currentTab === 'follower' && amIFollowingThisUser && (
             <div className="card">
               <div className="card-header pb-2">
                 <h3>Followers</h3>

@@ -1,5 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Button } from 'antd'
+import { isFollowing } from 'components/utils'
 import { isEmpty, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,6 +9,7 @@ import SocialFollowBtn from '../FollowBtn'
 
 const SocialProfileCard = ({ user, setCurrentTab }) => {
   const currentUser = useSelector(state => state.user)
+  const social = useSelector(state => state.social)
 
   const [followerList, setFollowerList] = useState([])
   const [followingList, setFollowingList] = useState([])
@@ -26,8 +28,10 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
     if (!isNil(setCurrentTab)) setCurrentTab(tabKey)
   }
 
+  const amIFollowingThisUser = isFollowing(social.followingList, user.accountId)
+
   useEffect(() => {
-    if (!isEmpty(user) && !user.isPrivateProfile) getUserSocials()
+    if (!isEmpty(user) && (amIFollowingThisUser || !user.isPrivateProfile)) getUserSocials()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
@@ -67,7 +71,9 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
           >
             <span>Following</span>
             <br />
-            <h5 className="text-dark font-weight-bold">{size(followingList)}</h5>
+            <h5 className="text-dark font-weight-bold">
+              {!amIFollowingThisUser && user.isPrivateProfile ? '-' : size(followingList)}
+            </h5>
           </div>
           <div
             role="button"
@@ -78,7 +84,9 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
           >
             <span>Followers</span>
             <br />
-            <h5 className="text-dark font-weight-bold">{size(followerList)}</h5>
+            <h5 className="text-dark font-weight-bold">
+              {!amIFollowingThisUser && user.isPrivateProfile ? '-' : size(followerList)}
+            </h5>
           </div>
         </div>
         {currentUser.accountId !== user.accountId && (

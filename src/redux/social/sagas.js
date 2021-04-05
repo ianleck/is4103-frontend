@@ -14,6 +14,10 @@ import {
   FLW_REQ_SUCCESS,
   FLW_REQ_CANCEL_SUCCESS,
   FLW_REQ_CANCEL_ERR,
+  FLW_REQ_ACCEPTED,
+  FLW_REQ_ACCEPTED_ERR,
+  FLW_REQ_REJECTED,
+  FLW_REQ_REJECTED_ERR,
 } from 'constants/notifications'
 import actions from './actions'
 
@@ -55,6 +59,20 @@ export function* LOAD_CURRENT_SOCIAL() {
         })
       }
     }
+
+    const followRequestRsp = yield call(social.getFollowRequests, currentUser.accountId)
+    if (followRequestRsp && followRequestRsp.success) {
+      if (!isNil(followRequestRsp.pendingFollowerList)) {
+        const pendingFollowerList = sortDescAndKeyFollowershipId(
+          followRequestRsp.pendingFollowerList,
+        )
+
+        yield putResolve({
+          type: 'social/SET_STATE',
+          payload: { pendingFollowerList },
+        })
+      }
+    }
   }
 }
 
@@ -89,6 +107,32 @@ export function* UNFOLLOW_USER({ payload }) {
   }
 }
 
+export function* ACCEPT_FOLLOW_REQUEST({ payload }) {
+  const { targetAccountId } = payload
+  const response = yield call(social.acceptFollowRequest, targetAccountId)
+  if (response && !isNil(response.success)) {
+    showNotification('success', SUCCESS, FLW_REQ_ACCEPTED)
+    yield putResolve({
+      type: 'social/LOAD_CURRENT_SOCIAL',
+    })
+  } else {
+    showNotification('error', ERROR, FLW_REQ_ACCEPTED_ERR)
+  }
+}
+
+export function* REJECT_FOLLOW_REQUEST({ payload }) {
+  const { targetAccountId } = payload
+  const response = yield call(social.rejectFollowRequest, targetAccountId)
+  if (response && !isNil(response.success)) {
+    showNotification('success', SUCCESS, FLW_REQ_REJECTED)
+    yield putResolve({
+      type: 'social/LOAD_CURRENT_SOCIAL',
+    })
+  } else {
+    showNotification('error', ERROR, FLW_REQ_REJECTED_ERR)
+  }
+}
+
 export function* CANCEL_FOLLOW_REQUEST({ payload }) {
   const { targetAccountId } = payload
   const response = yield call(social.cancelFollowRequest, targetAccountId)
@@ -107,6 +151,8 @@ export default function* rootSaga() {
     takeEvery(actions.LOAD_CURRENT_SOCIAL, LOAD_CURRENT_SOCIAL),
     takeEvery(actions.FOLLOW_USER, FOLLOW_USER),
     takeEvery(actions.UNFOLLOW_USER, UNFOLLOW_USER),
+    takeEvery(actions.ACCEPT_FOLLOW_REQUEST, ACCEPT_FOLLOW_REQUEST),
+    takeEvery(actions.REJECT_FOLLOW_REQUEST, REJECT_FOLLOW_REQUEST),
     takeEvery(actions.CANCEL_FOLLOW_REQUEST, CANCEL_FOLLOW_REQUEST),
   ])
 }

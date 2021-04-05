@@ -1,62 +1,61 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Button } from 'antd'
+import { CheckOutlined, CloseOutlined, UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Space } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
-import { initPageItems, sendToSocialProfile, showNotification } from 'components/utils'
+import { initPageItems, sendToSocialProfile } from 'components/utils'
 import { isNil, map, size } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { removeFollower } from 'services/social'
-import {
-  SUCCESS,
-  FOLLOWER_REMOVED_SUCCESS,
-  ERROR,
-  FOLLOWER_REMOVED_ERR,
-} from 'constants/notifications'
-import SocialFollowBtn from '../FollowBtn'
 
-const SocialFollowingList = ({ followingList, isFollowingList, isOwnList, setShowSocialModal }) => {
+const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
   const history = useHistory()
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [paginatedFollowing, setPaginatedFollowing] = useState([])
+  const [paginatedRequests, setPaginatedRequests] = useState([])
   const [currentPageIdx, setCurrentPageIdx] = useState(1)
   const [showLoadMore, setShowLoadMore] = useState(false)
 
   useEffect(() => {
     initPageItems(
       setIsLoading,
-      followingList,
-      setPaginatedFollowing,
+      pendingFollowerList,
+      setPaginatedRequests,
       setCurrentPageIdx,
       setShowLoadMore,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followingList])
+  }, [pendingFollowerList])
 
   const socialProfileOverride = accountId => {
     sendToSocialProfile(history, user, accountId)
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
   }
 
-  const removeFollowerSvc = async accountId => {
-    if (!isNil(accountId)) {
-      const response = await removeFollower(accountId)
-      if (response && response.success) {
-        showNotification('success', SUCCESS, FOLLOWER_REMOVED_SUCCESS)
-        dispatch({
-          type: 'social/LOAD_CURRENT_SOCIAL',
-        })
-      } else {
-        showNotification('error', ERROR, FOLLOWER_REMOVED_ERR)
+  const followerReqSvc = async (targetAccountId, type) => {
+    const getAction = () => {
+      switch (type) {
+        case 'accept':
+          return 'social/ACCEPT_FOLLOW_REQUEST'
+        case 'reject':
+          return 'social/REJECT_FOLLOW_REQUEST'
+        default:
+          return ''
       }
+    }
+    if (!isNil(targetAccountId)) {
+      dispatch({
+        type: getAction(),
+        payload: {
+          targetAccountId,
+        },
+      })
     }
   }
 
-  const FollowingListItem = ({ followingListItem }) => {
-    const FollowingListItemRow = ({ userRowItem }) => {
+  const RequestListItem = ({ requestListItem }) => {
+    const RequestListItemRow = ({ userRowItem }) => {
       return (
         <div className="row mb-3 align-items-center">
           <div
@@ -89,52 +88,50 @@ const SocialFollowingList = ({ followingList, isFollowingList, isOwnList, setSho
               </div>
             </div>
           </div>
-          <div className="col-5 col-md-3 text-right">
-            {isFollowingList && user.accountId !== userRowItem.accountId && (
-              <SocialFollowBtn targetAccountId={userRowItem.accountId} />
-            )}
-            {!isFollowingList && user.accountId !== userRowItem.accountId && isOwnList && (
+          <div className="col text-right">
+            <Space>
               <Button
-                type="default"
-                size="large"
-                onClick={() => removeFollowerSvc(userRowItem.accountId)}
-              >
-                Remove
-              </Button>
-            )}
+                className="btn btn-success text-white"
+                shape="circle"
+                icon={<CheckOutlined />}
+                onClick={() => followerReqSvc(userRowItem.accountId, 'accept')}
+              />
+              <Button
+                className="btn btn-danger text-white"
+                shape="circle"
+                icon={<CloseOutlined />}
+                onClick={() => followerReqSvc(userRowItem.accountId, 'accept')}
+              />
+            </Space>
           </div>
         </div>
       )
     }
 
-    if (isFollowingList && !isNil(followingListItem.Following)) {
-      const userRowItem = followingListItem.Following
-      return <FollowingListItemRow userRowItem={userRowItem} />
-    }
-    if (!isFollowingList && !isNil(followingListItem.Follower)) {
-      const userRowItem = followingListItem.Follower
-      return <FollowingListItemRow userRowItem={userRowItem} />
+    if (!isNil(requestListItem.Follower)) {
+      const userRowItem = requestListItem.Follower
+      return <RequestListItemRow userRowItem={userRowItem} />
     }
     return null
   }
   return (
     <PaginationWrapper
       setIsLoading={setIsLoading}
-      totalData={followingList}
-      paginatedData={paginatedFollowing}
-      setPaginatedData={setPaginatedFollowing}
+      totalData={pendingFollowerList}
+      paginatedData={paginatedRequests}
+      setPaginatedData={setPaginatedRequests}
       currentPageIdx={currentPageIdx}
       setCurrentPageIdx={setCurrentPageIdx}
       showLoadMore={showLoadMore}
       setShowLoadMore={setShowLoadMore}
       buttonStyle="primary"
       wrapperContent={
-        size(paginatedFollowing) > 0 &&
-        map(paginatedFollowing, followingListItem => {
+        size(paginatedRequests) > 0 &&
+        map(paginatedRequests, requestListItem => {
           return (
-            <FollowingListItem
-              key={followingListItem.followershipId}
-              followingListItem={followingListItem}
+            <RequestListItem
+              key={requestListItem.followershipId}
+              requestListItem={requestListItem}
               isLoading={isLoading}
             />
           )
@@ -144,4 +141,4 @@ const SocialFollowingList = ({ followingList, isFollowingList, isOwnList, setSho
   )
 }
 
-export default SocialFollowingList
+export default FollowerRequestList
