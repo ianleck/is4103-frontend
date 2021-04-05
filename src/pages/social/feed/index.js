@@ -45,6 +45,7 @@ const SocialFeed = () => {
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             posts={posts}
+            setPosts={setPosts}
             paginatedPosts={paginatedPosts}
             setPaginatedPosts={setPaginatedPosts}
             currentPageIdx={currentPageIdx}

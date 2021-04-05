@@ -66,7 +66,7 @@ const PostCommentItem = ({ comment, isLoading }) => {
         </div>
       </div>
       <div className="col-auto align-self-start">
-        <Dropdown overlay={<CommentMenu />}>
+        <Dropdown overlay={<CommentMenu />} trigger={['click']}>
           <Button type="text" icon={<MoreOutlined />} />
         </Dropdown>
       </div>

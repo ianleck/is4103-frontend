@@ -31,14 +31,27 @@ export async function addPost(accountId, payload) {
     .catch(err => console.log(err))
 }
 
-export async function editPost(accountId, payload) {
-  const url = `/social/post/${accountId}`
+export async function editPost(postId, payload) {
+  const url = `/social/post/${postId}`
   return apiClient
     .put(url, {
       editedPost: {
         ...payload,
       },
     })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function deletePost(postId) {
+  const url = `/social/post/${postId}`
+  return apiClient
+    .delete(url)
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data

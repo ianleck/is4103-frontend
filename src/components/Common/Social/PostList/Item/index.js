@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Avatar, Button, Skeleton, Typography } from 'antd'
-import { CommentOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
+import { Avatar, Button, Dropdown, Menu, Skeleton, Typography } from 'antd'
+import { CommentOutlined, LikeFilled, LikeOutlined, MoreOutlined } from '@ant-design/icons'
 import { isNil, size } from 'lodash'
 import moment from 'moment'
 import { useHistory } from 'react-router-dom'
@@ -9,7 +9,7 @@ import { LIKE, UNLIKE } from 'constants/text'
 import { sendToSocialProfile } from 'components/utils'
 import PostComments from '../../PostComment'
 
-const SocialPostListItem = ({ user, post, isLoading }) => {
+const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions }) => {
   const { Paragraph } = Typography
   const { LikePost } = post
   const history = useHistory()
@@ -21,6 +21,38 @@ const SocialPostListItem = ({ user, post, isLoading }) => {
   const [isLiked, setIsLiked] = useState(
     size(LikePost.filter(o => o.accountId === user.accountId)) > 0,
   )
+
+  const PostMenu = ({ currentPost }) => {
+    return (
+      <Menu>
+        {
+          <Menu.Item>
+            <a
+              target="_blank"
+              role="button"
+              tabIndex={0}
+              onClick={() => showPostModalWithOptions('edit', currentPost)}
+              onKeyDown={e => e.preventDefault()}
+            >
+              Edit Post
+            </a>
+          </Menu.Item>
+        }
+        {<Menu.Divider />}
+        <Menu.Item danger>
+          <a
+            target="_blank"
+            role="button"
+            tabIndex={0}
+            onClick={() => showPostModalWithOptions('delete', currentPost)}
+            onKeyDown={e => e.preventDefault()}
+          >
+            Delete Post
+          </a>
+        </Menu.Item>
+      </Menu>
+    )
+  }
 
   const postAction = async (postId, type) => {
     if (type === 'like') {
@@ -67,6 +99,16 @@ const SocialPostListItem = ({ user, post, isLoading }) => {
               </span>
               <br />
               <small className="text-muted">{moment(post.createdAt).fromNow()}</small>
+            </div>
+            <div className="col-auto align-self-start">
+              <Dropdown overlay={<PostMenu currentPost={post} />} trigger={['click']}>
+                <Button
+                  type="default"
+                  size="large"
+                  className="border-0 p-0"
+                  icon={<MoreOutlined />}
+                />
+              </Dropdown>
             </div>
           </div>
         </div>
