@@ -1,16 +1,16 @@
 import { Button, Tag } from 'antd'
+import ProductCard from 'components/Cart/ProductCard'
 import BackBtn from 'components/Common/BackBtn'
 import StatusTag from 'components/Common/StatusTag'
 import { formatTime } from 'components/utils'
 import { BILLING_STATUS_ENUM, BILLING_TYPE, USER_TYPE_ENUM } from 'constants/constants'
-import { isNil, map } from 'lodash'
+import { isEmpty, isNil, map } from 'lodash'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
 const ViewBillingDetailCard = data => {
-  const { billing, product, recipient } = data
-
+  const { billing, product, recipient, otherBillings } = data
   const user = useSelector(state => state.user)
   const history = useHistory()
   const { pathname } = useLocation()
@@ -20,6 +20,10 @@ const ViewBillingDetailCard = data => {
 
   const isWithdrawal = billing.billingType === BILLING_TYPE.WITHDRAWAL
   const isWithdrawn = billing.status === BILLING_STATUS_ENUM.WITHDRAWN
+
+  const isCourse = item => {
+    return item.billingType === BILLING_TYPE.COURSE
+  }
 
   const printIframe = documentId => {
     const iframe = document.frames
@@ -57,28 +61,15 @@ const ViewBillingDetailCard = data => {
     }
   }
 
-  const viewCoursePage = () => {
-    const path = `/courses/${product.courseId}`
+  const viewOtherBilling = record => {
+    if (isStudent) {
+      const path = `/student/dashboard/billing/view/${record.billingId}`
+      history.push(path)
+      return
+    }
+    const path = `/${user.userType.toLowerCase()}/billing/view/${record.billingId}`
     history.push(path)
   }
-
-  const CourseContent = () => (
-    <div className="card-body">
-      <div className="h5 card-title truncate-2-overflow">{product.title}</div>
-      <div className="h6 card-subtitle mb-2 text-muted truncate-2-overflow">{product.subTitle}</div>
-      <p className="card-text text-2-lines truncate-2-overflow">{product.description}</p>
-      <p>
-        {map(product.Categories, cat => {
-          return (
-            <Tag color="geekblue" key={cat.categoryId}>
-              {cat.name}
-            </Tag>
-          )
-        })}
-      </p>
-      <div className="card-footer px-0 pb-0">{`Sold by: ${product.Sensei?.firstName} ${product.Sensei?.lastName}`}</div>
-    </div>
-  )
 
   const AdminWithdrawalContent = () => (
     <div className="card my-4">
@@ -106,17 +97,12 @@ const ViewBillingDetailCard = data => {
   )
 
   const ProductContent = () => {
-    if (billing.billingType === 'COURSE') {
-      if (isStudent) {
-        return (
-          <a href="#" className="card" onClick={() => viewCoursePage()}>
-            <CourseContent />
-          </a>
-        )
-      }
+    if (isCourse(billing)) {
       return (
-        <div className="card">
-          <CourseContent />
+        <div className="row mb-2">
+          <div className="w-100 col-12">
+            <ProductCard location="BillingDetailPage" listing={product} key={product.courseId} />
+          </div>
         </div>
       )
     }
@@ -125,6 +111,25 @@ const ViewBillingDetailCard = data => {
     }
     // to add on for case if billingType is SUBSCRIPTION
     return <div />
+  }
+
+  const OtherBillingContent = () => {
+    return map(otherBillings, otherBilling => (
+      <div className="row" key={otherBilling.billingId}>
+        <div className="col-3">
+          <Tag>{otherBilling.billingType}</Tag>
+        </div>
+        <div className="col-3">{isCourse(otherBilling) && otherBilling.Course.title}</div>
+        <div className="col-3">
+          {otherBilling.currency} {parseFloat(otherBilling.amount).toFixed(2)}
+        </div>
+        <div className="col-3">
+          <Button type="link" onClick={() => viewOtherBilling(otherBilling)}>
+            More
+          </Button>
+        </div>
+      </div>
+    ))
   }
 
   const BillingHeader = () => {
@@ -180,6 +185,7 @@ const ViewBillingDetailCard = data => {
             <BillingItem>
               <span>{`This billing is part of Paypal Payment ${billing.paypalPaymentId}`}</span>
             </BillingItem>
+            {!isEmpty(otherBillings) && !isNil(otherBillings) && <OtherBillingContent />}
           </>
         )}
       </div>
