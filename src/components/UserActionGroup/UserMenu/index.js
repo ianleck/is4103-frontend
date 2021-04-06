@@ -8,7 +8,7 @@ import {
   SolutionOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar, Modal, Button } from 'antd'
+import { Menu, Dropdown, Avatar, Modal, Button, Empty } from 'antd'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import { size } from 'lodash'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
@@ -18,6 +18,7 @@ import styles from './style.module.scss'
 const UserMenu = () => {
   const user = useSelector(state => state.user)
   const social = useSelector(state => state.social)
+  const numFollowRequests = size(social.pendingFollowerList)
 
   const dispatch = useDispatch()
   const history = useHistory()
@@ -66,9 +67,16 @@ const UserMenu = () => {
     history.push(path)
   }
 
+  const displayFollowerRequests = () => {
+    setShowFollowingList(false)
+    setShowFollowerRequests(true)
+    setShowSocialModal(true)
+  }
+
   const displayFollowingList = type => {
     if (type === 'following') setShowFollowingList(true)
     else setShowFollowingList(false)
+    setShowFollowerRequests(false)
     setShowSocialModal(true)
   }
 
@@ -115,6 +123,16 @@ const UserMenu = () => {
           </div>
         </div>
       )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={() => displayFollowerRequests()}>
+            <SolutionOutlined className="mr-2" />
+            You have {numFollowRequests} follower {numFollowRequests === 1 ? 'request' : 'requests'}
+            .
+          </a>
+        </Menu.Item>
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && <Menu.Divider />}
       <Menu.Item>
         <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
@@ -215,7 +233,9 @@ const UserMenu = () => {
                 onClick={() => setShowFollowerRequests(true)}
                 onKeyDown={e => e.preventDefault()}
               >
-                <span className="font-weight-bold font-size-18">Follower requests</span>
+                <span className="font-weight-bold font-size-18">
+                  Follow requests ({numFollowRequests})
+                </span>
                 <ArrowRightOutlined className="float-right" />
               </div>
             )}
@@ -244,10 +264,13 @@ const UserMenu = () => {
                     </Button>
                   </div>
                 </div>
-                <FollowerRequestList
-                  pendingFollowerList={social.pendingFollowerList}
-                  setShowSocialModal={setShowSocialModal}
-                />
+                {numFollowRequests === 0 && <Empty />}
+                {numFollowRequests > 0 && (
+                  <FollowerRequestList
+                    pendingFollowerList={social.pendingFollowerList}
+                    setShowSocialModal={setShowSocialModal}
+                  />
+                )}
               </div>
             )}
           </Modal>
