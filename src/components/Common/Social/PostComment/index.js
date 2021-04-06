@@ -424,7 +424,7 @@ const PostComments = ({ user, post, setNumComments }) => {
         centered
         destroyOnClose
         okButtonProps={{ style: { display: 'none' } }}
-        onCancel={() => showCommentModal(false)}
+        onCancel={() => setShowCommentModal(false)}
         footer={getCommentModalElements('footer')}
       >
         {getCommentModalElements('body')}
