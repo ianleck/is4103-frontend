@@ -79,7 +79,6 @@ export function* LOAD_CURRENT_SOCIAL() {
 export function* FOLLOW_USER({ payload }) {
   const { targetAccountId } = payload
   const response = yield call(social.followUser, targetAccountId)
-  console.log(response)
   if (response && !isNil(response.followingStatus)) {
     if (response.followingStatus === FOLLOWING_ENUM.APPROVED) {
       showNotification('success', SUCCESS, FOLLOW_SUCCESS)

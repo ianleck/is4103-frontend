@@ -50,7 +50,8 @@ const UserMenu = () => {
 
   const viewFeed = e => {
     e.preventDefault()
-    history.push(`/social/feed`)
+    if (userType === USER_TYPE_ENUM.STUDENT) history.push(`/social/feed`)
+    if (userType === USER_TYPE_ENUM.SENSEI) history.push(`/sensei/social/feed`)
   }
 
   const viewProfile = e => {

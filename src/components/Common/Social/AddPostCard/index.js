@@ -88,7 +88,7 @@ const SocialAddPostCard = ({ user, getPostsSvc }) => {
   }
 
   return (
-    <div className="card">
+    <div className="card w-100">
       <div className="card-body">
         <div className="row align-items-center">
           <div className="col-auto">

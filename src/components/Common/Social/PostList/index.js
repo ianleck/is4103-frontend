@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { isNil, map, size } from 'lodash'
-import { Button, Form, Input, Modal } from 'antd'
+import { Button, Empty, Form, Input, Modal } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
 import {
   initPageItems,
@@ -179,31 +179,40 @@ const SocialPostList = ({
 
   return (
     <div>
-      <PaginationWrapper
-        setIsLoading={setIsLoading}
-        totalData={posts}
-        paginatedData={paginatedPosts}
-        setPaginatedData={setPaginatedPosts}
-        currentPageIdx={currentPageIdx}
-        setCurrentPageIdx={setCurrentPageIdx}
-        showLoadMore={showLoadMore}
-        setShowLoadMore={setShowLoadMore}
-        buttonStyle="primary"
-        wrapperContent={
-          size(paginatedPosts) > 0 &&
-          map(paginatedPosts, post => {
-            return (
-              <SocialPostListItem
-                key={post.postId}
-                post={post}
-                user={user}
-                isLoading={isLoading}
-                showPostModalWithOptions={showPostModalWithOptions}
-              />
-            )
-          })
-        }
-      />
+      {size(posts) > 0 && (
+        <PaginationWrapper
+          setIsLoading={setIsLoading}
+          totalData={posts}
+          paginatedData={paginatedPosts}
+          setPaginatedData={setPaginatedPosts}
+          currentPageIdx={currentPageIdx}
+          setCurrentPageIdx={setCurrentPageIdx}
+          showLoadMore={showLoadMore}
+          setShowLoadMore={setShowLoadMore}
+          buttonStyle="primary"
+          wrapperContent={
+            size(paginatedPosts) > 0 &&
+            map(paginatedPosts, post => {
+              return (
+                <SocialPostListItem
+                  key={post.postId}
+                  post={post}
+                  user={user}
+                  isLoading={isLoading}
+                  showPostModalWithOptions={showPostModalWithOptions}
+                />
+              )
+            })
+          }
+        />
+      )}
+      {size(posts) === 0 && (
+        <div className="card">
+          <div className="card-body">
+            <Empty />
+          </div>
+        </div>
+      )}
       <Modal
         title={getPostModalElements('title')}
         visible={showPostModal}

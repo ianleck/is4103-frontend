@@ -14,6 +14,19 @@ export async function getPosts(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function getFollowingPosts(accountId) {
+  const url = `/social/post/following/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function addPost(accountId, payload) {
   const url = `/social/post/${accountId}`
   return apiClient

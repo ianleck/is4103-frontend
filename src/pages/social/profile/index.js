@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { isNil } from 'lodash'
+import { isNil, size } from 'lodash'
 import { getProfile } from 'services/user'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
 import { getPosts } from 'services/social/posts'
@@ -69,7 +69,6 @@ const SocialProfile = () => {
   const getPostsSvc = async userToGetPosts => {
     if (userToGetPosts && !isNil(userToGetPosts.accountId)) {
       const response = await getPosts(userToGetPosts.accountId)
-      console.log(response)
       if (response && !isNil(response.listOfPost)) {
         const allPosts = sortDescAndKeyPostId(response.listOfPost)
         setPosts(allPosts)
@@ -95,116 +94,120 @@ const SocialProfile = () => {
   }, [social])
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-12 col-md-5">
-          <SocialProfileCard user={viewUser} setCurrentTab={setCurrentTab} />
-          <div className="card">
-            <div className="card-body">
-              <Button
-                block
-                className={`${currentTab === 'socialfeed' ? 'btn btn-light' : 'btn'} border-0`}
-                onClick={() => changeCurrentTab('socialfeed')}
-                disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
-                size="large"
-                ref={button => button && button.blur()}
-              >
-                Social Feed
-              </Button>
-              <Button
-                block
-                className={`${currentTab === 'profile' ? 'btn btn-light' : 'btn'} border-0`}
-                onClick={() => changeCurrentTab('profile')}
-                disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
-                size="large"
-                ref={button => button && button.blur()}
-              >
-                Profile
-              </Button>
-              <Button
-                block
-                className={`${currentTab === 'achievements' ? 'btn btn-light' : 'btn'} border-0`}
-                onClick={() => changeCurrentTab('achievements')}
-                disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
-                size="large"
-                ref={button => button && button.blur()}
-              >
-                Achievements
-              </Button>
-            </div>
+    <div className="row">
+      <div className="col-12 col-md-5">
+        <SocialProfileCard user={viewUser} setCurrentTab={setCurrentTab} />
+        <div className="card">
+          <div className="card-body">
+            <Button
+              block
+              className={`${currentTab === 'socialfeed' ? 'btn btn-light' : 'btn'} border-0`}
+              onClick={() => changeCurrentTab('socialfeed')}
+              disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
+              size="large"
+              ref={button => button && button.blur()}
+            >
+              Social Feed
+            </Button>
+            <Button
+              block
+              className={`${currentTab === 'profile' ? 'btn btn-light' : 'btn'} border-0`}
+              onClick={() => changeCurrentTab('profile')}
+              disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
+              size="large"
+              ref={button => button && button.blur()}
+            >
+              Profile
+            </Button>
+            <Button
+              block
+              className={`${currentTab === 'achievements' ? 'btn btn-light' : 'btn'} border-0`}
+              onClick={() => changeCurrentTab('achievements')}
+              disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
+              size="large"
+              ref={button => button && button.blur()}
+            >
+              Achievements
+            </Button>
           </div>
         </div>
-        <div className="col-12 col-md-7">
-          {!amIFollowingThisUser && viewUser.isPrivateProfile && (
-            <div className="card">
-              <div className="card-body">
-                <Empty
-                  image={<LockFilled style={{ fontSize: '100px' }} />}
-                  description={
-                    <>
-                      <span className="text-dark font-weight-bold">This account is private.</span>
-                      <br />
-                      <span className="text-muted">Follow this account to see their posts.</span>
-                    </>
-                  }
-                />
-              </div>
+      </div>
+      <div className="col-12 col-md-7">
+        {!amIFollowingThisUser && viewUser.isPrivateProfile && (
+          <div className="card">
+            <div className="card-body">
+              <Empty
+                image={<LockFilled style={{ fontSize: '100px' }} />}
+                description={
+                  <>
+                    <span className="text-dark font-weight-bold">This account is private.</span>
+                    <br />
+                    <span className="text-muted">Follow this account to see their posts.</span>
+                  </>
+                }
+              />
             </div>
-          )}
-          {currentTab === 'socialfeed' && amIFollowingThisUser && (
-            <SocialPostList
-              user={user}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
-              posts={posts}
-              setPosts={setPosts}
-              paginatedPosts={paginatedPosts}
-              setPaginatedPosts={setPaginatedPosts}
-              currentPageIdx={currentPageIdx}
-              setCurrentPageIdx={setCurrentPageIdx}
-              showLoadMore={showLoadMore}
-              setShowLoadMore={setShowLoadMore}
-            />
-          )}
-          {currentTab === 'profile' && amIFollowingThisUser && (
-            <div>
-              <PersonalInformationCard user={viewUser} />
-              <AboutCard user={viewUser} />
-              <IndustryCard user={viewUser} />
-              <OccupationCard user={viewUser} />
-              <ExperienceCard user={viewUser} />
-              <PersonalityCard user={viewUser} />
+          </div>
+        )}
+        {currentTab === 'socialfeed' && (
+          <SocialPostList
+            user={user}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            posts={posts}
+            setPosts={setPosts}
+            paginatedPosts={paginatedPosts}
+            setPaginatedPosts={setPaginatedPosts}
+            currentPageIdx={currentPageIdx}
+            setCurrentPageIdx={setCurrentPageIdx}
+            showLoadMore={showLoadMore}
+            setShowLoadMore={setShowLoadMore}
+          />
+        )}
+        {currentTab === 'profile' && (
+          <div>
+            <PersonalInformationCard user={viewUser} />
+            <AboutCard user={viewUser} />
+            <IndustryCard user={viewUser} />
+            <OccupationCard user={viewUser} />
+            <ExperienceCard user={viewUser} />
+            <PersonalityCard user={viewUser} />
+          </div>
+        )}
+        {currentTab === 'following' && (
+          <div className="card">
+            <div className="card-header pb-2">
+              <h3>Following</h3>
             </div>
-          )}
-          {currentTab === 'following' && amIFollowingThisUser && (
-            <div className="card">
-              <div className="card-header pb-2">
-                <h3>Following</h3>
-              </div>
-              <div className="card-body">
+            <div className="card-body">
+              {size(followingList) > 0 && (
                 <SocialFollowingList
                   followingList={followingList}
                   isOwnList={false}
                   isFollowingList
                 />
-              </div>
+              )}
+              {size(followingList) === 0 && <Empty />}
             </div>
-          )}
-          {currentTab === 'follower' && amIFollowingThisUser && (
-            <div className="card">
-              <div className="card-header pb-2">
-                <h3>Followers</h3>
-              </div>
-              <div className="card-body">
+          </div>
+        )}
+        {currentTab === 'follower' && (
+          <div className="card">
+            <div className="card-header pb-2">
+              <h3>Followers</h3>
+            </div>
+            <div className="card-body">
+              {size(followerList) > 0 && (
                 <SocialFollowingList
                   followingList={followerList}
                   isOwnList={false}
                   isFollowingList={false}
                 />
-              </div>
+              )}
+              {size(followerList) === 0 && <Empty />}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
