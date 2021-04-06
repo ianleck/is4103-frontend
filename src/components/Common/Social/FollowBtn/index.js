@@ -1,4 +1,5 @@
 import { Button } from 'antd'
+import { FOLLOWING_ENUM, SOCIAL_ACTIONS } from 'constants/constants'
 import { FOLLOW, REQUESTED, UNFOLLOW } from 'constants/text'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,17 +11,23 @@ const SocialFollowBtn = ({ targetAccountId }) => {
   const socialAction = actionType => {
     const getAction = () => {
       switch (actionType) {
-        case 'follow':
+        case SOCIAL_ACTIONS.FOLLOW:
           return 'social/FOLLOW_USER'
-        case 'unfollow':
+        case SOCIAL_ACTIONS.UNFOLLOW:
           return 'social/UNFOLLOW_USER'
-        case 'cancel_follow_request':
+        case SOCIAL_ACTIONS.CANCEL_FOLLOW_REQUEST:
           return 'social/CANCEL_FOLLOW_REQUEST'
         default:
           return ''
       }
     }
-    if (['follow', 'unfollow', 'cancel_follow_request'].indexOf(actionType) !== -1) {
+    if (
+      [
+        SOCIAL_ACTIONS.FOLLOW,
+        SOCIAL_ACTIONS.UNFOLLOW,
+        SOCIAL_ACTIONS.CANCEL_FOLLOW_REQUEST,
+      ].indexOf(actionType) !== -1
+    ) {
       dispatch({
         type: getAction(),
         payload: {
@@ -34,38 +41,49 @@ const SocialFollowBtn = ({ targetAccountId }) => {
 
   const getCurrentFollowStatus = () => {
     if (social.pendingFollowingList.findIndex(o => o.followingId === targetAccountId) >= 0)
-      return 'pending'
+      return FOLLOWING_ENUM.PENDING
     if (social.followingList.findIndex(o => o.followingId === targetAccountId) >= 0)
-      return 'following'
+      return FOLLOWING_ENUM.APPROVED
     return false
   }
 
-  const getButtonElements = type => {
+  const DynamicFollowBtn = () => {
     const followingStatus = getCurrentFollowStatus()
     switch (followingStatus) {
-      case 'pending':
-        if (type === 'className') return 'btn btn-default'
-        if (type === 'onClick') {
-          socialAction('cancel_follow_request')
-        }
-        if (type === 'buttonLabel') return REQUESTED
-        break
-      case 'following':
-        if (type === 'className') return 'btn btn-primary'
-        if (type === 'onClick') {
-          socialAction('unfollow')
-        }
-        if (type === 'buttonLabel') return UNFOLLOW
-        break
+      case FOLLOWING_ENUM.PENDING:
+        return (
+          <Button
+            block
+            className="btn btn-default"
+            size="large"
+            onClick={() => socialAction(SOCIAL_ACTIONS.CANCEL_FOLLOW_REQUEST)}
+          >
+            {REQUESTED}
+          </Button>
+        )
+      case FOLLOWING_ENUM.APPROVED:
+        return (
+          <Button
+            block
+            className="btn btn-primary"
+            size="large"
+            onClick={() => socialAction(SOCIAL_ACTIONS.UNFOLLOW)}
+          >
+            {UNFOLLOW}
+          </Button>
+        )
       default:
-        if (type === 'className') return 'btn btn-light'
-        if (type === 'onClick') {
-          socialAction('follow')
-        }
-        if (type === 'buttonLabel') return FOLLOW
-        break
+        return (
+          <Button
+            block
+            className="btn btn-light"
+            size="large"
+            onClick={() => socialAction(SOCIAL_ACTIONS.FOLLOW)}
+          >
+            {FOLLOW}
+          </Button>
+        )
     }
-    return false
   }
 
   useEffect(() => {
@@ -73,16 +91,7 @@ const SocialFollowBtn = ({ targetAccountId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return (
-    <Button
-      block
-      className={getButtonElements('className')}
-      size="large"
-      onClick={() => getButtonElements('onClick')}
-    >
-      {getButtonElements('buttonLabel')}
-    </Button>
-  )
+  return <DynamicFollowBtn />
 }
 
 export default SocialFollowBtn

@@ -79,16 +79,17 @@ const PostComments = ({ user, post, setNumComments }) => {
           lastName: user.lastName,
           profileImgUrl: user.profileImgUrl,
         }
-        sortedComments.push(response.comment)
-        setComments(sortedComments)
+        comments.push(response.comment)
+        const allComments = sortDescAndKeyCommentId(comments)
+        setComments(allComments)
         initPageItems(
           setIsLoading,
-          sortedComments,
+          allComments,
           setPaginatedComments,
           setCurrentPageIdx,
           setShowLoadMore,
         )
-        setNumComments(size(sortedComments))
+        setNumComments(size(allComments))
       } else {
         showNotification('error', ERROR, COMMENT_ADD_ERR)
       }
@@ -181,11 +182,11 @@ const PostComments = ({ user, post, setNumComments }) => {
     if (type === 'delete') deleteCommentSvc()
   }
 
-  const getCommentModalBody = type => {
-    if (type === 'delete') {
+  const CommentModalBody = () => {
+    if (commentModalOptions === 'delete') {
       return <span>Are you sure you want to delete this comment?</span>
     }
-    if (type === 'edit') {
+    if (commentModalOptions === 'edit') {
       return (
         <div className="row">
           <div className="col-12">
@@ -217,7 +218,7 @@ const PostComments = ({ user, post, setNumComments }) => {
         </div>
       )
     }
-    if (type === 'report') {
+    if (commentModalOptions === 'report') {
       return (
         <div>
           <Descriptions title="Comment Information" column={1}>
@@ -267,7 +268,7 @@ const PostComments = ({ user, post, setNumComments }) => {
     return <></>
   }
 
-  const getCommentModalFooter = type => {
+  const CommentModalFooter = () => {
     return (
       <div className="row justify-content-between">
         <div className="col-auto">
@@ -276,19 +277,19 @@ const PostComments = ({ user, post, setNumComments }) => {
           </Button>
         </div>
         <div className="col-auto">
-          {type === 'edit' && (
+          {commentModalOptions === 'edit' && (
             <Button type="primary" size="large" form="editCommentForm" htmlType="submit">
-              {`${getCommentModalElements('title')}`}
+              {getCommentModalTitle()}
             </Button>
           )}
-          {type === 'delete' && (
-            <Button danger size="large" onClick={() => postModalAction(type)}>
-              {`${getCommentModalElements('title')}`}
+          {commentModalOptions === 'delete' && (
+            <Button danger size="large" onClick={() => postModalAction(commentModalOptions)}>
+              {getCommentModalTitle()}
             </Button>
           )}
-          {type === 'report' && (
+          {commentModalOptions === 'report' && (
             <Button danger type="primary" size="large" form="reportCommentForm" htmlType="submit">
-              {`${getCommentModalElements('title')}`}
+              {getCommentModalTitle()}
             </Button>
           )}
         </div>
@@ -296,20 +297,10 @@ const PostComments = ({ user, post, setNumComments }) => {
     )
   }
 
-  const getCommentModalElements = type => {
-    switch (type) {
-      case 'title':
-        if (commentModalOptions === 'edit') return 'Edit Comment'
-        if (commentModalOptions === 'delete') return 'Delete Comment'
-        if (commentModalOptions === 'report') return 'Report Comment'
-        break
-      case 'body':
-        return getCommentModalBody(commentModalOptions)
-      case 'footer':
-        return getCommentModalFooter(commentModalOptions)
-      default:
-        return 'Error'
-    }
+  const getCommentModalTitle = () => {
+    if (commentModalOptions === 'edit') return 'Edit Comment'
+    if (commentModalOptions === 'delete') return 'Delete Comment'
+    if (commentModalOptions === 'report') return 'Report Comment'
     return 'Error'
   }
 
@@ -419,15 +410,15 @@ const PostComments = ({ user, post, setNumComments }) => {
         </div>
       </div>
       <Modal
-        title={getCommentModalElements('title')}
+        title={getCommentModalTitle()}
         visible={showCommentModal}
         centered
         destroyOnClose
         okButtonProps={{ style: { display: 'none' } }}
         onCancel={() => setShowCommentModal(false)}
-        footer={getCommentModalElements('footer')}
+        footer={<CommentModalFooter />}
       >
-        {getCommentModalElements('body')}
+        <CommentModalBody />
       </Modal>
     </div>
   )

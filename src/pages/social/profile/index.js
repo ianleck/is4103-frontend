@@ -142,14 +142,14 @@ const SocialProfile = () => {
                   <>
                     <span className="text-dark font-weight-bold">This account is private.</span>
                     <br />
-                    <span className="text-muted">Follow this account to see their posts.</span>
+                    <span className="text-muted">Follow this account to see their content.</span>
                   </>
                 }
               />
             </div>
           </div>
         )}
-        {currentTab === 'socialfeed' && (
+        {currentTab === 'socialfeed' && (amIFollowingThisUser || !viewUser.isPrivateProfile) && (
           <SocialPostList
             user={user}
             isLoading={isLoading}

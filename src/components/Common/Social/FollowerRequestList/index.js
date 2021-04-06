@@ -6,6 +6,7 @@ import PaginationWrapper from 'components/Common/Pagination'
 import { initPageItems, sendToSocialProfile } from 'components/utils'
 import { isNil, map, size } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
+import { SOCIAL_ACTIONS } from 'constants/constants'
 
 const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
   const history = useHistory()
@@ -35,14 +36,14 @@ const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
 
   const followerReqSvc = async (targetAccountId, type) => {
     const getAction = () => {
-      switch (type) {
-        case 'accept':
-          return 'social/ACCEPT_FOLLOW_REQUEST'
-        case 'reject':
-          return 'social/REJECT_FOLLOW_REQUEST'
-        default:
-          return ''
+      if (
+        [SOCIAL_ACTIONS.ACCEPT_FOLLOW_REQUEST, SOCIAL_ACTIONS.REJECT_FOLLOW_REQUEST].indexOf(
+          type,
+        ) !== -1
+      ) {
+        return `social/${type}`
       }
+      return ''
     }
     if (!isNil(targetAccountId)) {
       dispatch({
@@ -94,13 +95,17 @@ const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
                 className="btn btn-success text-white"
                 shape="circle"
                 icon={<CheckOutlined />}
-                onClick={() => followerReqSvc(userRowItem.accountId, 'accept')}
+                onClick={() =>
+                  followerReqSvc(userRowItem.accountId, SOCIAL_ACTIONS.ACCEPT_FOLLOW_REQUEST)
+                }
               />
               <Button
                 className="btn btn-danger text-white"
                 shape="circle"
                 icon={<CloseOutlined />}
-                onClick={() => followerReqSvc(userRowItem.accountId, 'accept')}
+                onClick={() =>
+                  followerReqSvc(userRowItem.accountId, SOCIAL_ACTIONS.REJECT_FOLLOW_REQUEST)
+                }
               />
             </Space>
           </div>

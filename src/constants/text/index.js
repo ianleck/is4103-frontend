@@ -1,7 +1,6 @@
 export const CREATOR_INFO = 'Creator Information'
 export const VIEW_PROFILE = 'View Profile'
-export const DIGI_DOJO_SENSEI = 'Digi Dojo Sensei'
-export const DIGI_DOJO_STUDENT = 'Digi Dojo Student'
+export const DIGI_DOJO = 'Digi Dojo'
 
 export const ANNOUNCEMENTS = 'Announcements'
 

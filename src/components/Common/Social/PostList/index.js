@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { isNil, map, size } from 'lodash'
+import { isEmpty, isNil, map, size } from 'lodash'
 import { Button, Empty, Form, Input, Modal } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
 import {
@@ -208,7 +208,7 @@ const SocialPostList = ({
           }
         />
       )}
-      {size(posts) === 0 && (
+      {isEmpty(posts) && (
         <div className="card">
           <div className="card-body">
             <Empty />
