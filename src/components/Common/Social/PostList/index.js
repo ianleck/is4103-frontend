@@ -30,6 +30,7 @@ const SocialPostList = ({
   setCurrentPageIdx,
   showLoadMore,
   setShowLoadMore,
+  btnSize,
 }) => {
   const { TextArea } = Input
 
@@ -200,6 +201,7 @@ const SocialPostList = ({
                   user={user}
                   isLoading={isLoading}
                   showPostModalWithOptions={showPostModalWithOptions}
+                  btnSize={btnSize}
                 />
               )
             })

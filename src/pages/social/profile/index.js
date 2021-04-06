@@ -162,6 +162,7 @@ const SocialProfile = () => {
             setCurrentPageIdx={setCurrentPageIdx}
             showLoadMore={showLoadMore}
             setShowLoadMore={setShowLoadMore}
+            btnSize="small"
           />
         )}
         {currentTab === 'profile' && (

@@ -9,7 +9,7 @@ import { LIKE, UNLIKE } from 'constants/text'
 import { sendToSocialProfile } from 'components/utils'
 import PostComments from '../../PostComment'
 
-const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions }) => {
+const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, btnSize }) => {
   const { Paragraph } = Typography
   const { LikePost } = post
   const history = useHistory()
@@ -124,23 +124,23 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions })
           </Paragraph>
         </div>
         <div className="card-footer border-0">
-          <div className="row">
-            <div className="col-6 col-md-4 col-lg-3 order-11 order-md-1">
+          <div className="row align-items-center">
+            <div className="col-6 col-lg-4 col-xl-3 order-11 order-lg-1">
               <Button
                 block
                 type={isLiked ? 'primary' : 'default'}
-                size="small"
+                size={!isNil(btnSize) ? btnSize : 'small'}
                 icon={isLiked ? <LikeFilled /> : <LikeOutlined />}
                 onClick={() => postAction(post.postId, isLiked ? 'unlike' : 'like')}
               >
                 {isLiked ? UNLIKE : LIKE}
               </Button>
             </div>
-            <div className="col-6 col-md-4 col-lg-3 order-12 order-md-2">
+            <div className="col-6 col-lg-4 col-xl-3 order-12 order-lg-2">
               <Button
                 block
                 type="default"
-                size="small"
+                size={!isNil(btnSize) ? btnSize : 'small'}
                 icon={<CommentOutlined />}
                 onClick={() => setShowInteractionBox(!showInteractionBox)}
               >
@@ -150,7 +150,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions })
             <div
               role="button"
               tabIndex={0}
-              className="invisible-btn defocus-btn col-12 col-md text-left text-md-right mt-2 mb-3 mt-md-0 mb-md-0 order-1 order-md-12"
+              className="invisible-btn defocus-btn col-12 col-lg text-left text-lg-right mt-2 mb-3 mt-lg-0 mb-lg-0 order-1 order-lg-12"
               onClick={() => setShowInteractionBox(!showInteractionBox)}
               onKeyDown={e => e.preventDefault()}
             >

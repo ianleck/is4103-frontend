@@ -103,10 +103,10 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
         </div>
         {currentUser.accountId !== user.accountId && (
           <div className="row mt-2">
-            <div className="col-6">
+            <div className="col-12 col-lg-6">
               <SocialFollowBtn targetAccountId={user.accountId} />
             </div>
-            <div className="col-6">
+            <div className="col-12 col-lg-6 mt-2 mt-lg-0">
               <Button block type="default" size="large">
                 Message
               </Button>
