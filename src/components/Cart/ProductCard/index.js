@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { getProfile } from 'services/user/index'
 import { Avatar, Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { getCourseById } from 'services/courses'
 
 const ProductCard = data => {
   const user = useSelector(state => state.user)
@@ -20,11 +20,10 @@ const ProductCard = data => {
   useEffect(() => {
     const checkSensei = async () => {
       if (!isNil(listing.accountId)) {
-        getCourseById(listing.courseId).then(res => {
-          if (res && !isNil(res.course?.Sensei)) {
-            setSensei(res.course.Sensei)
-          }
-        })
+        const res = await getProfile(listing.accountId)
+        if (res) {
+          setSensei(res)
+        }
       }
     }
 
