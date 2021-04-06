@@ -72,8 +72,8 @@ export function* RESET_CART() {
   const result = yield call(jwtCart.getCart)
   const { cart } = result
 
-  const courses = cart.Course
-  const mentorships = cart.MentorshipApplications
+  const courses = cart.Courses
+  const mentorships = cart.MentorPasses
 
   let courseIds = []
   let mentorshipListingIds = []

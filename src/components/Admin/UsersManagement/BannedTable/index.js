@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import * as jwtAdmin from 'services/admin'
 import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import BannedWidget from 'components/Admin/UsersManagement/BannedWidget'
+import { getAllBannedSenseis, getAllBannedStudents } from 'services/admin'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -17,45 +18,27 @@ const BannedTable = () => {
   const [senseis, setSenseis] = useState()
   const history = useHistory()
 
-  // console.log('user', user)
-  // console.log('students', students)
-  // console.log('History', history)
-
   useEffect(() => {
     populateStudents()
     populateSenseis()
   }, [])
 
   const populateStudents = async () => {
-    const response = await jwtAdmin.getAllStudents()
-    let banned = []
-
-    for (let i = 0; i < response.length; i += 1) {
-      if (response[i].status === 'DEACTIVATED') {
-        banned = [...banned, response[i]]
-      }
-      // console.log('banned', banned)
-    }
-
-    setStudents(banned)
+    const response = await getAllBannedStudents()
+    setStudents(response)
   }
   const populateSenseis = async () => {
-    const response = await jwtAdmin.getAllSenseis()
-    let banned = []
-
-    for (let i = 0; i < response.length; i += 1) {
-      if (response[i].status === 'DEACTIVATED') {
-        banned = [...banned, response[i]]
-      }
-      // console.log('banned', banned)
-    }
-
-    setSenseis(banned)
+    const response = await getAllBannedSenseis()
+    setSenseis(response)
   }
 
   const onButtonClick = record => {
-    // console.log('button', record)
-    const path = `/admin/user-management/user/${record.accountId}`
+    if (record.userType === USER_TYPE_ENUM.STUDENT) {
+      const path = `/admin/user-management/student/${record.accountId}`
+      history.push(path)
+    }
+
+    const path = `/admin/user-management/sensei/${record.accountId}`
     history.push(path)
   }
 

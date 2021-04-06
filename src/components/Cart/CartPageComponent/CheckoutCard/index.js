@@ -1,36 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import * as jwtCart from 'services/cart'
 import { Button, notification } from 'antd'
 import { LoadingOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { CART_EMPTY, WARNING } from 'constants/notifications'
-import { isEmpty } from 'lodash'
+import { size } from 'lodash'
 
 const CheckoutCard = () => {
-  const user = useSelector(state => state.user)
-  const [cart, setCart] = useState()
-  const [isEmptyCart, setIsEmptyCart] = useState(true)
+  const cart = useSelector(state => state.cart)
+  const isEmptyCart = size(cart.Courses) === 0 && size(cart.MentorPasses) === 0
   const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    const populateCart = async () => {
-      if (user.accountId !== '') {
-        const response = await jwtCart.getCart()
-        setCart(response.cart)
-
-        if (
-          (isEmpty(response.cart.Course) && isEmpty(response.cart.MentorshipApplications)) ||
-          (response.cart.Course.length === 0 && response.cart.MentorshipApplications.length === 0)
-        ) {
-          setIsEmptyCart(true)
-        } else {
-          setIsEmptyCart(false)
-        }
-      }
-    }
-    populateCart()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const getSubTotal = () => {
     const amt = 0
@@ -49,22 +28,7 @@ const CheckoutCard = () => {
       })
     } else {
       setIsLoading(true)
-      let courseIds = []
-      let mentorshipListingIds = []
-
-      for (let i = 0; i < cart.Course.length; i += 1) {
-        courseIds = [...courseIds, cart.Course[i].courseId]
-      }
-
-      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
-        mentorshipListingIds = [
-          ...mentorshipListingIds,
-          cart.MentorshipApplications[i].mentorshipListingId,
-        ]
-      }
-
-      const response = await jwtCart.checkOut(courseIds, mentorshipListingIds)
-      setIsLoading(false)
+      const response = await jwtCart.checkOut(cart.cartId)
       window.location = response.paypalUrl
     }
   }
@@ -73,8 +37,8 @@ const CheckoutCard = () => {
     let amt = 0
 
     if (!isEmptyCart) {
-      for (let i = 0; i < cart.Course.length; i += 1) {
-        amt += cart.Course[i].priceAmount
+      for (let i = 0; i < cart.Courses.length; i += 1) {
+        amt += cart.Courses[i].priceAmount
       }
     }
     return amt
@@ -84,8 +48,8 @@ const CheckoutCard = () => {
     let amt = 0
 
     if (!isEmptyCart) {
-      for (let i = 0; i < cart.MentorshipApplications.length; i += 1) {
-        amt += cart.MentorshipApplications[i].priceAmount
+      for (let i = 0; i < cart.MentorPasses.length; i += 1) {
+        amt += cart.MentorPasses[i].priceAmount
       }
     }
     return amt

@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Avatar, Divider, Rate, Space, Tag } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { random, round } from 'lodash'
+import { random } from 'lodash'
 
 const MentorshipListingCard = data => {
   const { listing } = data
@@ -57,7 +57,7 @@ const MentorshipListingCard = data => {
           </div>
           <div className="row mt-2">
             <div className="col-12">
-              <span className="font-weight-bold">${round(random(19.99, 39.99), 2)}/month</span>
+              <span className="font-weight-bold">${listing.priceAmount.toFixed(2)}/month</span>
             </div>
           </div>
           <div className="row">

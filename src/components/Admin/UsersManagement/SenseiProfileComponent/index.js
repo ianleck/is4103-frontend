@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as jwtAdmin from 'services/admin'
-import { Button, Table, Tabs } from 'antd'
-import { ArrowLeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { Button, Popconfirm, Table, Tabs } from 'antd'
+import { CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'
 import ProfileAboutCard from 'components/Profile/AboutCard'
 import ProfileOccupationCard from 'components/Profile/OccupationCard'
@@ -12,30 +12,40 @@ import ProfileExperienceCard from 'components/Profile/ExperienceCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
-import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
-import { formatTime, showNotification } from 'components/utils'
+import { ADMIN_VERIFIED_ENUM, STATUS_ENUM } from 'constants/constants'
+import {
+  formatTime,
+  getDetailsColumn,
+  showNotification,
+  sortDescAndKeyBillingId,
+} from 'components/utils'
 import {
   SUCCESS,
   ACCEPT_SENSEI_PROFILE,
   REJECT_SENSEI_PROFILE,
   SENSEI_PROFILE_UPDATE_ERR,
   ERROR,
+  USER_BANNED,
+  USER_UNBANNED,
 } from 'constants/notifications'
 import billingColumns from 'components/Common/TableColumns/Billing'
+import BackBtn from 'components/Common/BackBtn'
+import { viewWallet } from 'services/wallet'
+import { concat, isNil } from 'lodash'
 
 const { TabPane } = Tabs
 const { Column } = Table
 
 const SenseiProfileComponent = () => {
-  const { userId } = useParams()
   const history = useHistory()
+  const { userId } = useParams()
   const user = useSelector(state => state.user)
+  const { walletId } = user
+
   const [sensei, setSensei] = useState('')
   const [mentorshipListings, setMentorshipListings] = useState('')
-
-  // for future implementation when linking with backend
-  // const [billingsSent, setBillingsSent] = useState([])
-  // const [billingsReceived, setBillingsReceived] = useState([])
+  const [billingsSent, setBillingsSent] = useState([])
+  const [billingsReceived, setBillingsReceived] = useState([])
 
   const [listingsTabKey, setListingsTabKey] = useState('listings')
   const changeListingsTab = key => {
@@ -56,17 +66,24 @@ const SenseiProfileComponent = () => {
     setMentorshipListings(response)
   }
 
+  const getWallet = async () => {
+    const result = await viewWallet(walletId)
+    if (result) {
+      if (!isNil(result.wallet.BillingsSent)) {
+        setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
+      }
+      if (!isNil(result.wallet.BillingsReceived)) {
+        setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
+      }
+    }
+  }
+
   useEffect(() => {
     getSensei()
     getListings()
+    getWallet()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const onBack = e => {
-    e.preventDefault()
-    const path = '/admin/user-management/'
-    history.push(path)
-  }
 
   const onAccept = async () => {
     const response = await jwtAdmin.acceptSensei(userId)
@@ -93,6 +110,12 @@ const SenseiProfileComponent = () => {
       showNotification('error', ERROR, SENSEI_PROFILE_UPDATE_ERR)
     }
   }
+
+  const viewBilling = record => {
+    const path = `/admin/billing/view/${record.billingId}`
+    history.push(path)
+  }
+  const billingColumnsWithDetail = concat(billingColumns, getDetailsColumn(viewBilling))
 
   const AdminVerificationCard = () => {
     return (
@@ -158,29 +181,50 @@ const SenseiProfileComponent = () => {
   }
 
   const showBillings = (dataSource, tableColumns) => {
-    return (
-      <Table
-        dataSource={dataSource}
-        columns={tableColumns}
-        // onRow={record => viewBilling(record)}
-      />
-    )
+    return <Table dataSource={dataSource} columns={tableColumns} />
+  }
+
+  const onBan = async () => {
+    const response = await jwtAdmin.banUser(userId)
+
+    if (response.success && sensei.status === STATUS_ENUM.ACTIVE) {
+      showNotification('success', SUCCESS, USER_BANNED)
+    } else if (response.success && sensei.status === STATUS_ENUM.BANNED) {
+      showNotification('success', SUCCESS, USER_UNBANNED)
+    }
+    getSensei()
   }
 
   return (
     <div>
-      <div className="row">
+      <div className="row pt-2 justify-content-md-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
-          <Button
-            block
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={onBack}
-            icon={<ArrowLeftOutlined />}
-          >
-            Back
-          </Button>
+          <BackBtn />
+        </div>
+        <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
+          {sensei.status === STATUS_ENUM.ACTIVE ? (
+            <Popconfirm
+              title="Do you wish to ban this sensei?"
+              onConfirm={onBan}
+              okText="Confirm"
+              okType="danger"
+            >
+              <Button danger block shape="round" size="large" icon={<StopOutlined />}>
+                Ban Account
+              </Button>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="Do you wish to unban this sensei?"
+              onConfirm={onBan}
+              okText="Confirm"
+              okType="danger"
+            >
+              <Button danger block shape="round" size="large" icon={<StopOutlined />}>
+                Unban Account
+              </Button>
+            </Popconfirm>
+          )}
         </div>
       </div>
 
@@ -230,8 +274,9 @@ const SenseiProfileComponent = () => {
               </Tabs>
             </div>
             <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
-              {billingsTabKey === 'received' && showBillings([], billingColumns)}
-              {billingsTabKey === 'sent' && showBillings([], billingColumns)}
+              {billingsTabKey === 'received' &&
+                showBillings(billingsReceived, billingColumnsWithDetail)}
+              {billingsTabKey === 'sent' && showBillings(billingsSent, billingColumnsWithDetail)}
             </div>
           </div>
         </div>

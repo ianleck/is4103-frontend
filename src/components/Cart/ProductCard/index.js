@@ -1,36 +1,45 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Avatar, Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
-import { getCourseById } from 'services/courses'
+import { USER_TYPE_ENUM } from 'constants/constants'
+import { getProfile } from 'services/user'
 
 const ProductCard = data => {
+  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const { listing } = data
   const [sensei, setSensei] = useState([])
   const [isCourse, setIsCourse] = useState(false)
   const history = useHistory()
   const currLocation = data.location
+  const isStudent = user.userType === USER_TYPE_ENUM.STUDENT
 
   useEffect(() => {
-    getCourseById(listing.courseId).then(res => {
-      if (res && !isNil(res.course?.Sensei)) {
-        setSensei(res.course.Sensei)
+    const checkSensei = async () => {
+      if (!isNil(listing.accountId)) {
+        const res = await getProfile(listing.accountId)
+        if (res) {
+          setSensei(res)
+        }
       }
-    })
+    }
 
     const checkCourse = () => {
       if (!isNil(listing.courseId)) {
         setIsCourse(true)
       }
     }
-
+    checkSensei()
     checkCourse()
   }, [listing])
 
   const redirect = id => {
+    if (!isStudent) {
+      return
+    }
     if (isCourse) {
       history.push({
         pathname: `/courses/${id}`,
@@ -61,7 +70,6 @@ const ProductCard = data => {
         },
       })
     }
-    if (currLocation === 'CartPage') window.location.reload()
   }
 
   const GetDefaultProfilePic = () => {

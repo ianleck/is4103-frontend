@@ -1,6 +1,12 @@
 import React from 'react'
 import { Tag } from 'antd'
-import { ADMIN_VERIFIED_ENUM, BILLING_STATUS_ENUM, USER_TYPE_ENUM } from 'constants/constants'
+import {
+  ADMIN_VERIFIED_ENUM,
+  BILLING_STATUS_ENUM,
+  STATUS_ENUM,
+  TASK_PROGRESS,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 
 import { isNil } from 'lodash'
 import { NA } from 'constants/text'
@@ -80,15 +86,52 @@ const StatusTag = data => {
         colour = 'red'
         break
       case BILLING_STATUS_ENUM.PENDING_120_DAYS:
-      case BILLING_STATUS_ENUM.PENDING_PAYMENT:
       case BILLING_STATUS_ENUM.PENDING_WITHDRAWAL:
         colour = 'warning'
         break
 
-      case BILLING_STATUS_ENUM.SUCCESS:
+      case BILLING_STATUS_ENUM.PAID:
       case BILLING_STATUS_ENUM.WITHDRAWN:
       case BILLING_STATUS_ENUM.CONFIRMED:
         colour = 'green'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
+  }
+
+  if (type === 'TASK_PROGRESS') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case TASK_PROGRESS.ONGOING:
+        colour = 'processing'
+        break
+      case TASK_PROGRESS.COMPLETED:
+        colour = 'success'
+        break
+      default:
+        colour = 'error'
+        break
+    }
+    return (
+      <Tag color={colour} style={data.style} className={data.className}>
+        {dataSource}
+      </Tag>
+    )
+  }
+
+  if (type === 'STATUS_TYPE_ENUM') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case STATUS_ENUM.ACTIVE:
+        colour = 'processing'
+        break
+      case STATUS_ENUM.BANNED:
+        colour = 'error'
         break
       default:
         colour = 'default'

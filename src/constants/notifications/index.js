@@ -104,3 +104,6 @@ export const POST_EDIT_SUCCESS = 'Your post was successfully updated.'
 export const POST_EDIT_ERR = 'There was an error editing your post.'
 export const POST_DEL_SUCCESS = 'Your post was successfully deleted.'
 export const POST_DEL_ERR = 'There was an error deleting your post.'
+
+export const USER_BANNED = 'User has been banned.'
+export const USER_UNBANNED = 'User has been unbanned.'

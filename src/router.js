@@ -40,7 +40,12 @@ const routes = [
   },
   {
     path: '/success',
-    Component: lazy(() => import('pages/checkout')),
+    Component: lazy(() => import('pages/checkout/success')),
+    exact: true,
+  },
+  {
+    path: '/err',
+    Component: lazy(() => import('pages/checkout/failed')),
     exact: true,
   },
   {
@@ -330,6 +335,11 @@ const routes = [
   {
     path: '/student/mentorship/apply/:id',
     Component: lazy(() => import('pages/student/mentorships/apply')),
+    exact: true,
+  },
+  {
+    path: '/student/mentorship/subscription/:id',
+    Component: lazy(() => import('pages/student/mentorships/subscription')),
     exact: true,
   },
   {
