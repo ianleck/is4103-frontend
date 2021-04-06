@@ -5,7 +5,7 @@ import { Avatar, Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { getProfile } from 'services/user'
+import { getCourseById } from 'services/courses'
 
 const ProductCard = data => {
   const user = useSelector(state => state.user)
@@ -20,10 +20,11 @@ const ProductCard = data => {
   useEffect(() => {
     const checkSensei = async () => {
       if (!isNil(listing.accountId)) {
-        const res = await getProfile(listing.accountId)
-        if (res) {
-          setSensei(res)
-        }
+        getCourseById(listing.courseId).then(res => {
+          if (res && !isNil(res.course?.Sensei)) {
+            setSensei(res.course.Sensei)
+          }
+        })
       }
     }
 
