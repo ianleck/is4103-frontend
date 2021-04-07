@@ -47,43 +47,29 @@ const SocialFollowBtn = ({ targetAccountId }) => {
     return false
   }
 
-  const DynamicFollowBtn = () => {
+  const getButtonClassName = () => {
     const followingStatus = getCurrentFollowStatus()
-    switch (followingStatus) {
-      case FOLLOWING_ENUM.PENDING:
-        return (
-          <Button
-            block
-            className="btn btn-default"
-            size="large"
-            onClick={() => socialAction(SOCIAL_ACTIONS.CANCEL_FOLLOW_REQUEST)}
-          >
-            {REQUESTED}
-          </Button>
-        )
-      case FOLLOWING_ENUM.APPROVED:
-        return (
-          <Button
-            block
-            className="btn btn-primary"
-            size="large"
-            onClick={() => socialAction(SOCIAL_ACTIONS.UNFOLLOW)}
-          >
-            {UNFOLLOW}
-          </Button>
-        )
-      default:
-        return (
-          <Button
-            block
-            className="btn btn-light"
-            size="large"
-            onClick={() => socialAction(SOCIAL_ACTIONS.FOLLOW)}
-          >
-            {FOLLOW}
-          </Button>
-        )
+    if (followingStatus === FOLLOWING_ENUM.PENDING) return 'btn btn-default'
+    if (followingStatus === FOLLOWING_ENUM.APPROVED) return 'btn btn-primary'
+    return 'btn btn-light'
+  }
+
+  const getButtonClickHandler = () => {
+    const followingStatus = getCurrentFollowStatus()
+    if (followingStatus === FOLLOWING_ENUM.PENDING) {
+      socialAction(SOCIAL_ACTIONS.CANCEL_FOLLOW_REQUEST)
+    } else if (followingStatus === FOLLOWING_ENUM.APPROVED) {
+      socialAction(SOCIAL_ACTIONS.UNFOLLOW)
+    } else {
+      socialAction(SOCIAL_ACTIONS.FOLLOW)
     }
+  }
+
+  const getButtonLabel = () => {
+    const followingStatus = getCurrentFollowStatus()
+    if (followingStatus === FOLLOWING_ENUM.PENDING) return REQUESTED
+    if (followingStatus === FOLLOWING_ENUM.APPROVED) return UNFOLLOW
+    return FOLLOW
   }
 
   useEffect(() => {
@@ -91,7 +77,16 @@ const SocialFollowBtn = ({ targetAccountId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <DynamicFollowBtn />
+  return (
+    <Button
+      block
+      className={getButtonClassName()}
+      size="large"
+      onClick={() => getButtonClickHandler()}
+    >
+      {getButtonLabel()}
+    </Button>
+  )
 }
 
 export default SocialFollowBtn
