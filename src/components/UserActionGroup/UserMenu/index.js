@@ -87,7 +87,9 @@ const UserMenu = () => {
           <span className="mb-5">Welcome,</span>
         </div>
         <div className="mt-2 col-12 font-size-18">
-          <span className="font-weight-bold">{`${firstName} ${lastName} [${username}]`}</span>
+          <span className="font-weight-bold">
+            {`${firstName || 'Anonymous'} ${lastName || 'Pigeon'} [${username}]`}
+          </span>
         </div>
       </div>
       <Menu.Divider />

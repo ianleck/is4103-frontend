@@ -7,7 +7,7 @@ import {
   DIRECTION,
   USER_TYPE_ENUM,
 } from 'constants/constants'
-import { filter, isNil, map, size } from 'lodash'
+import { filter, isEmpty, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
@@ -281,7 +281,9 @@ export const isFollowing = (followingList, accountId) => {
 }
 
 export const sendToSocialProfile = (history, user, accountId) => {
-  if (user.userType === USER_TYPE_ENUM.SENSEI) history.push(`/sensei/social/profile/${accountId}`)
+  if (isEmpty(user.userType)) history.replace(`/auth/login`)
+  else if (user.userType === USER_TYPE_ENUM.SENSEI)
+    history.push(`/sensei/social/profile/${accountId}`)
   else if (user.userType === USER_TYPE_ENUM.STUDENT) history.push(`/social/profile/${accountId}`)
 }
 
