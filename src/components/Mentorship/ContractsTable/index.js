@@ -1,4 +1,9 @@
-import { CloseOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import {
+  CloseOutlined,
+  EyeOutlined,
+  QuestionCircleOutlined,
+  ShoppingOutlined,
+} from '@ant-design/icons'
 import { Button, ConfigProvider, Empty, Popconfirm, Space, Table, Tabs } from 'antd'
 import { filter, size } from 'lodash'
 import React, { useState, useEffect } from 'react'
@@ -6,6 +11,7 @@ import { useHistory } from 'react-router-dom'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector } from 'react-redux'
+import { formatTime } from 'components/utils'
 
 const MentorshipContractsTable = () => {
   const { TabPane } = Tabs
@@ -21,6 +27,7 @@ const MentorshipContractsTable = () => {
       setContracts(contracts)
     }
   }
+
   useEffect(() => {
     getContracts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,18 +52,27 @@ const MentorshipContractsTable = () => {
       title: 'Date Applied',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      render: record => formatTime(record),
       responsive: ['sm'],
     },
     {
       title: 'Mentorship Title',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: ['MentorshipListing', 'name'],
+      key: ['MentorshipListing', 'name'],
       responsive: ['md'],
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['ascend', 'descend'],
     },
     {
-      title: 'Monthly Subscription Price (S$)',
+      title: 'Mentorship Description',
+      dataIndex: ['MentorshipListing', 'description'],
+      key: ['MentorshipListing', 'description'],
+      responsive: ['md'],
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Pass Price (S$)',
       dataIndex: 'MentorshipListing',
       key: 'price',
       responsive: ['md'],
@@ -72,11 +88,16 @@ const MentorshipContractsTable = () => {
           <Button
             type="default"
             shape="circle"
+            size="large"
             icon={<EyeOutlined />}
             onClick={() => viewListing(record)}
           />
-          {record.progress ===
-            (CONTRACT_PROGRESS_ENUM.ONGOING || CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
+          {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
+            record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
+            <Button type="primary" shape="circle" size="large" icon={<ShoppingOutlined />} />
+          )}
+          {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
+            record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
             <Popconfirm
               title="Are you sure you wish to cancel your subscription?"
               icon={<QuestionCircleOutlined className="text-danger" />}
