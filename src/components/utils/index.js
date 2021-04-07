@@ -7,7 +7,7 @@ import {
   DIRECTION,
   USER_TYPE_ENUM,
 } from 'constants/constants'
-import { isNil, map, size } from 'lodash'
+import { filter, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
@@ -315,4 +315,10 @@ export const initPageItems = (
 
 export const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
+}
+
+export const getAvailableCurrencyCodes = allCurrencyCodes => {
+  return filter(allCurrencyCodes, cc => {
+    return cc.code === 'SGD'
+  })
 }
