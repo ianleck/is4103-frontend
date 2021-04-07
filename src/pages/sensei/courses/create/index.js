@@ -720,7 +720,7 @@ const SenseiCreateCourse = () => {
                   {map(getAvailableCurrencyCodes(currencyCodes), currency => {
                     const { code, name } = currency
                     return (
-                      <Option key={code} value={code} defaultValue={{ value: 'SGD' }}>
+                      <Option key={code} value={code}>
                         {`${name} (${code})`}
                       </Option>
                     )
