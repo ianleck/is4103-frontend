@@ -43,7 +43,7 @@ import {
   deleteLessonFile,
   getCommentsByLessonId,
 } from 'services/courses/lessons'
-import { formatTime, showNotification } from 'components/utils'
+import { formatTime, getAvailableCurrencyCodes, showNotification } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
 import {
   ADMIN_VERIFIED_ENUM,
@@ -717,10 +717,10 @@ const SenseiCreateCourse = () => {
                     return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }}
                 >
-                  {map(currencyCodes, currency => {
+                  {map(getAvailableCurrencyCodes(currencyCodes), currency => {
                     const { code, name } = currency
                     return (
-                      <Option key={code} value={code}>
+                      <Option key={code} value={code} defaultValue={{ value: 'SGD' }}>
                         {`${name} (${code})`}
                       </Option>
                     )
