@@ -24,7 +24,7 @@ const CourseListingCard = data => {
               &nbsp;&nbsp;COURSE
             </span>
           </div>
-          <div className="course-card-img-holder overflow-scroll">
+          <div className="course-card-img-holder overflow-hidden">
             <img
               className="course-card-img"
               alt="example"

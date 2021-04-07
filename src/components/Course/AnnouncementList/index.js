@@ -43,7 +43,7 @@ const CourseAnnouncementList = ({ announcements }) => {
           )}
         </div>
       </div>
-      <div className={`card-body overflow-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}>
+      <div className={`card-body overflow-y-scroll ${!isExpanded ? 'announcement-card-body' : ''}`}>
         {size(announcements) === 0 && <Empty />}
         {size(announcements) > 0 &&
           map(announcements, announcement => {
