@@ -23,7 +23,8 @@ const Failed = () => {
       }
 
       for (let i = 0; i < cart.MentorPasses.length; i += 1) {
-        amt += cart.MentorPasses[i].priceAmount
+        amt +=
+          cart.MentorPasses[i].priceAmount * cart.MentorPasses[i].CartToMentorshipListing.numSlots
       }
     }
     return amt
