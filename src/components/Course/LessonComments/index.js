@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Avatar, Button, Divider, Form, Input, Space, Modal, Select, Descriptions } from 'antd'
 import { ADD_COMMENTS } from 'constants/text'
 import { isNil, map, size } from 'lodash'
-import { showNotification, sortDescAndKeyCommentId } from 'components/utils'
+import { initPageItems, showNotification, sortDescAndKeyCommentId } from 'components/utils'
 import {
   ERROR,
   SUCCESS,
@@ -15,7 +15,6 @@ import {
 } from 'constants/notifications'
 import { getCommentsByLessonId, deleteComment, addCommentToLesson } from 'services/courses/lessons'
 import { getComplaintReasons, postCommentComplaint } from 'services/complaints'
-import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT } from 'constants/constants'
 import PaginationWrapper from 'components/Common/Pagination'
 import CommentGridItem from './CommentGridItem'
 
@@ -54,27 +53,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
     if (result && !isNil(result.comments)) {
       setComments(sortDescAndKeyCommentId(result.comments))
     }
-    const tempPaginatedItems = []
-    for (
-      let i = 0;
-      i <
-      (DEFAULT_ITEMS_PER_PAGE < size(result.comments)
-        ? DEFAULT_ITEMS_PER_PAGE
-        : size(result.comments));
-      i += 1
-    ) {
-      tempPaginatedItems.push(result.comments[i])
-    }
-    setPaginatedComments(tempPaginatedItems)
-    setCurrentPageIdx(1)
-    if (DEFAULT_ITEMS_PER_PAGE < size(result.comments)) {
-      setShowLoadMore(true)
-    } else {
-      setShowLoadMore(false)
-    }
-    setTimeout(() => {
-      setIsLoading(false)
-    }, DEFAULT_TIMEOUT)
+    initPageItems(setIsLoading, comments, setPaginatedComments, setCurrentPageIdx, setShowLoadMore)
   }
 
   useEffect(() => {
@@ -147,6 +126,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
                   autoSize={{ minRows: 2, maxRows: 6 }}
                   size="large"
                   placeholder={ADD_COMMENTS}
+                  ref={input => input && input.focus()}
                 />
               </div>
             </div>
@@ -262,6 +242,7 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
           setCurrentPageIdx={setCurrentPageIdx}
           showLoadMore={showLoadMore}
           setShowLoadMore={setShowLoadMore}
+          buttonStyle="primary"
           wrapperContent={
             size(paginatedComments) > 0 &&
             map(paginatedComments, comment => {

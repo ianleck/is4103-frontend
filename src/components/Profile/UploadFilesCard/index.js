@@ -101,16 +101,18 @@ const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
         >
           Download
         </Button>
-        <Button
-          ghost
-          type="danger"
-          shape="round"
-          icon={<DeleteOutlined />}
-          size="large"
-          onClick={() => removeFileFromServer(data.isTranscript ? 'transcript' : 'cv')}
-        >
-          Remove
-        </Button>
+        {showUploadButton && (
+          <Button
+            ghost
+            type="danger"
+            shape="round"
+            icon={<DeleteOutlined />}
+            size="large"
+            onClick={() => removeFileFromServer(data.isTranscript ? 'transcript' : 'cv')}
+          >
+            Remove
+          </Button>
+        )}
       </Space>
     )
   }

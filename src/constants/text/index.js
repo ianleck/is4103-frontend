@@ -1,5 +1,6 @@
 export const CREATOR_INFO = 'Creator Information'
 export const VIEW_PROFILE = 'View Profile'
+export const DIGI_DOJO = 'Digi Dojo'
 
 export const ANNOUNCEMENTS = 'Announcements'
 
@@ -44,6 +45,7 @@ export const EXPAND = 'EXPAND'
 export const COLLAPSE = 'COLLAPSE'
 export const CLOSE = 'Close'
 export const LOAD_MORE = 'Load More'
+export const ALL_LOADED = 'All Items Loaded'
 
 export const WITHDRAWALS = 'Withdrawals'
 export const APPROVE_WITHDRAWAL = 'Approve Withrdrawal Request'
@@ -57,3 +59,14 @@ export const WALLET_MGT = 'Wallet Management'
 
 export const BILLINGS = 'Billings'
 export const BILLING_MGT = 'Billing Management'
+
+export const FOLLOW = 'Follow'
+export const FLW_REQ_SENT = 'Follow Request Sent'
+export const CANCEL_FLW_REQ = 'Cancel Follow Request'
+export const REQUESTED = 'Requested'
+export const UNFOLLOW = 'Unfollow'
+
+export const ADD_POST = 'Add a post'
+export const UNLIKE = 'Unlike'
+export const LIKE = 'Like'
+export const LIKED = 'Liked'

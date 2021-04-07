@@ -67,7 +67,7 @@ const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport,
       </div>
       {!isAdmin && (
         <div className="col-auto align-self-start">
-          <Dropdown overlay={commentMenu()}>
+          <Dropdown overlay={commentMenu()} trigger={['click']}>
             <Button type="text" size="large" icon={<MoreOutlined />} />
           </Dropdown>
         </div>

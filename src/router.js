@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import Layout from 'layouts'
 
 const routes = [
-  // Landing Pages
+  // Common Pages
   {
     path: '/',
     Component: lazy(() => import('pages/')),
@@ -38,7 +38,6 @@ const routes = [
     Component: lazy(() => import('pages/cart')),
     exact: true,
   },
-
   {
     path: '/success',
     Component: lazy(() => import('pages/checkout/success')),
@@ -47,6 +46,16 @@ const routes = [
   {
     path: '/err',
     Component: lazy(() => import('pages/checkout/failed')),
+    exact: true,
+  },
+  {
+    path: '/social/feed',
+    Component: lazy(() => import('pages/social/feed')),
+    exact: true,
+  },
+  {
+    path: '/social/profile/:accountId',
+    Component: lazy(() => import('pages/social/profile')),
     exact: true,
   },
   // Auth Pages
@@ -211,6 +220,11 @@ const routes = [
     Component: lazy(() => import('pages/admin/wallets')),
     exact: true,
   },
+  {
+    path: '/admin/social/profile/:accountId',
+    Component: lazy(() => import('pages/social/profile')),
+    exact: true,
+  },
   // Sensei Pages
   {
     path: '/sensei',
@@ -255,6 +269,16 @@ const routes = [
   {
     path: '/sensei/mentorships/applications',
     Component: lazy(() => import('pages/sensei/mentorships/applications')),
+    exact: true,
+  },
+  {
+    path: '/sensei/social/feed',
+    Component: lazy(() => import('pages/social/feed')),
+    exact: true,
+  },
+  {
+    path: '/sensei/social/profile/:accountId',
+    Component: lazy(() => import('pages/social/profile')),
     exact: true,
   },
   {

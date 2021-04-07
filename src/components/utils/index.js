@@ -1,9 +1,14 @@
+import React from 'react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import { DIRECTION } from 'constants/constants'
-import { isNil, map } from 'lodash'
+import {
+  DEFAULT_ITEMS_PER_PAGE,
+  DEFAULT_TIMEOUT,
+  DIRECTION,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
+import { isNil, map, size } from 'lodash'
 import moment from 'moment'
-import React from 'react'
 
 export const formatTime = dateTime => {
   return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
@@ -45,6 +50,30 @@ export const sortDescAndKeyCommentId = data => {
   }))
 }
 
+export const sortDescAndKeyFollowingId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), following => ({
+    ...following,
+    key: following.followingId,
+  }))
+}
+
+export const sortDescAndKeyFollowershipId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), followership => ({
+    ...followership,
+    key: followership.followershipId,
+  }))
+}
+
+export const sortDescAndKeyPostId = data => {
+  return map(
+    data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    post => ({
+      ...post,
+      key: post.postId,
+    }),
+  )
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {
@@ -58,6 +87,15 @@ export const filterDataByComplaintStatus = (data, complaintStatus) => {
   if (!isNil(complaintStatus)) {
     return data.filter(o => {
       return o.isResolved === complaintStatus
+    })
+  }
+  return data
+}
+
+export const filterDataByFollowingStatus = (data, followingStatus) => {
+  if (!isNil(followingStatus)) {
+    return data.filter(o => {
+      return o.followingStatus === followingStatus
     })
   }
   return data
@@ -184,18 +222,21 @@ export const showNotification = (type, msg, description) => {
       notification.success({
         message: msg,
         description,
+        duration: 2.5,
       })
       break
     case 'error':
       notification.error({
         message: msg,
         description,
+        duration: 2.5,
       })
       break
     case 'warn':
       notification.warn({
         message: msg,
         description,
+        duration: 2.5,
       })
       break
     default:
@@ -233,4 +274,45 @@ export const getDetailsColumn = viewItem => {
       />
     ),
   }
+}
+
+export const isFollowing = (followingList, accountId) => {
+  return size(followingList.filter(following => following.followingId === accountId)) === 1
+}
+
+export const sendToSocialProfile = (history, user, accountId) => {
+  if (user.userType === USER_TYPE_ENUM.SENSEI) history.push(`/sensei/social/profile/${accountId}`)
+  else if (user.userType === USER_TYPE_ENUM.STUDENT) history.push(`/social/profile/${accountId}`)
+}
+
+export const initPageItems = (
+  setIsLoading,
+  totalData,
+  setPaginatedItems,
+  setCurrentPageIdx,
+  setShowLoadMore,
+) => {
+  setIsLoading(true)
+  const tempPaginatedItems = []
+  for (
+    let i = 0;
+    i < (DEFAULT_ITEMS_PER_PAGE < size(totalData) ? DEFAULT_ITEMS_PER_PAGE : size(totalData));
+    i += 1
+  ) {
+    tempPaginatedItems.push(totalData[i])
+  }
+  setPaginatedItems(tempPaginatedItems)
+  setCurrentPageIdx(1)
+  if (DEFAULT_ITEMS_PER_PAGE < size(totalData)) {
+    setShowLoadMore(true)
+  } else {
+    setShowLoadMore(false)
+  }
+  setTimeout(() => {
+    setIsLoading(false)
+  }, DEFAULT_TIMEOUT)
+}
+
+export const onFinishFailed = errorInfo => {
+  console.log('Failed:', errorInfo)
 }
