@@ -154,7 +154,7 @@ const MentorshipContractsTable = () => {
     return false
   }
 
-  const onAddPassToCart = async values => {
+  const onAddPassToCart = values => {
     const { mentorshipContractId } = selectedRecord
     const { mentorshipListingId } = selectedRecord
     const { numSlots } = values
