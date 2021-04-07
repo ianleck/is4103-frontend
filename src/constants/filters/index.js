@@ -1,3 +1,4 @@
+import { getAvailableCurrencyCodes } from 'components/utils'
 import {
   ADMIN_ROLE_ENUM,
   ADMIN_VERIFIED_ENUM,
@@ -91,4 +92,7 @@ export const USER_TYPE_ENUM_FILTER = [
   },
 ]
 
-export const CURRENCY_FILTERS = map(currencyCodes, c => ({ value: c.code, text: c.code }))
+export const CURRENCY_FILTERS = map(getAvailableCurrencyCodes(currencyCodes), c => ({
+  value: c.code,
+  text: c.code,
+}))
