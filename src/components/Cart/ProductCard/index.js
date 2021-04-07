@@ -18,9 +18,9 @@ const ProductCard = data => {
   const isStudent = user.userType === USER_TYPE_ENUM.STUDENT
 
   useEffect(() => {
-    const checkSensei = () => {
+    const checkSensei = async () => {
       if (!isNil(listing.accountId)) {
-        const res = getProfile(listing.accountId)
+        const res = await getProfile(listing.accountId)
         if (res) {
           setSensei(res)
         }

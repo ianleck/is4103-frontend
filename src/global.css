@@ -2,6 +2,10 @@
   max-height: 175px;
 }
 
+.complaint-reason-list-card {
+  height: 120px;
+}
+
 .clickable:hover {
   cursor: pointer;
 }
@@ -32,8 +36,15 @@
   white-space: pre-line;
 }
 
-.complaint-reason-list-card {
-  height: 120px;
+.following-list-container {
+  height: 450px;
+  max-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.invisible-btn:hover {
+  cursor: pointer;
 }
 
 .lesson-list-card {
@@ -80,6 +91,31 @@
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
   height: 220px;
+}
+
+.social-card-banner {
+  width: 100%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  opacity: 0.2;
+}
+
+.social-card-title {
+  position: absolute;
+  width: 100%;
+  padding-top: 5px;
+  transform: translate(-50%, 0);
+  -webkit-transform: translate(-50%, 50%);
+  text-align: center;
+  left: 50%;
+}
+
+.social-card-avatar {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -webkit-transform: translate(-50%, -50%);
 }
 
 .sensei-course-card-content {

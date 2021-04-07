@@ -2,18 +2,33 @@ import React, { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { UserOutlined } from '@ant-design/icons'
-import { Menu, Dropdown, Avatar, Badge } from 'antd'
+import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  SolutionOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
+import { Menu, Dropdown, Avatar, Modal, Button, Empty } from 'antd'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import { size } from 'lodash'
+import SocialFollowingList from 'components/Common/Social/FollowingList'
+import FollowerRequestList from 'components/Common/Social/FollowerRequestList'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
   const user = useSelector(state => state.user)
+  const social = useSelector(state => state.social)
+  const numFollowRequests = size(social.pendingFollowerList)
+
   const dispatch = useDispatch()
-  const [count, setCount] = useState(7)
   const history = useHistory()
 
-  const { username, userType } = user
+  const { firstName, lastName, username, userType } = user
+
+  const [showSocialModal, setShowSocialModal] = useState(false)
+  const [showFollowingList, setShowFollowingList] = useState(false)
+
+  const [showFollowerRequests, setShowFollowerRequests] = useState(false)
 
   const redirectToLogin = isStudent => e => {
     e.preventDefault()
@@ -34,6 +49,12 @@ const UserMenu = () => {
     })
   }
 
+  const viewFeed = e => {
+    e.preventDefault()
+    if (userType === USER_TYPE_ENUM.STUDENT) history.push(`/social/feed`)
+    if (userType === USER_TYPE_ENUM.SENSEI) history.push(`/sensei/social/feed`)
+  }
+
   const viewProfile = e => {
     e.preventDefault()
     const path = `/${userType.toLowerCase()}/profile`
@@ -46,36 +67,95 @@ const UserMenu = () => {
     history.push(path)
   }
 
-  const addCount = () => {
-    setCount(count + 1)
+  const displayFollowerRequests = () => {
+    setShowFollowingList(false)
+    setShowFollowerRequests(true)
+    setShowSocialModal(true)
+  }
+
+  const displayFollowingList = type => {
+    if (type === 'following') setShowFollowingList(true)
+    else setShowFollowingList(false)
+    setShowFollowerRequests(false)
+    setShowSocialModal(true)
   }
 
   const menu = (
     <Menu selectable={false}>
-      <Menu.Item className="pt-2 pb-2 pl-3 pr-5">
-        <div className="row">
-          <div className="col-12">
-            <span className="mb-5">Signed in as</span>
-          </div>
-          <div className="mt-2 col-12 font-size-18">
-            <span className="font-weight-bold">{username}</span>
+      <div className="row pt-2 pb-2 pl-3 pr-5">
+        <div className="col-12">
+          <span className="mb-5">Welcome,</span>
+        </div>
+        <div className="mt-2 col-12 font-size-18">
+          <span className="font-weight-bold">{`${firstName} ${lastName} [${username}]`}</span>
+        </div>
+      </div>
+      <Menu.Divider />
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <div
+          role="button"
+          tabIndex={0}
+          className="row ml-2 mr-1 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
+          onClick={() => displayFollowingList('following')}
+          onKeyDown={e => e.preventDefault()}
+        >
+          <div className="col-12 pl-0">
+            <span className="mb-5">Following</span>
+            <div className="mt-2 font-size-18">
+              <span className="font-weight-bold">{size(social.followingList)}</span>
+            </div>
           </div>
         </div>
-      </Menu.Item>
-      <Menu.Divider />
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <div
+          role="button"
+          tabIndex={0}
+          className="row ml-2 mr-2 pt-2 pb-2 pl-2 pr-5 btn border-0 text-left"
+          onClick={() => displayFollowingList('followers')}
+          onKeyDown={e => e.preventDefault()}
+        >
+          <div className="col-12 pl-0">
+            <span className="mb-5">Followers</span>
+            <div className="mt-2 font-size-18">
+              <span className="font-weight-bold">{size(social.followerList)}</span>
+            </div>
+          </div>
+        </div>
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={() => displayFollowerRequests()}>
+            <SolutionOutlined className="mr-2" />
+            You have {numFollowRequests} follower {numFollowRequests === 1 ? 'request' : 'requests'}
+            .
+          </a>
+        </Menu.Item>
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && <Menu.Divider />}
       <Menu.Item>
         <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
-          Your profile
+          My profile
         </a>
       </Menu.Item>
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={viewFeed}>
+            <SolutionOutlined className="mr-2" />
+            My feed
+          </a>
+        </Menu.Item>
+      )}
       <Menu.Divider />
-      <Menu.Item>
-        <a href="#" onClick={viewSettings}>
-          <i className="fe fe-settings mr-2" />
-          Settings
-        </a>
-      </Menu.Item>
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={viewSettings}>
+            <i className="fe fe-settings mr-2" />
+            Settings
+          </a>
+        </Menu.Item>
+      )}
       <Menu.Item>
         <a href="#" onClick={logout}>
           <i className="fe fe-log-out mr-2" />
@@ -123,21 +203,77 @@ const UserMenu = () => {
 
   if (user.authorized) {
     return (
-      <Dropdown overlay={menu} trigger={['click']} onVisibleChange={addCount}>
+      <Dropdown overlay={menu}>
         <div className={styles.dropdown}>
-          <Badge count={count}>
-            <Avatar
-              src={
-                user.profileImgUrl
-                  ? `${user.profileImgUrl}?${new Date().getTime()}`
-                  : GetDefaultProfilePic()
-              }
-              className={styles.avatar}
-              shape="square"
-              size="large"
-              icon={<UserOutlined />}
-            />
-          </Badge>
+          <Avatar
+            src={
+              user.profileImgUrl
+                ? `${user.profileImgUrl}?${new Date().getTime()}`
+                : GetDefaultProfilePic()
+            }
+            className={styles.avatar}
+            shape="square"
+            size="large"
+            icon={<UserOutlined />}
+          />
+          <Modal
+            title={`${showFollowingList ? 'Following' : 'Follower'} List`}
+            visible={showSocialModal}
+            cancelText="Close"
+            centered
+            okButtonProps={{ style: { display: 'none' } }}
+            onCancel={() => setShowSocialModal(false)}
+            zIndex="1051"
+          >
+            {!showFollowerRequests && (
+              <div
+                role="button"
+                tabIndex={0}
+                className="text-dark btn btn-block text-left border-0 mb-4 pl-0 d-flex justify-content-between align-items-center"
+                onClick={() => setShowFollowerRequests(true)}
+                onKeyDown={e => e.preventDefault()}
+              >
+                <span className="font-weight-bold font-size-18">
+                  Follow requests ({numFollowRequests})
+                </span>
+                <ArrowRightOutlined className="float-right" />
+              </div>
+            )}
+            {!showFollowerRequests && (
+              <div className="following-list-container">
+                <SocialFollowingList
+                  followingList={showFollowingList ? social.followingList : social.followerList}
+                  isFollowingList={showFollowingList}
+                  isOwnList
+                  setShowSocialModal={setShowSocialModal}
+                />
+              </div>
+            )}
+            {showFollowerRequests && (
+              <div className="following-list-container">
+                <div className="row pt-2">
+                  <div className="col-4 mb-4">
+                    <Button
+                      block
+                      type="primary"
+                      shape="round"
+                      icon={<ArrowLeftOutlined />}
+                      onClick={() => setShowFollowerRequests(false)}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </div>
+                {numFollowRequests === 0 && <Empty />}
+                {numFollowRequests > 0 && (
+                  <FollowerRequestList
+                    pendingFollowerList={social.pendingFollowerList}
+                    setShowSocialModal={setShowSocialModal}
+                  />
+                )}
+              </div>
+            )}
+          </Modal>
         </div>
       </Dropdown>
     )

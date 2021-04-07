@@ -159,7 +159,6 @@ export async function updateProfile(accountId, payload) {
       { withCredentials: true },
     )
     .then(response => {
-      console.log(response)
       if (!isNil(response.data)) {
         if (!isNil(response.data.user)) return response.data.user
         return false

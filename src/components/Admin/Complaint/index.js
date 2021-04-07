@@ -252,13 +252,9 @@ const Complaint = () => {
   const addNewComplaintReasonFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <button
-          type="button"
-          onClick={() => setShowAddComplaint(false)}
-          className="btn btn-outline-default"
-        >
+        <Button type="default" size="large" onClick={() => setShowAddComplaint(false)}>
           Cancel
-        </button>
+        </Button>
       </div>
       <div className="col-auto">
         <Button type="primary" form="addNewComplaintReasonForm" htmlType="submit" size="large">

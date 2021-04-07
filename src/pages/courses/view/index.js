@@ -6,8 +6,10 @@ import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, NA } from 'constants/text'
-import { formatTime } from 'components/utils'
+import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO, NA } from 'constants/text'
+import { formatTime, sendToSocialProfile } from 'components/utils'
+import SocialFollowBtn from 'components/Common/Social/FollowBtn'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -156,16 +158,25 @@ const ViewCourseDetailsPublic = () => {
                 </div>
                 <div className="row">
                   <div className="col-12">
-                    <a className="h3 font-weight-bold" href="#" onClick={() => history.goBack()}>
+                    <a
+                      className="h3 font-weight-bold"
+                      href="#"
+                      onClick={() => sendToSocialProfile(history, user, currentCourse.accountId)}
+                    >
                       {`${isNil(currentSensei.firstName) ? 'Anonymous' : currentSensei.firstName} ${
                         isNil(currentSensei.lastName) ? 'Pigeon' : currentSensei.lastName
                       }`}
                     </a>
                   </div>
                   <div className="col-12 mt-2">
-                    <div className="h5 text-uppercase">Digi Dojo {currentSensei.userType}</div>
+                    <div className="h5 text-uppercase">
+                      {`${DIGI_DOJO} ${USER_TYPE_ENUM.SENSEI}`}
+                    </div>
                   </div>
                   <div className="col-12 mt-2">
+                    <SocialFollowBtn targetAccountId={currentCourse.accountId} />
+                  </div>
+                  <div className="col-12 mt-4">
                     <Descriptions
                       title="Credentials"
                       bordered
