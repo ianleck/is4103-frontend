@@ -4,7 +4,6 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
   EditOutlined,
-  ShoppingOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import {
@@ -21,7 +20,7 @@ import {
 } from 'antd'
 import { filter, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
   acceptMentorshipApplication,
   cancelMentorshipApplication,
@@ -29,12 +28,11 @@ import {
   getSenseiMentorshipApplications,
   rejectMentorshipApplication,
 } from 'services/mentorship/applications'
-import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import { formatTime } from 'components/utils'
 
 const MentorshipApplicationsTable = () => {
   const user = useSelector(state => state.user)
-  const dispatch = useDispatch()
   const history = useHistory()
   const [mentorshipApplications, setMentorshipApplications] = useState([])
   const { accountId, userType } = user
@@ -79,13 +77,6 @@ const MentorshipApplicationsTable = () => {
         notification.success({ message: 'Success', description: _data.message })
         getApplications()
       }
-    })
-  }
-
-  const addItemToCart = record => {
-    dispatch({
-      type: 'cart/ADD_MENTORSHIP_LISTING_TO_CART',
-      payload: { mentorshipListingId: record.mentorshipContractId },
     })
   }
 
@@ -227,18 +218,6 @@ const MentorshipApplicationsTable = () => {
             icon={<EditOutlined />}
             onClick={() => editApplication(record)}
           />
-          {record.senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED &&
-            record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
-              <Button
-                type="primary"
-                size="large"
-                shape="circle"
-                onClick={() => {
-                  addItemToCart(record)
-                }}
-                icon={<ShoppingOutlined />}
-              />
-            )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
               title="Are you sure you wish to cancel your application?"

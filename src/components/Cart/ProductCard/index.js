@@ -12,7 +12,7 @@ const ProductCard = data => {
   const dispatch = useDispatch()
   const { listing } = data
   const [sensei, setSensei] = useState([])
-  const [isCourse, setIsCourse] = useState(false)
+  const [isCourse, setIsCourse] = useState(true)
   const history = useHistory()
   const currLocation = data.location
   const isStudent = user.userType === USER_TYPE_ENUM.STUDENT
@@ -28,8 +28,8 @@ const ProductCard = data => {
     }
 
     const checkCourse = () => {
-      if (!isNil(listing.courseId)) {
-        setIsCourse(true)
+      if (isNil(listing.courseId)) {
+        setIsCourse(false)
       }
     }
     checkSensei()
@@ -73,7 +73,14 @@ const ProductCard = data => {
   }
 
   const GetDefaultProfilePic = () => {
-    return '/resources/images/course-placeholder.png'
+    if (isCourse) {
+      return '/resources/images/course-placeholder.png'
+    }
+
+    if (isNil(sensei.profileImgUrl)) {
+      return '/resources/images/avatars/master.png'
+    }
+    return sensei.profileImgUrl
   }
 
   const getCourseCard = () => {
@@ -205,9 +212,17 @@ const ProductCard = data => {
               {!isNil(sensei.lastName) ? sensei.lastName : 'Pigeon'}
             </h6>
             <div className="text-dark text-wrap">{listing.name}</div>
+            <div className="text-dark text-wrap">
+              Pass Quantity: {listing.CartToMentorshipListing.numSlots}
+            </div>
             <div className="text-dark text-wrap mt-2">
               <span>
-                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+                <strong>
+                  ${' '}
+                  {parseFloat(
+                    listing.priceAmount * listing.CartToMentorshipListing.numSlots,
+                  ).toFixed(2)}
+                </strong>
               </span>
             </div>
           </div>
@@ -248,9 +263,17 @@ const ProductCard = data => {
               {listing.name}
             </div>
             <div className="truncate-2-overflow text-dark text-wrap">{listing.description}</div>
+            <div className="text-dark text-wrap">
+              Pass Quantity: {listing.CartToMentorshipListing.numSlots}
+            </div>
             <div className="text-dark text-wrap mt-2">
               <span>
-                <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
+                <strong>
+                  ${' '}
+                  {parseFloat(
+                    listing.priceAmount * listing.CartToMentorshipListing.numSlots,
+                  ).toFixed(2)}
+                </strong>
               </span>
             </div>
           </div>

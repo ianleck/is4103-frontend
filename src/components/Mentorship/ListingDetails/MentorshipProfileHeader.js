@@ -8,7 +8,7 @@ import { FacebookIcon, FacebookShareButton } from 'react-share'
 import { useSelector } from 'react-redux'
 import BackBtn from 'components/Common/BackBtn'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
-import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 
 const MentorshipProfileHeader = () => {
   const { id } = useParams()
@@ -35,8 +35,11 @@ const MentorshipProfileHeader = () => {
       if (response && size(response.contracts) > 0) {
         for (let i = 0; i < size(response.contracts); i += 1) {
           if (
-            id === response.contracts[i].mentorshipListingId &&
-            response.contracts[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.PENDING
+            (id === response.contracts[i].mentorshipListingId &&
+              response.contracts[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.PENDING) ||
+            (id === response.contracts[i].mentorshipListingId &&
+              response.contracts[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED &&
+              response.contracts[i].progress !== CONTRACT_PROGRESS_ENUM.COMPLETED)
           ) {
             setIsSubscribed(true)
           }
