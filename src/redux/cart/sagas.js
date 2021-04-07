@@ -32,7 +32,6 @@ export function* LOAD_CURRENT_CART() {
 export function* ADD_COURSE_TO_CART({ payload }) {
   const { courseId } = payload
   const response = yield call(jwtCart.addCourseToCart, courseId)
-  console.log('response', response)
   if (response && response.success) {
     if (!isNil(response.updatedCart)) {
       yield putResolve({
@@ -47,7 +46,6 @@ export function* ADD_COURSE_TO_CART({ payload }) {
 export function* ADD_MENTORSHIP_PASSES_TO_CART({ payload }) {
   const { mentorshipContractId, numSlots } = payload
   const response = yield call(jwtCart.addMentorshipPassToCart, mentorshipContractId, numSlots)
-  console.log('response', response)
   if (response && response.success) {
     if (!isNil(response.updatedCart)) {
       yield putResolve({
@@ -67,7 +65,6 @@ export function* UPDATE_MENTORSHIP_PASSES_TO_CART({ payload }) {
     mentorshipListingId,
     numSlots,
   )
-  console.log('response', response)
   if (response && response.success) {
     const response2 = yield call(jwtCart.getCart)
 
