@@ -145,11 +145,14 @@ const ViewCourseDetailsPublic = () => {
                 <div className="row mt-2 align-items-center">
                   <div className="col-auto">
                     <div className="kit__utils__avatar kit__utils__avatar--size64 mb-3">
-                      {currentSensei.profileImgUrl ? (
-                        <img src={currentSensei.profileImgUrl} alt="Display Pic" />
-                      ) : (
-                        <img src="/resources/images/avatars/master.png" alt="Display Pic" />
-                      )}
+                      <img
+                        src={
+                          currentSensei.profileImgUrl
+                            ? currentSensei.profileImgUrl
+                            : '/resources/images/avatars/master.png'
+                        }
+                        alt="Display Pic"
+                      />
                     </div>
                   </div>
                 </div>

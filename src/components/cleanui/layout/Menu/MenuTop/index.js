@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
+import { DIGI_DOJO } from 'constants/text'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
@@ -131,7 +132,7 @@ const MenuTop = ({
     >
       <div className={style.logoContainer}>
         <div className={style.logo}>
-          <img src="/resources/images/logo.svg" width="32" className="mr-2" alt="Digi Dojo" />
+          <img src="/resources/images/logo.svg" width="32" className="mr-2" alt={DIGI_DOJO} />
           <div className={style.name}>{logo}</div>
         </div>
       </div>

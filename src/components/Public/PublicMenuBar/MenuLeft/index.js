@@ -7,6 +7,7 @@ import store from 'store'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { find } from 'lodash'
 import UserMenu from 'components/UserActionGroup/UserMenu'
+import { DIGI_DOJO } from 'constants/text'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
@@ -191,7 +192,7 @@ const MenuLeft = ({
       >
         <div className={style.logoContainer}>
           <div className={style.logo}>
-            <img src="/resources/images/logo.svg" width="32" className="mr-2" alt="Digi Dojo" />
+            <img src="/resources/images/logo.svg" width="32" className="mr-2" alt={DIGI_DOJO} />
             <div className={style.name}>{logo}</div>
             {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
           </div>
