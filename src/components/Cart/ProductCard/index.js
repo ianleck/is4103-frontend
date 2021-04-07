@@ -196,11 +196,7 @@ const ProductCard = data => {
           <div className="col-auto pl-2">
             <Avatar
               size={32}
-              src={
-                sensei.profileImgUrl
-                  ? `${sensei.profileImgUrl}?${new Date().getTime()}`
-                  : GetDefaultProfilePic()
-              }
+              src={sensei.profileImgUrl ? sensei.profileImgUrl : GetDefaultProfilePic()}
             />
           </div>
           <div className="col pl-0">
@@ -240,11 +236,7 @@ const ProductCard = data => {
           <div className="col-auto pl-2">
             <Avatar
               size={64}
-              src={
-                sensei.profileImgUrl
-                  ? `${sensei.profileImgUrl}?${new Date().getTime()}`
-                  : GetDefaultProfilePic()
-              }
+              src={sensei.profileImgUrl ? sensei.profileImgUrl : GetDefaultProfilePic()}
             />
           </div>
           <div className="col pl-2">

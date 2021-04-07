@@ -73,8 +73,8 @@ const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
                   icon={<UserOutlined />}
                   src={
                     userRowItem.profileImgUrl
-                      ? `${userRowItem.profileImgUrl}?${new Date().getTime()}`
-                      : null
+                      ? userRowItem.profileImgUrl
+                      : '/resources/images/avatars/avatar-2.png'
                   }
                 />
               </div>

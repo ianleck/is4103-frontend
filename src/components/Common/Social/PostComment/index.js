@@ -372,7 +372,7 @@ const PostComments = ({ user, post, setNumComments }) => {
                 <Avatar
                   src={
                     user.profileImgUrl
-                      ? `${user.profileImgUrl}?${new Date().getTime()}`
+                      ? user.profileImgUrl
                       : '/resources/images/avatars/avatar-2.png'
                   }
                 />

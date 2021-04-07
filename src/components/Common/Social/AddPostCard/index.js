@@ -94,9 +94,7 @@ const SocialAddPostCard = ({ user, getPostsSvc }) => {
           <div className="col-auto">
             <Avatar
               src={
-                user.profileImgUrl
-                  ? `${user.profileImgUrl}?${new Date().getTime()}`
-                  : '/resources/images/avatars/avatar-2.png'
+                user.profileImgUrl ? user.profileImgUrl : '/resources/images/avatars/avatar-2.png'
               }
             />
           </div>
