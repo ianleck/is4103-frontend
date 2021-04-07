@@ -312,7 +312,7 @@ const MentorshipContractsTable = () => {
                   label="Quantity"
                   rules={[{ required: true, message: 'Please input a valid quantity' }]}
                 >
-                  <InputNumber min={1} defaultValue={1} />
+                  <InputNumber min={1} />
                 </Form.Item>
               </div>
             </div>
