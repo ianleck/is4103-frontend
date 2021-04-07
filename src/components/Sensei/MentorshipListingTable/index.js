@@ -157,7 +157,7 @@ const SenseiMentorshipListings = () => {
       key: 'description',
     },
     {
-      title: 'Monthly Price (S$)',
+      title: 'Pass Price (S$)',
       dataIndex: 'priceAmount',
       key: 'priceAmount',
       responsive: ['lg'],
@@ -340,9 +340,9 @@ const SenseiMentorshipListings = () => {
             </Select>
           </Form.Item>
           <Form.Item
-            label="Monthly subscription price (S$)"
+            label="Mentorship pass price (S$)"
             name="priceAmount"
-            rules={[{ required: true, message: 'Please add a monthly subscription price.' }]}
+            rules={[{ required: true, message: 'Please add a mentorship pass price.' }]}
           >
             <InputNumber
               formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -427,9 +427,9 @@ const SenseiMentorshipListings = () => {
             </Select>
           </Form.Item>
           <Form.Item
-            label="Monthly subscription price (S$)"
+            label="Mentorship Pass price (S$)"
             name="priceAmount"
-            rules={[{ required: true, message: 'Please add a monthly subscription price.' }]}
+            rules={[{ required: true, message: 'Please add a mentorship pass price.' }]}
           >
             <InputNumber
               formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
