@@ -43,7 +43,7 @@ const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport,
         <Avatar
           src={
             comment.User?.profileImgUrl
-              ? `${comment.User.profileImgUrl}?${new Date().getTime()}`
+              ? comment.User.profileImgUrl
               : '/resources/images/avatars/avatar-2.png'
           }
         />

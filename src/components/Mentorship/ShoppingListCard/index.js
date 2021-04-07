@@ -35,8 +35,8 @@ const MentorshipListingCard = data => {
                 size={42}
                 icon={<UserOutlined />}
                 src={
-                  listing?.Sensei?.profileImgUrl
-                    ? `${listing?.Sensei?.profileImgUrl}?${new Date().getTime()}`
+                  listing.Sensei?.profileImgUrl
+                    ? listing.Sensei?.profileImgUrl
                     : '/resources/images/avatars/avatar-2.png'
                 }
               />

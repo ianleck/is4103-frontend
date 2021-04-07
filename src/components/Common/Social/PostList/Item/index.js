@@ -78,7 +78,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
                 size="large"
                 src={
                   post.User?.profileImgUrl
-                    ? `${post.User?.profileImgUrl}?${new Date().getTime()}`
+                    ? post.User.profileImgUrl
                     : '/resources/images/avatars/avatar-2.png'
                 }
               />

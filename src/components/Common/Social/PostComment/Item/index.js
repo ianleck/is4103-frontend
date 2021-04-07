@@ -63,7 +63,7 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
         <Avatar
           src={
             comment.User?.profileImgUrl
-              ? `${comment.User.profileImgUrl}?${new Date().getTime()}`
+              ? comment.User.profileImgUrl
               : '/resources/images/avatars/avatar-2.png'
           }
         />

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Layout } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
+import { DIGI_DOJO } from 'constants/text'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ settings }) => ({
@@ -46,7 +47,7 @@ const AuthLayout = ({
           >
             <div className={style.logoContainer}>
               <a href="/" className={style.logo}>
-                <img src="/resources/images/logo.svg" width="32" className="mr-2" alt="Clean UI" />
+                <img src="/resources/images/logo.svg" width="32" className="mr-2" alt={DIGI_DOJO} />
                 <div className={style.name}>{logo}</div>
                 {logo === 'Clean UI Pro' && <div className={style.descr}>React</div>}
               </a>

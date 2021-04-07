@@ -70,7 +70,7 @@ const CourseListingCard = data => {
                   size={32}
                   icon={<UserOutlined />}
                   src={
-                    !isNil(course.Sensei?.profileImgUrl)
+                    course.Sensei?.profileImgUrl
                       ? course.Sensei.profileImgUrl
                       : '/resources/images/avatars/master.png'
                   }

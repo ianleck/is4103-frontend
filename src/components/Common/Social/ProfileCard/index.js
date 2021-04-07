@@ -60,7 +60,7 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
           <Avatar
             size={75}
             icon={<UserOutlined />}
-            src={user.profileImgUrl ? `${user.profileImgUrl}?${new Date().getTime()}` : null}
+            src={user.profileImgUrl ? user.profileImgUrl : '/resources/images/avatars/avatar-2.png'}
           />
         </div>
       </div>
