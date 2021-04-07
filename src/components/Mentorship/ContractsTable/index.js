@@ -4,21 +4,40 @@ import {
   QuestionCircleOutlined,
   ShoppingOutlined,
 } from '@ant-design/icons'
-import { Button, ConfigProvider, Empty, Popconfirm, Space, Table, Tabs } from 'antd'
-import { filter, size } from 'lodash'
+import {
+  Button,
+  ConfigProvider,
+  Empty,
+  Popconfirm,
+  Space,
+  Table,
+  Tabs,
+  Modal,
+  Form,
+  Divider,
+  InputNumber,
+  Descriptions,
+} from 'antd'
+import { filter, isNil, size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { formatTime } from 'components/utils'
 
 const MentorshipContractsTable = () => {
   const { TabPane } = Tabs
   const history = useHistory()
   const user = useSelector(state => state.user)
+  const cart = useSelector(state => state.cart)
+  const dispatch = useDispatch()
+
   const [tabKey, setTabKey] = useState('ongoing')
   const [mentorshipContracts, setContracts] = useState([])
+  const [showBuyPass, setShowBuyPass] = useState(false)
+  const [selectedRecord, setSelectedRecord] = useState([])
+
   const getContracts = async () => {
     const test = await getAllStudentMentorshipApplications(user.accountId)
     if (test) {
@@ -94,7 +113,13 @@ const MentorshipContractsTable = () => {
           />
           {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
             record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
-            <Button type="primary" shape="circle" size="large" icon={<ShoppingOutlined />} />
+            <Button
+              type="primary"
+              shape="circle"
+              size="large"
+              onClick={() => recordSelected(record)}
+              icon={<ShoppingOutlined />}
+            />
           )}
           {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
             record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
@@ -110,6 +135,61 @@ const MentorshipContractsTable = () => {
       ),
     },
   ]
+
+  const recordSelected = record => {
+    setSelectedRecord(record)
+    setShowBuyPass(true)
+  }
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const checkInCart = listingId => {
+    for (let i = 0; i < cart.MentorPasses.length; i += 1) {
+      if (cart.MentorPasses[i].mentorshipListingId === listingId) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const onAddPassToCart = async values => {
+    const { mentorshipContractId } = selectedRecord
+    const { mentorshipListingId } = selectedRecord
+    const { numSlots } = values
+    const { cartId } = cart
+
+    const alrInCart = checkInCart(selectedRecord.mentorshipListingId)
+
+    if (alrInCart) {
+      dispatch({
+        type: 'cart/UPDATE_MENTORSHIP_PASSES_TO_CART',
+        payload: { cartId, mentorshipListingId, numSlots },
+      })
+    } else {
+      dispatch({
+        type: 'cart/ADD_MENTORSHIP_PASSES_TO_CART',
+        payload: { mentorshipContractId, numSlots },
+      })
+    }
+    setShowBuyPass(false)
+  }
+
+  const buyPassFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowBuyPass(false)}>
+          Cancel
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="buyPassesForm" htmlType="submit" size="large">
+          Add mentor passes to cart
+        </Button>
+      </div>
+    </div>
+  )
 
   const showContracts = (subscriptionStatus, dataSource, columns) => {
     const numSubscriptions = size(dataSource)
@@ -166,7 +246,6 @@ const MentorshipContractsTable = () => {
         </Tabs>
       </div>
       <div className="card-body">
-        {' '}
         {tabKey === 'notStarted' &&
           showContracts(
             CONTRACT_PROGRESS_ENUM.NOT_STARTED,
@@ -191,6 +270,54 @@ const MentorshipContractsTable = () => {
             filter(mentorshipContracts, ['progress', CONTRACT_PROGRESS_ENUM.CANCELLED]),
             tableColumns,
           )}
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Purchase Mentorship Passes"
+          visible={showBuyPass}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => setShowBuyPass(false)}
+          footer={buyPassFooter}
+        >
+          <p className="text-dark">
+            <strong>Mentorship Passes in Inventory</strong>
+          </p>
+          <Descriptions column={1}>
+            <Descriptions.Item label="Number of passes">
+              {isNil(selectedRecord.mentorPassCount) ? 0 : selectedRecord.mentorPassCount}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <Divider />
+
+          <p className="text-dark">
+            <strong>Number of passes to purchase</strong>
+          </p>
+
+          <Form
+            id="buyPassesForm"
+            layout="vertical"
+            className="mt-4"
+            hideRequiredMark
+            onFinish={onAddPassToCart}
+            onFinishFailed={onFinishFailed}
+          >
+            <div className="row">
+              <div className="col-md-12">
+                <Form.Item
+                  name="numSlots"
+                  label="Quantity"
+                  rules={[{ required: true, message: 'Please input a valid quantity' }]}
+                >
+                  <InputNumber min={1} defaultValue={1} />
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
       </div>
     </div>
   )
