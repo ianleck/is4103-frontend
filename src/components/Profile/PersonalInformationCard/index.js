@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Descriptions, Form, Input, Modal, Typography, Upload, message } from 'antd'
-import QRCode from 'react-qr-code'
+import { Button, Descriptions, Form, Input, Modal, Upload, message } from 'antd'
 import { isNil } from 'lodash'
-import { QrcodeOutlined, CameraOutlined, PlusOutlined } from '@ant-design/icons'
+import { CameraOutlined, PlusOutlined } from '@ant-design/icons'
 import actions from 'redux/user/actions'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import moment from 'moment'
@@ -15,15 +14,12 @@ const onFinishFailed = errorInfo => {
 }
 
 const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
-  const { Paragraph } = Typography
-
   const dispatch = useDispatch()
 
   const [showEditInformation, setShowEditInformation] = useState(false)
-  const [showQRCode, setShowQRCode] = useState(false)
   const [showDPModal, setShowDPModal] = useState(false)
 
-  const title = `${user.firstName} is sharing his Digi Dojo profile with you!`
+  const title = `${user.firstName || 'Anonymous Pigeon'} is sharing his Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
     const formValues = {
@@ -163,16 +159,10 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
                 size="middle"
                 icon={<CameraOutlined />}
                 onClick={() => setShowDPModal(true)}
-              />
+              >
+                Upload
+              </Button>
             )}
-            <Button
-              className="ml-2"
-              type="primary"
-              shape="round"
-              icon={<QrcodeOutlined />}
-              size="middle"
-              onClick={() => setShowQRCode(true)}
-            />
             <div>
               <ShareBtn
                 quote={title}
@@ -319,32 +309,6 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
               </div>
             </Form>
           </Modal>
-          <Modal
-            title="View QR"
-            visible={showQRCode}
-            cancelText="Close"
-            centered
-            okButtonProps={{ style: { display: 'none' } }}
-            onCancel={() => setShowQRCode(false)}
-          >
-            <div className="row mt-3">
-              <div className="col-12 text-center">
-                <QRCode value={`http://localhost:3000/social/profile/${user.accountId}`} />
-                <div className="mt-3">
-                  <Paragraph
-                    copyable={{
-                      text: isAdmin
-                        ? `http://localhost:3000/admin/social/profile/${user.accountId}`
-                        : `http://localhost:3000/social/profile/${user.accountId}`,
-                    }}
-                  >
-                    Share Link
-                  </Paragraph>
-                </div>
-              </div>
-            </div>
-          </Modal>
-
           <Modal
             title="Upload Display Picture"
             visible={showDPModal}
