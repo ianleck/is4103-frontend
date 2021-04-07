@@ -69,7 +69,7 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
           <div
             role="button"
             tabIndex={0}
-            className="col-6 invisible-btn defocus-btn"
+            className="col-6 clickable defocus-btn"
             onClick={() => showSocialTab('following')}
             onKeyDown={e => e.preventDefault()}
           >
@@ -86,7 +86,7 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
           <div
             role="button"
             tabIndex={0}
-            className="col-6 text-right invisible-btn defocus-btn"
+            className="col-6 text-right clickable defocus-btn"
             onClick={() => showSocialTab('follower')}
             onKeyDown={e => e.preventDefault()}
           >

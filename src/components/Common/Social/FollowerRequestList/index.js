@@ -62,7 +62,7 @@ const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
           <div
             role="button"
             tabIndex={0}
-            className="col-7 col-md-9 invisible-btn defocus-btn"
+            className="col-7 col-md-9 clickable defocus-btn"
             onClick={() => socialProfileOverride(userRowItem.accountId)}
             onKeyDown={e => e.preventDefault()}
           >
