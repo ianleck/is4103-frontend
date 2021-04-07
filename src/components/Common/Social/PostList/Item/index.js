@@ -87,7 +87,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
               <span
                 role="button"
                 tabIndex={0}
-                className="invisible-btn font-weight-bold"
+                className="invisible-btn font-weight-bold font-size-18"
                 onClick={() => sendToSocialProfile(history, user, post.User?.accountId)}
                 onKeyDown={e => e.preventDefault()}
               >
@@ -96,7 +96,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
                 }`}
               </span>
               <br />
-              <small className="text-muted">{moment(post.createdAt).fromNow()}</small>
+              <span className="font-size-15 text-muted">{moment(post.createdAt).fromNow()}</span>
             </div>
             <div className="col-auto align-self-start">
               {user.accountId === post.accountId && (
@@ -112,7 +112,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
             </div>
           </div>
         </div>
-        <div className="card-body pt-0 pb-0 description-body">
+        <div className="card-body pt-0 pb-0 description-body font-size-21">
           <Paragraph
             ellipsis={{
               rows: 1,

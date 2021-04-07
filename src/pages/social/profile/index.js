@@ -178,7 +178,7 @@ const SocialProfile = () => {
         {currentTab === 'following' && (
           <div className="card">
             <div className="card-header pb-2">
-              <h3>Following</h3>
+              <h3 className="font-weight-bold text-dark">Following</h3>
             </div>
             <div className="card-body">
               {size(followingList) > 0 && (
@@ -195,7 +195,7 @@ const SocialProfile = () => {
         {currentTab === 'follower' && (
           <div className="card">
             <div className="card-header pb-2">
-              <h3>Followers</h3>
+              <h3 className="font-weight-bold text-dark">Followers</h3>
             </div>
             <div className="card-body">
               {size(followerList) > 0 && (
