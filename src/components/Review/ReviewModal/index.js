@@ -64,7 +64,7 @@ const ReviewModal = ({ isVisible, setShowReviewModal, review, editMode, onSubmit
 
         <Form.Item label="Review Comment" name="comment">
           <TextArea
-            placeholder="Tell us more about what your experience."
+            placeholder="Tell us more about your experience."
             autoSize={{ minRows: 2, maxRows: 6 }}
           />
         </Form.Item>
