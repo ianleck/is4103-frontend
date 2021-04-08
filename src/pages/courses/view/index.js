@@ -144,7 +144,7 @@ const ViewCourseDetailsPublic = () => {
                 </div>
                 <div className="col-auto">
                   <ShareBtn
-                    quote={`${user.firstName || 'Anonymous Pigeon'} is sharing this course: [${
+                    quote={`${user.firstName || 'Anonymous'} is sharing this course: [${
                       currentCourse.title
                     }] with you!`}
                     url={`http://localhost:3000/courses/${currentCourse.courseId}`}

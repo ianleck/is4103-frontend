@@ -19,7 +19,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showDPModal, setShowDPModal] = useState(false)
 
-  const title = `${user.firstName || 'Anonymous Pigeon'} is sharing his Digi Dojo profile with you!`
+  const title = `${user.firstName || 'Anonymous'} is sharing their Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
     const formValues = {
