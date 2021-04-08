@@ -41,7 +41,6 @@ const BillingView = () => {
         }
       }
       // for SUBSCRIPTION billing
-      // to check when mentorship subscription cart checkout is patched
       if (result.billings[0].billingType === BILLING_TYPE.MENTORSHIP) {
         const subscription = await getSubscription(result.billings[0].contractId)
         if (subscription && !isNil(subscription)) {
