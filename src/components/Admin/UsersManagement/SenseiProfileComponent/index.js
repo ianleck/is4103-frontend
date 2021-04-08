@@ -12,7 +12,7 @@ import ProfileExperienceCard from 'components/Profile/ExperienceCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
-import { ADMIN_VERIFIED_ENUM, STATUS_ENUM } from 'constants/constants'
+import { ADMIN_ROLE_ENUM, ADMIN_VERIFIED_ENUM, STATUS_ENUM } from 'constants/constants'
 import {
   formatTime,
   getDetailsColumn,
@@ -40,7 +40,7 @@ const SenseiProfileComponent = () => {
   const history = useHistory()
   const { userId } = useParams()
   const user = useSelector(state => state.user)
-  const { walletId } = user
+  const isAdminRole = user.role === ADMIN_ROLE_ENUM.ADMIN
 
   const [sensei, setSensei] = useState('')
   const [mentorshipListings, setMentorshipListings] = useState('')
@@ -58,30 +58,32 @@ const SenseiProfileComponent = () => {
   }
 
   const getSensei = async () => {
+    const getWallet = async senseiWalletId => {
+      const result = await viewWallet(senseiWalletId)
+      if (result && !isNil(result.wallet)) {
+        if (!isNil(result.wallet.BillingsSent)) {
+          setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
+        }
+        if (!isNil(result.wallet.BillingsReceived)) {
+          setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
+        }
+      }
+    }
+
     const response = await jwtAdmin.getSensei(userId)
     setSensei(response)
+    if (!isAdminRole) {
+      getWallet(response.walletId)
+    }
   }
   const getListings = async () => {
     const response = await jwtAdmin.getMentorMentorshipListings(userId)
     setMentorshipListings(response)
   }
 
-  const getWallet = async () => {
-    const result = await viewWallet(walletId)
-    if (result) {
-      if (!isNil(result.wallet.BillingsSent)) {
-        setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
-      }
-      if (!isNil(result.wallet.BillingsReceived)) {
-        setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
-      }
-    }
-  }
-
   useEffect(() => {
     getSensei()
     getListings()
-    getWallet()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -260,27 +262,29 @@ const SenseiProfileComponent = () => {
           </div>
         </div>
       </div>
-      {/* Billings of a Sensei */}
-      <div className="row mt-4">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header card-header-flex">
-              <div className="d-flex flex-column justify-content-center mr-auto">
-                <h5>Billings</h5>
+      {/* Billings of a Sensei - cannot be viewed by admins with just ADMIN role */}
+      {!isAdminRole && (
+        <div className="row mt-4">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-header card-header-flex">
+                <div className="d-flex flex-column justify-content-center mr-auto">
+                  <h5>Billings</h5>
+                </div>
+                <Tabs activeKey={billingsTabKey} className="kit-tabs" onChange={changeBillingsTab}>
+                  <TabPane tab="Received" key="received" />
+                  <TabPane tab="Sent" key="sent" />
+                </Tabs>
               </div>
-              <Tabs activeKey={billingsTabKey} className="kit-tabs" onChange={changeBillingsTab}>
-                <TabPane tab="Received" key="received" />
-                <TabPane tab="Sent" key="sent" />
-              </Tabs>
-            </div>
-            <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
-              {billingsTabKey === 'received' &&
-                showBillings(billingsReceived, billingColumnsWithDetail)}
-              {billingsTabKey === 'sent' && showBillings(billingsSent, billingColumnsWithDetail)}
+              <div className="card-body overflow-x-scroll mr-3 mr-sm-0">
+                {billingsTabKey === 'received' &&
+                  showBillings(billingsReceived, billingColumnsWithDetail)}
+                {billingsTabKey === 'sent' && showBillings(billingsSent, billingColumnsWithDetail)}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
