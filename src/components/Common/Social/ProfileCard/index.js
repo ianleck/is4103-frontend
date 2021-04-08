@@ -32,6 +32,7 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
 
   useEffect(() => {
     if (
+      currentUser.authorized &&
       !isEmpty(user) &&
       (amIFollowingThisUser || !user.isPrivateProfile || currentUser.accountId === user.accountId)
     )
