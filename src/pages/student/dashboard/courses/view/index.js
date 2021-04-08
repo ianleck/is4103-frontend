@@ -6,17 +6,25 @@ import { LESSONS, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
+import { Button } from 'antd'
+import { EditOutlined } from '@ant-design/icons'
+import ReviewModal from 'components/Review/ReviewModal'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
 
   const [course, setCourse] = useState([])
   const [announcements, setAnnouncements] = useState([])
+  const [reviews, setReviews] = useState([])
+  const [showReviewModal, setShowReviewModal] = useState(false)
 
+  console.log('reviews', reviews)
   const getCourseDetails = async () => {
     const courseDetails = await getCourseById(id)
+    console.log('courseDetails are ', JSON.stringify(courseDetails, null, 2))
     if (courseDetails && !isNil(courseDetails.course)) {
       setCourse(courseDetails.course)
+      setReviews([]) // to change
     }
     const courseAnnouncements = await getAnnouncements(id)
     if (courseAnnouncements && courseAnnouncements.announcements) {
@@ -31,9 +39,27 @@ const StudentCourseDetails = () => {
 
   return (
     <div>
-      <div className="row pt-2">
+      <div className="row pt-2 justify-content-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />
+        </div>
+        <div className="col-auto d-flex justify-content-center mt-4 mt-md-0">
+          <Button
+            type="primary"
+            size="large"
+            shape="round"
+            onClick={() => {
+              setShowReviewModal(true)
+            }}
+            icon={<EditOutlined />}
+          >
+            Add a Review
+          </Button>
+          <ReviewModal
+            isVisible={showReviewModal}
+            setShowReviewModal={setShowReviewModal}
+            isCourse
+          />
         </div>
       </div>
       <div className="row mt-5">
