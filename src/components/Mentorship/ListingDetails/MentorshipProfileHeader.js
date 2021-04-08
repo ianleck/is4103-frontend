@@ -51,7 +51,7 @@ const MentorshipProfileHeader = () => {
   }, [])
 
   return (
-    <div className="row justify-content-between ">
+    <div className="row justify-content-between">
       <div className="col-auto">
         <BackBtn />
       </div>
