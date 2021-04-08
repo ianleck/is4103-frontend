@@ -53,7 +53,13 @@ const LessonComments = ({ lessonId, currentLesson, isAdmin }) => {
     if (result && !isNil(result.comments)) {
       setComments(sortDescAndKeyCommentId(result.comments))
     }
-    initPageItems(setIsLoading, comments, setPaginatedComments, setCurrentPageIdx, setShowLoadMore)
+    initPageItems(
+      setIsLoading,
+      result.comments,
+      setPaginatedComments,
+      setCurrentPageIdx,
+      setShowLoadMore,
+    )
   }
 
   useEffect(() => {
