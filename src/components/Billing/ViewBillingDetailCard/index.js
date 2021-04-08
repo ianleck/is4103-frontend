@@ -3,7 +3,12 @@ import ProductCard from 'components/Cart/ProductCard'
 import BackBtn from 'components/Common/BackBtn'
 import StatusTag from 'components/Common/StatusTag'
 import { formatTime } from 'components/utils'
-import { BILLING_STATUS_ENUM, BILLING_TYPE, USER_TYPE_ENUM } from 'constants/constants'
+import {
+  BILLING_STATUS_ENUM,
+  BILLING_TYPE,
+  FRONTEND_API,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import { isEmpty, isNil, map } from 'lodash'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -201,7 +206,7 @@ const ViewBillingDetailCard = data => {
       <iframe
         id="billingReceipt"
         name="billingReceipt"
-        src={`http://localhost:3000${pathname}`}
+        src={`${FRONTEND_API}${pathname}`}
         style={{ display: 'none' }}
         title="Billing Receipt"
       />

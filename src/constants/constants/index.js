@@ -12,6 +12,9 @@ export const ADMIN_VERIFIED_ENUM = {
   DRAFT: 'DRAFT',
 }
 
+export const BACKEND_API = 'http://localhost:5000/api'
+export const FRONTEND_API = 'http://localhost:3000'
+
 export const DEFAULT_TIMEOUT = 550
 
 export const DEFAULT_ITEMS_PER_PAGE = 10

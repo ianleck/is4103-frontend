@@ -4,7 +4,7 @@ import { Button, Descriptions, Form, Input, Modal, Upload, message } from 'antd'
 import { isNil } from 'lodash'
 import { CameraOutlined, PlusOutlined } from '@ant-design/icons'
 import actions from 'redux/user/actions'
-import { USER_TYPE_ENUM } from 'constants/constants'
+import { BACKEND_API, FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
 import moment from 'moment'
 import { NO_DP_TO_REMOVE } from 'constants/notifications'
 import ShareBtn from 'components/Common/Social/ShareBtn'
@@ -106,7 +106,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
   const getUploadProps = () => {
     return {
       name: 'file',
-      action: 'http://localhost:5000/api/upload/dp',
+      action: `${BACKEND_API}/upload/dp`,
       headers: {
         authorization: `Bearer ${user.accessToken}`,
       },
@@ -166,7 +166,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
             <div>
               <ShareBtn
                 quote={title}
-                url={`http://localhost:3000/social/profile/${user.accountId}`}
+                url={`${FRONTEND_API}/social/profile/${user.accountId}`}
                 btnType="default"
                 btnSize="middle"
                 btnShape="round"

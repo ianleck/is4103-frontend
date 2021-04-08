@@ -2,6 +2,7 @@ import { DeleteOutlined, FileOutlined, MoreOutlined, UploadOutlined } from '@ant
 import { Button, DatePicker, Dropdown, Input, Menu, message, Popconfirm, Upload } from 'antd'
 import Axios from 'axios'
 import StatusTag from 'components/Common/StatusTag'
+import { BACKEND_API } from 'constants/constants'
 import download from 'js-file-download'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
@@ -43,7 +44,7 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
   const uploadProps = taskId => {
     return {
       name: 'file',
-      action: `http://localhost:5000/api/upload/task/attachment/${taskId}`,
+      action: `${BACKEND_API}/upload/task/attachment/${taskId}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
