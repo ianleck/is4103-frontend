@@ -1,39 +1,39 @@
 import { Button, Form, Modal, Rate } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { onFinishFailed } from 'components/utils'
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { addCourseReview } from 'services/review'
+import { isEmpty } from 'lodash'
+import React, { useEffect } from 'react'
 
-const ReviewModal = ({ isVisible, setShowReviewModal, isCourse }) => {
-  const { id } = useParams()
-  const [addReviewForm] = Form.useForm()
+const ReviewModal = ({ isVisible, setShowReviewModal, review, editMode, onSubmitReview }) => {
+  const [reviewForm] = Form.useForm()
 
-  const onAddReview = values => {
-    const formValues = {
-      rating: values.rating,
-      comment: values.comment,
+  useEffect(() => {
+    const reviewExists = !isEmpty(review)
+    if (reviewExists) {
+      reviewForm.setFieldsValue({
+        rating: review[0].rating,
+        comment: review[0].comment,
+      })
     }
-    console.log('formValues', formValues)
-    console.log('isCourse', isCourse)
+  }, [review, reviewForm])
 
-    if (isCourse) {
-      const payload = { courseId: id, review: { ...formValues } }
-      addCourseReview(payload)
+  const getAction = () => {
+    if (editMode) {
+      return 'Edit'
     }
-    setShowReviewModal(false)
+    return 'Add'
   }
 
-  const addReviewFooter = (
+  const reviewFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <Button type="default" size="large" onClick={() => setShowReviewModal(false)} className="">
+        <Button type="default" size="large" onClick={() => setShowReviewModal(false)}>
           Close
         </Button>
       </div>
       <div className="col-auto">
-        <Button type="primary" form="addReviewForm" htmlType="submit" size="large" className="">
-          Add
+        <Button type="primary" form="reviewForm" htmlType="submit" size="large">
+          {getAction()}
         </Button>
       </div>
     </div>
@@ -41,20 +41,21 @@ const ReviewModal = ({ isVisible, setShowReviewModal, isCourse }) => {
   return (
     <Modal
       visible={isVisible}
-      title="Add a Review"
+      title={`${getAction()} a Review`}
       cancelText="Close"
       centered
       okButtonProps={{ style: { display: 'none' } }}
       onCancel={() => setShowReviewModal(false)}
-      footer={addReviewFooter}
+      footer={reviewFooter}
+      getContainer={false}
     >
       <Form
-        id="addReviewForm"
-        form={addReviewForm}
+        id="reviewForm"
+        form={reviewForm}
         layout="vertical"
         hideRequiredMark
         onSubmit={e => e.preventDefault()}
-        onFinish={onAddReview}
+        onFinish={onSubmitReview}
         onFinishFailed={onFinishFailed}
       >
         <Form.Item label="Rating" name="rating">
