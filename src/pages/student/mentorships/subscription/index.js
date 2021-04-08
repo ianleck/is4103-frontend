@@ -17,7 +17,7 @@ const MentorshipSubscriptionView = () => {
   useEffect(() => {
     const getMentorshipSubscription = async () => {
       const result = await getSubscription(id)
-      console.log('mentorshipListing is ', result.contract.MentorshipListing)
+
       if (result && !isNil(result.contract)) {
         setMentorshipSubscription(result.contract)
         if (!isNil(result.contract.MentorshipListing)) {
