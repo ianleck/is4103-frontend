@@ -1,13 +1,13 @@
-import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Button } from 'antd'
+import { MoreOutlined, UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Dropdown, Menu } from 'antd'
 import { isFollowing } from 'components/utils'
 import { isEmpty, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getFollowerList, getFollowingList } from 'services/social'
+import { getFollowerList, getFollowingList, blockUser } from 'services/social'
 import SocialFollowBtn from '../FollowBtn'
 
-const SocialProfileCard = ({ user, setCurrentTab }) => {
+const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
   const currentUser = useSelector(state => state.user)
   const social = useSelector(state => state.social)
 
@@ -39,12 +39,55 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
+  const BlockBtn = () => {
+    const blockUserSvc = async () => {
+      const response = await blockUser(user.accountId)
+      console.log(response)
+    }
+
+    const BlockMenu = () => {
+      return (
+        <Menu selectable={false}>
+          <Menu.Item danger>
+            <a
+              target="_blank"
+              role="button"
+              tabIndex={0}
+              onClick={() => blockUserSvc()}
+              onKeyDown={e => e.preventDefault()}
+            >
+              Block User
+            </a>
+          </Menu.Item>
+        </Menu>
+      )
+    }
+
+    return (
+      <Dropdown
+        overlay={<BlockMenu />}
+        trigger={['click']}
+        overlayStyle={{ boxShadow: '2px 3px 5px 1px rgba(0, 0, 0, .1)' }}
+      >
+        <Button
+          type="default"
+          size="large"
+          className="mt-2 mr-2 border-0"
+          icon={<MoreOutlined />}
+        />
+      </Dropdown>
+    )
+  }
+
   return (
     <div className="card">
       <div className="card-header p-0 border-0 overflow-hidden">
         <div className="row pb-0">
           <div className="col-12 text-center">
-            <h5 className="pt-4 pb-0 pl-3 pr-3">
+            <div className="float-right">
+              <BlockBtn />
+            </div>
+            <h5 className="pt-4 pb-0 pl-5 pr-3">
               {`${!isNil(user.firstName) ? user.firstName : 'Anonymous'} ${
                 !isNil(user.lastName) ? user.lastName : 'Pigeon'
               }`}
@@ -76,9 +119,10 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
             <span>Following</span>
             <br />
             <h5 className="text-dark font-weight-bold">
-              {!amIFollowingThisUser &&
-              user.isPrivateProfile &&
-              currentUser.accountId !== user.accountId
+              {(!amIFollowingThisUser &&
+                user.isPrivateProfile &&
+                currentUser.accountId !== user.accountId) ||
+              isBlocked
                 ? '-'
                 : size(followingList)}
             </h5>
@@ -93,9 +137,10 @@ const SocialProfileCard = ({ user, setCurrentTab }) => {
             <span>Followers</span>
             <br />
             <h5 className="text-dark font-weight-bold">
-              {!amIFollowingThisUser &&
-              user.isPrivateProfile &&
-              currentUser.accountId !== user.accountId
+              {(!amIFollowingThisUser &&
+                user.isPrivateProfile &&
+                currentUser.accountId !== user.accountId) ||
+              isBlocked
                 ? '-'
                 : size(followerList)}
             </h5>

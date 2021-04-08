@@ -48,8 +48,9 @@ const SocialProfile = () => {
   const getUserProfile = async () => {
     if (!isNil(accountId)) {
       const response = await getProfile(accountId)
+      console.log(response)
       if (response) setViewUser(response)
-      if (amIFollowingThisUser || !response.isPrivateProfile) {
+      if (amIFollowingThisUser || !response.isPrivateProfile || !response.isBlocking) {
         getPostsSvc(response)
         getSocialInfo()
       }
@@ -96,7 +97,11 @@ const SocialProfile = () => {
   return (
     <div className="row">
       <div className="col-12 col-md-5">
-        <SocialProfileCard user={viewUser} setCurrentTab={setCurrentTab} />
+        <SocialProfileCard
+          user={viewUser}
+          setCurrentTab={setCurrentTab}
+          isBlocked={user.isBlocking}
+        />
         <div className="card">
           <div className="card-body">
             <Button

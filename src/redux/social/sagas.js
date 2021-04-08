@@ -73,6 +73,18 @@ export function* LOAD_CURRENT_SOCIAL() {
         })
       }
     }
+
+    const usersBlockedRsp = yield call(social.getUsersBlocked, currentUser.accountId)
+    if (usersBlockedRsp && usersBlockedRsp.success) {
+      if (!isNil(usersBlockedRsp.usersBlocked)) {
+        const usersBlockedList = sortDescAndKeyFollowershipId(usersBlockedRsp.usersBlocked)
+
+        yield putResolve({
+          type: 'social/SET_STATE',
+          payload: { usersBlockedList },
+        })
+      }
+    }
   }
 }
 
