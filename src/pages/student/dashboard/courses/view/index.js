@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isNil } from 'lodash'
+import { filter, isEmpty, isNil } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
 import { LESSONS, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
@@ -9,22 +9,46 @@ import CourseLessonsList from 'components/Course/LessonsList'
 import { Button } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
+import { useSelector } from 'react-redux'
+import { addCourseReview, editCourseReview } from 'services/review'
+import {
+  ERROR,
+  REVIEW_ADD_ERR,
+  REVIEW_ADD_SUCCESS,
+  REVIEW_EDIT_ERR,
+  REVIEW_EDIT_SUCCESS,
+  SUCCESS,
+} from 'constants/notifications'
+import { showNotification } from 'components/utils'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
-
+  const user = useSelector(state => state.user)
   const [course, setCourse] = useState([])
   const [announcements, setAnnouncements] = useState([])
   const [reviews, setReviews] = useState([])
+  const [ownReview, setOwnReview] = useState([])
   const [showReviewModal, setShowReviewModal] = useState(false)
+  const [editMode, setEditMode] = useState(false)
 
-  console.log('reviews', reviews)
+  console.log('reviews', reviews) // this is needed as a placeholder, Nat will deal with reviews in a later PR
+
   const getCourseDetails = async () => {
     const courseDetails = await getCourseById(id)
-    console.log('courseDetails are ', JSON.stringify(courseDetails, null, 2))
-    if (courseDetails && !isNil(courseDetails.course)) {
-      setCourse(courseDetails.course)
-      setReviews([]) // to change
+    if (courseDetails) {
+      if (!isNil(courseDetails.course)) {
+        setCourse(courseDetails.course)
+        if (!isNil(courseDetails.course.Reviews)) {
+          setReviews(courseDetails.course.Reviews)
+          const reviewByUser = filter(courseDetails.course.Reviews, review => {
+            return review.accountId === user.accountId
+          })
+          setOwnReview(reviewByUser)
+          if (!isEmpty(reviewByUser)) {
+            setEditMode(true)
+          }
+        }
+      }
     }
     const courseAnnouncements = await getAnnouncements(id)
     if (courseAnnouncements && courseAnnouncements.announcements) {
@@ -37,6 +61,35 @@ const StudentCourseDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const onSubmitReview = async values => {
+    const formValues = {
+      rating: values.rating,
+      comment: values.comment,
+    }
+
+    const payload = { courseId: id, review: { ...formValues } }
+
+    if (editMode) {
+      const editResponse = await editCourseReview(payload)
+
+      if (editResponse && !isNil(editResponse.review)) {
+        showNotification('success', SUCCESS, REVIEW_EDIT_SUCCESS)
+      } else {
+        showNotification('error', ERROR, REVIEW_EDIT_ERR)
+      }
+    } else {
+      const addResponse = await addCourseReview(payload)
+
+      if (addResponse && !isNil(addResponse.review)) {
+        showNotification('success', SUCCESS, REVIEW_ADD_SUCCESS)
+      } else {
+        showNotification('error', ERROR, REVIEW_ADD_ERR)
+      }
+    }
+
+    getCourseDetails()
+    setShowReviewModal(false)
+  }
   return (
     <div>
       <div className="row pt-2 justify-content-between">
@@ -53,12 +106,14 @@ const StudentCourseDetails = () => {
             }}
             icon={<EditOutlined />}
           >
-            Add a Review
+            {`${editMode ? 'Edit your' : 'Add a'}  Review`}
           </Button>
           <ReviewModal
             isVisible={showReviewModal}
             setShowReviewModal={setShowReviewModal}
-            isCourse
+            review={ownReview}
+            onSubmitReview={onSubmitReview}
+            editMode={editMode}
           />
         </div>
       </div>
