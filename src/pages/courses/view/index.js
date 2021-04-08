@@ -9,7 +9,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO, NA } from 'constants/text'
 import { formatTime, sendToSocialProfile } from 'components/utils'
 import SocialFollowBtn from 'components/Common/Social/FollowBtn'
-import { USER_TYPE_ENUM } from 'constants/constants'
+import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 
 const ViewCourseDetailsPublic = () => {
@@ -147,7 +147,7 @@ const ViewCourseDetailsPublic = () => {
                     quote={`${user.firstName || 'Anonymous'} is sharing this course: [${
                       currentCourse.title
                     }] with you!`}
-                    url={`http://localhost:3000/courses/${currentCourse.courseId}`}
+                    url={`${FRONTEND_API}/courses/${currentCourse.courseId}`}
                     btnClassName="mt-3"
                   />
                 </div>

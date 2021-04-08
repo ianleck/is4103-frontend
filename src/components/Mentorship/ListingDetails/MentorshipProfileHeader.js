@@ -6,7 +6,11 @@ import { CheckSquareOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import BackBtn from 'components/Common/BackBtn'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
-import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import {
+  CONTRACT_PROGRESS_ENUM,
+  FRONTEND_API,
+  MENTORSHIP_CONTRACT_APPROVAL,
+} from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 
 const MentorshipProfileHeader = () => {
@@ -66,7 +70,7 @@ const MentorshipProfileHeader = () => {
       <div className="col-auto mt-4 mt-md-0">
         <ShareBtn
           quote={title}
-          url={`http://localhost:3000/student/mentorship/view/${id}`}
+          url={`${FRONTEND_API}/student/mentorship/view/${id}`}
           btnType="primary"
           btnShape="round"
         />
