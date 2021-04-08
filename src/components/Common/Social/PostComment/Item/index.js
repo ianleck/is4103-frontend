@@ -74,7 +74,7 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
             <span
               role="button"
               tabIndex={0}
-              className="invisible-btn font-weight-bold"
+              className="clickable font-weight-bold"
               onClick={() => sendToSocialProfile(history, user, comment.User?.accountId)}
               onKeyDown={e => e.preventDefault()}
             >
@@ -92,7 +92,11 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
         </div>
       </div>
       <div className="col-auto align-self-start">
-        <Dropdown overlay={<CommentMenu />} trigger={['click']}>
+        <Dropdown
+          overlay={<CommentMenu />}
+          trigger={['click']}
+          overlayStyle={{ boxShadow: '2px 3px 5px 1px rgba(0, 0, 0, .1)' }}
+        >
           <Button type="text" icon={<MoreOutlined />} />
         </Dropdown>
       </div>

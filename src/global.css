@@ -15,7 +15,13 @@
 }
 
 .course-card-img-holder {
-  max-height: 150px;
+  height: 150px;
+  background-color: white;
+}
+
+.course-card-img-max {
+  max-height: 400px;
+  background-color: white;
 }
 
 .course-img-banner-holder {
@@ -41,10 +47,6 @@
   max-height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-}
-
-.invisible-btn:hover {
-  cursor: pointer;
 }
 
 .lesson-list-card {

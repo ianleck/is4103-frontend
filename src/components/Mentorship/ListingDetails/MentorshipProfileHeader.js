@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Modal, Typography } from 'antd'
+import { Button } from 'antd'
 import { size } from 'lodash'
-import { CheckSquareOutlined, QrcodeOutlined } from '@ant-design/icons'
-import QRCode from 'react-qr-code'
-import { FacebookIcon, FacebookShareButton } from 'react-share'
+import { CheckSquareOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import BackBtn from 'components/Common/BackBtn'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import ShareBtn from 'components/Common/Social/ShareBtn'
 
 const MentorshipProfileHeader = () => {
   const { id } = useParams()
   const history = useHistory()
   const user = useSelector(state => state.user)
-  const [showQRCode, setShowQRCode] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
 
-  const { Paragraph } = Typography
-
-  const shareUrl = `http://digi.dojo/mentorship/view/${id}`
   const title = `${user.firstName} is sharing a Digi Dojo mentorship listing with you!`
 
   const onAdd = e => {
@@ -51,24 +46,12 @@ const MentorshipProfileHeader = () => {
   }, [])
 
   return (
-    <div className="row justify-content-between ">
-      <div className="col-auto">
+    <div className="row pt-2 justify-content-between">
+      <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
         <BackBtn />
       </div>
 
-      <div className="col-auto d-flex justify-content-center">
-        <FacebookShareButton className="mr-4" url={shareUrl} quote={title} hashtag="DigiDojo">
-          <FacebookIcon size={38} round />
-        </FacebookShareButton>
-
-        <Button
-          className="mr-4"
-          type="primary"
-          shape="round"
-          icon={<QrcodeOutlined />}
-          size="large"
-          onClick={() => setShowQRCode(true)}
-        />
+      <div className="col text-right mt-4 mt-md-0">
         <Button
           type="primary"
           size="large"
@@ -80,29 +63,14 @@ const MentorshipProfileHeader = () => {
           Apply for Mentorship
         </Button>
       </div>
-      <Modal
-        title="View QR"
-        visible={showQRCode}
-        cancelText="Close"
-        centered
-        okButtonProps={{ style: { display: 'none' } }}
-        onCancel={() => setShowQRCode(false)}
-      >
-        <div className="row mt-3">
-          <div className="col-12 text-center">
-            <QRCode value={`http://localhost:3000/mentorship/view/${id}`} />
-            <div className="mt-3">
-              <Paragraph
-                copyable={{
-                  text: `http://localhost:3000/mentorship/view/${id}`,
-                }}
-              >
-                Share Link
-              </Paragraph>
-            </div>
-          </div>
-        </div>
-      </Modal>
+      <div className="col-auto mt-4 mt-md-0">
+        <ShareBtn
+          quote={title}
+          url={`http://localhost:3000/student/mentorship/view/${id}`}
+          btnType="primary"
+          btnShape="round"
+        />
+      </div>
     </div>
   )
 }

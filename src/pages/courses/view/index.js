@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Descriptions, List, Rate, Typography } from 'antd'
+import { Button, Descriptions, Image, List, Rate, Typography } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isEmpty, isNil, map, random } from 'lodash'
@@ -10,6 +10,7 @@ import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO, NA } from 'constan
 import { formatTime, sendToSocialProfile } from 'components/utils'
 import SocialFollowBtn from 'components/Common/Social/FollowBtn'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import ShareBtn from 'components/Common/Social/ShareBtn'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -114,10 +115,9 @@ const ViewCourseDetailsPublic = () => {
 
         <div className="col-12 col-lg-4 order-1 order-lg-12">
           <div className="card">
-            <div className="course-card-img-holder overflow-scroll">
-              <img
+            <div className="course-card-img-max overflow-hidden">
+              <Image
                 className="course-card-img"
-                alt="example"
                 src={
                   !isNil(currentCourse.imgUrl)
                     ? currentCourse.imgUrl
@@ -130,15 +130,28 @@ const ViewCourseDetailsPublic = () => {
               <h2 className="font-weight-bold">
                 ${parseFloat(currentCourse.priceAmount).toFixed(2)}
               </h2>
-              <Button
-                block
-                type="primary"
-                size="large"
-                className="mt-4"
-                onClick={() => addToCart()}
-              >
-                {ADD_TO_CART}
-              </Button>
+              <div className="row align-items-center">
+                <div className="col pr-0">
+                  <Button
+                    block
+                    type="primary"
+                    size="large"
+                    className="mt-3"
+                    onClick={() => addToCart()}
+                  >
+                    {ADD_TO_CART}
+                  </Button>
+                </div>
+                <div className="col-auto">
+                  <ShareBtn
+                    quote={`${user.firstName || 'Anonymous'} is sharing this course: [${
+                      currentCourse.title
+                    }] with you!`}
+                    url={`http://localhost:3000/courses/${currentCourse.courseId}`}
+                    btnClassName="mt-3"
+                  />
+                </div>
+              </div>
               <hr className="mt-4" />
               <div className="mt-4">
                 <small className="text-uppercase text-secondary">{CREATOR_INFO}</small>
@@ -158,15 +171,17 @@ const ViewCourseDetailsPublic = () => {
                 </div>
                 <div className="row">
                   <div className="col-12">
-                    <a
-                      className="h3 font-weight-bold"
-                      href="#"
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className="h3 font-weight-bold clickable defocus-btn"
                       onClick={() => sendToSocialProfile(history, user, currentCourse.accountId)}
+                      onKeyDown={e => e.preventDefault()}
                     >
                       {`${isNil(currentSensei.firstName) ? 'Anonymous' : currentSensei.firstName} ${
                         isNil(currentSensei.lastName) ? 'Pigeon' : currentSensei.lastName
                       }`}
-                    </a>
+                    </div>
                   </div>
                   <div className="col-12 mt-2">
                     <div className="h5 text-uppercase">

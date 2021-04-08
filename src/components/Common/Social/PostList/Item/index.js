@@ -87,7 +87,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
               <span
                 role="button"
                 tabIndex={0}
-                className="invisible-btn font-weight-bold font-size-18"
+                className="clickable font-weight-bold font-size-18"
                 onClick={() => sendToSocialProfile(history, user, post.User?.accountId)}
                 onKeyDown={e => e.preventDefault()}
               >
@@ -100,7 +100,11 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
             </div>
             <div className="col-auto align-self-start">
               {user.accountId === post.accountId && (
-                <Dropdown overlay={<PostMenu />} trigger={['click']}>
+                <Dropdown
+                  overlay={<PostMenu />}
+                  trigger={['click']}
+                  overlayStyle={{ boxShadow: '2px 3px 5px 1px rgba(0, 0, 0, .1)' }}
+                >
                   <Button
                     type="default"
                     size="large"
@@ -150,7 +154,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
             <div
               role="button"
               tabIndex={0}
-              className="invisible-btn defocus-btn col-12 col-lg text-left text-lg-right mt-2 mb-3 mt-lg-0 mb-lg-0 order-1 order-lg-12"
+              className="clickable defocus-btn col-12 col-lg text-left text-lg-right mt-2 mb-3 mt-lg-0 mb-lg-0 order-1 order-lg-12"
               onClick={() => setShowInteractionBox(!showInteractionBox)}
               onKeyDown={e => e.preventDefault()}
             >
