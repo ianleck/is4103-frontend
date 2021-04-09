@@ -44,7 +44,15 @@ const ViewCourseDetailsPublic = () => {
         type: 'cart/ADD_COURSE_TO_CART',
         payload: { courseId: id },
       })
-    else history.push('/auth/login')
+    else {
+      dispatch({
+        type: 'settings/SET_STATE',
+        payload: {
+          rememberPath: `/courses/${id}`,
+        },
+      })
+      history.push('/auth/login')
+    }
   }
 
   return (
