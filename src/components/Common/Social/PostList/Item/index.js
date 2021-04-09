@@ -88,7 +88,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
                 role="button"
                 tabIndex={0}
                 className="clickable font-weight-bold font-size-18"
-                onClick={() => sendToSocialProfile(history, user, post.User?.accountId)}
+                onClick={() => sendToSocialProfile(history, post.User?.accountId)}
                 onKeyDown={e => e.preventDefault()}
               >
                 {getUserFullName(post.User)}

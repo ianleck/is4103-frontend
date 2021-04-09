@@ -74,7 +74,7 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
               role="button"
               tabIndex={0}
               className="clickable font-weight-bold"
-              onClick={() => sendToSocialProfile(history, user, comment.User?.accountId)}
+              onClick={() => sendToSocialProfile(history, comment.User?.accountId)}
               onKeyDown={e => e.preventDefault()}
             >
               {getUserFullName(comment.User)}

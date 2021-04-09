@@ -188,7 +188,7 @@ const ViewCourseDetailsPublic = () => {
                       role="button"
                       tabIndex={0}
                       className="h3 font-weight-bold clickable defocus-btn"
-                      onClick={() => sendToSocialProfile(history, user, currentCourse.accountId)}
+                      onClick={() => sendToSocialProfile(history, currentCourse.accountId)}
                       onKeyDown={e => e.preventDefault()}
                     >
                       {getUserFullName(currentSensei)}
