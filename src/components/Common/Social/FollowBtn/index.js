@@ -17,13 +17,11 @@ const SocialFollowBtn = ({ targetAccountId }) => {
   const checkUserBlocked = async () => {
     if (!isNil(targetAccountId)) {
       const response = await getProfile(targetAccountId)
-      console.log(response)
       if (response && !isNil(response.isBlocking)) {
         setIsBlocked(response.isBlocking)
         return response.isBlocking
       }
     }
-    setIsBlocked(false)
     return false
   }
 

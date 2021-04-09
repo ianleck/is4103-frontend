@@ -108,7 +108,7 @@ export const POST_DEL_ERR = 'There was an error deleting your post.'
 
 export const USER_BANNED = 'User has been banned.'
 export const USER_UNBANNED = 'User has been unbanned.'
-export const USER_BLOCKED = 'User has been blocked'
+export const USER_BLOCKED = 'User has been blocked.'
 export const USER_UNBLOCKED = 'User has been unblocked.'
 
 export const REVIEW_ADD_SUCCESS = 'Your review was successfully created.'

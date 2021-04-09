@@ -26,7 +26,7 @@ const SocialProfile = () => {
   const { accountId } = useParams()
 
   const [viewUser, setViewUser] = useState('')
-  const [isBlocked, setIsBlocked] = useState('')
+  const [isBlocked, setIsBlocked] = useState(false)
 
   const [posts, setPosts] = useState([])
 
