@@ -47,6 +47,7 @@ import { formatTime, getAvailableCurrencyCodes, showNotification } from 'compone
 import { languages, currencyCodes } from 'constants/information'
 import {
   ADMIN_VERIFIED_ENUM,
+  BACKEND_API,
   DEFAULT_TIMEOUT,
   LEVEL_ENUM,
   VISIBILITY_ENUM,
@@ -168,18 +169,16 @@ const SenseiCreateCourse = () => {
     let uploadUrl = ''
     switch (uploadType) {
       case 'courseImg':
-        uploadUrl = `http://localhost:5000/api/upload/course/${
-          !isNil(id) ? id : currentCourse.courseId
-        }`
+        uploadUrl = `${BACKEND_API}/upload/course/${!isNil(id) ? id : currentCourse.courseId}`
         break
       case 'lessonFile':
-        uploadUrl = `http://localhost:5000/api/upload/lesson/file/${currentLesson.lessonId}`
+        uploadUrl = `${BACKEND_API}/upload/lesson/file/${currentLesson.lessonId}`
         break
       case 'lessonVideo':
-        uploadUrl = `http://localhost:5000/api/upload/lesson/video/${currentLesson.lessonId}`
+        uploadUrl = `${BACKEND_API}/upload/lesson/video/${currentLesson.lessonId}`
         break
       case 'assessmentVideo':
-        uploadUrl = `http://localhost:5000/api/upload/lesson/assessment/${currentLesson.lessonId}`
+        uploadUrl = `${BACKEND_API}/upload/lesson/assessment/${currentLesson.lessonId}`
         break
       default:
         break

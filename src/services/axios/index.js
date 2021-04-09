@@ -3,9 +3,10 @@ import { notification } from 'antd'
 import { isNil } from 'lodash'
 import { showNotification } from 'components/utils'
 import { ERROR } from 'constants/notifications'
+import { BACKEND_API } from 'constants/constants'
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: BACKEND_API,
   /* 
   For external device support (e.g. Mobile Phone)
   Set local IP address instead of calling localhost:

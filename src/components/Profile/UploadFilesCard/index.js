@@ -15,6 +15,7 @@ import {
   TRANSCRIPT_REMOVED,
   TRANSCRIPT_REMOVED_ERR,
 } from 'constants/notifications'
+import { BACKEND_API } from 'constants/constants'
 
 const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
   const dispatch = useDispatch()
@@ -23,9 +24,7 @@ const VerifyProfileCard = ({ user, showUploadButton, accessToken }) => {
   const getUploadProps = isTranscript => {
     return {
       name: 'file',
-      action: isTranscript
-        ? 'http://localhost:5000/api/upload/transcript'
-        : 'http://localhost:5000/api/upload/cv',
+      action: isTranscript ? `${BACKEND_API}/upload/transcript` : `${BACKEND_API}/upload/cv`,
       headers: {
         authorization: `Bearer ${user.accessToken}`,
       },
