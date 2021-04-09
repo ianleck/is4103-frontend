@@ -31,7 +31,7 @@ const CartItemList = () => {
         <div className="col-12 font-weight-bold">Course(s)</div>
         <div className="col-12 mt-2">
           {cart.Courses.map(c => (
-            <ProductCard listing={c} location="CartPage" key={c.courseId} />
+            <ProductCard listing={c} location="CartPage" key={c.courseId} isCourse />
           ))}
         </div>
       </div>
