@@ -4,7 +4,7 @@ import { FOLLOWING_ENUM, SOCIAL_ACTIONS } from 'constants/constants'
 import { ERROR } from 'constants/notifications'
 import { FOLLOW, REQUESTED, UNAVAILABLE, UNFOLLOW } from 'constants/text'
 import { isNil } from 'lodash'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfile } from 'services/user'
 
@@ -12,13 +12,18 @@ const SocialFollowBtn = ({ targetAccountId }) => {
   const dispatch = useDispatch()
   const social = useSelector(state => state.social)
 
+  const [isBlocked, setIsBlocked] = useState(false)
+
   const checkUserBlocked = async () => {
     if (!isNil(targetAccountId)) {
       const response = await getProfile(targetAccountId)
+      console.log(response)
       if (response && !isNil(response.isBlocking)) {
-        if (response.isBlocking) return true
+        setIsBlocked(response.isBlocking)
+        return response.isBlocking
       }
     }
+    setIsBlocked(false)
     return false
   }
 
@@ -90,21 +95,22 @@ const SocialFollowBtn = ({ targetAccountId }) => {
     const followingStatus = getCurrentFollowStatus()
     if (followingStatus === FOLLOWING_ENUM.PENDING) return REQUESTED
     if (followingStatus === FOLLOWING_ENUM.APPROVED) return UNFOLLOW
-    if (followingStatus === FOLLOWING_ENUM.BLOCKED) return UNAVAILABLE
+    if (followingStatus === FOLLOWING_ENUM.BLOCKED || isBlocked) return UNAVAILABLE
     return FOLLOW
   }
 
   const getButtonDisabled = () => {
     const followingStatus = getCurrentFollowStatus()
     if (followingStatus === FOLLOWING_ENUM.BLOCKED) return true
-    if (checkUserBlocked()) return true
+    if (isBlocked) return true
     return false
   }
 
   useEffect(() => {
     getCurrentFollowStatus()
+    checkUserBlocked()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [targetAccountId])
 
   return (
     <Button
