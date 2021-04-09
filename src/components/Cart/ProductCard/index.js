@@ -157,10 +157,7 @@ const ProductCard = data => {
           </div>
           <div className="col pl-0">
             <h6 className="truncate-2-overflow text-wrap">{listing.title}</h6>
-            <small className="text-dark">
-              {!isNil(sensei.firstName) ? sensei.firstName : 'Anonymous'}{' '}
-              {!isNil(sensei.lastName) ? sensei.lastName : 'Pigeon'}
-            </small>
+            <small className="text-dark">{getUserFullName(sensei)}</small>
             <div className="text-dark text-wrap mt-2">
               <span>
                 <strong>$ {parseFloat(listing.priceAmount).toFixed(2)}</strong>
@@ -222,10 +219,7 @@ const ProductCard = data => {
             />
           </div>
           <div className="col pl-0">
-            <h6 className="truncate-2-overflow text-wrap">
-              {!isNil(sensei.firstName) ? sensei.firstName : 'Anonymous'}{' '}
-              {!isNil(sensei.lastName) ? sensei.lastName : 'Pigeon'}
-            </h6>
+            <h6 className="truncate-2-overflow text-wrap">{getUserFullName(sensei)}</h6>
             <div className="text-dark text-wrap">{listing.name}</div>
             <div className="text-dark text-wrap">
               Pass Quantity: {listing.CartToMentorshipListing.numSlots}

@@ -8,6 +8,7 @@ import { BACKEND_API, FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
 import moment from 'moment'
 import { NO_DP_TO_REMOVE } from 'constants/notifications'
 import ShareBtn from 'components/Common/Social/ShareBtn'
+import { getUserFirstName, getUserFullName } from 'components/utils'
 
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -19,7 +20,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showDPModal, setShowDPModal] = useState(false)
 
-  const title = `${user.firstName || 'Anonymous'} is sharing their Digi Dojo profile with you!`
+  const title = `${getUserFirstName(user)} is sharing their Digi Dojo profile with you!`
 
   const onUpdateProfile = values => {
     const formValues = {
@@ -180,9 +181,7 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
                 isNil(user.firstName) || isNil(user.lastName) ? 'text-danger' : 'text-dark'
               } h3 font-weight-bold`}
             >
-              {`${isNil(user.firstName) ? 'Anonymous' : user.firstName} ${
-                isNil(user.lastName) ? 'Pigeon' : user.lastName
-              }`}{' '}
+              {getUserFullName(user)}{' '}
               {(isNil(user.firstName) || isNil(user.lastName)) && <small>*Update required</small>}
             </div>
           </div>
