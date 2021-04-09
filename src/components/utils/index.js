@@ -324,3 +324,16 @@ export const getAvailableCurrencyCodes = allCurrencyCodes => {
     return cc.code === 'SGD'
   })
 }
+
+export const getUserFirstName = user => {
+  return !isNil(user.firstName) ? user.firstName : 'Anonymous'
+}
+export const getUserLastName = user => {
+  return !isNil(user.lastName) ? user.lastName : 'Pigeon'
+}
+
+export const getUserFullName = user => {
+  const firstName = getUserFirstName(user)
+  const lastName = getUserLastName(user)
+  return `${firstName} ${lastName}`
+}
