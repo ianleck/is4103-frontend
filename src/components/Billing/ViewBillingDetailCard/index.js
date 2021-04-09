@@ -1,4 +1,4 @@
-import { Button, Tag } from 'antd'
+import { Button, Skeleton, Tag } from 'antd'
 import ProductCard from 'components/Cart/ProductCard'
 import BackBtn from 'components/Common/BackBtn'
 import StatusTag from 'components/Common/StatusTag'
@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
 const ViewBillingDetailCard = data => {
-  const { billing, product, recipient, otherBillings } = data
+  const { billing, product, recipient, otherBillings, isLoading } = data
   const user = useSelector(state => state.user)
   const history = useHistory()
   const { pathname } = useLocation()
@@ -24,6 +24,8 @@ const ViewBillingDetailCard = data => {
   const isCourse = item => {
     return item.billingType === BILLING_TYPE.COURSE
   }
+
+  const isMentorshipSubscription = billing.billingType === BILLING_TYPE.MENTORSHIP
 
   const printIframe = documentId => {
     const iframe = document.frames
@@ -101,7 +103,12 @@ const ViewBillingDetailCard = data => {
       return (
         <div className="row mb-2">
           <div className="w-100 col-12">
-            <ProductCard location="BillingDetailPage" listing={product} key={product.courseId} />
+            <ProductCard
+              location="BillingDetailPage"
+              listing={product}
+              key={product.courseId}
+              isCourse
+            />
           </div>
         </div>
       )
@@ -109,7 +116,20 @@ const ViewBillingDetailCard = data => {
     if (isWithdrawal && isAdmin) {
       return <AdminWithdrawalContent />
     }
-    // to add on for case if billingType is SUBSCRIPTION
+    if (isMentorshipSubscription) {
+      return (
+        <div className="row mb-2">
+          <div className="w-100 col-12">
+            <ProductCard
+              location="BillingDetailPage"
+              listing={product}
+              key={product.mentorshipListingId}
+              isBilling
+            />
+          </div>
+        </div>
+      )
+    }
     return <div />
   }
 
@@ -154,7 +174,9 @@ const ViewBillingDetailCard = data => {
             <Tag>{billing.billingType}</Tag>
           </span>
         </BillingItem>
-        <ProductContent />
+        <Skeleton active loading={isLoading}>
+          <ProductContent />
+        </Skeleton>
         <BillingItem>
           <span>
             {!isWithdrawal && `Amount Paid: `}
