@@ -7,7 +7,12 @@ import { getCourseById } from 'services/courses'
 import { indexOf, isEmpty, isNil, map, random } from 'lodash'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO, NA } from 'constants/text'
-import { formatTime, sendToSocialProfile } from 'components/utils'
+import {
+  formatTime,
+  getUserFirstName,
+  getUserFullName,
+  sendToSocialProfile,
+} from 'components/utils'
 import SocialFollowBtn from 'components/Common/Social/FollowBtn'
 import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
@@ -144,7 +149,7 @@ const ViewCourseDetailsPublic = () => {
                 </div>
                 <div className="col-auto">
                   <ShareBtn
-                    quote={`${user.firstName || 'Anonymous'} is sharing this course: [${
+                    quote={`${getUserFirstName(user)} is sharing this course: [${
                       currentCourse.title
                     }] with you!`}
                     url={`${FRONTEND_API}/courses/${currentCourse.courseId}`}
@@ -178,9 +183,7 @@ const ViewCourseDetailsPublic = () => {
                       onClick={() => sendToSocialProfile(history, user, currentCourse.accountId)}
                       onKeyDown={e => e.preventDefault()}
                     >
-                      {`${isNil(currentSensei.firstName) ? 'Anonymous' : currentSensei.firstName} ${
-                        isNil(currentSensei.lastName) ? 'Pigeon' : currentSensei.lastName
-                      }`}
+                      {getUserFullName(currentSensei)}
                     </div>
                   </div>
                   <div className="col-12 mt-2">

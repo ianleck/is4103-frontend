@@ -1,8 +1,8 @@
 import React from 'react'
 import { Avatar, Button, Dropdown, Menu, Skeleton } from 'antd'
-import { isNil } from 'lodash'
 import moment from 'moment'
 import { MoreOutlined } from '@ant-design/icons'
+import { getUserFullName } from 'components/utils'
 
 const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport, isAdmin }) => {
   const commentMenu = () => {
@@ -51,11 +51,7 @@ const CommentGridItem = ({ comment, user, isLoading, handleDelete, handleReport,
       <div className="col">
         <div className="row text-dark">
           <div className="col-12">
-            <span className="h5 font-weight-bold">
-              {`${!isNil(comment.User?.firstName) ? comment.User?.firstName : 'Anonymous'} ${
-                !isNil(comment.User?.lastName) ? comment.User?.lastName : 'Pigeon'
-              }`}
-            </span>
+            <span className="h5 font-weight-bold">{getUserFullName(comment.User)}</span>
             <span className="text-muted">&nbsp;&nbsp;{moment(comment.createdAt).fromNow()}</span>
           </div>
           <div className="col-12">

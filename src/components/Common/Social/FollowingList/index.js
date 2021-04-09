@@ -3,7 +3,12 @@ import { useHistory } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Button } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
-import { initPageItems, sendToSocialProfile, showNotification } from 'components/utils'
+import {
+  getUserFullName,
+  initPageItems,
+  sendToSocialProfile,
+  showNotification,
+} from 'components/utils'
 import { isNil, map, size } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeFollower } from 'services/social'
@@ -81,11 +86,7 @@ const SocialFollowingList = ({ followingList, isFollowingList, isOwnList, setSho
               <div className="col text-dark">
                 <span className="font-size-15 font-weight-bold">{userRowItem.username}</span>
                 <br />
-                <span className="font-size-15">
-                  {`${!isNil(userRowItem.firstName) ? userRowItem.firstName : 'Anonymous'} ${
-                    !isNil(userRowItem.lastName) ? userRowItem.lastName : 'Pigeon'
-                  }`}
-                </span>
+                <span className="font-size-15">{getUserFullName(userRowItem)}</span>
               </div>
             </div>
           </div>

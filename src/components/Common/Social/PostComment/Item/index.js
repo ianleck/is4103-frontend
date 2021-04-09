@@ -1,9 +1,8 @@
 import React from 'react'
 import { Avatar, Button, Dropdown, Menu, Skeleton } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
-import { isNil } from 'lodash'
 import moment from 'moment'
-import { sendToSocialProfile } from 'components/utils'
+import { getUserFullName, sendToSocialProfile } from 'components/utils'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -78,9 +77,7 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
               onClick={() => sendToSocialProfile(history, user, comment.User?.accountId)}
               onKeyDown={e => e.preventDefault()}
             >
-              {`${!isNil(comment.User?.firstName) ? comment.User?.firstName : 'Anonymous'} ${
-                !isNil(comment.User?.lastName) ? comment.User?.lastName : 'Pigeon'
-              }`}
+              {getUserFullName(comment.User)}
             </span>
             <small className="text-muted">&nbsp;&nbsp;{moment(comment.createdAt).fromNow()}</small>
           </div>

@@ -6,7 +6,7 @@ import moment from 'moment'
 import { useHistory } from 'react-router-dom'
 import { likePost, unlikePost } from 'services/social/posts'
 import { LIKE, UNLIKE } from 'constants/text'
-import { sendToSocialProfile } from 'components/utils'
+import { getUserFullName, sendToSocialProfile } from 'components/utils'
 import PostComments from '../../PostComment'
 
 const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, btnSize }) => {
@@ -91,9 +91,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
                 onClick={() => sendToSocialProfile(history, user, post.User?.accountId)}
                 onKeyDown={e => e.preventDefault()}
               >
-                {`${!isNil(post.User?.firstName) ? post.User?.firstName : 'Anonymous'} ${
-                  !isNil(post.User?.lastName) ? post.User?.lastName : 'Pigeon'
-                }`}
+                {getUserFullName(post.User)}
               </span>
               <br />
               <span className="font-size-15 text-muted">{moment(post.createdAt).fromNow()}</span>

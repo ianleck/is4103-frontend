@@ -13,6 +13,7 @@ import { USER_TYPE_ENUM } from 'constants/constants'
 import { size } from 'lodash'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
 import FollowerRequestList from 'components/Common/Social/FollowerRequestList'
+import { getUserFullName } from 'components/utils'
 import styles from './style.module.scss'
 
 const UserMenu = () => {
@@ -23,7 +24,7 @@ const UserMenu = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const { firstName, lastName, username, userType } = user
+  const { username, userType } = user
 
   const [showSocialModal, setShowSocialModal] = useState(false)
   const [showFollowingList, setShowFollowingList] = useState(false)
@@ -87,9 +88,7 @@ const UserMenu = () => {
           <span className="mb-5">Welcome,</span>
         </div>
         <div className="mt-2 col-12 font-size-18">
-          <span className="font-weight-bold">
-            {`${firstName || 'Anonymous'} ${lastName || 'Pigeon'} [${username}]`}
-          </span>
+          <span className="font-weight-bold">{`${getUserFullName(user)} [${username}]`}</span>
         </div>
       </div>
       <Menu.Divider />
