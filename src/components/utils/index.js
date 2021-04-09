@@ -121,6 +121,14 @@ export const resetCart = {
   MentorshipApplications: [],
 }
 
+export const resetSocial = {
+  followingList: [],
+  followerList: [],
+  pendingFollowingList: [],
+  pendingFollowerList: [],
+  usersBlockedList: [],
+}
+
 export const resetUser = {
   accountId: '',
   adminVerified: '',

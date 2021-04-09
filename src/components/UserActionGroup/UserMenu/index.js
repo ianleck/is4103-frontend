@@ -31,6 +31,7 @@ const UserMenu = () => {
   const { username, userType } = user
 
   const [showSocialModal, setShowSocialModal] = useState(false)
+  const [socialModalTitle, setSocialModalTitle] = useState('')
   const [showFollowingList, setShowFollowingList] = useState(false)
 
   const [showFollowerRequests, setShowFollowerRequests] = useState(false)
@@ -74,14 +75,30 @@ const UserMenu = () => {
   }
 
   const displayFollowerRequests = () => {
+    setSocialModalTitle('Follower Requests List')
     setShowFollowingList(false)
     setShowFollowerRequests(true)
     setShowSocialModal(true)
   }
 
+  const displayFollowerRequestsMenu = () => {
+    setSocialModalTitle('Follower Requests List')
+    setShowFollowerRequests(true)
+  }
+
+  const displayBlockedUsersMenu = () => {
+    setSocialModalTitle('Blocked Users List')
+    setShowBlockedUsers(true)
+  }
+
   const displayFollowingList = type => {
-    if (type === 'following') setShowFollowingList(true)
-    else setShowFollowingList(false)
+    if (type === 'following') {
+      setShowFollowingList(true)
+      setSocialModalTitle('Following List')
+    } else {
+      setShowFollowingList(false)
+      setSocialModalTitle('Follower List')
+    }
     setShowFollowerRequests(false)
     setShowSocialModal(true)
   }
@@ -235,7 +252,7 @@ const UserMenu = () => {
             icon={<UserOutlined />}
           />
           <Modal
-            title={`${showFollowingList ? 'Following' : 'Follower'} List`}
+            title={socialModalTitle}
             visible={showSocialModal}
             cancelText="Close"
             centered
@@ -249,7 +266,7 @@ const UserMenu = () => {
                 role="button"
                 tabIndex={0}
                 className="text-dark btn btn-block text-left border-0 pl-0 d-flex justify-content-between align-items-center"
-                onClick={() => setShowFollowerRequests(true)}
+                onClick={() => displayFollowerRequestsMenu()}
                 onKeyDown={e => e.preventDefault()}
               >
                 <span className="font-weight-bold font-size-18">
@@ -265,12 +282,12 @@ const UserMenu = () => {
                   role="button"
                   tabIndex={0}
                   className="text-dark btn btn-block text-left border-0 mt-2 pl-0 d-flex justify-content-between align-items-center"
-                  onClick={() => setShowBlockedUsers(true)}
+                  onClick={() => displayBlockedUsersMenu()}
                   onKeyDown={e => e.preventDefault()}
                 >
                   <span className="font-weight-bold font-size-18">
                     <StopFilled />
-                    &nbsp;&nbsp;Blocked users ({numFollowRequests})
+                    &nbsp;&nbsp;Blocked users ({numUsersBlocked})
                   </span>
                   <ArrowRightOutlined className="float-right" />
                 </div>
@@ -330,7 +347,7 @@ const UserMenu = () => {
                 {numUsersBlocked === 0 && <Empty />}
                 {numUsersBlocked > 0 && (
                   <UsersBlockedList
-                    pendingFollowerList={social.usersBlockedList}
+                    usersBlockedList={social.usersBlockedList}
                     setShowSocialModal={setShowSocialModal}
                   />
                 )}

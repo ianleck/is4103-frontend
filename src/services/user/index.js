@@ -141,6 +141,8 @@ export async function getProfile(accountId) {
         if (!isNil(response.data.userProfile)) {
           if (!isNil(response.data.isBlocking)) {
             response.data.userProfile.isBlocking = response.data.isBlocking
+          } else {
+            response.data.userProfile.isBlocking = false
           }
           return response.data.userProfile
         }

@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { CheckOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Space } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Button } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
-import { initPageItems, sendToSocialProfile } from 'components/utils'
+import {
+  getUserFullName,
+  initPageItems,
+  sendToSocialProfile,
+  showNotification,
+} from 'components/utils'
 import { isNil, map, size } from 'lodash'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { unblockUser } from 'services/social'
+import { SUCCESS, USER_UNBLOCKED } from 'constants/notifications'
 
 const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const user = useSelector(state => state.user)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -21,7 +28,7 @@ const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
     initPageItems(
       setIsLoading,
       usersBlockedList,
-      paginatedBlocks,
+      setPaginatedBlocks,
       setCurrentPageIdx,
       setShowLoadMore,
     )
@@ -31,6 +38,16 @@ const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
   const socialProfileOverride = accountId => {
     sendToSocialProfile(history, user, accountId)
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
+  }
+
+  const unblockUserSvc = async accountId => {
+    const response = await unblockUser(accountId)
+    if (response && response.success) {
+      dispatch({
+        type: 'social/LOAD_CURRENT_SOCIAL',
+      })
+      showNotification('success', SUCCESS, USER_UNBLOCKED)
+    }
   }
 
   const UserBlockItem = ({ userBlockItem }) => {
@@ -59,24 +76,18 @@ const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
               <div className="col text-dark">
                 <span className="font-size-15 font-weight-bold">{userBlockRowItem.username}</span>
                 <br />
-                <span className="font-size-15">
-                  {`${
-                    !isNil(userBlockRowItem.firstName) ? userBlockRowItem.firstName : 'Anonymous'
-                  } ${!isNil(userBlockRowItem.lastName) ? userBlockRowItem.lastName : 'Pigeon'}`}
-                </span>
+                <span className="font-size-15">{getUserFullName(userBlockRowItem)}</span>
               </div>
             </div>
           </div>
           <div className="col text-right">
-            <Space>
-              <Button
-                className="btn btn-light"
-                icon={<CheckOutlined />}
-                onClick={() => unblockUser(userBlockRowItem.accountId)}
-              >
-                Unblock
-              </Button>
-            </Space>
+            <Button
+              type="default"
+              size="large"
+              onClick={() => unblockUserSvc(userBlockRowItem.accountId)}
+            >
+              Unblock
+            </Button>
           </div>
         </div>
       )
@@ -101,8 +112,14 @@ const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
       buttonStyle="primary"
       wrapperContent={
         size(paginatedBlocks) > 0 &&
-        map(paginatedBlocks, blocks => {
-          return <UserBlockItem key={blocks.followershipId} blocks={blocks} isLoading={isLoading} />
+        map(paginatedBlocks, userBlockItem => {
+          return (
+            <UserBlockItem
+              key={userBlockItem.followershipId}
+              userBlockItem={userBlockItem}
+              isLoading={isLoading}
+            />
+          )
         })
       }
     />

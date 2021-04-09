@@ -1,13 +1,16 @@
 import { MoreOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, Menu } from 'antd'
-import { getUserFullName, isFollowing } from 'components/utils'
+import { getUserFullName, isFollowing, showNotification } from 'components/utils'
+import { SUCCESS, USER_BLOCKED } from 'constants/notifications'
 import { isEmpty, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getFollowerList, getFollowingList, blockUser } from 'services/social'
 import SocialFollowBtn from '../FollowBtn'
 
 const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
+  const dispatch = useDispatch()
+
   const currentUser = useSelector(state => state.user)
   const social = useSelector(state => state.social)
 
@@ -34,7 +37,10 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
     if (
       currentUser.authorized &&
       !isEmpty(user) &&
-      (amIFollowingThisUser || !user.isPrivateProfile || currentUser.accountId === user.accountId)
+      (amIFollowingThisUser ||
+        !user.isPrivateProfile ||
+        currentUser.accountId === user.accountId) &&
+      !isBlocked
     )
       getUserSocials()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +49,12 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
   const BlockBtn = () => {
     const blockUserSvc = async () => {
       const response = await blockUser(user.accountId)
-      console.log(response)
+      if (response && response.success) {
+        dispatch({
+          type: 'social/LOAD_CURRENT_SOCIAL',
+        })
+        showNotification('success', SUCCESS, USER_BLOCKED)
+      }
     }
 
     const BlockMenu = () => {
@@ -85,9 +96,11 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
       <div className="card-header p-0 border-0 overflow-hidden">
         <div className="row pb-0">
           <div className="col-12 text-center">
-            <div className="float-right">
-              <BlockBtn />
-            </div>
+            {!isBlocked && currentUser.accountId !== user.accountId && (
+              <div className="float-right">
+                <BlockBtn />
+              </div>
+            )}
             <h5 className="pt-4 pb-0 pl-5 pr-3">{getUserFullName(user)}</h5>
           </div>
         </div>
@@ -143,7 +156,7 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
             </h5>
           </div>
         </div>
-        {currentUser.accountId !== user.accountId && (
+        {!isBlocked && currentUser.accountId !== user.accountId && (
           <div className="row mt-2">
             <div className="col-12 col-lg-6">
               <SocialFollowBtn targetAccountId={user.accountId} />
