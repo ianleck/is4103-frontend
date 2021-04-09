@@ -3,6 +3,8 @@ import { Tag } from 'antd'
 import {
   ADMIN_VERIFIED_ENUM,
   BILLING_STATUS_ENUM,
+  CONTRACT_PROGRESS_ENUM,
+  MENTORSHIP_CONTRACT_APPROVAL,
   STATUS_ENUM,
   TASK_PROGRESS,
   USER_TYPE_ENUM,
@@ -139,6 +141,51 @@ const StatusTag = data => {
     }
     return <Tag color={colour}>{dataSource}</Tag>
   }
+
+  if (type === 'CONTRACT_PROGRESS_ENUM') {
+    const dataSource = data.data.progress
+
+    switch (dataSource) {
+      case CONTRACT_PROGRESS_ENUM.NOT_STARTED:
+        colour = 'blue'
+        break
+      case CONTRACT_PROGRESS_ENUM.ONGOING:
+        colour = 'purple'
+        break
+      case CONTRACT_PROGRESS_ENUM.COMPLETED:
+        colour = 'green'
+        break
+      case CONTRACT_PROGRESS_ENUM.CANCELLED:
+        colour = 'red'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
+  }
+
+  if (type === 'MENTORSHIP_CONTRACT_APPROVAL') {
+    const dataSource = data.data.senseiApproval
+    console.log(dataSource)
+
+    switch (dataSource) {
+      case MENTORSHIP_CONTRACT_APPROVAL.PENDING:
+        colour = 'orange'
+        break
+      case MENTORSHIP_CONTRACT_APPROVAL.APPROVED:
+        colour = 'green'
+        break
+      case MENTORSHIP_CONTRACT_APPROVAL.REJECTED:
+        colour = 'red'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
+  }
+
   return <Tag>{NA}</Tag>
 }
 
