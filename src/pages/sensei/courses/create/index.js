@@ -736,6 +736,7 @@ const SenseiCreateCourse = () => {
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   step="0.01"
                   min={0}
+                  precision={2}
                   className="w-50"
                 />
               </Form.Item>

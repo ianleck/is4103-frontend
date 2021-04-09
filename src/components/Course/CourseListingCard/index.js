@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Avatar, Divider, Rate, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { isNil, random } from 'lodash'
+import { getUserFullName } from 'components/utils'
 
 const CourseListingCard = data => {
   const history = useHistory()
@@ -78,9 +79,7 @@ const CourseListingCard = data => {
               </div>
               <div className="col pl-0">
                 <span className="p-0 text-dark text-wrap truncate-1-overflow">
-                  {`${isNil(course.Sensei?.firstName) ? 'Anonymous' : course.Sensei?.firstName} ${
-                    isNil(course.Sensei?.lastName) ? 'Pigeon' : course.Sensei?.lastName
-                  }`}
+                  {getUserFullName(course.Sensei)}
                 </span>
               </div>
             </div>

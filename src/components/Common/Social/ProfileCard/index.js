@@ -1,6 +1,6 @@
 import { MoreOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, Menu } from 'antd'
-import { isFollowing } from 'components/utils'
+import { getUserFullName, isFollowing } from 'components/utils'
 import { isEmpty, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -32,6 +32,7 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
 
   useEffect(() => {
     if (
+      currentUser.authorized &&
       !isEmpty(user) &&
       (amIFollowingThisUser || !user.isPrivateProfile || currentUser.accountId === user.accountId)
     )
@@ -87,11 +88,7 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
             <div className="float-right">
               <BlockBtn />
             </div>
-            <h5 className="pt-4 pb-0 pl-5 pr-3">
-              {`${!isNil(user.firstName) ? user.firstName : 'Anonymous'} ${
-                !isNil(user.lastName) ? user.lastName : 'Pigeon'
-              }`}
-            </h5>
+            <h5 className="pt-4 pb-0 pl-5 pr-3">{getUserFullName(user)}</h5>
           </div>
         </div>
         <img

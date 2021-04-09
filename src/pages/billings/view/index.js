@@ -14,6 +14,7 @@ const BillingView = () => {
   const [secondaryBillings, setSecondaryBillings] = useState([])
   const [product, setProduct] = useState([])
   const [user, setUser] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const viewBillingDetail = async () => {
     const result = await viewBilling({ billingId: id })
@@ -38,13 +39,15 @@ const BillingView = () => {
         const course = await getCourseById(result.billings[0].productId)
         if (course && !isNil(course.course)) {
           setProduct(course.course)
+          setIsLoading(false)
         }
       }
       // for SUBSCRIPTION billing
       if (result.billings[0].billingType === BILLING_TYPE.MENTORSHIP) {
         const subscription = await getSubscription(result.billings[0].contractId)
-        if (subscription && !isNil(subscription)) {
-          setProduct(subscription)
+        if (subscription && !isNil(subscription.contract.MentorshipListing)) {
+          setProduct(subscription.contract.MentorshipListing)
+          setIsLoading(false)
         }
       }
       // for WITHDRAWAL billing
@@ -54,6 +57,7 @@ const BillingView = () => {
           const sensei = await getSensei(wallet.wallet.accountId)
           if (sensei) {
             setUser(sensei)
+            setIsLoading(false)
           }
         }
       }
@@ -70,6 +74,7 @@ const BillingView = () => {
       product={product}
       recipient={user}
       otherBillings={secondaryBillings}
+      isLoading={isLoading}
     />
   )
 }

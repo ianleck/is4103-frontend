@@ -67,7 +67,7 @@ const Failed = () => {
         <div className="row">
           <div className="w-100">
             {courses.map(c => (
-              <ProductCard location="SuccessPage" listing={c} key={c.courseId} />
+              <ProductCard location="SuccessPage" listing={c} key={c.courseId} isCourse />
             ))}
           </div>
         </div>
