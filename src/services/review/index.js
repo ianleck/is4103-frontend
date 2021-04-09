@@ -27,26 +27,28 @@ export async function editCourseReview(payload) {
     .catch(err => console.log(err))
 }
 
-// export async function addMentorshipListingReview() {
-//   return apiClient
-//     .post(`/review/mentorship/${mentorshipListingId}`, { courseId }, { withCredentials: true })
-//     .then(response => {
-//       if (response && !isNil(response.data)) {
-//         if (response.data.success) return response.data
-//       }
-//       return false
-//     })
-//     .catch(err => console.log(err))
-// }
+export async function addMentorshipListingReview(payload) {
+  const { mentorshipListingId, review } = payload
+  return apiClient
+    .post(`/review/mentorship/${mentorshipListingId}`, { review })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
 
-// export async function editMentorshipListingReview() {
-//   return apiClient
-//     .post(`/review/mentorship/${mentorshipListingId}`, { courseId }, { withCredentials: true })
-//     .then(response => {
-//       if (response && !isNil(response.data)) {
-//         if (response.data.success) return response.data
-//       }
-//       return false
-//     })
-//     .catch(err => console.log(err))
-// }
+export async function editMentorshipListingReview(payload) {
+  const { mentorshipListingId, review } = payload
+  return apiClient
+    .put(`/review/mentorship/${mentorshipListingId}`, { review })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
