@@ -138,7 +138,14 @@ export async function getProfile(accountId) {
     .get(`/user/${accountId}`)
     .then(response => {
       if (!isNil(response.data)) {
-        if (!isNil(response.data.userProfile)) return response.data.userProfile
+        if (!isNil(response.data.userProfile)) {
+          if (!isNil(response.data.isBlocking)) {
+            response.data.userProfile.isBlocking = response.data.isBlocking
+          } else {
+            response.data.userProfile.isBlocking = false
+          }
+          return response.data.userProfile
+        }
       } else {
         return false
       }

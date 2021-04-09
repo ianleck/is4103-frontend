@@ -53,6 +53,19 @@ export async function getFollowRequests(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function getUsersBlocked(accountId) {
+  const url = `/social/blocked/all/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function followUser(targetAccountId) {
   const url = `/social/following/follow/${targetAccountId}`
   return apiClient
@@ -120,6 +133,32 @@ export async function cancelFollowRequest(targetAccountId) {
 
 export async function removeFollower(targetAccountId) {
   const url = `/social/following/remove/${targetAccountId}`
+  return apiClient
+    .delete(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function blockUser(targetAccountId) {
+  const url = `/social/block/${targetAccountId}`
+  return apiClient
+    .post(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function unblockUser(targetAccountId) {
+  const url = `/social/unblock/${targetAccountId}`
   return apiClient
     .delete(url)
     .then(response => {
