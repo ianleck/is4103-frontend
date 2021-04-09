@@ -19,7 +19,7 @@ import {
   REVIEW_EDIT_SUCCESS,
   SUCCESS,
 } from 'constants/notifications'
-import { getUserFirstName, showNotification } from 'components/utils'
+import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import { FRONTEND_API } from 'constants/constants'
 
@@ -158,9 +158,7 @@ const StudentCourseDetails = () => {
         <div className="col-auto">
           <span>
             by&nbsp;
-            <strong>
-              {course.Sensei?.firstName} {course.Sensei?.lastName}
-            </strong>
+            <strong>{getUserFullName(course.Sensei)}</strong>
           </span>
         </div>
       </div>

@@ -334,10 +334,10 @@ export const getAvailableCurrencyCodes = allCurrencyCodes => {
 }
 
 export const getUserFirstName = user => {
-  return !isNil(user.firstName) ? user.firstName : 'Anonymous'
+  return user && !isNil(user.firstName) ? user.firstName : 'Anonymous'
 }
 export const getUserLastName = user => {
-  return !isNil(user.lastName) ? user.lastName : 'Pigeon'
+  return user && !isNil(user.lastName) ? user.lastName : 'Pigeon'
 }
 
 export const getUserFullName = user => {
