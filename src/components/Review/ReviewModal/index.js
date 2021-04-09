@@ -57,9 +57,10 @@ const ReviewModal = ({ isVisible, setShowReviewModal, review, editMode, onSubmit
         onSubmit={e => e.preventDefault()}
         onFinish={onSubmitReview}
         onFinishFailed={onFinishFailed}
+        initialValues={{ rating: 5 }}
       >
         <Form.Item label="Rating" name="rating">
-          <Rate defaultValue={5} />
+          <Rate />
         </Form.Item>
 
         <Form.Item label="Review Comment" name="comment">
