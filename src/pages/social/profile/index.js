@@ -17,7 +17,8 @@ import ExperienceCard from 'components/Profile/ExperienceCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
 import { getFollowingList, getFollowerList } from 'services/social'
-import { LockFilled, StopFilled } from '@ant-design/icons'
+import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
+import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
 
 const SocialProfile = () => {
   const user = useSelector(state => state.user)
@@ -141,40 +142,8 @@ const SocialProfile = () => {
         </div>
       </div>
       <div className="col-12 col-md-7">
-        {!amIFollowingThisUser && viewUser.isPrivateProfile && (
-          <div className="card">
-            <div className="card-body">
-              <Empty
-                image={<LockFilled style={{ fontSize: '100px' }} />}
-                description={
-                  <>
-                    <span className="text-dark font-weight-bold">This account is private.</span>
-                    <br />
-                    <span className="text-muted">Follow this account to see their content.</span>
-                  </>
-                }
-              />
-            </div>
-          </div>
-        )}
-        {isBlocked && (
-          <div className="card">
-            <div className="card-body">
-              <Empty
-                image={<StopFilled style={{ fontSize: '100px' }} />}
-                description={
-                  <>
-                    <span className="text-dark font-weight-bold">This profile is unavailable.</span>
-                    <br />
-                    <span className="text-muted">
-                      This profile is currently not available. Check back again later.
-                    </span>
-                  </>
-                }
-              />
-            </div>
-          </div>
-        )}
+        {!amIFollowingThisUser && viewUser.isPrivateProfile && <ProfilePrivateCard />}
+        {isBlocked && <ProfileBlockedCard />}
         {currentTab === 'socialfeed' &&
           !isBlocked &&
           (amIFollowingThisUser || !viewUser.isPrivateProfile) && (
@@ -190,7 +159,7 @@ const SocialProfile = () => {
               setCurrentPageIdx={setCurrentPageIdx}
               showLoadMore={showLoadMore}
               setShowLoadMore={setShowLoadMore}
-              btnSize="small"
+              btnSize="medium"
             />
           )}
         {currentTab === 'profile' && (

@@ -92,7 +92,7 @@ const SocialFeed = () => {
               setCurrentPageIdx={setCurrentPageIdx}
               showLoadMore={showLoadMore}
               setShowLoadMore={setShowLoadMore}
-              btnSize="large"
+              btnSize="medium"
             />
           )}
           {currentTab === 'following' && (
