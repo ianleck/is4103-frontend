@@ -10,7 +10,7 @@ const ShareBtn = ({ quote, url, btnType, btnClassName, btnSize, btnShape }) => {
 
   const ShareMenu = () => {
     return (
-      <Menu>
+      <Menu selectable={false}>
         <Menu.Item icon={<FacebookOutlined />} key="facebook" className="font-size-18">
           <FacebookShareButton url="digi.dojo" quote={quote} hashtag="DigiDojo">
             Facebook
