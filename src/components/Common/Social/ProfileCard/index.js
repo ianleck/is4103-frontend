@@ -1,7 +1,8 @@
 import { MoreOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Menu } from 'antd'
+import { Avatar, Button, Dropdown, Menu, Modal } from 'antd'
 import { getUserFullName, isFollowing, showNotification } from 'components/utils'
 import { SUCCESS, USER_BLOCKED } from 'constants/notifications'
+import { BLOCK_USER } from 'constants/text'
 import { isEmpty, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,6 +17,8 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
 
   const [followerList, setFollowerList] = useState([])
   const [followingList, setFollowingList] = useState([])
+
+  const [showBlockUserModal, setShowBlockUserModal] = useState(false)
 
   const getUserSocials = async () => {
     const followingListRsp = await getFollowingList(user.accountId)
@@ -33,30 +36,7 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
 
   const amIFollowingThisUser = isFollowing(social.followingList, user.accountId)
 
-  useEffect(() => {
-    if (
-      currentUser.authorized &&
-      !isEmpty(user) &&
-      (amIFollowingThisUser ||
-        !user.isPrivateProfile ||
-        currentUser.accountId === user.accountId) &&
-      !isBlocked
-    )
-      getUserSocials()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
-
   const BlockBtn = () => {
-    const blockUserSvc = async () => {
-      const response = await blockUser(user.accountId)
-      if (response && response.success) {
-        dispatch({
-          type: 'social/LOAD_CURRENT_SOCIAL',
-        })
-        showNotification('success', SUCCESS, USER_BLOCKED)
-      }
-    }
-
     const BlockMenu = () => {
       return (
         <Menu selectable={false}>
@@ -65,7 +45,7 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
               target="_blank"
               role="button"
               tabIndex={0}
-              onClick={() => blockUserSvc()}
+              onClick={() => setShowBlockUserModal(true)}
               onKeyDown={e => e.preventDefault()}
             >
               Block User
@@ -90,6 +70,47 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
       </Dropdown>
     )
   }
+
+  const blockUserSvc = async () => {
+    const response = await blockUser(user.accountId)
+    if (response && response.success) {
+      dispatch({
+        type: 'social/LOAD_CURRENT_SOCIAL',
+      })
+      showNotification('success', SUCCESS, USER_BLOCKED)
+      setShowBlockUserModal(false)
+    }
+  }
+
+  const BlockUserModalFooter = () => {
+    return (
+      <div className="row justify-content-between">
+        <div className="col-auto">
+          <Button type="default" size="large" onClick={() => setShowBlockUserModal(false)}>
+            Close
+          </Button>
+        </div>
+        <div className="col-auto">
+          <Button type="primary" size="large" onClick={() => blockUserSvc()}>
+            {BLOCK_USER}
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    if (
+      currentUser.authorized &&
+      !isEmpty(user) &&
+      (amIFollowingThisUser ||
+        !user.isPrivateProfile ||
+        currentUser.accountId === user.accountId) &&
+      !isBlocked
+    )
+      getUserSocials()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   return (
     <div className="card">
@@ -169,6 +190,17 @@ const SocialProfileCard = ({ user, setCurrentTab, isBlocked }) => {
           </div>
         )}
       </div>
+      <Modal
+        title="Block User"
+        visible={showBlockUserModal}
+        centered
+        destroyOnClose
+        okButtonProps={{ style: { display: 'none' } }}
+        onCancel={() => setShowBlockUserModal(false)}
+        footer={<BlockUserModalFooter />}
+      >
+        Are you sure you want to block this user?
+      </Modal>
     </div>
   )
 }

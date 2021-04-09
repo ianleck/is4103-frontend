@@ -31,7 +31,6 @@ const UserMenu = () => {
   const { username, userType } = user
 
   const [showSocialModal, setShowSocialModal] = useState(false)
-  const [socialModalTitle, setSocialModalTitle] = useState('')
   const [showFollowingList, setShowFollowingList] = useState(false)
 
   const [showFollowerRequests, setShowFollowerRequests] = useState(false)
@@ -75,31 +74,29 @@ const UserMenu = () => {
   }
 
   const displayFollowerRequests = () => {
-    setSocialModalTitle('Follower Requests List')
     setShowFollowingList(false)
     setShowFollowerRequests(true)
     setShowSocialModal(true)
   }
 
   const displayFollowerRequestsMenu = () => {
-    setSocialModalTitle('Follower Requests List')
     setShowFollowerRequests(true)
   }
 
   const displayBlockedUsersMenu = () => {
-    setSocialModalTitle('Blocked Users List')
     setShowBlockedUsers(true)
   }
 
   const displayFollowingList = type => {
     if (type === 'following') {
       setShowFollowingList(true)
-      setSocialModalTitle('Following List')
+      setShowBlockedUsers(false)
     } else {
       setShowFollowingList(false)
-      setSocialModalTitle('Follower List')
+      setShowBlockedUsers(false)
     }
     setShowFollowerRequests(false)
+    setShowBlockedUsers(false)
     setShowSocialModal(true)
   }
 
@@ -252,7 +249,7 @@ const UserMenu = () => {
             icon={<UserOutlined />}
           />
           <Modal
-            title={socialModalTitle}
+            title={`${showFollowingList ? 'Following' : 'Follower'} List`}
             visible={showSocialModal}
             cancelText="Close"
             centered

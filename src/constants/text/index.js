@@ -66,6 +66,8 @@ export const FLW_REQ_SENT = 'Follow Request Sent'
 export const CANCEL_FLW_REQ = 'Cancel Follow Request'
 export const REQUESTED = 'Requested'
 export const UNFOLLOW = 'Unfollow'
+export const BLOCK_USER = 'Block User'
+export const UNBLOCK_USER = 'Unblock User'
 
 export const ADD_POST = 'Add a post'
 export const UNLIKE = 'Unlike'
