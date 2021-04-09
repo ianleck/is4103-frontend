@@ -59,7 +59,7 @@ const ReviewModal = ({ isVisible, setShowReviewModal, review, editMode, onSubmit
         onFinishFailed={onFinishFailed}
       >
         <Form.Item label="Rating" name="rating">
-          <Rate />
+          <Rate defaultValue={5} />
         </Form.Item>
 
         <Form.Item label="Review Comment" name="comment">
