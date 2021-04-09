@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { isNil } from 'lodash'
 import SocialPostListItem from 'components/Common/Social/PostList/Item'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
@@ -9,7 +9,11 @@ import { getPostById } from 'services/social/posts'
 
 const SocialViewOnePost = () => {
   const { postId } = useParams()
+
+  const history = useHistory()
   const user = useSelector(state => state.user)
+
+  if (!user.authorized) history.replace('/auth/login')
 
   const [post, setPost] = useState('')
   const [isBlocked, setIsBlocked] = useState(false)

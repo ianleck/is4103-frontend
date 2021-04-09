@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { getFollowingPosts } from 'services/social/posts'
 import { isNil, size } from 'lodash'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
@@ -10,9 +11,12 @@ import { Button, Empty } from 'antd'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
 
 const SocialFeed = () => {
+  const history = useHistory()
   const user = useSelector(state => state.user)
   const social = useSelector(state => state.social)
   const [posts, setPosts] = useState([])
+
+  if (!user.authorized) history.replace('/auth/login')
 
   const [isLoading, setIsLoading] = useState(false)
   const [paginatedPosts, setPaginatedPosts] = useState([])

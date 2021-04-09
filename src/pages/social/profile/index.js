@@ -26,6 +26,8 @@ const SocialProfile = () => {
   const history = useHistory()
   const { accountId } = useParams()
 
+  if (!user.authorized) history.replace('/auth/login')
+
   const [viewUser, setViewUser] = useState('')
   const [isBlocked, setIsBlocked] = useState(false)
 
