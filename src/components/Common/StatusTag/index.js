@@ -167,7 +167,6 @@ const StatusTag = data => {
 
   if (type === 'MENTORSHIP_CONTRACT_APPROVAL') {
     const dataSource = data.data.senseiApproval
-    console.log(dataSource)
 
     switch (dataSource) {
       case MENTORSHIP_CONTRACT_APPROVAL.PENDING:
