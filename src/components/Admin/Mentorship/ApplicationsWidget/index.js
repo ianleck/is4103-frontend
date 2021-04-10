@@ -15,7 +15,7 @@ const ApplicationsWidget = data => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applications])
 
-  const processApplications = async () => {
+  const processApplications = () => {
     let pendingCounter = 0
     let approvedCounter = 0
     let rejectedCounter = 0
