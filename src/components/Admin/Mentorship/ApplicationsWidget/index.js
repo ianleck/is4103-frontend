@@ -1,37 +1,52 @@
+import CountIconWidgetGroup from 'components/Common/CountIconWidgetGroup'
+import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import React, { useEffect, useState } from 'react'
-import * as jwtAdmin from 'services/admin'
 
-const ApplicationsWidget = () => {
-  const [count, setCount] = useState(0)
+const ApplicationsWidget = data => {
+  const applications = data.data
+
+  const [pending, setPending] = useState(0)
+  const [approved, setApproved] = useState(0)
+  const [rejected, setRejected] = useState(0)
 
   useEffect(() => {
-    populateApplications()
-  }, [])
+    processApplications()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applications])
 
-  const populateApplications = async () => {
-    const response = await jwtAdmin.getAllMentorshipContracts()
-    let counter = 0
+  const processApplications = () => {
+    let pendingCounter = 0
+    let approvedCounter = 0
+    let rejectedCounter = 0
 
-    if (response.length > 0) {
-      for (let i = 0; i < response.length; i += 1) {
-        // console.log(response[i])
-        if (response[i].senseiApproval === 'PENDING') {
-          counter += 1
+    if (applications.length > 0) {
+      for (let i = 0; i < applications.length; i += 1) {
+        if (applications[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.PENDING) {
+          pendingCounter += 1
+        } else if (applications[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED) {
+          approvedCounter += 1
+        } else if (applications[i].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.REJECTED) {
+          rejectedCounter += 1
         }
       }
     }
-    setCount(counter)
+
+    setPending(pendingCounter)
+    setApproved(approvedCounter)
+    setRejected(rejectedCounter)
   }
 
   return (
-    <div className="card">
-      <div className="card-body">
-        <h4 className="d-flex align-items-center justify-content-center">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center">
-          Number of Mentorship Applications
-        </h6>
-      </div>
-    </div>
+    <CountIconWidgetGroup
+      objectType="Applications"
+      numPending={pending}
+      numAccepted={approved}
+      numRejected={rejected}
+      pendingPrefix="Pending"
+      acceptedPrefix="Accepted"
+      rejectedPrefix="Rejected"
+      noClick
+    />
   )
 }
 
