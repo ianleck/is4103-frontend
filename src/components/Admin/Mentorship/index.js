@@ -5,7 +5,11 @@ import { getMentorshipListing } from 'services/mentorship/listings'
 import { Tabs, Table, Space, Button, Tag, Modal, Descriptions } from 'antd'
 import { formatTime } from 'components/utils'
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { VISIBILITY_ENUM_FILTER } from 'constants/filters'
+import {
+  CONTRACT_PROGRESS_ENUM_FILTER,
+  MENTORSHIP_CONTRACT_APPROVAL_ENUM_FILTER,
+  VISIBILITY_ENUM_FILTER,
+} from 'constants/filters'
 import StatusTag from 'components/Common/StatusTag'
 import { compact, isEmpty, map } from 'lodash'
 import ListingsWidget from './ListingsWidget'
@@ -106,8 +110,6 @@ const Mentorship = () => {
       const Sensei = await jwtAdmin.getSensei(item.MentorshipListing.accountId)
       item.Sensei = Sensei
     })
-
-    console.log('con', con)
 
     setContracts(con)
   }
@@ -224,6 +226,7 @@ const Mentorship = () => {
       title: 'Mentorship Listing Name',
       key: ['MentorshipListing', 'name'],
       dataIndex: ['MentorshipListing', 'name'],
+      sorter: (a, b) => a.MentorshipListing.name.length - b.MentorshipListing.name.length,
       width: '15%',
       responsive: ['sm'],
     },
@@ -246,16 +249,18 @@ const Mentorship = () => {
       dataIndex: 'progress',
       width: '15%',
       responsive: ['lg'],
-      render: record => <StatusTag data={{ progress: record }} type="CONTRACT_PROGRESS_ENUM" />,
+      render: record => <StatusTag data={record} type="CONTRACT_PROGRESS_ENUM" />,
+      filters: CONTRACT_PROGRESS_ENUM_FILTER,
+      onFilter: (value, record) => record.progress.indexOf(value) === 0,
     },
     {
       title: 'Sensei Approval',
       key: 'senseiApproval',
       dataIndex: 'senseiApproval',
       width: '15%',
-      render: record => (
-        <StatusTag data={{ senseiApproval: record }} type="MENTORSHIP_CONTRACT_APPROVAL" />
-      ),
+      render: record => <StatusTag data={record} type="MENTORSHIP_CONTRACT_APPROVAL" />,
+      filters: MENTORSHIP_CONTRACT_APPROVAL_ENUM_FILTER,
+      onFilter: (value, record) => record.senseiApproval.indexOf(value) === 0,
     },
     {
       title: 'Action',
@@ -326,16 +331,14 @@ const Mentorship = () => {
       dataIndex: 'progress',
       width: '15%',
       responsive: ['lg'],
-      render: record => <StatusTag data={{ progress: record }} type="CONTRACT_PROGRESS_ENUM" />,
+      render: record => <StatusTag data={record} type="CONTRACT_PROGRESS_ENUM" />,
     },
     {
       title: 'Sensei Approval',
       key: 'senseiApproval',
       dataIndex: 'senseiApproval',
       width: '15%',
-      render: record => (
-        <StatusTag data={{ senseiApproval: record }} type="MENTORSHIP_CONTRACT_APPROVAL" />
-      ),
+      render: record => <StatusTag data={record} type="MENTORSHIP_CONTRACT_APPROVAL" />,
     },
     {
       title: 'Action',
