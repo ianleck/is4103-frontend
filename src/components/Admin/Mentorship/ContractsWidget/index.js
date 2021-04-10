@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react'
 
 const ContractsWidget = data => {
   const contracts = data.data
-  console.log(contracts)
 
   const [onGoingCount, setOngoingCount] = useState(0)
   const [cancelledCount, setCancelledCount] = useState(0)
@@ -16,14 +15,13 @@ const ContractsWidget = data => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const processContracts = async () => {
+  const processContracts = () => {
     let onGoingcounter = 0
     let cancelledcounter = 0
     let completedcounter = 0
 
     if (contracts.length > 0) {
       for (let i = 0; i < contracts.length; i += 1) {
-        // console.log(response[i])
         if (
           contracts[i].progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED ||
           contracts[i].progress === CONTRACT_PROGRESS_ENUM.ONGOING
