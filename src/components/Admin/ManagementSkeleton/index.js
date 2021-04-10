@@ -37,6 +37,9 @@ const ManagementSkeleton = ({
         handleAcceptedWidgetOnClick={handleAcceptedWidgetOnClick}
         handlePendingWidgetOnClick={handlePendingWidgetOnClick}
         handleRejectedWidgetOnClick={handleRejectedWidgetOnClick}
+        pendingPrefix="Pending"
+        acceptedPrefix="Accepted"
+        rejectedPrefix="Rejected"
       />
 
       <div className="row mt-2">

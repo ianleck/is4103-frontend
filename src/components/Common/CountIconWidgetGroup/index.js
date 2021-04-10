@@ -12,6 +12,9 @@ const CountIconWidgetGroup = ({
   handlePendingWidgetOnClick,
   handleRejectedWidgetOnClick,
   noClick,
+  pendingPrefix,
+  acceptedPrefix,
+  rejectedPrefix,
 }) => {
   const getClassName = filterName => {
     if (noClick) return null
@@ -23,7 +26,7 @@ const CountIconWidgetGroup = ({
     <div className="row mt-4">
       <div className="col-12 col-md-4">
         <CountIconWidget
-          title={`Pending ${objectType}`}
+          title={`${pendingPrefix} ${objectType}`}
           className={getClassName('pending')}
           count={numPending}
           icon={<ExceptionOutlined />}
@@ -34,7 +37,7 @@ const CountIconWidgetGroup = ({
 
       <div className="col-6 col-md-4">
         <CountIconWidget
-          title={`Accepted ${objectType}`}
+          title={`${acceptedPrefix} ${objectType}`}
           className={getClassName('accepted')}
           count={numAccepted}
           icon={<CheckOutlined />}
@@ -45,7 +48,7 @@ const CountIconWidgetGroup = ({
 
       <div className="col-6 col-md-4">
         <CountIconWidget
-          title={`Rejected ${objectType}`}
+          title={`${rejectedPrefix} ${objectType}`}
           className={getClassName('rejected')}
           count={numRejected}
           icon={<CloseOutlined />}
