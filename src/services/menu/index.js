@@ -155,7 +155,7 @@ export async function getSenseiMenuData() {
         {
           title: 'Mentee Overview',
           key: 'menteeOverview',
-          url: '/sensei/menteeOverview',
+          url: '/sensei/mentees',
         },
         {
           title: 'Tasks',
