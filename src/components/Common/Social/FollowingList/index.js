@@ -42,7 +42,7 @@ const SocialFollowingList = ({ followingList, isFollowingList, isOwnList, setSho
   }, [followingList])
 
   const socialProfileOverride = accountId => {
-    sendToSocialProfile(history, user, accountId)
+    sendToSocialProfile(history, accountId)
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
   }
 

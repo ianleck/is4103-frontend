@@ -23,6 +23,7 @@ let previousPath = ''
 
 const Layout = ({ children, location: { pathname, search } }) => {
   const user = useSelector(state => state.user)
+  const settings = useSelector(state => state.settings)
   // NProgress & ScrollTop Management
   const currentPath = pathname + search
   if (currentPath !== previousPath) {
@@ -83,9 +84,13 @@ const Layout = ({ children, location: { pathname, search } }) => {
       if (
         isUserAuthorized ||
         (!isUserAuthorized &&
-          (/^\/sensei(?=\/|$)/i.test(pathname) || /^\/student(?=\/|$)/i.test(pathname)))
-      )
+          (/^\/sensei(?=\/|$)/i.test(pathname) ||
+            /^\/student(?=\/|$)/i.test(pathname) ||
+            /^\/social(?=\/|$)/i.test(pathname)))
+      ) {
+        settings.rememberPath = pathname
         return <Redirect to="/auth/login" />
+      }
       if (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname))
         return <Redirect to="/auth/admin" />
     }

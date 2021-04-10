@@ -101,20 +101,31 @@ export function* LOGIN({ payload }) {
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
-    switch (currentUser.userType) {
-      case USER_TYPE_ENUM.ADMIN:
-        yield history.push('/admin')
-        break
-      case USER_TYPE_ENUM.SENSEI:
-        yield history.push('/sensei')
-        break
-      case USER_TYPE_ENUM.STUDENT:
-        yield history.push('/')
-        break
-      default:
-        yield history.push('/')
-        break
+    const settings = yield select(selectors.settings)
+    if (!isEmpty(settings.rememberPath)) {
+      yield history.push(settings.rememberPath)
+    } else {
+      switch (currentUser.userType) {
+        case USER_TYPE_ENUM.ADMIN:
+          yield history.push('/admin')
+          break
+        case USER_TYPE_ENUM.SENSEI:
+          yield history.push('/sensei')
+          break
+        case USER_TYPE_ENUM.STUDENT:
+          yield history.push('/')
+          break
+        default:
+          yield history.push('/')
+          break
+      }
     }
+    yield putResolve({
+      type: 'settings/SET_STATE',
+      payload: {
+        rememberPath: '',
+      },
+    })
     if (isNil(currentUser.firstName)) currentUser.firstName = 'Anonymous'
     if (isNil(currentUser.lastName)) currentUser.lastName = 'Pigeon'
     notification.success({
@@ -210,6 +221,12 @@ export function* LOGOUT() {
   })
   yield putResolve({
     type: 'menu/GET_DATA',
+  })
+  yield putResolve({
+    type: 'settings/SET_STATE',
+    payload: {
+      rememberPath: '',
+    },
   })
   yield history.push('/')
 }
