@@ -1,35 +1,72 @@
+import { CheckOutlined, CloseOutlined, ExceptionOutlined } from '@ant-design/icons'
+import CountIconWidget from 'components/Common/CountIconWidget'
+import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import React, { useEffect, useState } from 'react'
-import * as jwtAdmin from 'services/admin'
 
-const ContractsWidget = () => {
-  const [count, setCount] = useState(0)
+const ContractsWidget = data => {
+  const contracts = data.data
+  console.log(contracts)
+
+  const [onGoingCount, setOngoingCount] = useState(0)
+  const [cancelledCount, setCancelledCount] = useState(0)
+  const [completedCount, setCompletedCount] = useState(0)
 
   useEffect(() => {
-    populateContracts()
+    processContracts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const populateContracts = async () => {
-    const response = await jwtAdmin.getAllMentorshipContracts()
-    let counter = 0
+  const processContracts = async () => {
+    let onGoingcounter = 0
+    let cancelledcounter = 0
+    let completedcounter = 0
 
-    if (response.length > 0) {
-      for (let i = 0; i < response.length; i += 1) {
+    if (contracts.length > 0) {
+      for (let i = 0; i < contracts.length; i += 1) {
         // console.log(response[i])
-        if (response[i].senseiApproval === 'ACCEPTED') {
-          counter += 1
+        if (
+          contracts[i].progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED ||
+          contracts[i].progress === CONTRACT_PROGRESS_ENUM.ONGOING
+        ) {
+          onGoingcounter += 1
+        } else if (contracts[i].progress === CONTRACT_PROGRESS_ENUM.CANCELLED) {
+          cancelledcounter += 1
+        } else if (contracts[i].progress === CONTRACT_PROGRESS_ENUM.COMPLETED) {
+          completedcounter += 1
         }
       }
     }
-    setCount(counter)
+
+    setOngoingCount(onGoingcounter)
+    setCancelledCount(cancelledcounter)
+    setCompletedCount(completedcounter)
   }
 
   return (
-    <div className="card">
-      <div className="card-body">
-        <h4 className="d-flex align-items-center justify-content-center">{count}</h4>
-        <h6 className="d-flex align-items-center justify-content-center">
-          Number of Mentorship Contracts
-        </h6>
+    <div className="row mt-4">
+      <div className="col-12 col-md-4">
+        <CountIconWidget
+          title="Ongoing Mentorships"
+          count={onGoingCount}
+          color="orange"
+          icon={<ExceptionOutlined />}
+        />
+      </div>
+      <div className="col-12 col-md-4">
+        <CountIconWidget
+          title="Completed Mentorships"
+          count={completedCount}
+          color="green"
+          icon={<CheckOutlined />}
+        />
+      </div>
+      <div className="col-12 col-md-4">
+        <CountIconWidget
+          title="Cancelled Mentorships"
+          color="red"
+          count={cancelledCount}
+          icon={<CloseOutlined />}
+        />
       </div>
     </div>
   )

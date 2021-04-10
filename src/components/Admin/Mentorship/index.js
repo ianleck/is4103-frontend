@@ -9,9 +9,10 @@ import { VISIBILITY_ENUM_FILTER } from 'constants/filters'
 import StatusTag from 'components/Common/StatusTag'
 import { compact, isEmpty, map } from 'lodash'
 import ListingsWidget from './ListingsWidget'
+import ApplicationsWidget from './ApplicationsWidget'
+import ContractsWidget from './ContractsWidget'
 
 const { TabPane } = Tabs
-const { Column } = Table
 
 const Mentorship = () => {
   const [tabKey, setTabKey] = useState('Listings')
@@ -25,6 +26,12 @@ const Mentorship = () => {
   const [showListingDetails, setShowListingDetails] = useState(false)
   const [listingDetails, setListingDetails] = useState(false)
 
+  const [showApplicationDetails, setShowApplicationDetails] = useState(false)
+  const [applicationDetails, setApplicationDetails] = useState(false)
+
+  const [showContractDetails, setShowContractDetails] = useState(false)
+  const [contractDetails, setContractDetails] = useState(false)
+
   useEffect(() => {
     populateListings()
     populateApplications()
@@ -37,11 +44,23 @@ const Mentorship = () => {
 
   const onCloseDetails = () => {
     setShowListingDetails(false)
+    setShowApplicationDetails(false)
+    setShowContractDetails(false)
   }
 
   const selectListing = record => {
     setShowListingDetails(true)
     setListingDetails(record)
+  }
+
+  const selectApplication = record => {
+    setShowApplicationDetails(true)
+    setApplicationDetails(record)
+  }
+
+  const selectContract = record => {
+    setShowContractDetails(true)
+    setContractDetails(record)
   }
 
   const populateListings = async () => {
@@ -51,7 +70,6 @@ const Mentorship = () => {
 
   const populateApplications = async () => {
     const response = await jwtAdmin.getAllMentorshipContracts()
-    console.log('app', response)
 
     response.forEach(async item => {
       const Student = await jwtAdmin.getStudent(item.accountId)
@@ -77,6 +95,19 @@ const Mentorship = () => {
         con = [...con, response[i]]
       }
     }
+
+    con.forEach(async item => {
+      const Student = await jwtAdmin.getStudent(item.accountId)
+      item.Student = Student
+
+      const MentorshipListing = await getMentorshipListing(item.mentorshipListingId)
+      item.MentorshipListing = MentorshipListing.mentorshipListing
+
+      const Sensei = await jwtAdmin.getSensei(item.MentorshipListing.accountId)
+      item.Sensei = Sensei
+    })
+
+    console.log('con', con)
 
     setContracts(con)
   }
@@ -194,22 +225,19 @@ const Mentorship = () => {
       key: ['MentorshipListing', 'name'],
       dataIndex: ['MentorshipListing', 'name'],
       width: '15%',
-      responsive: ['lg'],
+      responsive: ['sm'],
     },
     {
       title: 'Sensei',
       key: ['Sensei'],
       dataIndex: ['Sensei'],
-      width: '15%',
-      responsive: ['lg'],
+      responsive: ['md'],
       render: record => formatName(record),
     },
     {
       title: 'Student',
       key: ['Student'],
       dataIndex: ['Student'],
-      width: '15%',
-      responsive: ['lg'],
       render: record => formatName(record),
     },
     {
@@ -225,7 +253,6 @@ const Mentorship = () => {
       key: 'senseiApproval',
       dataIndex: 'senseiApproval',
       width: '15%',
-      responsive: ['lg'],
       render: record => (
         <StatusTag data={{ senseiApproval: record }} type="MENTORSHIP_CONTRACT_APPROVAL" />
       ),
@@ -240,13 +267,17 @@ const Mentorship = () => {
             type="primary"
             shape="circle"
             size="large"
-            onClick={() => selectListing(record)}
+            onClick={() => selectApplication(record)}
             icon={<InfoCircleOutlined />}
           />
         </Space>
       ),
     },
   ]
+
+  const showApplicationWidget = () => {
+    return <ApplicationsWidget data={applications} />
+  }
 
   const showApplications = () => {
     return (
@@ -258,27 +289,78 @@ const Mentorship = () => {
     )
   }
 
+  const contractsColumns = [
+    {
+      title: 'Created At',
+      key: 'createdAt',
+      dataIndex: 'createdAt',
+      width: '15%',
+      responsive: ['lg'],
+      render: record => formatTime(record),
+      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Mentorship Listing Name',
+      key: ['MentorshipListing', 'name'],
+      dataIndex: ['MentorshipListing', 'name'],
+      width: '15%',
+      responsive: ['sm'],
+    },
+    {
+      title: 'Sensei',
+      key: ['Sensei'],
+      dataIndex: ['Sensei'],
+      responsive: ['md'],
+      render: record => formatName(record),
+    },
+    {
+      title: 'Student',
+      key: ['Student'],
+      dataIndex: ['Student'],
+      render: record => formatName(record),
+    },
+    {
+      title: 'Progress',
+      key: 'progress',
+      dataIndex: 'progress',
+      width: '15%',
+      responsive: ['lg'],
+      render: record => <StatusTag data={{ progress: record }} type="CONTRACT_PROGRESS_ENUM" />,
+    },
+    {
+      title: 'Sensei Approval',
+      key: 'senseiApproval',
+      dataIndex: 'senseiApproval',
+      width: '15%',
+      render: record => (
+        <StatusTag data={{ senseiApproval: record }} type="MENTORSHIP_CONTRACT_APPROVAL" />
+      ),
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: record => (
+        <Space size="large">
+          <Button
+            disabled={record.isResolved}
+            type="primary"
+            shape="circle"
+            size="large"
+            onClick={() => selectContract(record)}
+            icon={<InfoCircleOutlined />}
+          />
+        </Space>
+      ),
+    },
+  ]
+
+  const showContractWidget = () => {
+    return <ContractsWidget data={contracts} />
+  }
+
   const showContracts = () => {
-    return (
-      <Table dataSource={contracts} rowKey="mentorshipContractId">
-        <Column
-          title="Mentorship Contract Id"
-          dataIndex="mentorshipContractId"
-          key="mentorshipContractId"
-        />
-        <Column
-          title="Mentorship Listing Id"
-          dataIndex="mentorshipListingId"
-          key="mentorshipListingId"
-        />
-        <Column title="Name" dataIndex="name" key="name" />
-        <Column title="Statement" dataIndex="statement" key="statement" />
-        <Column title="Rating" dataIndex="rating" key="rating" />
-        <Column title="Owner Id" dataIndex="accountId" key="accountId" />
-        <Column title="Created At" dataIndex="createdAt" key="createdAt" />
-        <Column title="Updated At" dataIndex="updatedAt" key="updatedAt" />
-      </Table>
-    )
+    return <Table dataSource={contracts} columns={contractsColumns} rowKey="mentorshipContractId" />
   }
 
   return (
@@ -295,8 +377,9 @@ const Mentorship = () => {
       </div>
 
       <div className="card-body">
-        {/* add widget here */}
         {tabKey === 'Listings' && showListingWidget()}
+        {tabKey === 'Applications' && showApplicationWidget()}
+        {tabKey === 'Contracts' && showContractWidget()}
 
         <div className="row">
           <div className="col-12 overflow-x-scroll">
@@ -348,6 +431,129 @@ const Mentorship = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Visibility">
               {listingDetails.visibility ? listingDetails.visibility : '-'}
+            </Descriptions.Item>
+          </Descriptions>
+        </Modal>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Mentorship Application Details"
+          visible={showApplicationDetails}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => onCloseDetails()}
+        >
+          <Descriptions column={1}>
+            <Descriptions.Item label="Mentorship Contract ID">
+              {applicationDetails.mentorshipContractId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Mentorship Application Statement">
+              {applicationDetails.statement}
+            </Descriptions.Item>
+            <Descriptions.Item label="Listing ID">
+              {applicationDetails.mentorshipListingId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Name">
+              {applicationDetails ? applicationDetails.MentorshipListing.name : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Description">
+              {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Sensei">
+              {applicationDetails.Sensei
+                ? `${applicationDetails.Sensei.firstName} ${applicationDetails.Sensei.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Pass price">
+              {applicationDetails ? applicationDetails.MentorshipListing.priceAmount : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Date Created">
+              {applicationDetails.createdAt ? formatTime(applicationDetails.createdAt) : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Date Updated">
+              {applicationDetails.updatedAt ? formatTime(applicationDetails.updatedAt) : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Progress">
+              {applicationDetails.progress ? (
+                <StatusTag
+                  data={{ progress: applicationDetails.progress }}
+                  type="CONTRACT_PROGRESS_ENUM"
+                />
+              ) : (
+                '-'
+              )}
+            </Descriptions.Item>
+            <Descriptions.Item label="Sensei Approval">
+              {applicationDetails.senseiApproval ? (
+                <StatusTag
+                  data={{ senseiApproval: applicationDetails.senseiApproval }}
+                  type="MENTORSHIP_CONTRACT_APPROVAL"
+                />
+              ) : (
+                '-'
+              )}
+            </Descriptions.Item>
+          </Descriptions>
+        </Modal>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Mentorship Contract Details"
+          visible={showContractDetails}
+          cancelText="Close"
+          centered
+          okButtonProps={{ style: { display: 'none' } }}
+          onCancel={() => onCloseDetails()}
+        >
+          <Descriptions column={1}>
+            <Descriptions.Item label="Mentorship Contract ID">
+              {contractDetails.mentorshipContractId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Listing ID">
+              {contractDetails.mentorshipListingId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Name">
+              {contractDetails ? contractDetails.MentorshipListing.name : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Description">
+              {contractDetails ? contractDetails.MentorshipListing.description : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Sensei">
+              {contractDetails.Sensei
+                ? `${contractDetails.Sensei.firstName} ${contractDetails.Sensei.lastName}`
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="Pass price">
+              {contractDetails ? contractDetails.MentorshipListing.priceAmount : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Date Created">
+              {contractDetails.createdAt ? formatTime(contractDetails.createdAt) : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Date Updated">
+              {contractDetails.updatedAt ? formatTime(contractDetails.updatedAt) : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Progress">
+              {contractDetails.progress ? (
+                <StatusTag
+                  data={{ progress: contractDetails.progress }}
+                  type="CONTRACT_PROGRESS_ENUM"
+                />
+              ) : (
+                '-'
+              )}
+            </Descriptions.Item>
+            <Descriptions.Item label="Sensei Approval">
+              {contractDetails.senseiApproval ? (
+                <StatusTag
+                  data={{ senseiApproval: contractDetails.senseiApproval }}
+                  type="MENTORSHIP_CONTRACT_APPROVAL"
+                />
+              ) : (
+                '-'
+              )}
             </Descriptions.Item>
           </Descriptions>
         </Modal>
