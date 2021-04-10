@@ -34,14 +34,14 @@ const ListingsWidget = () => {
     <div className="row mt-4">
       <div className="col-12 col-md-6">
         <CountIconWidget
-          title="Total published Listings"
+          title="Total Published Listings"
           count={publishedCount}
           icon={<BookOutlined />}
         />
       </div>
       <div className="col-12 col-md-6">
         <CountIconWidget
-          title="Total hidden Listings"
+          title="Total Hidden Listings"
           count={hiddenCount}
           icon={<EyeInvisibleOutlined />}
         />

@@ -1,5 +1,4 @@
-import { CheckOutlined, CloseOutlined, ExceptionOutlined } from '@ant-design/icons'
-import CountIconWidget from 'components/Common/CountIconWidget'
+import CountIconWidgetGroup from 'components/Common/CountIconWidgetGroup'
 import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import React, { useEffect, useState } from 'react'
 
@@ -38,32 +37,16 @@ const ApplicationsWidget = data => {
   }
 
   return (
-    <div className="row mt-4">
-      <div className="col-12 col-md-4">
-        <CountIconWidget
-          title="Pending Applications"
-          count={pending}
-          color="orange"
-          icon={<ExceptionOutlined />}
-        />
-      </div>
-      <div className="col-12 col-md-4">
-        <CountIconWidget
-          title="Approved Applications"
-          color="green"
-          count={approved}
-          icon={<CheckOutlined />}
-        />
-      </div>
-      <div className="col-12 col-md-4">
-        <CountIconWidget
-          title="Rejected Applications"
-          count={rejected}
-          color="red"
-          icon={<CloseOutlined />}
-        />
-      </div>
-    </div>
+    <CountIconWidgetGroup
+      objectType="Applications"
+      numPending={pending}
+      numAccepted={approved}
+      numRejected={rejected}
+      pendingPrefix="Pending"
+      acceptedPrefix="Accepted"
+      rejectedPrefix="Rejected"
+      noClick
+    />
   )
 }
 

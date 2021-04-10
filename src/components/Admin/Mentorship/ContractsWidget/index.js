@@ -1,5 +1,4 @@
-import { CheckOutlined, CloseOutlined, ExceptionOutlined } from '@ant-design/icons'
-import CountIconWidget from 'components/Common/CountIconWidget'
+import CountIconWidgetGroup from 'components/Common/CountIconWidgetGroup'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import React, { useEffect, useState } from 'react'
 
@@ -16,9 +15,9 @@ const ContractsWidget = data => {
   }, [])
 
   const processContracts = () => {
-    let onGoingcounter = 0
-    let cancelledcounter = 0
-    let completedcounter = 0
+    let ongoingCounter = 0
+    let cancelledCounter = 0
+    let completedCounter = 0
 
     if (contracts.length > 0) {
       for (let i = 0; i < contracts.length; i += 1) {
@@ -26,47 +25,31 @@ const ContractsWidget = data => {
           contracts[i].progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED ||
           contracts[i].progress === CONTRACT_PROGRESS_ENUM.ONGOING
         ) {
-          onGoingcounter += 1
+          ongoingCounter += 1
         } else if (contracts[i].progress === CONTRACT_PROGRESS_ENUM.CANCELLED) {
-          cancelledcounter += 1
+          cancelledCounter += 1
         } else if (contracts[i].progress === CONTRACT_PROGRESS_ENUM.COMPLETED) {
-          completedcounter += 1
+          completedCounter += 1
         }
       }
     }
 
-    setOngoingCount(onGoingcounter)
-    setCancelledCount(cancelledcounter)
-    setCompletedCount(completedcounter)
+    setOngoingCount(ongoingCounter)
+    setCancelledCount(cancelledCounter)
+    setCompletedCount(completedCounter)
   }
 
   return (
-    <div className="row mt-4">
-      <div className="col-12 col-md-4">
-        <CountIconWidget
-          title="Not started/ Ongoing Mentorships"
-          count={onGoingCount}
-          color="orange"
-          icon={<ExceptionOutlined />}
-        />
-      </div>
-      <div className="col-12 col-md-4">
-        <CountIconWidget
-          title="Completed Mentorships"
-          count={completedCount}
-          color="green"
-          icon={<CheckOutlined />}
-        />
-      </div>
-      <div className="col-12 col-md-4">
-        <CountIconWidget
-          title="Cancelled Mentorships"
-          color="red"
-          count={cancelledCount}
-          icon={<CloseOutlined />}
-        />
-      </div>
-    </div>
+    <CountIconWidgetGroup
+      objectType="Contracts"
+      numPending={onGoingCount}
+      numAccepted={completedCount}
+      numRejected={cancelledCount}
+      pendingPrefix="Not Started/Ongoing"
+      acceptedPrefix="Completed"
+      rejectedPrefix="Cancelled"
+      noClick
+    />
   )
 }
 
