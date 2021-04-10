@@ -1,9 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import MentorshipTable from 'components/Admin/Mentorship/MentorshipTable'
-import ListingsWidget from 'components/Admin/Mentorship/ListingsWidget'
-import ContractsWidget from 'components/Admin/Mentorship/ContractsWidget'
-import ApplicationsWidget from 'components/Admin/Mentorship/ApplicationsWidget'
+import Mentorship from 'components/Admin/Mentorship'
 
 const MentorshipContentManagement = () => {
   return (
@@ -13,22 +10,8 @@ const MentorshipContentManagement = () => {
         <strong>Mentorship Content Management</strong>
       </div>
 
-      <div className="row">
-        <div className="col-12 col-md-4">
-          <ListingsWidget />
-        </div>
-
-        <div className="col-12 col-md-4">
-          <ContractsWidget />
-        </div>
-
-        <div className="col-12 col-md-4">
-          <ApplicationsWidget />
-        </div>
-
-        <div className="col-12">
-          <MentorshipTable />
-        </div>
+      <div>
+        <Mentorship />
       </div>
     </div>
   )
