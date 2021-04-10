@@ -29,7 +29,7 @@ const AllReviewsModal = ({ showAllReviewsModal, setShowAllReviewsModal, isLoadin
     >
       <div className="row">
         <div className="col-12">
-          <div className="row">
+          <div className="row align-items-center">
             <div className="col-auto">
               <Avatar src="/resources/images/avatars/avatar-2.png" />
             </div>
