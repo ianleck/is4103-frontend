@@ -41,7 +41,6 @@ import {
   deleteLessonVideo,
   deleteAssessmentVideo,
   deleteLessonFile,
-  getCommentsByLessonId,
 } from 'services/courses/lessons'
 import { formatTime, getAvailableCurrencyCodes, showNotification } from 'components/utils'
 import { languages, currencyCodes } from 'constants/information'
@@ -70,7 +69,6 @@ import {
 } from 'constants/notifications'
 import StatusTag from 'components/Common/StatusTag'
 import CourseAnnouncements from 'components/Sensei/Course/Announcements'
-import LessonComments from 'components/Course/LessonComments'
 import BackBtn from 'components/Common/BackBtn'
 
 const SenseiCreateCourse = () => {
@@ -94,7 +92,6 @@ const SenseiCreateCourse = () => {
   const [showEditLesson, setShowEditLesson] = useState(false)
   const [currentLesson, setCurrentLesson] = useState('')
   const [currentLessonTab, setCurrentLessonTab] = useState('lessonVideo')
-  const [lessonComments, setLessonComments] = useState([])
 
   const [courseForm] = Form.useForm()
   const [editLessonForm] = Form.useForm()
@@ -266,17 +263,9 @@ const SenseiCreateCourse = () => {
     }
   }
 
-  const getLessonComments = async lessonId => {
-    const result = await getCommentsByLessonId(lessonId)
-    if (result && !isNil(result.comments)) {
-      setLessonComments(result.comments)
-    }
-  }
-
   const handleEditLesson = record => {
     setCurrentLesson(record)
     setShowEditLesson(true)
-    getLessonComments(record.lessonId)
     editLessonForm.setFieldsValue({
       lessonTitle: record.title,
       lessonDescription: record.description,
@@ -958,12 +947,6 @@ const SenseiCreateCourse = () => {
               <Radio.Button value="lessonFile" onClick={() => setCurrentLessonTab('lessonFile')}>
                 Lesson File
               </Radio.Button>
-              <Radio.Button
-                value="lessonComments"
-                onClick={() => setCurrentLessonTab('lessonComments')}
-              >
-                Comments
-              </Radio.Button>
             </Radio.Group>
           </div>
           {currentLessonTab === 'lessonVideo' && (
@@ -1054,16 +1037,6 @@ const SenseiCreateCourse = () => {
                   )}
                 </Space>
               </div>
-            </div>
-          )}
-          {currentLessonTab === 'lessonComments' && (
-            <div className="col-12 mt-5">
-              <LessonComments
-                comments={lessonComments}
-                setComments={setLessonComments}
-                lessonId={currentLesson.lessonId}
-                currentLesson={currentLesson}
-              />
             </div>
           )}
         </div>
