@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 const ContractsWidget = data => {
   const contracts = data.data
 
-  const [onGoingCount, setOngoingCount] = useState(0)
+  const [ongoingCount, setOngoingCount] = useState(0)
   const [cancelledCount, setCancelledCount] = useState(0)
   const [completedCount, setCompletedCount] = useState(0)
 
@@ -42,7 +42,7 @@ const ContractsWidget = data => {
   return (
     <CountIconWidgetGroup
       objectType="Contracts"
-      numPending={onGoingCount}
+      numPending={ongoingCount}
       numAccepted={completedCount}
       numRejected={cancelledCount}
       pendingPrefix="Not Started/Ongoing"
