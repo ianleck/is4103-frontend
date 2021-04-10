@@ -7,7 +7,7 @@ import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
 import { Button, Image, Space } from 'antd'
-import { EditOutlined, FormOutlined } from '@ant-design/icons'
+import { EditOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
 import { addCourseReview, editCourseReview } from 'services/review'
@@ -22,7 +22,6 @@ import {
 import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
-import AllReviewsModal from 'components/Review/AllReviewsModal'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -32,7 +31,6 @@ const StudentCourseDetails = () => {
   const [reviews, setReviews] = useState([])
   const [ownReview, setOwnReview] = useState([])
   const [showReviewModal, setShowReviewModal] = useState(false)
-  const [showAllReviewsModal, setShowAllReviewsModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
 
   console.log('reviews', reviews) // this is needed as a placeholder, Nat will deal with reviews in a later PR
@@ -137,17 +135,6 @@ const StudentCourseDetails = () => {
                 {`${editMode ? 'Edit your' : 'Add a'}  Review`}
               </Button>
             )}
-            {user.userType !== USER_TYPE_ENUM.STUDENT && (
-              <Button
-                type="default"
-                size="large"
-                shape="round"
-                onClick={() => setShowAllReviewsModal(true)}
-                icon={<FormOutlined />}
-              >
-                Reviews
-              </Button>
-            )}
             <ShareBtn
               quote={`${getUserFirstName(user)} is sharing this course: [${
                 course.title
@@ -163,11 +150,6 @@ const StudentCourseDetails = () => {
             review={ownReview}
             onSubmitReview={onSubmitReview}
             editMode={editMode}
-          />
-          <AllReviewsModal
-            reviews={reviews}
-            showAllReviewsModal={showAllReviewsModal}
-            setShowAllReviewsModal={setShowAllReviewsModal}
           />
         </div>
       </div>
