@@ -189,7 +189,6 @@ const StatusTag = data => {
     }
     return <Tag color={colour}>{dataSource}</Tag>
   }
-
   return <Tag>{NA}</Tag>
 }
 
