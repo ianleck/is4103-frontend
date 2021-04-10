@@ -6,18 +6,7 @@ import {
   EditOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import {
-  Button,
-  ConfigProvider,
-  Empty,
-  Modal,
-  notification,
-  Popconfirm,
-  Space,
-  Table,
-  Tabs,
-  Tag,
-} from 'antd'
+import { Button, Modal, notification, Popconfirm, Space, Table, Tabs, Tag } from 'antd'
 import { filter, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -270,13 +259,7 @@ const MentorshipApplicationsTable = () => {
 
 const showApplications = (applicationStatus, dataSource, columns) => {
   const numApplications = size(dataSource)
-  const isRenderEmpty = numApplications === 0
 
-  const customizeRenderEmpty = () => (
-    <div className="text-center">
-      <Empty />
-    </div>
-  )
   const renderStyledStatus = status => {
     let textStyle = ''
     if (status === 'rejected') {
@@ -295,9 +278,7 @@ const showApplications = (applicationStatus, dataSource, columns) => {
           {numApplications === 1 ? 'application' : 'applications'}.
         </div>
       </div>
-      <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-        <Table className="mt-4" dataSource={dataSource} columns={columns} />
-      </ConfigProvider>
+      <Table className="mt-4" dataSource={dataSource} columns={columns} />
     </div>
   )
 }
