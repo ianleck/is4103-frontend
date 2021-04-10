@@ -44,7 +44,7 @@ const ContractsWidget = data => {
     <div className="row mt-4">
       <div className="col-12 col-md-4">
         <CountIconWidget
-          title="Ongoing Mentorships"
+          title="Not started/ Ongoing Mentorships"
           count={onGoingCount}
           color="orange"
           icon={<ExceptionOutlined />}
