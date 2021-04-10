@@ -218,6 +218,7 @@ const SenseiCourses = () => {
         numAccepted={numAcceptedCourses}
         numPending={numPendingCourses}
         numRejected={numRejectedCourses}
+        noClick
       />
       <div className="row align-items-center">
         <div className="col-12 mt-2 text-center text-md-right">
