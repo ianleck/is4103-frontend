@@ -7,7 +7,7 @@ import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
 import { Button, Space } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, FormOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
 import { addCourseReview, editCourseReview } from 'services/review'
@@ -21,7 +21,8 @@ import {
 } from 'constants/notifications'
 import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
-import { FRONTEND_API } from 'constants/constants'
+import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
+import AllReviewsModal from 'components/Review/AllReviewsModal'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -31,6 +32,7 @@ const StudentCourseDetails = () => {
   const [reviews, setReviews] = useState([])
   const [ownReview, setOwnReview] = useState([])
   const [showReviewModal, setShowReviewModal] = useState(false)
+  const [showAllReviewsModal, setShowAllReviewsModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
 
   console.log('reviews', reviews) // this is needed as a placeholder, Nat will deal with reviews in a later PR
@@ -42,6 +44,7 @@ const StudentCourseDetails = () => {
         setCourse(courseDetails.course)
         if (!isNil(courseDetails.course.Reviews)) {
           setReviews(courseDetails.course.Reviews)
+          console.log('reviews', courseDetails.course.Reviews)
           const reviewByUser = filter(courseDetails.course.Reviews, review => {
             return review.accountId === user.accountId
           })
@@ -57,11 +60,6 @@ const StudentCourseDetails = () => {
       setAnnouncements(courseAnnouncements.announcements)
     }
   }
-
-  useEffect(() => {
-    getCourseDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const onSubmitReview = async values => {
     const formValues = {
@@ -92,6 +90,12 @@ const StudentCourseDetails = () => {
     getCourseDetails()
     setShowReviewModal(false)
   }
+
+  useEffect(() => {
+    getCourseDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div>
       <div className="row pt-2 justify-content-between">
@@ -120,17 +124,30 @@ const StudentCourseDetails = () => {
         </div>
         <div className="col-12 col-lg text-center text-lg-right order-1 order-lg-12">
           <Space size="large">
-            <Button
-              type="primary"
-              size="large"
-              shape="round"
-              onClick={() => {
-                setShowReviewModal(true)
-              }}
-              icon={<EditOutlined />}
-            >
-              {`${editMode ? 'Edit your' : 'Add a'}  Review`}
-            </Button>
+            {user.userType === USER_TYPE_ENUM.STUDENT && (
+              <Button
+                type="primary"
+                size="large"
+                shape="round"
+                onClick={() => {
+                  setShowReviewModal(true)
+                }}
+                icon={<EditOutlined />}
+              >
+                {`${editMode ? 'Edit your' : 'Add a'}  Review`}
+              </Button>
+            )}
+            {user.userType !== USER_TYPE_ENUM.STUDENT && (
+              <Button
+                type="default"
+                size="large"
+                shape="round"
+                onClick={() => setShowAllReviewsModal(true)}
+                icon={<FormOutlined />}
+              >
+                Reviews
+              </Button>
+            )}
             <ShareBtn
               quote={`${getUserFirstName(user)} is sharing this course: [${
                 course.title
@@ -146,6 +163,11 @@ const StudentCourseDetails = () => {
             review={ownReview}
             onSubmitReview={onSubmitReview}
             editMode={editMode}
+          />
+          <AllReviewsModal
+            reviews={reviews}
+            showAllReviewsModal={showAllReviewsModal}
+            setShowAllReviewsModal={setShowAllReviewsModal}
           />
         </div>
       </div>

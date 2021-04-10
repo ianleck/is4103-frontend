@@ -267,6 +267,16 @@ const routes = [
     exact: true,
   },
   {
+    path: '/sensei/courses/view/:id',
+    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/sensei/courses/:courseId/view-lesson/:lessonId',
+    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    exact: true,
+  },
+  {
     path: '/sensei/mentorships/',
     Component: lazy(() => import('pages/sensei/mentorships')),
     exact: true,
