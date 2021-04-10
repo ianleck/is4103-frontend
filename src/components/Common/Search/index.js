@@ -240,7 +240,7 @@ const Search = ({ intl: { formatMessage } }) => {
                 </div>
               </div>
             )}
-            <div className="overflow-y-scroll w-50" style={{ maxHeight: '50vh' }}>
+            <div className="overflow-y-scroll w-50 text-left" style={{ maxHeight: '50vh' }}>
               {searchText &&
                 searchType === 'users' &&
                 size(userResults) > 0 &&
