@@ -17,7 +17,8 @@ import ExperienceCard from 'components/Profile/ExperienceCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
 import { getFollowingList, getFollowerList } from 'services/social'
-import { LockFilled } from '@ant-design/icons'
+import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
+import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
 
 const SocialProfile = () => {
   const user = useSelector(state => state.user)
@@ -25,7 +26,10 @@ const SocialProfile = () => {
   const history = useHistory()
   const { accountId } = useParams()
 
+  if (!user.authorized) history.replace('/auth/login')
+
   const [viewUser, setViewUser] = useState('')
+  const [isBlocked, setIsBlocked] = useState(false)
 
   const [posts, setPosts] = useState([])
 
@@ -48,8 +52,11 @@ const SocialProfile = () => {
   const getUserProfile = async () => {
     if (!isNil(accountId)) {
       const response = await getProfile(accountId)
-      if (response) setViewUser(response)
-      if (amIFollowingThisUser || !response.isPrivateProfile) {
+      if (response) {
+        setViewUser(response)
+        if (!isNil(response.isBlocking)) setIsBlocked(response.isBlocking)
+      }
+      if (!response.isBlocking && (amIFollowingThisUser || !response.isPrivateProfile)) {
         getPostsSvc(response)
         getSocialInfo()
       }
@@ -96,14 +103,18 @@ const SocialProfile = () => {
   return (
     <div className="row">
       <div className="col-12 col-md-5">
-        <SocialProfileCard user={viewUser} setCurrentTab={setCurrentTab} />
+        <SocialProfileCard
+          user={viewUser}
+          setCurrentTab={setCurrentTab}
+          isBlocked={viewUser.isBlocking}
+        />
         <div className="card">
           <div className="card-body">
             <Button
               block
               className={`${currentTab === 'socialfeed' ? 'btn btn-light' : 'btn'} border-0`}
               onClick={() => changeCurrentTab('socialfeed')}
-              disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
+              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
               size="large"
               ref={button => button && button.blur()}
             >
@@ -113,7 +124,7 @@ const SocialProfile = () => {
               block
               className={`${currentTab === 'profile' ? 'btn btn-light' : 'btn'} border-0`}
               onClick={() => changeCurrentTab('profile')}
-              disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
+              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
               size="large"
               ref={button => button && button.blur()}
             >
@@ -123,7 +134,7 @@ const SocialProfile = () => {
               block
               className={`${currentTab === 'achievements' ? 'btn btn-light' : 'btn'} border-0`}
               onClick={() => changeCurrentTab('achievements')}
-              disabled={!amIFollowingThisUser && viewUser.isPrivateProfile}
+              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
               size="large"
               ref={button => button && button.blur()}
             >
@@ -133,38 +144,26 @@ const SocialProfile = () => {
         </div>
       </div>
       <div className="col-12 col-md-7">
-        {!amIFollowingThisUser && viewUser.isPrivateProfile && (
-          <div className="card">
-            <div className="card-body">
-              <Empty
-                image={<LockFilled style={{ fontSize: '100px' }} />}
-                description={
-                  <>
-                    <span className="text-dark font-weight-bold">This account is private.</span>
-                    <br />
-                    <span className="text-muted">Follow this account to see their content.</span>
-                  </>
-                }
-              />
-            </div>
-          </div>
-        )}
-        {currentTab === 'socialfeed' && (amIFollowingThisUser || !viewUser.isPrivateProfile) && (
-          <SocialPostList
-            user={user}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            posts={posts}
-            setPosts={setPosts}
-            paginatedPosts={paginatedPosts}
-            setPaginatedPosts={setPaginatedPosts}
-            currentPageIdx={currentPageIdx}
-            setCurrentPageIdx={setCurrentPageIdx}
-            showLoadMore={showLoadMore}
-            setShowLoadMore={setShowLoadMore}
-            btnSize="small"
-          />
-        )}
+        {!amIFollowingThisUser && viewUser.isPrivateProfile && <ProfilePrivateCard />}
+        {isBlocked && <ProfileBlockedCard />}
+        {currentTab === 'socialfeed' &&
+          !isBlocked &&
+          (amIFollowingThisUser || !viewUser.isPrivateProfile) && (
+            <SocialPostList
+              user={user}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              posts={posts}
+              setPosts={setPosts}
+              paginatedPosts={paginatedPosts}
+              setPaginatedPosts={setPaginatedPosts}
+              currentPageIdx={currentPageIdx}
+              setCurrentPageIdx={setCurrentPageIdx}
+              showLoadMore={showLoadMore}
+              setShowLoadMore={setShowLoadMore}
+              btnSize="medium"
+            />
+          )}
         {currentTab === 'profile' && (
           <div>
             <PersonalInformationCard user={viewUser} />

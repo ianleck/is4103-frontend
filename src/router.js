@@ -58,6 +58,11 @@ const routes = [
     Component: lazy(() => import('pages/social/profile')),
     exact: true,
   },
+  {
+    path: '/social/post/:postId',
+    Component: lazy(() => import('pages/social/post')),
+    exact: true,
+  },
   // Auth Pages
   {
     path: '/auth/login',
@@ -279,6 +284,11 @@ const routes = [
   {
     path: '/sensei/social/profile/:accountId',
     Component: lazy(() => import('pages/social/profile')),
+    exact: true,
+  },
+  {
+    path: '/sensei/social/post/:postId',
+    Component: lazy(() => import('pages/social/post')),
     exact: true,
   },
   {

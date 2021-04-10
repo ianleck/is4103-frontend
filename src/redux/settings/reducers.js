@@ -37,6 +37,7 @@ const initialState = {
     isSquaredBorders: false,
     isBorderless: false,
     isDevMode: true,
+    rememberPath: '',
   }),
 }
 

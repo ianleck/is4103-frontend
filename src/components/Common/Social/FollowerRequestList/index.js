@@ -5,12 +5,11 @@ import { Avatar, Button, Space } from 'antd'
 import PaginationWrapper from 'components/Common/Pagination'
 import { getUserFullName, initPageItems, sendToSocialProfile } from 'components/utils'
 import { isNil, map, size } from 'lodash'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { SOCIAL_ACTIONS } from 'constants/constants'
 
 const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
   const history = useHistory()
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +29,7 @@ const FollowerRequestList = ({ pendingFollowerList, setShowSocialModal }) => {
   }, [pendingFollowerList])
 
   const socialProfileOverride = accountId => {
-    sendToSocialProfile(history, user, accountId)
+    sendToSocialProfile(history, accountId)
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
   }
 

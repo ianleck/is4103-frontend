@@ -13,7 +13,7 @@ const PublicLayout = ({ children }) => {
       case USER_TYPE_ENUM.ADMIN:
         return <Redirect to="/admin" />
       case USER_TYPE_ENUM.SENSEI:
-        if (pathname.includes('/social/profile/')) return <Redirect to={`/sensei${pathname}`} />
+        if (pathname.includes('/social/')) return <Redirect to={`/sensei${pathname}`} />
         return <Redirect to="/sensei" />
       default:
         break

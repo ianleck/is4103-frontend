@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Dropdown, Menu, Skeleton, Typography } from 'antd'
 import { CommentOutlined, LikeFilled, LikeOutlined, MoreOutlined } from '@ant-design/icons'
-import { isNil, size } from 'lodash'
+import { isEmpty, isNil, size } from 'lodash'
 import moment from 'moment'
 import { useHistory } from 'react-router-dom'
 import { likePost, unlikePost } from 'services/social/posts'
 import { LIKE, UNLIKE } from 'constants/text'
-import { getUserFullName, sendToSocialProfile } from 'components/utils'
+import { getUserFirstName, getUserFullName, sendToSocialProfile } from 'components/utils'
+import { FRONTEND_API } from 'constants/constants'
 import PostComments from '../../PostComment'
+import ShareBtn from '../../ShareBtn'
 
 const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, btnSize }) => {
   const { Paragraph } = Typography
-  const { LikePost } = post
+  const LikePost = !isEmpty(post) ? post.LikePost : []
   const history = useHistory()
 
   const [numComments, setNumComments] = useState(size(post.Comments))
@@ -21,6 +23,13 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
   const [isLiked, setIsLiked] = useState(
     size(LikePost.filter(o => o.accountId === user.accountId)) > 0,
   )
+
+  useEffect(() => {
+    setNumComments(size(post.Comments))
+    setNumLikePosts(size(LikePost))
+    setIsLiked(size(LikePost.filter(o => o.accountId === user.accountId)) > 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [LikePost])
 
   const PostMenu = () => {
     return (
@@ -88,7 +97,7 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
                 role="button"
                 tabIndex={0}
                 className="clickable font-weight-bold font-size-18"
-                onClick={() => sendToSocialProfile(history, user, post.User?.accountId)}
+                onClick={() => sendToSocialProfile(history, post.User?.accountId)}
                 onKeyDown={e => e.preventDefault()}
               >
                 {getUserFullName(post.User)}
@@ -127,38 +136,45 @@ const SocialPostListItem = ({ user, post, isLoading, showPostModalWithOptions, b
         </div>
         <div className="card-footer border-0">
           <div className="row align-items-center">
-            <div className="col-6 col-lg-4 col-xl-3 order-11 order-lg-1">
-              <Button
-                block
-                type={isLiked ? 'primary' : 'default'}
-                size={!isNil(btnSize) ? btnSize : 'small'}
-                icon={isLiked ? <LikeFilled /> : <LikeOutlined />}
-                onClick={() => postAction(post.postId, isLiked ? 'unlike' : 'like')}
-              >
-                {isLiked ? UNLIKE : LIKE}
-              </Button>
-            </div>
-            <div className="col-6 col-lg-4 col-xl-3 order-12 order-lg-2">
-              <Button
-                block
-                type="default"
-                size={!isNil(btnSize) ? btnSize : 'small'}
-                icon={<CommentOutlined />}
-                onClick={() => setShowInteractionBox(!showInteractionBox)}
-              >
-                Comment
-              </Button>
-            </div>
             <div
               role="button"
               tabIndex={0}
-              className="clickable defocus-btn col-12 col-lg text-left text-lg-right mt-2 mb-3 mt-lg-0 mb-lg-0 order-1 order-lg-12"
+              className="clickable defocus-btn col-12 text-left"
               onClick={() => setShowInteractionBox(!showInteractionBox)}
               onKeyDown={e => e.preventDefault()}
             >
               {numLikePosts === 1 ? `${numLikePosts} like` : `${numLikePosts} likes`}
               {' • '}
               {numComments === 1 ? `${numComments} comment` : `${numComments} comments`}
+            </div>
+            <div className="col-auto mt-3 pr-1">
+              <Button
+                block
+                type={isLiked ? 'primary' : 'default'}
+                size={!isNil(btnSize) ? btnSize : 'medium'}
+                icon={isLiked ? <LikeFilled /> : <LikeOutlined />}
+                onClick={() => postAction(post.postId, isLiked ? 'unlike' : 'like')}
+              >
+                {isLiked ? UNLIKE : LIKE}
+              </Button>
+            </div>
+            <div className="col-auto mt-3 pr-1">
+              <Button
+                block
+                type="default"
+                size={!isNil(btnSize) ? btnSize : 'medium'}
+                icon={<CommentOutlined />}
+                onClick={() => setShowInteractionBox(!showInteractionBox)}
+              >
+                Comment
+              </Button>
+            </div>
+            <div className="col-auto mt-3 text-right text-sm-left">
+              <ShareBtn
+                quote={`${getUserFirstName(user)} is sharing this post with you!`}
+                url={`${FRONTEND_API}/social/post/${post.postId}`}
+                btnSize={!isNil(btnSize) ? btnSize : 'medium'}
+              />
             </div>
           </div>
         </div>

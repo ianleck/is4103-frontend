@@ -5,7 +5,9 @@ import { useHistory } from 'react-router-dom'
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
+  LockFilled,
   SolutionOutlined,
+  StopFilled,
   UserOutlined,
 } from '@ant-design/icons'
 import { Menu, Dropdown, Avatar, Modal, Button, Empty } from 'antd'
@@ -13,6 +15,7 @@ import { USER_TYPE_ENUM } from 'constants/constants'
 import { size } from 'lodash'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
 import FollowerRequestList from 'components/Common/Social/FollowerRequestList'
+import UsersBlockedList from 'components/Common/Social/UsersBlockedList'
 import { getUserFullName } from 'components/utils'
 import styles from './style.module.scss'
 
@@ -20,6 +23,7 @@ const UserMenu = () => {
   const user = useSelector(state => state.user)
   const social = useSelector(state => state.social)
   const numFollowRequests = size(social.pendingFollowerList)
+  const numUsersBlocked = size(social.usersBlockedList)
 
   const dispatch = useDispatch()
   const history = useHistory()
@@ -30,6 +34,7 @@ const UserMenu = () => {
   const [showFollowingList, setShowFollowingList] = useState(false)
 
   const [showFollowerRequests, setShowFollowerRequests] = useState(false)
+  const [showBlockedUsers, setShowBlockedUsers] = useState(false)
 
   const redirectToLogin = isStudent => e => {
     e.preventDefault()
@@ -74,10 +79,24 @@ const UserMenu = () => {
     setShowSocialModal(true)
   }
 
+  const displayFollowerRequestsMenu = () => {
+    setShowFollowerRequests(true)
+  }
+
+  const displayBlockedUsersMenu = () => {
+    setShowBlockedUsers(true)
+  }
+
   const displayFollowingList = type => {
-    if (type === 'following') setShowFollowingList(true)
-    else setShowFollowingList(false)
+    if (type === 'following') {
+      setShowFollowingList(true)
+      setShowBlockedUsers(false)
+    } else {
+      setShowFollowingList(false)
+      setShowBlockedUsers(false)
+    }
     setShowFollowerRequests(false)
+    setShowBlockedUsers(false)
     setShowSocialModal(true)
   }
 
@@ -202,6 +221,18 @@ const UserMenu = () => {
     )
   }
 
+  const SocialModalFooter = () => {
+    return (
+      <div className="row align-items-center">
+        <div className="col-auto">
+          <Button type="default" size="large" onClick={() => setShowSocialModal(false)}>
+            Close
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   if (user.authorized) {
     return (
       <Dropdown overlay={menu}>
@@ -224,23 +255,43 @@ const UserMenu = () => {
             centered
             okButtonProps={{ style: { display: 'none' } }}
             onCancel={() => setShowSocialModal(false)}
+            footer={<SocialModalFooter />}
             zIndex="1051"
           >
-            {!showFollowerRequests && (
+            {!showFollowerRequests && !showBlockedUsers && (
               <div
                 role="button"
                 tabIndex={0}
-                className="text-dark btn btn-block text-left border-0 mb-4 pl-0 d-flex justify-content-between align-items-center"
-                onClick={() => setShowFollowerRequests(true)}
+                className="text-dark btn btn-block text-left border-0 pl-0 d-flex justify-content-between align-items-center"
+                onClick={() => displayFollowerRequestsMenu()}
                 onKeyDown={e => e.preventDefault()}
               >
                 <span className="font-weight-bold font-size-18">
-                  Follow requests ({numFollowRequests})
+                  <LockFilled />
+                  &nbsp;&nbsp;Follow requests ({numFollowRequests})
                 </span>
                 <ArrowRightOutlined className="float-right" />
               </div>
             )}
-            {!showFollowerRequests && (
+            {!showFollowerRequests && !showBlockedUsers && (
+              <>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="text-dark btn btn-block text-left border-0 mt-2 pl-0 d-flex justify-content-between align-items-center"
+                  onClick={() => displayBlockedUsersMenu()}
+                  onKeyDown={e => e.preventDefault()}
+                >
+                  <span className="font-weight-bold font-size-18">
+                    <StopFilled />
+                    &nbsp;&nbsp;Blocked users ({numUsersBlocked})
+                  </span>
+                  <ArrowRightOutlined className="float-right" />
+                </div>
+                <hr className="mb-4" />
+              </>
+            )}
+            {!showFollowerRequests && !showBlockedUsers && (
               <div className="following-list-container">
                 <SocialFollowingList
                   followingList={showFollowingList ? social.followingList : social.followerList}
@@ -250,7 +301,8 @@ const UserMenu = () => {
                 />
               </div>
             )}
-            {showFollowerRequests && (
+
+            {showFollowerRequests && !showBlockedUsers && (
               <div className="following-list-container">
                 <div className="row pt-2">
                   <div className="col-4 mb-4">
@@ -269,6 +321,30 @@ const UserMenu = () => {
                 {numFollowRequests > 0 && (
                   <FollowerRequestList
                     pendingFollowerList={social.pendingFollowerList}
+                    setShowSocialModal={setShowSocialModal}
+                  />
+                )}
+              </div>
+            )}
+            {showBlockedUsers && (
+              <div className="following-list-container">
+                <div className="row pt-2">
+                  <div className="col-4 mb-4">
+                    <Button
+                      block
+                      type="primary"
+                      shape="round"
+                      icon={<ArrowLeftOutlined />}
+                      onClick={() => setShowBlockedUsers(false)}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </div>
+                {numUsersBlocked === 0 && <Empty />}
+                {numUsersBlocked > 0 && (
+                  <UsersBlockedList
+                    usersBlockedList={social.usersBlockedList}
                     setShowSocialModal={setShowSocialModal}
                   />
                 )}

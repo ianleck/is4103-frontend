@@ -6,7 +6,7 @@ import { LESSONS, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button } from 'antd'
+import { Button, Space } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
@@ -19,7 +19,9 @@ import {
   REVIEW_EDIT_SUCCESS,
   SUCCESS,
 } from 'constants/notifications'
-import { showNotification } from 'components/utils'
+import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
+import ShareBtn from 'components/Common/Social/ShareBtn'
+import { FRONTEND_API } from 'constants/constants'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -96,30 +98,10 @@ const StudentCourseDetails = () => {
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />
         </div>
-        <div className="col-auto d-flex justify-content-center mt-4 mt-md-0">
-          <Button
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={() => {
-              setShowReviewModal(true)
-            }}
-            icon={<EditOutlined />}
-          >
-            {`${editMode ? 'Edit your' : 'Add a'}  Review`}
-          </Button>
-          <ReviewModal
-            isVisible={showReviewModal}
-            setShowReviewModal={setShowReviewModal}
-            review={ownReview}
-            onSubmitReview={onSubmitReview}
-            editMode={editMode}
-          />
-        </div>
       </div>
-      <div className="row mt-5">
+      <div className="row mt-5 justfy-content-between">
         <div className="col-12">
-          <div className="course-img-banner-holder overflow-scroll">
+          <div className="course-img-banner-holder">
             <img
               className="course-img-banner"
               alt="example"
@@ -129,10 +111,42 @@ const StudentCourseDetails = () => {
             />
           </div>
         </div>
-        <div className="col-12 mt-5">
+      </div>
+      <div className="row mt-5 align-items-center">
+        <div className="col-12 col-lg-8 mt-4 mt-lg-0 order-12 order-lg-1">
           <div className="text-dark h3">
             <strong>{course.title}</strong>
           </div>
+        </div>
+        <div className="col-12 col-lg text-center text-lg-right order-1 order-lg-12">
+          <Space size="large">
+            <Button
+              type="primary"
+              size="large"
+              shape="round"
+              onClick={() => {
+                setShowReviewModal(true)
+              }}
+              icon={<EditOutlined />}
+            >
+              {`${editMode ? 'Edit your' : 'Add a'}  Review`}
+            </Button>
+            <ShareBtn
+              quote={`${getUserFirstName(user)} is sharing this course: [${
+                course.title
+              }] with you!`}
+              url={`${FRONTEND_API}/courses/${course.courseId}`}
+              btnShape="round"
+              btnSize="large"
+            />
+          </Space>
+          <ReviewModal
+            isVisible={showReviewModal}
+            setShowReviewModal={setShowReviewModal}
+            review={ownReview}
+            onSubmitReview={onSubmitReview}
+            editMode={editMode}
+          />
         </div>
       </div>
       <div className="row">
@@ -144,9 +158,7 @@ const StudentCourseDetails = () => {
         <div className="col-auto">
           <span>
             by&nbsp;
-            <strong>
-              {course.Sensei?.firstName} {course.Sensei?.lastName}
-            </strong>
+            <strong>{getUserFullName(course.Sensei)}</strong>
           </span>
         </div>
       </div>

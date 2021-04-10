@@ -1,13 +1,8 @@
 import React from 'react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import {
-  DEFAULT_ITEMS_PER_PAGE,
-  DEFAULT_TIMEOUT,
-  DIRECTION,
-  USER_TYPE_ENUM,
-} from 'constants/constants'
-import { filter, isEmpty, isNil, map, size } from 'lodash'
+import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT, DIRECTION } from 'constants/constants'
+import { filter, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
@@ -119,6 +114,14 @@ export const resetCart = {
   deletedAt: null,
   Course: [],
   MentorshipApplications: [],
+}
+
+export const resetSocial = {
+  followingList: [],
+  followerList: [],
+  pendingFollowingList: [],
+  pendingFollowerList: [],
+  usersBlockedList: [],
 }
 
 export const resetUser = {
@@ -280,11 +283,8 @@ export const isFollowing = (followingList, accountId) => {
   return size(followingList.filter(following => following.followingId === accountId)) === 1
 }
 
-export const sendToSocialProfile = (history, user, accountId) => {
-  if (isEmpty(user.userType)) history.replace(`/auth/login`)
-  else if (user.userType === USER_TYPE_ENUM.SENSEI)
-    history.push(`/sensei/social/profile/${accountId}`)
-  else if (user.userType === USER_TYPE_ENUM.STUDENT) history.push(`/social/profile/${accountId}`)
+export const sendToSocialProfile = (history, accountId) => {
+  history.push(`/social/profile/${accountId}`)
 }
 
 export const initPageItems = (
@@ -326,10 +326,10 @@ export const getAvailableCurrencyCodes = allCurrencyCodes => {
 }
 
 export const getUserFirstName = user => {
-  return !isNil(user.firstName) ? user.firstName : 'Anonymous'
+  return user && !isNil(user.firstName) ? user.firstName : 'Anonymous'
 }
 export const getUserLastName = user => {
-  return !isNil(user.lastName) ? user.lastName : 'Pigeon'
+  return user && !isNil(user.lastName) ? user.lastName : 'Pigeon'
 }
 
 export const getUserFullName = user => {
