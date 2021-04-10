@@ -26,7 +26,7 @@ const Search = ({ intl: { formatMessage } }) => {
   const [mentorshipResults, setMentorshipResults] = useState([])
   const [courseResults, setCourseResults] = useState([])
 
-  const [query] = useDebounce(searchText, 1000)
+  const [query] = useDebounce(searchText, 750)
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown, false)
@@ -123,7 +123,7 @@ const Search = ({ intl: { formatMessage } }) => {
           className="clickable row align-items-center mb-4"
           onClick={() => {
             if (type === 'user') sendToPage(type, user.accountId)
-            if (type === 'listing') sendToPage(type, listing.mentorshipListingId)
+            if (type === 'mentorship') sendToPage(type, listing.mentorshipListingId)
             if (type === 'course') sendToPage(type, course.courseId)
           }}
           onKeyDown={e => e.preventDefault()}
@@ -165,7 +165,7 @@ const Search = ({ intl: { formatMessage } }) => {
                 )}
                 {type === 'mentorship' && (
                   <>
-                    <span className="h5 font-weight-bold">{listing.title}</span>
+                    <span className="h5 font-weight-bold">{listing.name}</span>
                     <br />
                     <span className="text-muted">{getUserFullName(listing.Sensei)}</span>
                   </>
