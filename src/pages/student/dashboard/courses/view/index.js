@@ -6,7 +6,7 @@ import { LESSONS, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button, Space } from 'antd'
+import { Button, Image, Space } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
@@ -21,7 +21,7 @@ import {
 } from 'constants/notifications'
 import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
-import { FRONTEND_API } from 'constants/constants'
+import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -42,6 +42,7 @@ const StudentCourseDetails = () => {
         setCourse(courseDetails.course)
         if (!isNil(courseDetails.course.Reviews)) {
           setReviews(courseDetails.course.Reviews)
+          console.log('reviews', courseDetails.course.Reviews)
           const reviewByUser = filter(courseDetails.course.Reviews, review => {
             return review.accountId === user.accountId
           })
@@ -57,11 +58,6 @@ const StudentCourseDetails = () => {
       setAnnouncements(courseAnnouncements.announcements)
     }
   }
-
-  useEffect(() => {
-    getCourseDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const onSubmitReview = async values => {
     const formValues = {
@@ -92,6 +88,12 @@ const StudentCourseDetails = () => {
     getCourseDetails()
     setShowReviewModal(false)
   }
+
+  useEffect(() => {
+    getCourseDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div>
       <div className="row pt-2 justify-content-between">
@@ -102,7 +104,7 @@ const StudentCourseDetails = () => {
       <div className="row mt-5 justfy-content-between">
         <div className="col-12">
           <div className="course-img-banner-holder">
-            <img
+            <Image
               className="course-img-banner"
               alt="example"
               src={
@@ -120,17 +122,19 @@ const StudentCourseDetails = () => {
         </div>
         <div className="col-12 col-lg text-center text-lg-right order-1 order-lg-12">
           <Space size="large">
-            <Button
-              type="primary"
-              size="large"
-              shape="round"
-              onClick={() => {
-                setShowReviewModal(true)
-              }}
-              icon={<EditOutlined />}
-            >
-              {`${editMode ? 'Edit your' : 'Add a'}  Review`}
-            </Button>
+            {user.userType === USER_TYPE_ENUM.STUDENT && (
+              <Button
+                type="primary"
+                size="large"
+                shape="round"
+                onClick={() => {
+                  setShowReviewModal(true)
+                }}
+                icon={<EditOutlined />}
+              >
+                {`${editMode ? 'Edit your' : 'Add a'}  Review`}
+              </Button>
+            )}
             <ShareBtn
               quote={`${getUserFirstName(user)} is sharing this course: [${
                 course.title

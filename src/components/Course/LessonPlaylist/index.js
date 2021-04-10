@@ -5,17 +5,23 @@ import { EMPTY_LESSON_TITLE, LESSON_LIST } from 'constants/text'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { indexOf, isEmpty, isNil, map, size } from 'lodash'
 import { sortArrByCreatedAt } from 'components/utils'
-import { DIRECTION } from 'constants/constants'
+import { DIRECTION, USER_TYPE_ENUM } from 'constants/constants'
+import { useSelector } from 'react-redux'
 
 const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
   let sortedLessonList = []
   let prevLessonId
   let nextLessonId
 
   const sendToLessonUrl = (sendToCourseId, sendToLessonId) => {
     if (!isAdmin)
-      history.replace(`/student/dashboard/courses/${sendToCourseId}/view-lesson/${sendToLessonId}`)
+      history.replace(
+        `/${user.userType.toLowerCase()}/${
+          user.userType === USER_TYPE_ENUM.STUDENT ? 'dashboard/' : ''
+        }courses/${sendToCourseId}/view-lesson/${sendToLessonId}`,
+      )
     else
       history.replace(
         `/admin/course-content-management/${sendToCourseId}/view-lesson/${sendToLessonId}`,

@@ -5,9 +5,12 @@ import { isEmpty, map, size } from 'lodash'
 import { VIEW_LESSON, EMPTY_LESSON_TITLE } from 'constants/text'
 import { ArrowLeftOutlined, ArrowRightOutlined, CaretRightOutlined } from '@ant-design/icons'
 import ScrollMenu from 'react-horizontal-scrolling-menu'
+import { useSelector } from 'react-redux'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const CourseLessonsList = ({ course, isAdmin }) => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
   const LessonItem = data => {
     const { lesson, courseId } = data
     return (
@@ -37,7 +40,9 @@ const CourseLessonsList = ({ course, isAdmin }) => {
                   onClick={() =>
                     !isAdmin
                       ? history.push(
-                          `/student/dashboard/courses/${courseId}/view-lesson/${lesson.lessonId}`,
+                          `/${user.userType.toLowerCase()}/${
+                            user.userType === USER_TYPE_ENUM.STUDENT ? 'dashboard/' : ''
+                          }courses/${courseId}/view-lesson/${lesson.lessonId}`,
                         )
                       : history.push(
                           `/admin/course-content-management/${courseId}/view-lesson/${lesson.lessonId}`,

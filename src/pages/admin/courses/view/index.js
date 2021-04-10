@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Space } from 'antd'
+import { Button, Image, Space } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { getAnnouncements, getCourseById } from 'services/courses'
@@ -95,8 +95,8 @@ const AdminCourseDetails = () => {
       </div>
       <div className="row mt-5">
         <div className="col-12">
-          <div className="course-img-banner-holder overflow-scroll">
-            <img
+          <div className="course-img-banner-holder">
+            <Image
               className="course-img-banner"
               alt="example"
               src={
