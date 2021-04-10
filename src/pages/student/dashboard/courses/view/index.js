@@ -6,7 +6,7 @@ import { LESSONS, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button, Space } from 'antd'
+import { Button, Image, Space } from 'antd'
 import { EditOutlined, FormOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
@@ -106,7 +106,7 @@ const StudentCourseDetails = () => {
       <div className="row mt-5 justfy-content-between">
         <div className="col-12">
           <div className="course-img-banner-holder">
-            <img
+            <Image
               className="course-img-banner"
               alt="example"
               src={
