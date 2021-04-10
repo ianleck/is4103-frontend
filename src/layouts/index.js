@@ -88,9 +88,7 @@ const Layout = ({ children, location: { pathname, search } }) => {
             /^\/student(?=\/|$)/i.test(pathname) ||
             /^\/social(?=\/|$)/i.test(pathname)))
       ) {
-        if (['sensei', 'student', 'social'].some(path => pathname.includes(path))) {
-          settings.rememberPath = pathname
-        }
+        settings.rememberPath = pathname
         return <Redirect to="/auth/login" />
       }
       if (!isUserAuthorized && /^\/admin(?=\/|$)/i.test(pathname))
