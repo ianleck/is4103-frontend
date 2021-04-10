@@ -485,10 +485,7 @@ const Mentorship = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Progress">
               {applicationDetails.progress ? (
-                <StatusTag
-                  data={{ progress: applicationDetails.progress }}
-                  type="CONTRACT_PROGRESS_ENUM"
-                />
+                <StatusTag data={applicationDetails.progress} type="CONTRACT_PROGRESS_ENUM" />
               ) : (
                 '-'
               )}
@@ -496,7 +493,7 @@ const Mentorship = () => {
             <Descriptions.Item label="Sensei Approval">
               {applicationDetails.senseiApproval ? (
                 <StatusTag
-                  data={{ senseiApproval: applicationDetails.senseiApproval }}
+                  data={applicationDetails.senseiApproval}
                   type="MENTORSHIP_CONTRACT_APPROVAL"
                 />
               ) : (
@@ -545,10 +542,7 @@ const Mentorship = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Progress">
               {contractDetails.progress ? (
-                <StatusTag
-                  data={{ progress: contractDetails.progress }}
-                  type="CONTRACT_PROGRESS_ENUM"
-                />
+                <StatusTag data={contractDetails.progress} type="CONTRACT_PROGRESS_ENUM" />
               ) : (
                 '-'
               )}
@@ -556,7 +550,7 @@ const Mentorship = () => {
             <Descriptions.Item label="Sensei Approval">
               {contractDetails.senseiApproval ? (
                 <StatusTag
-                  data={{ senseiApproval: contractDetails.senseiApproval }}
+                  data={contractDetails.senseiApproval}
                   type="MENTORSHIP_CONTRACT_APPROVAL"
                 />
               ) : (
