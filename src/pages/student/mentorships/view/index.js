@@ -22,6 +22,7 @@ import {
 } from 'constants/notifications'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
 import { showNotification } from 'components/utils'
+import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 
 const ViewListing = () => {
   const { id } = useParams()
@@ -32,6 +33,7 @@ const ViewListing = () => {
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const [hasExistingContract, setHasExistingContract] = useState(false)
+  const [hasExistingApprovedContract, setHasExistingApprovedContract] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const getListing = async () => {
@@ -54,6 +56,11 @@ const ViewListing = () => {
 
       if (!isNil(response.existingContract && !isEmpty(response.existingContract))) {
         setHasExistingContract(true)
+        if (!isNil(response.existingContract.senseiApproval)) {
+          setHasExistingApprovedContract(
+            response.existingContract.senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED,
+          )
+        }
       }
       setIsLoading(false)
     }
@@ -125,7 +132,10 @@ const ViewListing = () => {
     <div>
       <Helmet title="View Mentorship Listing" />
       <Skeleton active loading={isLoading}>
-        <MentorshipProfileHeader isSubscribed={hasExistingContract}>
+        <MentorshipProfileHeader
+          isSubscribed={hasExistingContract}
+          isSubscriptionApproved={hasExistingApprovedContract}
+        >
           {showReviewButton()}
         </MentorshipProfileHeader>
         <div className="row mt-4">
