@@ -11,7 +11,7 @@ import { getUserFullName } from 'components/utils'
 const ProductCard = data => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
-  const { listing, isBilling, isCourse } = data
+  const { listing, isBilling, isCourse, isTestimonial } = data
   const [sensei, setSensei] = useState([])
   const history = useHistory()
   const currLocation = data.location
@@ -96,6 +96,7 @@ const ProductCard = data => {
     removeHandler,
     passQty,
     isMentorshipBilling,
+    isTestimonialView,
   }) => {
     return (
       <div
@@ -114,14 +115,16 @@ const ProductCard = data => {
             <span className="mb-2 h6 text-dark text-uppercase text-wrap">{senseiName}</span>
             <div className="truncate-2-overflow text-wrap text-muted">{subTitle}</div>
             {!!passQty && <div className="text-dark text-wrap">{`Pass Quantity: ${passQty}`}</div>}
-            <div className="text-dark text-wrap mt-2">
-              <span>
-                <strong>
-                  {isMentorshipBilling && 'Price per Pass: '}
-                  {priceWithUnits}
-                </strong>
-              </span>
-            </div>
+            {!isTestimonialView && (
+              <div className="text-dark text-wrap mt-2">
+                <span>
+                  <strong>
+                    {isMentorshipBilling && 'Price per Pass: '}
+                    {priceWithUnits}
+                  </strong>
+                </span>
+              </div>
+            )}
           </div>
 
           {isDeleteBtnNeeded ? (
@@ -252,11 +255,14 @@ const ProductCard = data => {
       if (isBilling) {
         return listing.priceAmount
       }
+      if (isTestimonial) {
+        return 0
+      }
       return listing.priceAmount * listing.CartToMentorshipListing.numSlots
     }
 
     const getPassQty = () => {
-      if (!isBilling) {
+      if (!isBilling && !isTestimonial) {
         return listing.CartToMentorshipListing.numSlots
       }
       return null
@@ -274,6 +280,7 @@ const ProductCard = data => {
         removeHandler={removeClick}
         passQty={getPassQty()}
         isMentorshipBilling={isBilling}
+        isTestimonialView={isTestimonial}
       />
     )
   }
