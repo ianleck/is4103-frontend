@@ -1,5 +1,5 @@
 import { Avatar, Button, Form, Input } from 'antd'
-import ProductCard from 'components/Cart/ProductCard'
+import ProductCard from 'components/Common/ProductCard'
 import BackBtn from 'components/Common/BackBtn'
 import { getUserFullName, onFinishFailed, showNotification } from 'components/utils'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
