@@ -2,12 +2,15 @@ import { EyeOutlined } from '@ant-design/icons'
 import { Button, Modal, Skeleton, Table } from 'antd'
 import StatusTag from 'components/Common/StatusTag'
 import { formatTime } from 'components/utils'
+import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { getMentees } from 'services/mentorship/subscription'
 
 const MenteeOverviewPage = () => {
+  const history = useHistory()
   const user = useSelector(state => state.user)
   const [mentees, setMentees] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -89,6 +92,26 @@ const MenteeOverviewPage = () => {
     )
   }
 
+  const onCreateTestimonial = (studentId, listingId) => {
+    const path = `/sensei/testimonial/${listingId}/${studentId}`
+    history.push(path)
+  }
+
+  const showAddTestimonialButton = (studentId, listingId) => (
+    <div>
+      <Button
+        ghost
+        size="small"
+        type="primary"
+        onClick={() => {
+          onCreateTestimonial(studentId, listingId)
+        }}
+      >
+        Add Testimonial
+      </Button>
+    </div>
+  )
+
   const MentorshipContractModalBody = contracts => {
     return map(contracts, contract => (
       <div key={contract[0].mentorshipContractId} className="card">
@@ -105,10 +128,12 @@ const MenteeOverviewPage = () => {
             <strong>Listing Id: </strong>
             {contract[0].mentorshipListingId}
           </p>
-          <p className="mb-0">
+          <p>
             <strong>Contract Id: </strong>
             {contract[0].mentorshipContractId}
           </p>
+          {contract[0].progress === CONTRACT_PROGRESS_ENUM.COMPLETED &&
+            showAddTestimonialButton(contract[0].accountId, contract[0].mentorshipListingId)}
         </div>
         <div className="card-footer pb-0 pr-0">
           <p className="text-muted">Created At: {formatTime(contract[0].createdAt)}</p>
