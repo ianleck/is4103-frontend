@@ -316,6 +316,11 @@ const routes = [
     Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
+  {
+    path: '/sensei/testimonial/:mentorshipListingId/:accountId',
+    Component: lazy(() => import('pages/sensei/testimonials/create')),
+    exact: true,
+  },
   // Student Pages
   {
     path: '/student',

@@ -2,12 +2,15 @@ import { EyeOutlined } from '@ant-design/icons'
 import { Button, Modal, Skeleton, Table } from 'antd'
 import StatusTag from 'components/Common/StatusTag'
 import { formatTime } from 'components/utils'
+import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { getMentees } from 'services/mentorship/subscription'
 
 const MenteeOverviewPage = () => {
+  const history = useHistory()
   const user = useSelector(state => state.user)
   const [mentees, setMentees] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -89,33 +92,25 @@ const MenteeOverviewPage = () => {
     )
   }
 
-  const MentorshipContractModalBody = contracts => {
-    return map(contracts, contract => (
-      <div key={contract[0].mentorshipContractId} className="card">
-        <div className="card-body">
-          <p>
-            <strong>Progress: </strong>
-            <StatusTag data={contract[0].progress} type="CONTRACT_PROGRESS_ENUM" />
-          </p>
-          <p>
-            <strong>Approval Status: </strong>
-            <StatusTag data={contract[0].senseiApproval} type="MENTORSHIP_CONTRACT_APPROVAL" />
-          </p>
-          <p>
-            <strong>Listing Id: </strong>
-            {contract[0].mentorshipListingId}
-          </p>
-          <p className="mb-0">
-            <strong>Contract Id: </strong>
-            {contract[0].mentorshipContractId}
-          </p>
-        </div>
-        <div className="card-footer pb-0 pr-0">
-          <p className="text-muted">Created At: {formatTime(contract[0].createdAt)}</p>
-        </div>
-      </div>
-    ))
+  const onCreateTestimonial = (studentId, listingId) => {
+    const path = `/sensei/testimonial/${listingId}/${studentId}`
+    history.push(path)
   }
+
+  const showAddTestimonialButton = (studentId, listingId) => (
+    <div>
+      <Button
+        ghost
+        size="small"
+        type="primary"
+        onClick={() => {
+          onCreateTestimonial(studentId, listingId)
+        }}
+      >
+        Add Testimonial
+      </Button>
+    </div>
+  )
 
   return (
     <Skeleton active loading={isLoading}>
@@ -134,8 +129,35 @@ const MenteeOverviewPage = () => {
         centered
         okButtonProps={{ style: { display: 'none' } }}
         onCancel={() => setShowMentorshipContractModal(false)}
+        bodyStyle={{ height: 500, overflow: 'scroll' }}
       >
-        <MentorshipContractModalBody contract={studentMentorshipContract} />
+        {map(studentMentorshipContract, contract => (
+          <div key={contract.mentorshipContractId} className="card">
+            <div className="card-body">
+              <p>
+                <strong>Progress: </strong>
+                <StatusTag data={contract.progress} type="CONTRACT_PROGRESS_ENUM" />
+              </p>
+              <p>
+                <strong>Approval Status: </strong>
+                <StatusTag data={contract.senseiApproval} type="MENTORSHIP_CONTRACT_APPROVAL" />
+              </p>
+              <p>
+                <strong>Listing Id: </strong>
+                {contract.mentorshipListingId}
+              </p>
+              <p>
+                <strong>Contract Id: </strong>
+                {contract.mentorshipContractId}
+              </p>
+              {contract.progress === CONTRACT_PROGRESS_ENUM.COMPLETED &&
+                showAddTestimonialButton(contract.accountId, contract.mentorshipListingId)}
+            </div>
+            <div className="card-footer pb-0 pr-0">
+              <p className="text-muted">Created At: {formatTime(contract.createdAt)}</p>
+            </div>
+          </div>
+        ))}
       </Modal>
     </Skeleton>
   )

@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { size } from 'lodash'
-import ProductCard from '../../ProductCard'
+import ProductCard from 'components/Common/ProductCard'
 
 const CartItemList = () => {
   const cart = useSelector(state => state.cart)
