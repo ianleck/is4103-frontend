@@ -112,36 +112,6 @@ const MenteeOverviewPage = () => {
     </div>
   )
 
-  const MentorshipContractModalBody = contracts => {
-    return map(contracts, contract => (
-      <div key={contract[0].mentorshipContractId} className="card">
-        <div className="card-body">
-          <p>
-            <strong>Progress: </strong>
-            <StatusTag data={contract[0].progress} type="CONTRACT_PROGRESS_ENUM" />
-          </p>
-          <p>
-            <strong>Approval Status: </strong>
-            <StatusTag data={contract[0].senseiApproval} type="MENTORSHIP_CONTRACT_APPROVAL" />
-          </p>
-          <p>
-            <strong>Listing Id: </strong>
-            {contract[0].mentorshipListingId}
-          </p>
-          <p>
-            <strong>Contract Id: </strong>
-            {contract[0].mentorshipContractId}
-          </p>
-          {contract[0].progress === CONTRACT_PROGRESS_ENUM.COMPLETED &&
-            showAddTestimonialButton(contract[0].accountId, contract[0].mentorshipListingId)}
-        </div>
-        <div className="card-footer pb-0 pr-0">
-          <p className="text-muted">Created At: {formatTime(contract[0].createdAt)}</p>
-        </div>
-      </div>
-    ))
-  }
-
   return (
     <Skeleton active loading={isLoading}>
       <div className="card">
@@ -159,8 +129,35 @@ const MenteeOverviewPage = () => {
         centered
         okButtonProps={{ style: { display: 'none' } }}
         onCancel={() => setShowMentorshipContractModal(false)}
+        bodyStyle={{ height: 500, overflow: 'scroll' }}
       >
-        <MentorshipContractModalBody contract={studentMentorshipContract} />
+        {map(studentMentorshipContract, contract => (
+          <div key={contract.mentorshipContractId} className="card">
+            <div className="card-body">
+              <p>
+                <strong>Progress: </strong>
+                <StatusTag data={contract.progress} type="CONTRACT_PROGRESS_ENUM" />
+              </p>
+              <p>
+                <strong>Approval Status: </strong>
+                <StatusTag data={contract.senseiApproval} type="MENTORSHIP_CONTRACT_APPROVAL" />
+              </p>
+              <p>
+                <strong>Listing Id: </strong>
+                {contract.mentorshipListingId}
+              </p>
+              <p>
+                <strong>Contract Id: </strong>
+                {contract.mentorshipContractId}
+              </p>
+              {contract.progress === CONTRACT_PROGRESS_ENUM.COMPLETED &&
+                showAddTestimonialButton(contract.accountId, contract.mentorshipListingId)}
+            </div>
+            <div className="card-footer pb-0 pr-0">
+              <p className="text-muted">Created At: {formatTime(contract.createdAt)}</p>
+            </div>
+          </div>
+        ))}
       </Modal>
     </Skeleton>
   )
