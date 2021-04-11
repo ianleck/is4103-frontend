@@ -29,6 +29,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/courses/category/:categoryId',
+    Component: lazy(() => import('pages/courses')),
+    exact: true,
+  },
+  {
     path: '/courses/:id',
     Component: lazy(() => import('pages/courses/view')),
     exact: true,

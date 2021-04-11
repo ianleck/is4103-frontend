@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Menu, Row, Col } from 'antd'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useHistory, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
@@ -20,6 +20,7 @@ const mapStateToProps = ({ menu, settings, user }) => ({
 
 const MenuTop = ({ menuData = [], location: { pathname }, menuColor, logo, role, authorized }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
+  const history = useHistory()
 
   useEffect(() => {
     applySelectedKeys()
@@ -127,7 +128,13 @@ const MenuTop = ({ menuData = [], location: { pathname }, menuColor, logo, role,
       })}
     >
       <div className={style.logoContainer}>
-        <div className={style.logo}>
+        <div
+          role="button"
+          tabIndex={0}
+          className={`${style.logo} defocus-btn clickable`}
+          onClick={() => history.replace('/')}
+          onKeyDown={e => e.preventDefault()}
+        >
           <img src="/resources/images/logo.svg" width="32" className="mr-2" alt={DIGI_DOJO} />
           <div className={style.name}>{logo}</div>
         </div>

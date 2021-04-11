@@ -337,3 +337,16 @@ export const getUserFullName = user => {
   const lastName = getUserLastName(user)
   return `${firstName} ${lastName}`
 }
+
+export const mapCategoriesToMenu = categories => {
+  const menuData = []
+  map(categories, category => {
+    menuData.push({
+      categoryId: category.categoryId,
+      key: category.categoryId,
+      title: category.name,
+      url: `/courses/category/${category.categoryId}`,
+    })
+  })
+  return menuData
+}
