@@ -45,9 +45,9 @@ export async function requestWithdrawal(walletId) {
 }
 
 export async function approveWithdrawalRequest(billingId) {
-  const url = `/admin/withdrawal/approve/${billingId}`
+  const url = `/admin/withdrawal/${billingId}`
   return apiClient
-    .put(url)
+    .post(url)
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data
@@ -58,7 +58,7 @@ export async function approveWithdrawalRequest(billingId) {
 }
 
 export async function rejectWithdrawalRequest(billingId) {
-  const url = `/admin/withdrawal/reject/${billingId}`
+  const url = `/admin/withdrawal/${billingId}`
   return apiClient
     .put(url)
     .then(response => {
