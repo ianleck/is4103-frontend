@@ -27,7 +27,6 @@ const BrowseCoursesPage = () => {
       const result = await getCourses()
       if (result && !isNil(result.courses)) {
         if (!isNil(categoryId)) {
-          console.log(result.courses)
           setCourses(
             result.courses.filter(
               course => size(course.Categories.filter(cat => cat.categoryId === categoryId)) > 0,
