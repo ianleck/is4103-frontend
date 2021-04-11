@@ -11,7 +11,7 @@ const MentorshipProfileHeader = data => {
   const { id } = useParams()
   const history = useHistory()
   const user = useSelector(state => state.user)
-  const { children, isSubscribed } = data
+  const { children, isSubscribed, isSubscriptionApproved } = data
 
   const title = `${user.firstName} is sharing a Digi Dojo mentorship listing with you!`
 
@@ -47,7 +47,7 @@ const MentorshipProfileHeader = data => {
           btnShape="round"
         />
       </div>
-      {isSubscribed && children}
+      {isSubscriptionApproved && children}
     </div>
   )
 }
