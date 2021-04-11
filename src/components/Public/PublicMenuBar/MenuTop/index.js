@@ -7,24 +7,18 @@ import store from 'store'
 import { find } from 'lodash'
 import UserActionGroup from 'components/UserActionGroup'
 import { DIGI_DOJO } from 'constants/text'
+import Search from 'components/Common/Search'
 import style from './style.module.scss'
-import Search from '../Search'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
   menuData: menu.menuData,
   logo: settings.logo,
   menuColor: settings.menuColor,
   role: user.role,
+  authorized: user.authorized,
 })
 
-const MenuTop = ({
-  menuData = [],
-  location: { pathname },
-
-  menuColor,
-  logo,
-  role,
-}) => {
+const MenuTop = ({ menuData = [], location: { pathname }, menuColor, logo, role, authorized }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
 
   useEffect(() => {
@@ -144,9 +138,11 @@ const MenuTop = ({
         </Menu>
       </div>
       <Row className={style.action}>
-        <Col className="d-md-none d-lg-block">
-          <Search />
-        </Col>
+        {authorized && (
+          <Col>
+            <Search />
+          </Col>
+        )}
         <Col>
           <UserActionGroup />
         </Col>
