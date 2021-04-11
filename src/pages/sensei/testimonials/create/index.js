@@ -91,7 +91,7 @@ const CreateTestimonial = () => {
             </div>
             <div className="card-body">
               <div className="row align-items-center">
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                   <ProductCard
                     location="CreateTestimonialPage"
                     listing={mentorshipListing}
@@ -99,7 +99,7 @@ const CreateTestimonial = () => {
                     isTestimonial
                   />
                 </div>
-                <div className="col-6 mt-4">
+                <div className="col-12 col-md-6 mt-4">
                   <StudentProfileCard
                     imgSrc={mentee.profileImgUrl ? mentee.profileImgUrl : getDefaultProfilePic()}
                     fullName={getUserFullName(mentee)}
@@ -125,7 +125,7 @@ const CreateTestimonial = () => {
                       />
                     </Form.Item>
                     <div className="row justify-content-center mt-4">
-                      <Button type="primary" form="testimonialForm" htmlType="submit">
+                      <Button type="primary" size="large" form="testimonialForm" htmlType="submit">
                         Submit
                       </Button>
                     </div>
