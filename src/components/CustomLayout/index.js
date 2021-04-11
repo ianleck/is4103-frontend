@@ -26,6 +26,8 @@ const CustomLayout = ({
   if (pathname.includes('/student/dashboard') || pathname === '/student/profile') {
     showStudentDashboardMenu = true
   }
+  const showCategories = pathname.includes('/mentorships') || pathname.includes('/courses')
+
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
       <Layout
@@ -40,16 +42,23 @@ const CustomLayout = ({
       >
         {isPublic ? <PublicMenuBar /> : <Menu />}
         <Layout>
-          <Layout.Header
-            className={classNames('cui__layout__header', {
-              cui__layout__fixedHeader: isTopbarFixed,
-              cui__layout__headerGray: isGrayTopbar,
-            })}
-          >
-            {!!isPublic &&
-              (showStudentDashboardMenu ? <StudentDashboardSubMenuBar /> : <PublicCategoriesBar />)}
-            {!isPublic && <UserGroupTopBar />}
-          </Layout.Header>
+          {(showCategories || !isPublic) && (
+            <Layout.Header
+              className={classNames('cui__layout__header', {
+                cui__layout__fixedHeader: isTopbarFixed,
+                cui__layout__headerGray: isGrayTopbar,
+              })}
+            >
+              {!!isPublic &&
+                showCategories &&
+                (showStudentDashboardMenu ? (
+                  <StudentDashboardSubMenuBar />
+                ) : (
+                  <PublicCategoriesBar />
+                ))}
+              {!isPublic && <UserGroupTopBar />}
+            </Layout.Header>
+          )}
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
             <div className="cui__utils__content">{children}</div>
           </Layout.Content>

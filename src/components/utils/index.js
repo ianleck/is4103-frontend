@@ -338,14 +338,14 @@ export const getUserFullName = user => {
   return `${firstName} ${lastName}`
 }
 
-export const mapCategoriesToMenu = categories => {
+export const mapCategoriesToMenu = (categories, type) => {
   const menuData = []
   map(categories, category => {
     menuData.push({
       categoryId: category.categoryId,
       key: category.categoryId,
       title: category.name,
-      url: `/courses/category/${category.categoryId}`,
+      url: `/${type}/category/${category.categoryId}`,
     })
   })
   return menuData

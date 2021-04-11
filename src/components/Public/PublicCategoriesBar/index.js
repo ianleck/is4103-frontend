@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { Menu } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import store from 'store'
@@ -7,8 +7,8 @@ import { find } from 'lodash'
 import { mapCategoriesToMenu } from 'components/utils'
 import style from './style.module.scss'
 
-const mapStateToProps = ({ settings, user, categories }) => ({
-  menuData: mapCategoriesToMenu(categories),
+const mapStateToProps = ({ settings, user }) => ({
+  menuData: [],
   logo: settings.logo,
   menuColor: settings.menuColor,
   role: user.role,
@@ -16,11 +16,14 @@ const mapStateToProps = ({ settings, user, categories }) => ({
 
 const CourseCategoryBar = ({ menuData = [], location: { pathname }, role }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
+  const categories = useSelector(state => state.categories)
+  if (pathname.includes('/mentorships')) menuData = mapCategoriesToMenu(categories, 'mentorships')
+  else if (pathname.includes('/courses')) menuData = mapCategoriesToMenu(categories, 'courses')
 
   useEffect(() => {
     applySelectedKeys()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, menuData])
+  }, [pathname, categories])
 
   const applySelectedKeys = () => {
     const flattenItems = (items, key) =>
