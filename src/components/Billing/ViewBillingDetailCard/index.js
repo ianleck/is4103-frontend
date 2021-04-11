@@ -1,5 +1,5 @@
 import { Button, Skeleton, Tag } from 'antd'
-import ProductCard from 'components/Cart/ProductCard'
+import ProductCard from 'components/Common/ProductCard'
 import BackBtn from 'components/Common/BackBtn'
 import StatusTag from 'components/Common/StatusTag'
 import { formatTime } from 'components/utils'

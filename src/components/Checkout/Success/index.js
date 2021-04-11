@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as jwtCart from 'services/cart'
 import { FundOutlined, HomeOutlined, LoadingOutlined } from '@ant-design/icons'
 import { isEmpty } from 'lodash'
-import ProductCard from 'components/Cart/ProductCard'
+import ProductCard from 'components/Common/ProductCard'
 import { Button } from 'antd'
 
 const Success = () => {
