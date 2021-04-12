@@ -221,6 +221,30 @@ export async function getAllMentorshipContracts() {
     .catch(err => console.log(err))
 }
 
+export async function getSenseiMentorshipContracts(accountId) {
+  return apiClient
+    .get(`/mentorship/contract/sensei/${accountId}`, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.contracts
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getStudentMentorshipContracts(accountId) {
+  return apiClient
+    .get(`/mentorship/contract/student/${accountId}`, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.contracts
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getAllBannedStudents() {
   return apiClient
     .get(`/admin/all/user?userType=STUDENT&status=BANNED`, { withCredentials: true })
