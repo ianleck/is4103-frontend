@@ -22,7 +22,7 @@ import {
 import { getProfile } from 'services/user'
 import { getSubscription } from 'services/mentorship/subscription'
 
-const CreateTestimonial = () => {
+const TestimonialPage = () => {
   const { accountId, mentorshipContractId } = useParams()
   const history = useHistory()
   const [testimonialForm] = Form.useForm()
@@ -183,4 +183,4 @@ const CreateTestimonial = () => {
   )
 }
 
-export default CreateTestimonial
+export default TestimonialPage
