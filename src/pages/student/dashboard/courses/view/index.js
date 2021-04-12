@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { filter, isEmpty, isNil } from 'lodash'
-import { getAnnouncements, getCourseById } from 'services/courses'
+import { getAnnouncements, getCourseById, getPurchasedCourses } from 'services/courses'
 import { LESSONS, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button, Image, Space } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
+import { Button, Image, Space, Modal, Form, Input } from 'antd'
+import { DollarCircleOutlined, EditOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
 import { addCourseReview, editCourseReview } from 'services/review'
@@ -18,10 +18,12 @@ import {
   REVIEW_EDIT_ERR,
   REVIEW_EDIT_SUCCESS,
   SUCCESS,
+  COURSE_REFUND_REQUESTED,
 } from 'constants/notifications'
 import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
+import { requestCourseRefund } from 'services/wallet'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -32,6 +34,7 @@ const StudentCourseDetails = () => {
   const [ownReview, setOwnReview] = useState([])
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [showRefundModal, setShowRefundModal] = useState(false)
 
   console.log('reviews', reviews) // this is needed as a placeholder, Nat will deal with reviews in a later PR
 
@@ -89,6 +92,46 @@ const StudentCourseDetails = () => {
     setShowReviewModal(false)
   }
 
+  const refundFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowRefundModal(false)}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="requestRefundForm" htmlType="submit" size="large">
+          Request Refund
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const onRequestRefund = async values => {
+    const response = await getPurchasedCourses(user.accountId)
+    if (response) {
+      const purchased = response.courses
+      let cID = ''
+
+      for (let i = 0; i < purchased.length; i += 1) {
+        if (purchased[i].courseId === values.courseId) {
+          cID = purchased[i].CourseContracts[0].courseContractId
+        }
+      }
+
+      const response2 = await requestCourseRefund(cID)
+
+      if (response2) {
+        showNotification('success', SUCCESS, COURSE_REFUND_REQUESTED)
+      }
+    }
+    setShowRefundModal(false)
+  }
+
   useEffect(() => {
     getCourseDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -133,6 +176,19 @@ const StudentCourseDetails = () => {
                 icon={<EditOutlined />}
               >
                 {`${editMode ? 'Edit your' : 'Add a'}  Review`}
+              </Button>
+            )}
+            {user.userType === USER_TYPE_ENUM.STUDENT && (
+              <Button
+                size="large"
+                shape="round"
+                danger
+                onClick={() => {
+                  setShowRefundModal(true)
+                }}
+                icon={<DollarCircleOutlined />}
+              >
+                Request course refund
               </Button>
             )}
             <ShareBtn
@@ -192,6 +248,42 @@ const StudentCourseDetails = () => {
         <div className="col-12">
           <CourseLessonsList course={course} />
         </div>
+      </div>
+
+      <div className="col-xl-4 col-lg-12">
+        <Modal
+          title="Request for Refund"
+          visible={showRefundModal}
+          cancelText="Close"
+          centered
+          onCancel={() => setShowRefundModal(false)}
+          footer={refundFormFooter}
+        >
+          <Form
+            id="requestRefundForm"
+            layout="vertical"
+            hideRequiredMark
+            onFinish={onRequestRefund}
+            onFinishFailed={onFinishFailed}
+            initialValues={{
+              courseId: course.courseId,
+              title: course.title,
+            }}
+          >
+            <div className="row">
+              <div className="col-6">
+                <Form.Item name="courseId" label="Course ID">
+                  <Input disabled />
+                </Form.Item>
+              </div>
+              <div className="col-6">
+                <Form.Item name="title" label="Course Title">
+                  <Input disabled />
+                </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </Modal>
       </div>
     </div>
   )

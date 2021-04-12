@@ -74,7 +74,7 @@ const MentorshipSubscriptionView = () => {
           </div>
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <Button
-              type="primary"
+              danger
               shape="round"
               size="large"
               onClick={() => setShowRefundModal(true)}
