@@ -18,13 +18,14 @@ const StudentCourseCard = data => {
   }
 
   const getPercentageCompletion = () => {
-    const numLessons = 2 // Placeholder for when numLessons will be returned to the contract
     if (course.CourseContracts) {
-      if (size(course.CourseContracts) > 0) {
-        return ((size(course.CourseContracts[0].lessonProgress) / numLessons) * 100).toFixed(0)
+      if (size(course.CourseContracts) > 0 && !isNil(course.numLessons)) {
+        return ((size(course.CourseContracts[0].lessonProgress) / course.numLessons) * 100).toFixed(
+          0,
+        )
       }
     }
-    return 50
+    return 0
   }
 
   return (

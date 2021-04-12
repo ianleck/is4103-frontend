@@ -48,17 +48,19 @@ const StudentCourseLesson = () => {
 
   const markLessonAsCompletedSvc = async () => {
     const result = await getPurchasedCourses(user.accountId)
-    if (result && !isNil(result.requests)) {
-      const thisCourse = result.requests.filter(request => request.courseId === courseId)
+    if (result && !isNil(result.courses)) {
+      const thisCourse = result.courses.filter(request => request.courseId === courseId)
       if (size(thisCourse) > 0 && !isNil(thisCourse[0].CourseContracts)) {
         if (size(thisCourse[0].CourseContracts) > 0) {
           setCurrentCourseContract(thisCourse[0].CourseContracts[0])
           const thisContractId = thisCourse[0].CourseContracts[0].courseContractId
           const response = await markLessonAsCompleted(thisContractId, lessonId)
-          if (response && !isNil(response.courseContract)) {
-            const numLessons = 2 // Placeholder for when numLessons will be returned to the contract
+          if (response && !isNil(response.courseContract) && !isNil(thisCourse[0].numLessons)) {
             setPercent(
-              ((size(response.courseContract.lessonProgress) / numLessons) * 100).toFixed(0),
+              (
+                (size(response.courseContract.lessonProgress) / thisCourse[0].numLessons) *
+                100
+              ).toFixed(0),
             )
           }
         }
