@@ -115,9 +115,9 @@ export const Content50DataSource = {
         children: {
           wrapper: { className: 'content5-block-content' },
           img: {
-            children: 'https://t.alipayobjects.com/images/rmsweb/T11aVgXc4eXXXXXXXX.svg',
+            children: '/resources/images/avatars/sample/billgates.jpg',
           },
-          content: { children: 'Ant Design' },
+          content: { children: 'Bill Gates' },
         },
       },
       {
@@ -128,9 +128,9 @@ export const Content50DataSource = {
         children: {
           wrapper: { className: 'content5-block-content' },
           img: {
-            children: 'https://zos.alipayobjects.com/rmsportal/faKjZtrmIbwJvVR.svg',
+            children: '/resources/images/avatars/sample/markzuckerberg.jpg',
           },
-          content: { children: 'Ant Motion' },
+          content: { children: 'Mark Zuckerberg' },
         },
       },
       {
