@@ -26,7 +26,7 @@ const StudentMentorships = () => {
   }, [])
 
   const viewMentorshipContract = id => {
-    const path = `/student/mentorship/subscription/${id}`
+    const path = `/student/dashboard/mentorship/subscription/${id}`
     history.push(path)
   }
 
