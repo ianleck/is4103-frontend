@@ -21,9 +21,9 @@ const Footer = () => {
             <h2 className="logo">
               <img src="/resources/images/digidojo_logo.svg" width="100%" alt={DIGI_DOJO} />
             </h2>
-            <div className="slogan mt-4">Mentorship & Learning Platform</div>
+            <div className="slogan mt-4">Digi Dojo</div>
           </div>
-          <div className="block">
+          <div className="block ml-5 ml-md-0">
             <h2>Our Services</h2>
             <a href="/mentorships">Mentorships</a>
             <a href="/courses">Courses</a>
