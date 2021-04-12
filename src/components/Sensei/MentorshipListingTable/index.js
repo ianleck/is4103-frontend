@@ -13,6 +13,7 @@ import {
   Switch,
   Table,
   Tag,
+  Typography,
 } from 'antd'
 import {
   DeleteOutlined,
@@ -37,6 +38,7 @@ const SenseiMentorshipListings = () => {
 
   const { TextArea } = Input
   const { Option } = Select
+  const { Paragraph } = Typography
   const [addListingForm] = Form.useForm()
   const [editListingForm] = Form.useForm()
 
@@ -155,6 +157,19 @@ const SenseiMentorshipListings = () => {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      render: record => {
+        return (
+          <Paragraph
+            ellipsis={{
+              rows: 1,
+              expandable: true,
+              symbol: 'More',
+            }}
+          >
+            {record}
+          </Paragraph>
+        )
+      },
     },
     {
       title: 'Pass Price (S$)',
