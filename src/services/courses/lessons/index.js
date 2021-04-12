@@ -117,3 +117,16 @@ export async function deleteComment(commentId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function markLessonAsCompleted(courseContractId, lessonId) {
+  const url = `/course/contract/lesson/${courseContractId}/${lessonId}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

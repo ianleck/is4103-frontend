@@ -1,18 +1,23 @@
-import { UserOutlined } from '@ant-design/icons'
-import { Descriptions } from 'antd'
+import { DollarCircleOutlined, UserOutlined } from '@ant-design/icons'
+import { Descriptions, Button, Modal, Form, Input } from 'antd'
 import Avatar from 'antd/lib/avatar/avatar'
 import BackBtn from 'components/Common/BackBtn'
 import TaskComponent from 'components/Mentorship/Subscription/Task'
+import { showNotification } from 'components/utils'
+import { REFUND_TYPES } from 'constants/constants'
+import { MENTORSHIP_REFUND_REQUESTED, SUCCESS } from 'constants/notifications'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
 import { getSubscription } from 'services/mentorship/subscription'
+import { requestRefund } from 'services/wallet'
 
 const MentorshipSubscriptionView = () => {
   const { id } = useParams()
   const [mentorshipSubscription, setMentorshipSubscription] = useState([])
   const [mentorshipListing, setMentorshipListing] = useState([])
+  const [showRefundModal, setShowRefundModal] = useState(false)
 
   useEffect(() => {
     const getMentorshipSubscription = async () => {
@@ -31,6 +36,34 @@ const MentorshipSubscriptionView = () => {
 
   console.log('mentorshipSubscription is ', mentorshipSubscription) // Nat to deal with this in a later PR to populate the page with more subscription specific deets
 
+  const refundFormFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowRefundModal(false)}>
+          Close
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="requestRefundForm" htmlType="submit" size="large">
+          Request Refund
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const onRequestRefund = async values => {
+    const response = await requestRefund(values.mentorshipContractId, REFUND_TYPES.MENTORSHIP)
+
+    if (response) {
+      showNotification('success', SUCCESS, MENTORSHIP_REFUND_REQUESTED)
+    }
+    setShowRefundModal(false)
+  }
+
   return (
     <div>
       <Helmet title="Mentorship Subscription" />
@@ -39,6 +72,17 @@ const MentorshipSubscriptionView = () => {
         <div className="row pt-2 justify-content-between">
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <BackBtn />
+          </div>
+          <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+            <Button
+              danger
+              shape="round"
+              size="large"
+              onClick={() => setShowRefundModal(true)}
+              icon={<DollarCircleOutlined />}
+            >
+              Refund All Passes
+            </Button>
           </div>
         </div>
         <div className="row mt-4">
@@ -83,6 +127,48 @@ const MentorshipSubscriptionView = () => {
           <div className="col-12">
             <TaskComponent />
           </div>
+        </div>
+
+        <div className="col-xl-4 col-lg-12">
+          <Modal
+            title="Request for Refund"
+            visible={showRefundModal}
+            cancelText="Close"
+            centered
+            onCancel={() => setShowRefundModal(false)}
+            footer={refundFormFooter}
+          >
+            <Form
+              id="requestRefundForm"
+              layout="vertical"
+              hideRequiredMark
+              onFinish={onRequestRefund}
+              onFinishFailed={onFinishFailed}
+              initialValues={{
+                mentorshipContractId: mentorshipSubscription.mentorshipContractId,
+                name: mentorshipListing.name,
+                mentorPassCount: mentorshipSubscription.mentorPassCount,
+              }}
+            >
+              <div className="row">
+                <div className="col-6">
+                  <Form.Item name="mentorshipContractId" label="Mentorship Contract ID">
+                    <Input disabled />
+                  </Form.Item>
+                </div>
+                <div className="col-6">
+                  <Form.Item name="name" label="Mentorship Name">
+                    <Input disabled />
+                  </Form.Item>
+                </div>
+                <div className="col-12">
+                  <Form.Item name="mentorPassCount" label="Number of passes to be refunded">
+                    <Input disabled />
+                  </Form.Item>
+                </div>
+              </div>
+            </Form>
+          </Modal>
         </div>
       </div>
     </div>

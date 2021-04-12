@@ -73,3 +73,6 @@ export const ADD_POST = 'Add a post'
 export const UNLIKE = 'Unlike'
 export const LIKE = 'Like'
 export const LIKED = 'Liked'
+
+export const TESTIMONIALS = 'Testimonials'
+export const TESTIMONIAL_MGT = 'Testimonial Management'
