@@ -14,7 +14,7 @@ const mapStateToProps = ({ settings, user }) => ({
   role: user.role,
 })
 
-const CourseCategoryBar = ({ menuData = [], location: { pathname }, role }) => {
+const CategoryBar = ({ menuData = [], location: { pathname }, role }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
   const categories = useSelector(state => state.categories)
   if (pathname.includes('/mentorships')) menuData = mapCategoriesToMenu(categories, 'mentorships')
@@ -126,4 +126,4 @@ const CourseCategoryBar = ({ menuData = [], location: { pathname }, role }) => {
   )
 }
 
-export default withRouter(connect(mapStateToProps)(CourseCategoryBar))
+export default withRouter(connect(mapStateToProps)(CategoryBar))
