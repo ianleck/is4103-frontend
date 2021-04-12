@@ -5,7 +5,7 @@
 
 :root {
   --kit-color-primary: #4b7cf3;
-  --kit-font-family: 'Avenir-Bold', sans-serif;
+  --kit-font-family: 'Avenir', sans-serif;
 }
 
 html {
@@ -19,7 +19,7 @@ body {
   font-size: 1.2rem;
   line-height: 1.5;
   font-family: $base-font-family;
-  color: $text;
+  color: #000;
   overflow-x: hidden;
   position: relative;
   font-variant: normal;
