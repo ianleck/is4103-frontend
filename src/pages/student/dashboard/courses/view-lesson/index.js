@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import BackBtn from 'components/Common/BackBtn'
-import { isNil, size } from 'lodash'
+import { filter, isNil, size } from 'lodash'
 import { getCourseById, getPurchasedCourses } from 'services/courses'
 import { getCommentsByLessonId, markLessonAsCompleted } from 'services/courses/lessons'
 import LessonComments from 'components/Course/LessonComments'
@@ -29,7 +29,9 @@ const StudentCourseLesson = () => {
     if (result && !isNil(result.course)) {
       setCurrentCourse(result.course)
       if (!isNil(result.course.Lessons)) {
-        const viewLesson = result.course.Lessons.filter(o => o.lessonId === lessonId)
+        const viewLesson = filter(result.course.Lessons, lesson => {
+          return lesson.lessonId === lessonId
+        })
         if (size(viewLesson) > 0) {
           setCurrentLesson(viewLesson[0])
           if (!isNil(viewLesson[0].videoUrl)) {
@@ -50,7 +52,9 @@ const StudentCourseLesson = () => {
   const markLessonAsCompletedSvc = async () => {
     const result = await getPurchasedCourses(user.accountId)
     if (result && !isNil(result.courses)) {
-      const thisCourse = result.courses.filter(request => request.courseId === courseId)
+      const thisCourse = filter(result.courses, course => {
+        return course.courseId === courseId
+      })
       if (size(thisCourse) > 0 && !isNil(thisCourse[0].CourseContracts)) {
         if (size(thisCourse[0].CourseContracts) > 0) {
           setCurrentCourseContract(thisCourse[0].CourseContracts[0])
