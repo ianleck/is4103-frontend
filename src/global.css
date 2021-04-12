@@ -62,7 +62,7 @@
 }
 
 .mentorship-listing-card {
-  height: 340px;
+  height: 370px;
 }
 
 .menu-item {
@@ -100,7 +100,7 @@
   margin-left: 50%;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
-  height: 220px;
+  height: 260px;
 }
 
 .social-card-banner {
@@ -129,7 +129,7 @@
 }
 
 .sensei-course-card-content {
-  height: 180px;
+  height: 210px;
 }
 
 .scroll-menu-arrow--disabled {
@@ -166,7 +166,7 @@
 }
 
 .text-2-lines {
-  height: 45px !important;
+  height: 48px !important;
 }
 
 .text-2-bold-lines {
