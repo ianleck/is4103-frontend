@@ -32,7 +32,7 @@ const FeaturedMentors = () => {
       <div className="home-page mentors">
         <div className="title-wrapper">
           <h1>Our Featured Mentors</h1>
-          <div className="text-white">
+          <div className="subtitle">
             Featuring worldwide sensations like Bill Gates & Mark Zuckerberg, join us to get a
             chance to learn from the best.
           </div>
