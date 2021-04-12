@@ -3,7 +3,7 @@ import { Tabs } from 'antd'
 import ChartistGraph from 'react-chartist'
 import ChartistTooltip from 'chartist-plugin-tooltips-updated'
 import { getMentees } from 'services/mentorship/subscription'
-import { MONTH_NAMES } from 'constants/constants'
+import { MENTORSHIP_CONTRACT_APPROVAL, MONTH_NAMES } from 'constants/constants'
 
 const { TabPane } = Tabs
 
@@ -54,22 +54,29 @@ const MenteeChart = props => {
       const student = response.students
       const last6Month = new Date()
       last6Month.setMonth(last6Month.getMonth() - 5)
-      setCount(student.length)
 
       const monthCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       let labels = []
       let data = []
+      let counter = 0
 
       // Update MonthCounts
       for (let i = 0; i < student.length; i += 1) {
         for (let j = 0; j < student[i].MentorshipContracts.length; j += 1) {
           const date = new Date(student[i].MentorshipContracts[j].createdAt)
-
-          if (last6Month.getTime() <= date.getTime()) {
-            monthCounts[date.getMonth()] += 1
+          if (
+            student[i].MentorshipContracts[j].senseiApproval ===
+            MENTORSHIP_CONTRACT_APPROVAL.APPROVED
+          ) {
+            if (last6Month.getTime() <= date.getTime()) {
+              monthCounts[date.getMonth()] += 1
+            }
+            counter += 1
           }
         }
       }
+
+      setCount(counter)
 
       const month = last6Month.getMonth()
       for (let i = 0; i < 6; i += 1) {
