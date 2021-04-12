@@ -129,7 +129,7 @@ const Mentorship = ({ id, user }) => {
       key: 'createdAt',
       dataIndex: 'createdAt',
       width: '15%',
-      responsive: ['lg'],
+      responsive: ['sm'],
       render: record => formatTime(record),
       sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       sortDirections: ['ascend', 'descend'],
@@ -146,7 +146,6 @@ const Mentorship = ({ id, user }) => {
       dataIndex: ['description'],
       key: ['description'],
       responsive: ['lg'],
-      width: '15%',
       sorter: (a, b) => a.description.length - b.description.length,
       sortDirections: ['ascend', 'descend'],
     },
@@ -154,7 +153,7 @@ const Mentorship = ({ id, user }) => {
       title: 'Categories',
       key: 'Categories',
       dataIndex: 'Categories',
-      responsive: ['sm'],
+      width: '15%',
       render: recordCategories => (
         <>
           {recordCategories.map(category => {
