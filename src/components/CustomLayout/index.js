@@ -22,11 +22,9 @@ const CustomLayout = ({
   isPublic,
 }) => {
   const { pathname } = useLocation()
-  let showStudentDashboardMenu = false
-  if (pathname.includes('/student/dashboard') || pathname === '/student/profile') {
-    showStudentDashboardMenu = true
-  }
-  const showCategories = pathname.includes('/mentorships') || pathname.includes('/courses')
+  const showStudentDashboardMenu = /^\/student\/dashboard(?=\/|$)/i.test(pathname)
+  const showCategories =
+    /^\/mentorships(?=\/|$)/i.test(pathname) || /^\/courses(?=\/|$)/i.test(pathname)
 
   return (
     <div className={classNames({ cui__layout__grayBackground: isGrayBackground })}>
@@ -42,20 +40,15 @@ const CustomLayout = ({
       >
         {isPublic ? <PublicMenuBar /> : <Menu />}
         <Layout>
-          {(showCategories || !isPublic) && (
+          {(showCategories || showStudentDashboardMenu || !isPublic) && (
             <Layout.Header
               className={classNames('cui__layout__header', {
                 cui__layout__fixedHeader: isTopbarFixed,
                 cui__layout__headerGray: isGrayTopbar,
               })}
             >
-              {!!isPublic &&
-                showCategories &&
-                (showStudentDashboardMenu ? (
-                  <StudentDashboardSubMenuBar />
-                ) : (
-                  <PublicCategoriesBar />
-                ))}
+              {!!isPublic && showCategories && <PublicCategoriesBar />}
+              {!!isPublic && showStudentDashboardMenu && <StudentDashboardSubMenuBar />}
               {!isPublic && <UserGroupTopBar />}
             </Layout.Header>
           )}
