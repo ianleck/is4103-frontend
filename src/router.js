@@ -327,8 +327,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/sensei/testimonial/:mentorshipListingId/:accountId',
-    Component: lazy(() => import('pages/sensei/testimonials/create')),
+    path: '/sensei/testimonial/:mentorshipContractId/:accountId',
+    Component: lazy(() => import('pages/sensei/testimonials')),
     exact: true,
   },
   // Student Pages

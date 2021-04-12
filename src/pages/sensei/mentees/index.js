@@ -4,7 +4,7 @@ import StatusTag from 'components/Common/StatusTag'
 import MenteeChart from 'components/Sensei/MenteeChart'
 import { formatTime } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
-import { isNil, map, size } from 'lodash'
+import { isNil, isNull, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -107,22 +107,22 @@ const MenteeOverviewPage = () => {
     )
   }
 
-  const onCreateTestimonial = (studentId, listingId) => {
-    const path = `/sensei/testimonial/${listingId}/${studentId}`
+  const onViewTestimonialForm = (studentId, contractId) => {
+    const path = `/sensei/testimonial/${contractId}/${studentId}`
     history.push(path)
   }
 
-  const showAddTestimonialButton = (studentId, listingId) => (
+  const showDynamicTestimonialButton = (studentId, contractId, action) => (
     <div>
       <Button
         ghost
         size="small"
         type="primary"
         onClick={() => {
-          onCreateTestimonial(studentId, listingId)
+          onViewTestimonialForm(studentId, contractId)
         }}
       >
-        Add Testimonial
+        {`${action} Testimonial`}
       </Button>
     </div>
   )
@@ -169,7 +169,17 @@ const MenteeOverviewPage = () => {
                 {contract.mentorshipContractId}
               </p>
               {contract.progress === CONTRACT_PROGRESS_ENUM.COMPLETED &&
-                showAddTestimonialButton(contract.accountId, contract.mentorshipListingId)}
+                (isNull(contract.Testimonial)
+                  ? showDynamicTestimonialButton(
+                      contract.accountId,
+                      contract.mentorshipContractId,
+                      'Add',
+                    )
+                  : showDynamicTestimonialButton(
+                      contract.accountId,
+                      contract.mentorshipContractId,
+                      'Edit',
+                    ))}
             </div>
             <div className="card-footer pb-0 pr-0">
               <p className="text-muted">Created At: {formatTime(contract.createdAt)}</p>
