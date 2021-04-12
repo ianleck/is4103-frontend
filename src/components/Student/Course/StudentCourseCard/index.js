@@ -17,6 +17,17 @@ const StudentCourseCard = data => {
     return course.createdAt
   }
 
+  const getPercentageCompletion = () => {
+    if (course.CourseContracts) {
+      if (size(course.CourseContracts) > 0 && !isNil(course.numLessons)) {
+        return ((size(course.CourseContracts[0].lessonProgress) / course.numLessons) * 100).toFixed(
+          0,
+        )
+      }
+    }
+    return 0
+  }
+
   return (
     <Skeleton active loading={isLoading}>
       <div
@@ -45,7 +56,7 @@ const StudentCourseCard = data => {
                 <p className="card-text text-break truncate-2-overflow">{course.description}</p>
                 <div className="row w-100 align-items-center mt-auto">
                   <div className="col-12 mt-1">
-                    <Progress percent={50} status="active" />
+                    <Progress percent={getPercentageCompletion()} status="active" />
                   </div>
                   <div className="col-12 mt-1">
                     <small className="text-uppercase text-secondary">
