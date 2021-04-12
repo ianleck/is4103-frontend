@@ -10,6 +10,7 @@ import CourseProgressCard from 'components/Course/ProgressCard'
 import AdditionalContentCard from 'components/Course/AdditionalContentCard'
 import LessonPlaylist from 'components/Course/LessonPlaylist'
 import { useSelector } from 'react-redux'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const StudentCourseLesson = () => {
   const { courseId, lessonId } = useParams()
@@ -71,7 +72,7 @@ const StudentCourseLesson = () => {
   useEffect(() => {
     viewCourse()
     getLessonComments()
-    markLessonAsCompletedSvc()
+    if (user && user.userType === USER_TYPE_ENUM.STUDENT) markLessonAsCompletedSvc()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -97,7 +98,9 @@ const StudentCourseLesson = () => {
           />
         </div>
         <div className="col-12 col-lg-4">
-          <CourseProgressCard percent={percent} />
+          {user && user.userType === USER_TYPE_ENUM.STUDENT && (
+            <CourseProgressCard percent={percent} />
+          )}
           <AdditionalContentCard
             currentLesson={currentLesson}
             currentVideoUrl={currentVideoUrl}
