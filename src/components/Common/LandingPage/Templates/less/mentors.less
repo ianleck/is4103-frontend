@@ -1,10 +1,56 @@
-@content5: content5;
-.@{content5}-wrapper {
+@homepage: home-page;
+.@{homepage}-wrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  .@{homepage} {
+    height: 100%;
+    max-width: 1200px;
+    position: relative;
+    margin: auto;
+    will-change: transform;
+  }
+  .title-wrapper > h1,
+  > h1 {
+    font-size: 32px;
+    color: @text-color;
+    margin-bottom: 16px;
+  }
+  .title-wrapper {
+    margin: 0 auto 64px;
+    text-align: center;
+  }
+}
+
+.@{homepage} {
+  padding: 128px 24px;
+}
+
+@media screen and (max-width: 767px) {
+  .@{homepage}-wrapper {
+    .@{homepage} {
+      padding: 96px 24px;
+      > h1 {
+        font-size: 24px;
+        margin: 0 auto 32px;
+        &.title-h1 {
+          margin-bottom: 8px;
+        }
+      }
+      > p {
+        margin-bottom: 32px;
+      }
+    }
+  }
+}
+
+@mentors: mentors;
+.@{mentors}-wrapper {
   background: url('/resources/images/pages/landing/wavy.svg') no-repeat top;
   background-size: cover;
   min-height: 220px;
   text-align: center;
-  .@{content5} {
+  .@{mentors} {
     > p {
       text-align: center;
       font-size: 12px;
@@ -29,7 +75,7 @@
       right: 0;
       .block {
         margin-bottom: 24px;
-        .content5-block-content {
+        .mentors-block-content {
           display: block;
           background: #fff;
           border-radius: 4px;
@@ -63,10 +109,10 @@
 }
 
 @media screen and (max-width: 767px) {
-  .@{content5}-wrapper {
+  .@{mentors}-wrapper {
     min-height: 200px;
     overflow: hidden;
-    .@{content5} {
+    .@{mentors} {
       ul {
         li {
           display: block;

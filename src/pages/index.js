@@ -2,13 +2,13 @@ import React from 'react'
 import Content0 from 'components/Common/LandingPage/Templates/Content0'
 import Content3 from 'components/Common/LandingPage/Templates/Content3'
 import Footer1 from 'components/Common/LandingPage/Templates/Footer1'
+import Logo from 'components/Common/LandingPage/Logo'
 import 'components/Common/LandingPage/Templates/less/antMotionStyle.less'
-import LandingLogo from 'components/Common/LandingPage/Templates/LandingLogo'
 
 const LandingPage = () => {
   return (
     <div>
-      <LandingLogo />
+      <Logo />
       <Content0 id="Content0_0" key="Content0_0" dataSource={Content00DataSource} />
       <Content3 id="Content3_0" key="Content3_0" dataSource={Content30DataSource} />
       <Footer1 id="Footer1_0" key="Footer1_0" dataSource={Footer10DataSource} />
