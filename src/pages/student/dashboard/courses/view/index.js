@@ -113,7 +113,7 @@ const StudentCourseDetails = () => {
 
   const onRequestRefund = async values => {
     const response = await getPurchasedCourses(user.accountId)
-    if (!isNil(response.courses)) {
+    if (response && !isNil(response.courses)) {
       const purchased = response.courses
       let cID = ''
 
