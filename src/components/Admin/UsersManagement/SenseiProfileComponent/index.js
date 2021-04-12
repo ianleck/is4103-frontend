@@ -13,12 +13,7 @@ import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
 import { ADMIN_ROLE_ENUM, ADMIN_VERIFIED_ENUM, STATUS_ENUM } from 'constants/constants'
-import {
-  formatTime,
-  getDetailsColumn,
-  showNotification,
-  sortDescAndKeyBillingId,
-} from 'components/utils'
+import { getDetailsColumn, showNotification, sortDescAndKeyBillingId } from 'components/utils'
 import {
   SUCCESS,
   ACCEPT_SENSEI_PROFILE,
@@ -32,9 +27,9 @@ import billingColumns from 'components/Common/TableColumns/Billing'
 import BackBtn from 'components/Common/BackBtn'
 import { viewWallet } from 'services/wallet'
 import { concat, isNil } from 'lodash'
+import Mentorship from './MentorshipListing'
 
 const { TabPane } = Tabs
-const { Column } = Table
 
 const SenseiProfileComponent = () => {
   const history = useHistory()
@@ -43,14 +38,8 @@ const SenseiProfileComponent = () => {
   const isAdminRole = user.role === ADMIN_ROLE_ENUM.ADMIN
 
   const [sensei, setSensei] = useState('')
-  const [mentorshipListings, setMentorshipListings] = useState('')
   const [billingsSent, setBillingsSent] = useState([])
   const [billingsReceived, setBillingsReceived] = useState([])
-
-  const [listingsTabKey, setListingsTabKey] = useState('listings')
-  const changeListingsTab = key => {
-    setListingsTabKey(key)
-  }
 
   const [billingsTabKey, setBillingsTabKey] = useState('received')
   const changeBillingsTab = key => {
@@ -76,14 +65,9 @@ const SenseiProfileComponent = () => {
       getWallet(response.walletId)
     }
   }
-  const getListings = async () => {
-    const response = await jwtAdmin.getMentorMentorshipListings(userId)
-    setMentorshipListings(response)
-  }
 
   useEffect(() => {
     getSensei()
-    getListings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -92,7 +76,6 @@ const SenseiProfileComponent = () => {
     if (response) {
       if (response.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED) {
         getSensei()
-        getListings()
         showNotification('success', SUCCESS, ACCEPT_SENSEI_PROFILE)
       }
     } else {
@@ -105,7 +88,6 @@ const SenseiProfileComponent = () => {
     if (response) {
       if (response.adminVerified === 'REJECTED') {
         getSensei()
-        getListings()
         showNotification('success', SUCCESS, REJECT_SENSEI_PROFILE)
       }
     } else {
@@ -152,33 +134,6 @@ const SenseiProfileComponent = () => {
           )}
         </div>
       </div>
-    )
-  }
-
-  const showMentorshipListings = () => {
-    return (
-      <Table dataSource={mentorshipListings} rowKey="mentorshipListingId">
-        <Column
-          title="Mentorship Listing Id"
-          dataIndex="mentorshipListingId"
-          key="mentorshipListingId"
-        />
-        <Column title="Name" dataIndex="name" key="name" />
-        <Column title="Description" dataIndex="description" key="description" />
-        <Column title="Rating" dataIndex="rating" key="rating" />
-        <Column
-          title="Created At"
-          dataIndex="createdAt"
-          key="createdAt"
-          render={createdAt => formatTime(createdAt)}
-        />
-        <Column
-          title="Updated At"
-          dataIndex="updatedAt"
-          key="updatedAt"
-          render={updatedAt => formatTime(updatedAt)}
-        />
-      </Table>
     )
   }
 
@@ -247,19 +202,7 @@ const SenseiProfileComponent = () => {
       {/* Mentorship Listings of a Sensei */}
       <div className="row mt-4">
         <div className="col-12">
-          <div className="card">
-            <div className="card-header card-header-flex">
-              <div className="d-flex flex-column justify-content-center mr-auto">
-                <h5>Mentorship Listings</h5>
-              </div>
-              <Tabs activeKey={listingsTabKey} className="kit-tabs" onChange={changeListingsTab}>
-                <TabPane tab="Mentorship Listings" key="listings" />
-              </Tabs>
-            </div>
-            <div className="card-body">
-              {listingsTabKey === 'listings' && showMentorshipListings()}
-            </div>
-          </div>
+          <Mentorship id={userId} user={sensei} />
         </div>
       </div>
       {/* Billings of a Sensei - cannot be viewed by admins with just ADMIN role */}
