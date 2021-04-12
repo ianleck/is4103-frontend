@@ -206,7 +206,7 @@ const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
             <div className="col-12 mt-3 h5 font-weight-bold">
               <span>{item.role}</span>
             </div>
-            <div className="col-12">
+            <div className="col-12 description-body">
               <span>{item.description}</span>
             </div>
           </div>

@@ -1,8 +1,9 @@
 import { EyeOutlined } from '@ant-design/icons'
 import { Button, Modal, Skeleton, Table } from 'antd'
 import StatusTag from 'components/Common/StatusTag'
+import MenteeChart from 'components/Sensei/MenteeChart'
 import { formatTime } from 'components/utils'
-import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
+import { CONTRACT_PROGRESS_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import { isNil, isNull, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -24,7 +25,21 @@ const MenteeOverviewPage = () => {
       const response = await getMentees(accountId)
       if (response && !isNil(response.students)) {
         const data = map(response.students, (s, i) => ({ ...s, key: i }))
-        setMentees(data)
+
+        let men = []
+
+        for (let i = 0; i < data.length; i += 1) {
+          for (let j = 0; j < data[i].MentorshipContracts.length; j += 1) {
+            if (
+              data[i].MentorshipContracts[j].senseiApproval ===
+              MENTORSHIP_CONTRACT_APPROVAL.APPROVED
+            ) {
+              men = [...men, data[i]]
+            }
+          }
+        }
+
+        setMentees(men)
       }
       setIsLoading(false)
     }
@@ -122,6 +137,9 @@ const MenteeOverviewPage = () => {
         </div>
         <div className="card-body">{showMentees(mentees, tableColumns)}</div>
       </div>
+
+      <MenteeChart accountId={accountId} />
+
       <Modal
         visible={showMentorshipContractModal}
         title="View Mentorship Contract(s)"
