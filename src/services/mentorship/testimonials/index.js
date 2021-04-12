@@ -41,3 +41,16 @@ export async function getTestimonialByFilter(payload) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getSenseiTestimonials(accountId) {
+  const url = `/mentorship/testimonial/list/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
