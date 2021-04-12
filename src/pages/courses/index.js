@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { isNil } from 'lodash'
+import { useParams } from 'react-router-dom'
+import { isNil, size } from 'lodash'
 import { Helmet } from 'react-helmet'
 import { getCourses } from 'services/courses'
 import CourseListingsByCategory from 'components/Course/CourseListingsByCategory'
@@ -9,6 +10,7 @@ import { DEFAULT_TIMEOUT } from 'constants/constants'
 const BrowseCoursesPage = () => {
   const [courses, setCourses] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const { categoryId } = useParams()
 
   const setLoadingIndicator = loading => {
     if (loading) setIsLoading(true)
@@ -24,11 +26,20 @@ const BrowseCoursesPage = () => {
       setLoadingIndicator(true)
       const result = await getCourses()
       if (result && !isNil(result.courses)) {
-        setCourses(result.courses)
+        if (!isNil(categoryId)) {
+          setCourses(
+            result.courses.filter(
+              course => size(course.Categories.filter(cat => cat.categoryId === categoryId)) > 0,
+            ),
+          )
+        } else {
+          setCourses(result.courses)
+        }
       }
       setLoadingIndicator(false)
     }
     getCoursesEffect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
