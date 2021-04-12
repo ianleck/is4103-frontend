@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Avatar, Divider, Rate, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { isNil, random } from 'lodash'
+import { isNil } from 'lodash'
 import { getUserFullName } from 'components/utils'
 
 const CourseListingCard = data => {
@@ -52,7 +52,6 @@ const CourseListingCard = data => {
                 <div className="col-12">
                   <span>
                     <Rate disabled defaultValue={course.rating} />
-                    <small>&nbsp;&nbsp;{random(1, 15000)}</small>
                   </span>
                 </div>
               </div>
