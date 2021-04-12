@@ -40,6 +40,9 @@ const MentorshipSubscriptionView = () => {
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <BackBtn />
           </div>
+          <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+            <BackBtn />
+          </div>
         </div>
         <div className="row mt-4">
           <div className="col-12 col-md-2 d-flex align-items-center justify-content-center">
