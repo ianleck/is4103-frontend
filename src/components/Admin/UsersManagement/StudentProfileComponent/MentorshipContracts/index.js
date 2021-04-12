@@ -8,6 +8,7 @@ import {
   MENTORSHIP_CONTRACT_APPROVAL_ENUM_FILTER,
 } from 'constants/filters'
 import { isNil } from 'lodash'
+import Paragraph from 'antd/lib/typography/Paragraph'
 import StatusTag from 'components/Common/StatusTag'
 import ApplicationsWidget from '../../../Mentorship/ApplicationsWidget'
 import ContractsWidget from '../../../Mentorship/ContractsWidget'
@@ -105,6 +106,11 @@ const MentorshipContracts = ({ id }) => {
       dataIndex: ['statement'],
       sorter: (a, b) => a.MentorshipListing.statement.length - b.MentorshipListing.statement.length,
       responsive: ['sm'],
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
       title: 'Progress',
@@ -189,6 +195,11 @@ const MentorshipContracts = ({ id }) => {
       sorter: (a, b) =>
         a.MentorshipListing.description.length - b.MentorshipListing.description.length,
       responsive: ['sm'],
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
       title: 'Mentorship Pass Count',
@@ -280,7 +291,9 @@ const MentorshipContracts = ({ id }) => {
               {applicationDetails.mentorshipContractId}
             </Descriptions.Item>
             <Descriptions.Item label="Mentorship Application Statement">
-              {applicationDetails.statement}
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {applicationDetails.statement}
+              </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Listing ID">
               {applicationDetails.mentorshipListingId}
@@ -289,7 +302,9 @@ const MentorshipContracts = ({ id }) => {
               {applicationDetails ? applicationDetails.MentorshipListing.name : '-'}
             </Descriptions.Item>
             <Descriptions.Item label="Description">
-              {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
+              </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Pass price">
               {applicationDetails ? applicationDetails.MentorshipListing.priceAmount : '-'}
@@ -341,7 +356,9 @@ const MentorshipContracts = ({ id }) => {
               {contractDetails ? contractDetails.MentorshipListing.name : '-'}
             </Descriptions.Item>
             <Descriptions.Item label="Description">
-              {contractDetails ? contractDetails.MentorshipListing.description : '-'}
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {contractDetails ? contractDetails.MentorshipListing.description : '-'}
+              </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Sensei">
               {contractDetails.Sensei

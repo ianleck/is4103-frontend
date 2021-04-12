@@ -12,6 +12,7 @@ import {
 } from 'constants/filters'
 import StatusTag from 'components/Common/StatusTag'
 import { compact, isEmpty, map } from 'lodash'
+import Paragraph from 'antd/lib/typography/Paragraph'
 import ListingsWidget from '../../../Mentorship/ListingsWidget'
 import ApplicationsWidget from '../../../Mentorship/ApplicationsWidget'
 import ContractsWidget from '../../../Mentorship/ContractsWidget'
@@ -148,6 +149,11 @@ const Mentorship = ({ id, user }) => {
       responsive: ['lg'],
       sorter: (a, b) => a.description.length - b.description.length,
       sortDirections: ['ascend', 'descend'],
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
       title: 'Categories',
@@ -407,7 +413,11 @@ const Mentorship = ({ id, user }) => {
               {listingDetails.mentorshipListingId}
             </Descriptions.Item>
             <Descriptions.Item label="Name">{listingDetails.name}</Descriptions.Item>
-            <Descriptions.Item label="Description">{listingDetails.description}</Descriptions.Item>
+            <Descriptions.Item label="Description">
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {listingDetails.description}
+              </Paragraph>
+            </Descriptions.Item>
             <Descriptions.Item label="Sensei">
               {`${sensei.firstName} ${sensei.lastName}`}
             </Descriptions.Item>
@@ -451,7 +461,9 @@ const Mentorship = ({ id, user }) => {
               {applicationDetails.mentorshipContractId}
             </Descriptions.Item>
             <Descriptions.Item label="Mentorship Application Statement">
-              {applicationDetails.statement}
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {applicationDetails.statement}
+              </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Listing ID">
               {applicationDetails.mentorshipListingId}
@@ -460,7 +472,9 @@ const Mentorship = ({ id, user }) => {
               {applicationDetails ? applicationDetails.MentorshipListing.name : '-'}
             </Descriptions.Item>
             <Descriptions.Item label="Description">
-              {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
+              </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Pass price">
               {applicationDetails ? applicationDetails.MentorshipListing.priceAmount : '-'}
@@ -512,7 +526,9 @@ const Mentorship = ({ id, user }) => {
               {contractDetails ? contractDetails.MentorshipListing.name : '-'}
             </Descriptions.Item>
             <Descriptions.Item label="Description">
-              {contractDetails ? contractDetails.MentorshipListing.description : '-'}
+              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
+                {contractDetails ? contractDetails.MentorshipListing.description : '-'}
+              </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Sensei">
               {contractDetails.Sensei
