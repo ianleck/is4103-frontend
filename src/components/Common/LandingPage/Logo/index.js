@@ -61,7 +61,7 @@ const Logo = () => {
             <h3 className="pl-5">Mentorship and Learning Platform</h3>
           </div>
         </QueueAnim>
-        <div className="img-wrapper mr-4" key="image">
+        <div className="img-wrapper" key="image">
           <ScrollParallax
             location="landinglogo"
             component={LandingLogoImage}
