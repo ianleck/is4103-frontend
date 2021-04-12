@@ -2,8 +2,8 @@ import React from 'react'
 import TweenOne from 'rc-tween-one'
 import QueueAnim from 'rc-queue-anim'
 import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax'
-import LandingLogoImage from 'components/Common/LandingPage/Templates/LandingLogoImage'
-import FeaturedMentors from '../FeaturedMentors'
+import LandingLogoImage from 'components/Common/LandingPage/Logo/LandingLogoImage'
+import FeaturedMentors from 'components/Common/LandingPage/FeaturedMentors'
 
 const Logo = () => {
   const loop = {
