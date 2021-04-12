@@ -96,21 +96,8 @@ export async function viewBilling(body) {
     .catch(err => console.log(err))
 }
 
-export async function requestCourseRefund(courseContractId) {
-  const url = `/wallet/refund?contractId=${courseContractId}&contractType=COURSE`
-  return apiClient
-    .post(url, { withCredentials: true })
-    .then(response => {
-      if (response && !isNil(response.data)) {
-        return response.data
-      }
-      return false
-    })
-    .catch(err => console.log(err))
-}
-
-export async function requestMentorshipRefund(mentorshipContractId) {
-  const url = `/wallet/refund?contractId=${mentorshipContractId}&contractType=MENTORSHIP`
+export async function requestRefund(contractId, productType) {
+  const url = `/wallet/refund?contractId=${contractId}&contractType=${productType}`
   return apiClient
     .post(url, { withCredentials: true })
     .then(response => {

@@ -4,13 +4,14 @@ import Avatar from 'antd/lib/avatar/avatar'
 import BackBtn from 'components/Common/BackBtn'
 import TaskComponent from 'components/Mentorship/Subscription/Task'
 import { showNotification } from 'components/utils'
+import { REFUND_TYPES } from 'constants/constants'
 import { MENTORSHIP_REFUND_REQUESTED, SUCCESS } from 'constants/notifications'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
 import { getSubscription } from 'services/mentorship/subscription'
-import { requestMentorshipRefund } from 'services/wallet'
+import { requestRefund } from 'services/wallet'
 
 const MentorshipSubscriptionView = () => {
   const { id } = useParams()
@@ -55,7 +56,7 @@ const MentorshipSubscriptionView = () => {
   }
 
   const onRequestRefund = async values => {
-    const response = await requestMentorshipRefund(values.mentorshipContractId)
+    const response = await requestRefund(values.mentorshipContractId, REFUND_TYPES.MENTORSHIP)
 
     if (response) {
       showNotification('success', SUCCESS, MENTORSHIP_REFUND_REQUESTED)

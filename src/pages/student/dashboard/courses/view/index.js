@@ -22,8 +22,8 @@ import {
 } from 'constants/notifications'
 import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
-import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
-import { requestCourseRefund } from 'services/wallet'
+import { FRONTEND_API, REFUND_TYPES, USER_TYPE_ENUM } from 'constants/constants'
+import { requestRefund } from 'services/wallet'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -123,7 +123,7 @@ const StudentCourseDetails = () => {
         }
       }
 
-      const response2 = await requestCourseRefund(cID)
+      const response2 = await requestRefund(cID, REFUND_TYPES.COURSE)
 
       if (response2) {
         showNotification('success', SUCCESS, COURSE_REFUND_REQUESTED)
