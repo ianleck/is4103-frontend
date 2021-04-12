@@ -121,5 +121,5 @@ export const TESTIMONIAL_ADD_ERR = 'There was an error creating your testimonial
 export const TESTIMONIAL_EDIT_SUCCESS = 'Your testimonial was successfully edited.'
 export const TESTIMONIAL_EDIT_ERR = 'There was an error editing your testimonial.'
 
-export const COURSE_REFUND_REQUESTED = 'Refund for your course have submitted.'
-export const MENTORSHIP_REFUND_REQUESTED = 'Refund for your mentorship passes have submitted.'
+export const COURSE_REFUND_REQUESTED = 'Refund for your course has been submitted.'
+export const MENTORSHIP_REFUND_REQUESTED = 'Refund for your mentorship passes have been submitted.'

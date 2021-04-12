@@ -113,7 +113,7 @@ const StudentCourseDetails = () => {
 
   const onRequestRefund = async values => {
     const response = await getPurchasedCourses(user.accountId)
-    if (response) {
+    if (!isNil(response.courses)) {
       const purchased = response.courses
       let cID = ''
 
@@ -188,7 +188,7 @@ const StudentCourseDetails = () => {
                 }}
                 icon={<DollarCircleOutlined />}
               >
-                Request course refund
+                Request Course Refund
               </Button>
             )}
             <ShareBtn
