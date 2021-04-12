@@ -1,6 +1,7 @@
 import { EyeOutlined } from '@ant-design/icons'
 import { Button, Modal, Skeleton, Table } from 'antd'
 import StatusTag from 'components/Common/StatusTag'
+import MenteeChart from 'components/Sensei/MenteeChart'
 import { formatTime } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { isNil, map, size } from 'lodash'
@@ -122,6 +123,9 @@ const MenteeOverviewPage = () => {
         </div>
         <div className="card-body">{showMentees(mentees, tableColumns)}</div>
       </div>
+
+      <MenteeChart accountId={accountId} />
+
       <Modal
         visible={showMentorshipContractModal}
         title="View Mentorship Contract(s)"
