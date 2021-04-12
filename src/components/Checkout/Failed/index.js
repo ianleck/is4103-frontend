@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { HomeOutlined, LoadingOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import { size } from 'lodash'
-import ProductCard from 'components/Cart/ProductCard'
+import ProductCard from 'components/Common/ProductCard'
 import { Button } from 'antd'
 
 const Failed = () => {

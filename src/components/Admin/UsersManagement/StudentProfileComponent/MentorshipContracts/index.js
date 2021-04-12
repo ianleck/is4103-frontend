@@ -1,35 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import * as jwtAdmin from 'services/admin'
-import { getMentorshipListing } from 'services/mentorship/listings'
-import { Tabs, Table, Space, Button, Tag, Modal, Descriptions } from 'antd'
+import { Tabs, Table, Space, Button, Modal, Descriptions } from 'antd'
 import { formatTime } from 'components/utils'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import {
   CONTRACT_PROGRESS_ENUM_FILTER,
   MENTORSHIP_CONTRACT_APPROVAL_ENUM_FILTER,
-  VISIBILITY_ENUM_FILTER,
 } from 'constants/filters'
-import StatusTag from 'components/Common/StatusTag'
+import { isNil } from 'lodash'
 import Paragraph from 'antd/lib/typography/Paragraph'
-import { compact, isEmpty, map } from 'lodash'
-import ListingsWidget from './ListingsWidget'
-import ApplicationsWidget from './ApplicationsWidget'
-import ContractsWidget from './ContractsWidget'
+import StatusTag from 'components/Common/StatusTag'
+import ApplicationsWidget from '../../../Mentorship/ApplicationsWidget'
+import ContractsWidget from '../../../Mentorship/ContractsWidget'
 
 const { TabPane } = Tabs
 
-const Mentorship = () => {
-  const [tabKey, setTabKey] = useState('Listings')
-  const categories = useSelector(state => state.categories)
-  const categoryFilters = map(categories, cat => ({ value: cat.categoryId, text: cat.name }))
+const MentorshipContracts = ({ id }) => {
+  const userId = id
+  const [tabKey, setTabKey] = useState('Applications')
 
-  const [listings, setListings] = useState()
-  const [applications, setApplications] = useState()
-  const [contracts, setContracts] = useState()
-
-  const [showListingDetails, setShowListingDetails] = useState(false)
-  const [listingDetails, setListingDetails] = useState(false)
+  const [applications, setApplications] = useState([])
+  const [contracts, setContracts] = useState([])
 
   const [showApplicationDetails, setShowApplicationDetails] = useState(false)
   const [applicationDetails, setApplicationDetails] = useState(false)
@@ -38,9 +29,9 @@ const Mentorship = () => {
   const [contractDetails, setContractDetails] = useState(false)
 
   useEffect(() => {
-    populateListings()
     populateApplications()
     populateContracts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const changeTab = key => {
@@ -48,14 +39,8 @@ const Mentorship = () => {
   }
 
   const onCloseDetails = () => {
-    setShowListingDetails(false)
     setShowApplicationDetails(false)
     setShowContractDetails(false)
-  }
-
-  const selectListing = record => {
-    setShowListingDetails(true)
-    setListingDetails(record)
   }
 
   const selectApplication = record => {
@@ -68,21 +53,10 @@ const Mentorship = () => {
     setContractDetails(record)
   }
 
-  const populateListings = async () => {
-    const response = await jwtAdmin.getAllMentorshipListings()
-    setListings(response)
-  }
-
   const populateApplications = async () => {
-    const response = await jwtAdmin.getAllMentorshipContracts()
+    const response = await jwtAdmin.getStudentMentorshipContracts(userId)
 
     response.forEach(async item => {
-      const Student = await jwtAdmin.getStudent(item.accountId)
-      item.Student = Student
-
-      const MentorshipListing = await getMentorshipListing(item.mentorshipListingId)
-      item.MentorshipListing = MentorshipListing.mentorshipListing
-
       const Sensei = await jwtAdmin.getSensei(item.MentorshipListing.accountId)
       item.Sensei = Sensei
     })
@@ -91,7 +65,7 @@ const Mentorship = () => {
   }
 
   const populateContracts = async () => {
-    const response = await jwtAdmin.getAllMentorshipContracts()
+    const response = await jwtAdmin.getStudentMentorshipContracts(userId)
 
     let con = []
 
@@ -102,117 +76,11 @@ const Mentorship = () => {
     }
 
     con.forEach(async item => {
-      const Student = await jwtAdmin.getStudent(item.accountId)
-      item.Student = Student
-
-      const MentorshipListing = await getMentorshipListing(item.mentorshipListingId)
-      item.MentorshipListing = MentorshipListing.mentorshipListing
-
       const Sensei = await jwtAdmin.getSensei(item.MentorshipListing.accountId)
       item.Sensei = Sensei
     })
 
     setContracts(con)
-  }
-
-  const formatName = record => {
-    const name = `${record.firstName} ${record.lastName}`
-    return name
-  }
-
-  const listingColumns = [
-    {
-      title: 'Created At',
-      key: 'createdAt',
-      dataIndex: 'createdAt',
-      width: '15%',
-      responsive: ['lg'],
-      render: record => formatTime(record),
-      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      sortDirections: ['ascend', 'descend'],
-    },
-    {
-      title: 'Mentorship Listing Name',
-      dataIndex: ['name'],
-      key: ['name'],
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ['ascend', 'descend'],
-    },
-    {
-      title: 'Description',
-      dataIndex: ['description'],
-      key: ['description'],
-      responsive: ['lg'],
-      width: '15%',
-      render: record => {
-        return (
-          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
-        )
-      },
-    },
-    {
-      title: 'Sensei',
-      dataIndex: ['Sensei'],
-      key: ['Sensei'],
-      responsive: ['md'],
-      render: record => formatName(record),
-      width: '15%',
-    },
-    {
-      title: 'Categories',
-      key: 'Categories',
-      dataIndex: 'Categories',
-      responsive: ['sm'],
-      render: recordCategories => (
-        <>
-          {recordCategories.map(category => {
-            const { name, categoryId } = category
-            return (
-              <Tag color="geekblue" key={categoryId}>
-                {name}
-              </Tag>
-            )
-          })}
-        </>
-      ),
-      filters: categoryFilters,
-      onFilter: (value, record) => {
-        return !isEmpty(compact(record.Categories.map(c => c.categoryId.indexOf(value) === 0)))
-      },
-    },
-    {
-      title: 'Visibility',
-      dataIndex: ['visibility'],
-      key: ['visibility'],
-      responsive: ['lg'],
-      width: '10%',
-      filters: VISIBILITY_ENUM_FILTER,
-      onFilter: (value, record) => record.visibility.indexOf(value) === 0,
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: record => (
-        <Space size="large">
-          <Button
-            disabled={record.isResolved}
-            type="primary"
-            shape="circle"
-            size="large"
-            onClick={() => selectListing(record)}
-            icon={<InfoCircleOutlined />}
-          />
-        </Space>
-      ),
-    },
-  ]
-
-  const showListingWidget = () => {
-    return <ListingsWidget />
-  }
-
-  const showListings = () => {
-    return <Table dataSource={listings} columns={listingColumns} rowKey="mentorshipListingId" />
   }
 
   const applicationsColumns = [
@@ -231,21 +99,18 @@ const Mentorship = () => {
       key: ['MentorshipListing', 'name'],
       dataIndex: ['MentorshipListing', 'name'],
       sorter: (a, b) => a.MentorshipListing.name.length - b.MentorshipListing.name.length,
-      width: '15%',
+    },
+    {
+      title: 'Mentorship Application Statement',
+      key: ['statement'],
+      dataIndex: ['statement'],
+      sorter: (a, b) => a.MentorshipListing.statement.length - b.MentorshipListing.statement.length,
       responsive: ['sm'],
-    },
-    {
-      title: 'Sensei',
-      key: ['Sensei'],
-      dataIndex: ['Sensei'],
-      responsive: ['md'],
-      render: record => formatName(record),
-    },
-    {
-      title: 'Student',
-      key: ['Student'],
-      dataIndex: ['Student'],
-      render: record => formatName(record),
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
       title: 'Progress',
@@ -298,6 +163,13 @@ const Mentorship = () => {
     )
   }
 
+  const formatPass = record => {
+    if (isNil(record)) {
+      return 0
+    }
+    return record
+  }
+
   const contractsColumns = [
     {
       title: 'Created At',
@@ -315,27 +187,33 @@ const Mentorship = () => {
       dataIndex: ['MentorshipListing', 'name'],
       sorter: (a, b) => a.MentorshipListing.name.length - b.MentorshipListing.name.length,
       width: '15%',
+    },
+    {
+      title: 'Mentorship Listing Description',
+      key: ['MentorshipListing', 'description'],
+      dataIndex: ['MentorshipListing', 'description'],
+      sorter: (a, b) =>
+        a.MentorshipListing.description.length - b.MentorshipListing.description.length,
       responsive: ['sm'],
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
-      title: 'Sensei',
-      key: ['Sensei'],
-      dataIndex: ['Sensei'],
+      title: 'Mentorship Pass Count',
+      key: ['mentorshipPassCount'],
+      dataIndex: ['mentorshipPassCount'],
+      width: '15%',
+      render: record => formatPass(record),
       responsive: ['md'],
-      render: record => formatName(record),
-    },
-    {
-      title: 'Student',
-      key: ['Student'],
-      dataIndex: ['Student'],
-      render: record => formatName(record),
     },
     {
       title: 'Progress',
       key: 'progress',
       dataIndex: 'progress',
       width: '15%',
-      responsive: ['lg'],
       render: record => <StatusTag data={record} type="CONTRACT_PROGRESS_ENUM" />,
       filters: CONTRACT_PROGRESS_ENUM_FILTER,
       onFilter: (value, record) => record.progress.indexOf(value) === 0,
@@ -382,74 +260,21 @@ const Mentorship = () => {
           <h5>Mentorship</h5>
         </div>
         <Tabs activeKey={tabKey} className="kit-tabs" onChange={changeTab}>
-          <TabPane tab="Listings" key="Listings" />
           <TabPane tab="Applications" key="Applications" />
           <TabPane tab="Contracts" key="Contracts" />
         </Tabs>
       </div>
 
       <div className="card-body">
-        {tabKey === 'Listings' && showListingWidget()}
         {tabKey === 'Applications' && showApplicationWidget()}
         {tabKey === 'Contracts' && showContractWidget()}
 
         <div className="row">
           <div className="col-12 overflow-x-scroll">
-            {tabKey === 'Listings' && showListings()}
             {tabKey === 'Applications' && showApplications()}
             {tabKey === 'Contracts' && showContracts()}
           </div>
         </div>
-      </div>
-
-      <div className="col-xl-4 col-lg-12">
-        <Modal
-          title="Mentorship Listing Details"
-          visible={showListingDetails}
-          cancelText="Close"
-          centered
-          okButtonProps={{ style: { display: 'none' } }}
-          onCancel={() => onCloseDetails()}
-        >
-          <Descriptions column={1}>
-            <Descriptions.Item label="Listing ID">
-              {listingDetails.mentorshipListingId}
-            </Descriptions.Item>
-            <Descriptions.Item label="Name">{listingDetails.name}</Descriptions.Item>
-            <Descriptions.Item label="Description">
-              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
-                {listingDetails.description}
-              </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="Sensei">
-              {listingDetails.Sensei
-                ? `${listingDetails.Sensei.firstName} ${listingDetails.Sensei.lastName}`
-                : null}
-            </Descriptions.Item>
-            <Descriptions.Item label="Pass price">{listingDetails.priceAmount}</Descriptions.Item>
-            <Descriptions.Item label="Categories">
-              {listingDetails
-                ? listingDetails.Categories.map(category => {
-                    const { name, categoryId } = category
-                    return (
-                      <Tag color="geekblue" key={categoryId}>
-                        {name}
-                      </Tag>
-                    )
-                  })
-                : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date Created">
-              {listingDetails.createdAt ? formatTime(listingDetails.createdAt) : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date Published">
-              {listingDetails.publishedAt ? formatTime(listingDetails.publishedAt) : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Visibility">
-              {listingDetails.visibility ? listingDetails.visibility : '-'}
-            </Descriptions.Item>
-          </Descriptions>
-        </Modal>
       </div>
 
       <div className="col-xl-4 col-lg-12">
@@ -480,11 +305,6 @@ const Mentorship = () => {
               <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
                 {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
               </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="Sensei">
-              {applicationDetails.Sensei
-                ? `${applicationDetails.Sensei.firstName} ${applicationDetails.Sensei.lastName}`
-                : null}
             </Descriptions.Item>
             <Descriptions.Item label="Pass price">
               {applicationDetails ? applicationDetails.MentorshipListing.priceAmount : '-'}
@@ -578,4 +398,4 @@ const Mentorship = () => {
   )
 }
 
-export default Mentorship
+export default MentorshipContracts

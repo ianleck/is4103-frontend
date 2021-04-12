@@ -11,22 +11,25 @@ import {
   VISIBILITY_ENUM_FILTER,
 } from 'constants/filters'
 import StatusTag from 'components/Common/StatusTag'
-import Paragraph from 'antd/lib/typography/Paragraph'
 import { compact, isEmpty, map } from 'lodash'
-import ListingsWidget from './ListingsWidget'
-import ApplicationsWidget from './ApplicationsWidget'
-import ContractsWidget from './ContractsWidget'
+import Paragraph from 'antd/lib/typography/Paragraph'
+import ListingsWidget from '../../../Mentorship/ListingsWidget'
+import ApplicationsWidget from '../../../Mentorship/ApplicationsWidget'
+import ContractsWidget from '../../../Mentorship/ContractsWidget'
 
 const { TabPane } = Tabs
 
-const Mentorship = () => {
+const Mentorship = ({ id, user }) => {
+  const userId = id
+  const sensei = user
+
   const [tabKey, setTabKey] = useState('Listings')
   const categories = useSelector(state => state.categories)
   const categoryFilters = map(categories, cat => ({ value: cat.categoryId, text: cat.name }))
 
-  const [listings, setListings] = useState()
-  const [applications, setApplications] = useState()
-  const [contracts, setContracts] = useState()
+  const [listings, setListings] = useState([])
+  const [applications, setApplications] = useState([])
+  const [contracts, setContracts] = useState([])
 
   const [showListingDetails, setShowListingDetails] = useState(false)
   const [listingDetails, setListingDetails] = useState(false)
@@ -41,6 +44,7 @@ const Mentorship = () => {
     populateListings()
     populateApplications()
     populateContracts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const changeTab = key => {
@@ -69,12 +73,12 @@ const Mentorship = () => {
   }
 
   const populateListings = async () => {
-    const response = await jwtAdmin.getAllMentorshipListings()
+    const response = await jwtAdmin.getMentorMentorshipListings(userId)
     setListings(response)
   }
 
   const populateApplications = async () => {
-    const response = await jwtAdmin.getAllMentorshipContracts()
+    const response = await jwtAdmin.getSenseiMentorshipContracts(userId)
 
     response.forEach(async item => {
       const Student = await jwtAdmin.getStudent(item.accountId)
@@ -91,7 +95,7 @@ const Mentorship = () => {
   }
 
   const populateContracts = async () => {
-    const response = await jwtAdmin.getAllMentorshipContracts()
+    const response = await jwtAdmin.getSenseiMentorshipContracts(userId)
 
     let con = []
 
@@ -126,7 +130,7 @@ const Mentorship = () => {
       key: 'createdAt',
       dataIndex: 'createdAt',
       width: '15%',
-      responsive: ['lg'],
+      responsive: ['sm'],
       render: record => formatTime(record),
       sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       sortDirections: ['ascend', 'descend'],
@@ -143,7 +147,8 @@ const Mentorship = () => {
       dataIndex: ['description'],
       key: ['description'],
       responsive: ['lg'],
-      width: '15%',
+      sorter: (a, b) => a.description.length - b.description.length,
+      sortDirections: ['ascend', 'descend'],
       render: record => {
         return (
           <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
@@ -151,18 +156,10 @@ const Mentorship = () => {
       },
     },
     {
-      title: 'Sensei',
-      dataIndex: ['Sensei'],
-      key: ['Sensei'],
-      responsive: ['md'],
-      render: record => formatName(record),
-      width: '15%',
-    },
-    {
       title: 'Categories',
       key: 'Categories',
       dataIndex: 'Categories',
-      responsive: ['sm'],
+      width: '15%',
       render: recordCategories => (
         <>
           {recordCategories.map(category => {
@@ -208,7 +205,7 @@ const Mentorship = () => {
   ]
 
   const showListingWidget = () => {
-    return <ListingsWidget />
+    return <ListingsWidget userId={userId} />
   }
 
   const showListings = () => {
@@ -422,9 +419,7 @@ const Mentorship = () => {
               </Paragraph>
             </Descriptions.Item>
             <Descriptions.Item label="Sensei">
-              {listingDetails.Sensei
-                ? `${listingDetails.Sensei.firstName} ${listingDetails.Sensei.lastName}`
-                : null}
+              {`${sensei.firstName} ${sensei.lastName}`}
             </Descriptions.Item>
             <Descriptions.Item label="Pass price">{listingDetails.priceAmount}</Descriptions.Item>
             <Descriptions.Item label="Categories">
@@ -480,11 +475,6 @@ const Mentorship = () => {
               <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
                 {applicationDetails ? applicationDetails.MentorshipListing.description : '-'}
               </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="Sensei">
-              {applicationDetails.Sensei
-                ? `${applicationDetails.Sensei.firstName} ${applicationDetails.Sensei.lastName}`
-                : null}
             </Descriptions.Item>
             <Descriptions.Item label="Pass price">
               {applicationDetails ? applicationDetails.MentorshipListing.priceAmount : '-'}

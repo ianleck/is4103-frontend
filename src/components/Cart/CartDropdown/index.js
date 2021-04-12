@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Dropdown, Button } from 'antd'
 import { map, size } from 'lodash'
+import ProductCard from 'components/Common/ProductCard'
 import styles from './style.module.scss'
-import ProductCard from '../ProductCard'
 
 const Cart = () => {
   const history = useHistory()

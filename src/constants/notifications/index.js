@@ -115,3 +115,6 @@ export const REVIEW_ADD_SUCCESS = 'Your review was successfully created.'
 export const REVIEW_ADD_ERR = 'There was an error creating your review.'
 export const REVIEW_EDIT_SUCCESS = 'Your review was successfully updated.'
 export const REVIEW_EDIT_ERR = 'There was an error editing your review.'
+
+export const TESTIMONIAL_ADD_SUCCESS = 'Your testimonial was successfully created.'
+export const TESTIMONIAL_ADD_ERR = 'There was an error creating your testimonial.'
