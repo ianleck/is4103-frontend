@@ -9,14 +9,14 @@
 }
 
 html {
-  font-size: 15px;
+  font-size: 16px;
   @media (max-width: $sm-max-width) {
     font-size: 14px;
   }
 }
 
 body {
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.5;
   font-family: $base-font-family;
   color: $text;
