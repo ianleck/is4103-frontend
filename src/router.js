@@ -327,7 +327,7 @@ const routes = [
     exact: true,
   },
   {
-    path: '/sensei/testimonial/:mentorshipListingId/:accountId',
+    path: '/sensei/testimonial/:mentorshipContractId/:accountId',
     Component: lazy(() => import('pages/sensei/testimonials/create')),
     exact: true,
   },
