@@ -29,7 +29,6 @@ const ApplyListingForm = () => {
   const getListing = async () => {
     const response = await getMentorshipListing(id)
     if (response && !isNil(response.mentorshipListing)) {
-      console.log(response)
       setListing(response.mentorshipListing)
     }
     if (!isNil(response.existingContract && !isEmpty(response.existingContract))) {
