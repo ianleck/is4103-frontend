@@ -10,11 +10,11 @@ const RefundRequestsWidget = data => {
   const [rejected, setRejected] = useState(0)
 
   useEffect(() => {
-    processApplications()
+    processRequests()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refundRequests])
 
-  const processApplications = () => {
+  const processRequests = () => {
     let pendingCounter = 0
     let approvedCounter = 0
     let rejectedCounter = 0
