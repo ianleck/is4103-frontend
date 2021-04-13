@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import PaginationWrapper from 'components/Common/Pagination'
 import CourseListingCard from 'components/Course/CourseListingCard'
 import { initPageItems } from 'components/utils'
+import { Empty } from 'antd'
 
 const BrowseCoursesPage = () => {
   const [courses, setCourses] = useState([])
@@ -34,22 +35,28 @@ const BrowseCoursesPage = () => {
     const result = await getCourses()
     if (result && !isNil(result.courses)) {
       if (!isNil(categoryId)) {
-        setCourses(
-          filter(
-            result.courses,
-            course => size(course.Categories.filter(cat => cat.categoryId === categoryId)) > 0,
-          ),
+        const filteredResults = filter(
+          result.courses,
+          course => size(filter(course.Categories, cat => cat.categoryId === categoryId)) > 0,
+        )
+        setCourses(filteredResults)
+        initPageItems(
+          setIsLoading,
+          filteredResults,
+          setPaginatedCourses,
+          setCurrentPageIdx,
+          setShowLoadMore,
         )
       } else {
         setCourses(result.courses)
+        initPageItems(
+          setIsLoading,
+          result.courses,
+          setPaginatedCourses,
+          setCurrentPageIdx,
+          setShowLoadMore,
+        )
       }
-      initPageItems(
-        setIsLoading,
-        result.courses,
-        setPaginatedCourses,
-        setCurrentPageIdx,
-        setShowLoadMore,
-      )
     }
     setLoadingIndicator(false)
   }
@@ -95,6 +102,9 @@ const BrowseCoursesPage = () => {
           })
         }
       />
+      <div className="row">
+        <div className="col-12">{size(courses) === 0 && <Empty />}</div>
+      </div>
     </div>
   )
 }

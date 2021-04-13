@@ -25,22 +25,28 @@ const MentorshipListingList = () => {
     const response = await getMentorshipListings()
     if (response && !isNil(response.mentorshipListings)) {
       if (!isNil(categoryId)) {
-        setListings(
-          filter(
-            response.mentorshipListings,
-            listing => size(listing.Categories.filter(cat => cat.categoryId === categoryId)) > 0,
-          ),
+        const filteredResults = filter(
+          response.mentorshipListings,
+          listing => size(filter(listing.Categories, cat => cat.categoryId === categoryId)) > 0,
+        )
+        setListings(filteredResults)
+        initPageItems(
+          setIsLoading,
+          filteredResults,
+          setPaginatedListings,
+          setCurrentPageIdx,
+          setShowLoadMore,
         )
       } else {
         setListings(response.mentorshipListings)
+        initPageItems(
+          setIsLoading,
+          response.mentorshipListings,
+          setPaginatedListings,
+          setCurrentPageIdx,
+          setShowLoadMore,
+        )
       }
-      initPageItems(
-        setIsLoading,
-        response.mentorshipListings,
-        setPaginatedListings,
-        setCurrentPageIdx,
-        setShowLoadMore,
-      )
     }
     setTimeout(() => {
       setIsLoading(false)
