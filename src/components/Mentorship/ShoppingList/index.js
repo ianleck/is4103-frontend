@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { Empty } from 'antd'
+import { filter, isNil, size } from 'lodash'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getMentorshipListings } from 'services/mentorship/listings'
 import ShoppingListCard from 'components/Mentorship/ShoppingListCard'
-import { filter, isNil, size } from 'lodash'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 import BackBtn from 'components/Common/BackBtn'
-import { useSelector } from 'react-redux'
 
 const MentorshipListingList = () => {
   const [listings, setListings] = useState([])
@@ -60,12 +61,17 @@ const MentorshipListingList = () => {
         </div>
       )}
       <div className="row">
-        {listings &&
+        {size(listings) > 0 &&
           listings.map(l => {
             return (
               <ShoppingListCard listing={l} key={l.mentorshipListingId} isLoading={isLoading} />
             )
           })}
+        {size(listings) === 0 && (
+          <div className="col-12">
+            <Empty />
+          </div>
+        )}
       </div>
     </div>
   )
