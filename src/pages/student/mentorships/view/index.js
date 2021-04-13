@@ -1,17 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory, useParams } from 'react-router-dom'
-import MentorshipProfilePicture from 'components/Mentorship/ListingDetails/MentorshipProfilePicture'
-import MentorshipExperienceCard from 'components/Mentorship/ListingDetails/MentorshipExperienceCard'
-import MentorshipDescriptionCard from 'components/Mentorship/ListingDetails/MentorshipDescriptionCard'
-import MentorshipProfileHeader from 'components/Mentorship/ListingDetails/MentorshipProfileHeader'
-import MentorshipPricingCard from 'components/Mentorship/ListingDetails/MentorshipPricingCard'
 import { getMentorshipListing } from 'services/mentorship/listings'
 import { filter, isEmpty, isNil } from 'lodash'
 import { useSelector } from 'react-redux'
-import { Avatar, Button, PageHeader, Rate, Skeleton } from 'antd'
-import { CheckSquareOutlined, EditOutlined } from '@ant-design/icons'
+import { Button, Rate, Skeleton } from 'antd'
+import { EditOutlined } from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import {
   ERROR,
@@ -22,7 +16,7 @@ import {
   SUCCESS,
 } from 'constants/notifications'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
-import { formatTime, getUserFirstName, getUserFullName, showNotification } from 'components/utils'
+import { formatTime, getUserFirstName, showNotification } from 'components/utils'
 import { DEFAULT_TIMEOUT, FRONTEND_API, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import BackBtn from 'components/Common/BackBtn'
 import ShareBtn from 'components/Common/Social/ShareBtn'
@@ -35,6 +29,7 @@ import OccupationCard from 'components/Profile/OccupationCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
+import MentorshipHeader from 'components/Mentorship/MentorshipHeader'
 
 const ViewListing = () => {
   const { id } = useParams()
@@ -211,6 +206,41 @@ const ViewListing = () => {
     return <ProfileBlockedCard />
   }
 
+  const MentorshipActions = () => {
+    return (
+      <div className="card">
+        <div className="card-body">
+          <div className="row align-items-center">
+            <div className="col pr-0">
+              <Button
+                block
+                type="primary"
+                size="large"
+                disabled={hasExistingContract}
+                onClick={() => history.push(`/student/mentorship/apply/${id}`)}
+              >
+                Apply for Mentorship
+              </Button>
+            </div>
+            <div className="col-auto">
+              <ShareBtn
+                quote={`${getUserFirstName(user)} is sharing this post with you!`}
+                url={`${FRONTEND_API}/student/mentorship/view/${listing.mentorshipListingId}`}
+                btnSize="large"
+                block
+              />
+            </div>
+            <div className="col-12">{hasExistingApprovedContract && showReviewButton()}</div>
+          </div>
+          <hr />
+          <div className="mt-4">
+            <CreatorInfo history={history} sensei={listing.Sensei} accountId={listing.accountId} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   useEffect(() => {
     getListing()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,59 +259,38 @@ const ViewListing = () => {
           <BackBtn />
         </div>
       </div>
-      <div className="col-12 pl-0 pr-0 mt-4">
-        <div className="card">
-          <div className="card-body">
-            <div className="row align-items-center">
-              <div className="col-auto col-lg-auto">
-                <Avatar
-                  src={
-                    listing.Sensei?.profileImgUrl
-                      ? listing.Sensei?.profileImgUrl
-                      : '/resources/images/avatars/avatar-2.png'
-                  }
-                  size={48}
-                />
-              </div>
-              <div className="col-10 col-lg-5">
-                <span className="h5">{listing.name}</span>
-                <br />
-                <small className="text-muted">{`by ${getUserFullName(listing.Sensei)}`}</small>
-              </div>
-              <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto pr-0 mt-4 mt-lg-0">
-                <Button
-                  key="mentorship-tab"
-                  type={currentTab === 'info' ? 'primary' : 'default'}
-                  size="large"
-                  onClick={() => changeTab('info')}
-                >
-                  Mentorship Info
-                </Button>
-              </div>
-              <div className="col-auto col-sm-auto col-lg-auto pl-sm-2 pr-0 mt-4 mt-lg-0">
-                <Button
-                  key="reviews-tab"
-                  type={currentTab === 'reviews' ? 'primary' : 'default'}
-                  size="large"
-                  onClick={() => changeTab('reviews')}
-                >
-                  Reviews
-                </Button>
-              </div>
-              <div className="col-auto col-sm-auto col-lg-auto pl-sm-2 mt-4 mt-lg-0">
-                <Button
-                  key="profile-tab"
-                  type={currentTab === 'profile' ? 'primary' : 'default'}
-                  size="large"
-                  onClick={() => changeTab('profile')}
-                >
-                  Mentor Profile
-                </Button>
-              </div>
-            </div>
-          </div>
+      <MentorshipHeader listing={listing}>
+        <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto pr-0 mt-4 mt-lg-0">
+          <Button
+            key="mentorship-tab"
+            type={currentTab === 'info' ? 'primary' : 'default'}
+            size="large"
+            onClick={() => changeTab('info')}
+          >
+            Mentorship Info
+          </Button>
         </div>
-      </div>
+        <div className="col-auto col-sm-auto col-lg-auto pl-sm-2 pr-0 mt-4 mt-lg-0">
+          <Button
+            key="reviews-tab"
+            type={currentTab === 'reviews' ? 'primary' : 'default'}
+            size="large"
+            onClick={() => changeTab('reviews')}
+          >
+            Reviews
+          </Button>
+        </div>
+        <div className="col-auto col-sm-auto col-lg-auto pl-sm-2 mt-4 mt-lg-0">
+          <Button
+            key="profile-tab"
+            type={currentTab === 'profile' ? 'primary' : 'default'}
+            size="large"
+            onClick={() => changeTab('profile')}
+          >
+            Mentor Profile
+          </Button>
+        </div>
+      </MentorshipHeader>
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
         <div className="col-12 col-lg-6 col-xl-8">
           <Skeleton active loading={isLoading}>
@@ -290,40 +299,7 @@ const ViewListing = () => {
           </Skeleton>
         </div>
         <div className="col-12 col-lg-6 col-xl-4">
-          <div className="card">
-            <div className="card-body">
-              <div className="row align-items-center">
-                <div className="col pr-0">
-                  <Button
-                    block
-                    type="primary"
-                    size="large"
-                    disabled={hasExistingContract}
-                    onClick={() => history.push(`/student/mentorship/apply/${id}`)}
-                  >
-                    Apply for Mentorship
-                  </Button>
-                </div>
-                <div className="col-auto">
-                  <ShareBtn
-                    quote={`${getUserFirstName(user)} is sharing this post with you!`}
-                    url={`${FRONTEND_API}/student/mentorship/view/${listing.mentorshipListingId}`}
-                    btnSize="large"
-                    block
-                  />
-                </div>
-                <div className="col-12">{hasExistingApprovedContract && showReviewButton()}</div>
-              </div>
-              <hr />
-              <div className="mt-4">
-                <CreatorInfo
-                  history={history}
-                  sensei={listing.Sensei}
-                  accountId={listing.accountId}
-                />
-              </div>
-            </div>
-          </div>
+          <MentorshipActions />
         </div>
       </div>
     </div>
