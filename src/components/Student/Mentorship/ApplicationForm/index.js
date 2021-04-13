@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, notification } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useParams, useHistory, useLocation } from 'react-router-dom'
 import {
   createMentorshipApplication,
   updateMentorshipApplication,
 } from 'services/mentorship/applications'
+import BackBtn from 'components/Common/BackBtn'
 
 const formItemLayout = {
   labelCol: {
@@ -64,17 +64,9 @@ const ApplyListingForm = () => {
 
   return (
     <div>
-      <div className="row">
-        <div className="col-12">
-          <Button
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={() => history.goBack()}
-            icon={<ArrowLeftOutlined />}
-          >
-            Back
-          </Button>
+      <div className="row pt-2">
+        <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+          <BackBtn />
         </div>
       </div>
       <div className="row mt-4">
