@@ -55,13 +55,6 @@ const CourseListingCard = data => {
                   </span>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-12">
-                  <span className="w-100 mt-2 text-dark text-2-lines truncate-2-overflow text-break">
-                    {course.description}
-                  </span>
-                </div>
-              </div>
             </div>
             <Divider className="mt-4 mb-3" />
             <div className="row align-items-center justify-content-between">

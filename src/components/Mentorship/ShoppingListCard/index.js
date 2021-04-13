@@ -42,7 +42,7 @@ const MentorshipListingCard = data => {
               />
             </div>
             <div className="col-auto pl-0">
-              <p className="m-0 text-dark text-uppercase text-wrap">
+              <p className="m-0 text-dark text-wrap">
                 {listing?.Sensei?.firstName} {listing?.Sensei?.lastName}
               </p>
               <p className="m-0 text-secondary text-wrap">{listing?.Sensei?.occupation}</p>
@@ -80,9 +80,7 @@ const MentorshipListingCard = data => {
             {listing.Categories?.map(c => {
               return (
                 <Space key={c.categoryId}>
-                  <Tag className="mb-2" color="default">
-                    {c.name}
-                  </Tag>
+                  <Tag color="default">{c.name}</Tag>
                 </Space>
               )
             })}

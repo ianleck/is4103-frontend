@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom'
 import { isNil, size } from 'lodash'
 import { Helmet } from 'react-helmet'
 import { getCourses } from 'services/courses'
+import BackBtn from 'components/Common/BackBtn'
 import CourseListingsByCategory from 'components/Course/CourseListingsByCategory'
-// import FeaturedCourses from 'components/Course/FeaturedCourses'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 
 const BrowseCoursesPage = () => {
@@ -45,7 +45,18 @@ const BrowseCoursesPage = () => {
   return (
     <div>
       <Helmet title="Courses" />
-      {/* <FeaturedCourses /> */}
+      {!isNil(categoryId) && (
+        <div className="row pt-2">
+          <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+            <BackBtn url="/courses" />
+          </div>
+        </div>
+      )}
+      {isNil(categoryId) && (
+        <div className="mb-5">
+          <img src="/resources/images/pages/browse/courses.png" width="100%" alt="courses banner" />
+        </div>
+      )}
       <CourseListingsByCategory courses={courses} isLoading={isLoading} />
     </div>
   )

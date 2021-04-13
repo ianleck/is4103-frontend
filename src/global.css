@@ -15,7 +15,7 @@
 }
 
 .course-card-img-holder {
-  height: 150px;
+  height: 105px;
   background-color: white;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .mentorship-listing-card {
-  height: 370px;
+  height: 360px;
 }
 
 .menu-item {
@@ -166,7 +166,7 @@
 }
 
 .text-2-lines {
-  height: 52px !important;
+  height: 44px !important;
 }
 
 .text-2-bold-lines {
