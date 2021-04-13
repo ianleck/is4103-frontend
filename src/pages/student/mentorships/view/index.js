@@ -172,7 +172,7 @@ const ViewListing = () => {
           </div>
           <div className="col-12 col-lg-auto">
             <div className="card mb-0 border-0 shadow-none">
-              <div className="card-body pt-0 pb-0 pr-3 text-right">
+              <div className="card-body mt-4 mt-md-0 pt-0 pb-0 pr-3 text-center text-md-right">
                 <span className="h3 align-middle">
                   {`$${parseFloat(listing.priceAmount).toFixed(2)}`}
                 </span>
