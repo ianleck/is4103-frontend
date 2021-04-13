@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isNil, size } from 'lodash'
+import { filter, isNil, size } from 'lodash'
 import { Helmet } from 'react-helmet'
 import { getCourses } from 'services/courses'
 import BackBtn from 'components/Common/BackBtn'
 import CourseListingsByCategory from 'components/Course/CourseListingsByCategory'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
+import { useSelector } from 'react-redux'
 
 const BrowseCoursesPage = () => {
   const [courses, setCourses] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { categoryId } = useParams()
+  const categories = useSelector(state => state.categories)
 
   const setLoadingIndicator = loading => {
     if (loading) setIsLoading(true)
@@ -28,7 +30,8 @@ const BrowseCoursesPage = () => {
       if (result && !isNil(result.courses)) {
         if (!isNil(categoryId)) {
           setCourses(
-            result.courses.filter(
+            filter(
+              result.courses,
               course => size(course.Categories.filter(cat => cat.categoryId === categoryId)) > 0,
             ),
           )
@@ -46,9 +49,12 @@ const BrowseCoursesPage = () => {
     <div>
       <Helmet title="Courses" />
       {!isNil(categoryId) && (
-        <div className="row pt-2">
-          <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+        <div className="row align-items-center pt-2 mb-5">
+          <div className="col-6 col-sm-4 col-md-3 col-lg-2 mt-4 mt-md-0">
             <BackBtn url="/courses" />
+          </div>
+          <div className="col mt-4 mt-md-0">
+            <h3 className="m-0">{categories[categoryId].name}</h3>
           </div>
         </div>
       )}

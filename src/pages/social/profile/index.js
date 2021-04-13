@@ -7,7 +7,7 @@ import { getPosts } from 'services/social/posts'
 import { initPageItems, isFollowing, sortDescAndKeyPostId } from 'components/utils'
 import SocialPostList from 'components/Common/Social/PostList'
 import { useSelector } from 'react-redux'
-import { USER_TYPE_ENUM } from 'constants/constants'
+import { DEFAULT_TIMEOUT, USER_TYPE_ENUM } from 'constants/constants'
 import { Button, Empty } from 'antd'
 import AboutCard from 'components/Profile/AboutCard'
 import PersonalInformationCard from 'components/Profile/PersonalInformationCard'
@@ -90,7 +90,17 @@ const SocialProfile = () => {
     }
   }
 
+  const setLoadingIndicator = loading => {
+    if (loading) setIsLoading(true)
+    else {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, DEFAULT_TIMEOUT)
+    }
+  }
+
   const getMentorshipListingsSvc = async () => {
+    setLoadingIndicator(true)
     const response = await getMentorshipListings()
     if (response && !isNil(response.mentorshipListings)) {
       const userMentorships = filter(response.mentorshipListings, listing => {
@@ -98,9 +108,11 @@ const SocialProfile = () => {
       })
       setMentorships(userMentorships)
     }
+    setLoadingIndicator(false)
   }
 
   const getCoursesSvc = async () => {
+    setLoadingIndicator(true)
     const result = await getCourses()
     if (result && !isNil(result.courses)) {
       const userCourses = result.courses.filter(course => {
@@ -108,6 +120,7 @@ const SocialProfile = () => {
       })
       setCourses(userCourses)
     }
+    setLoadingIndicator(false)
   }
 
   useEffect(() => {
@@ -225,6 +238,7 @@ const SocialProfile = () => {
                   <MentorshipListingCard
                     listing={l}
                     key={l.mentorshipListingId}
+                    isLoading={isLoading}
                     className="col-12"
                   />
                 )
@@ -240,7 +254,14 @@ const SocialProfile = () => {
           <div className="row">
             {size(courses) > 0 &&
               map(courses, c => {
-                return <CourseListingCard key={c.courseId} course={c} className="col-12 col-md-6" />
+                return (
+                  <CourseListingCard
+                    key={c.courseId}
+                    course={c}
+                    isLoading={isLoading}
+                    className="col-12 col-md-6"
+                  />
+                )
               })}
             {size(courses) === 0 && (
               <div className="col-12 text-center">
