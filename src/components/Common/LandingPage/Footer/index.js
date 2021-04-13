@@ -21,7 +21,7 @@ const Footer = () => {
             <h2 className="logo">
               <img src="/resources/images/digidojo_logo.svg" width="100%" alt={DIGI_DOJO} />
             </h2>
-            <div className="slogan mt-4">Digi Dojo</div>
+            <div className="slogan mt-4">{DIGI_DOJO}</div>
           </div>
           <div className="block ml-5 ml-md-0">
             <h2>Our Services</h2>
@@ -39,7 +39,7 @@ const Footer = () => {
               <span>
                 ©2021 by&nbsp;
                 <a className="text-white" href="https://digi.dojo">
-                  Digi Dojo
+                  {DIGI_DOJO}
                 </a>
                 &nbsp;All Rights Reserved
               </span>

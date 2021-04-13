@@ -4,22 +4,26 @@ import { Avatar, Divider, Rate, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { getUserFullName } from 'components/utils'
+import { USER_TYPE_ENUM } from 'constants/constants'
+import { useSelector } from 'react-redux'
 
 const CourseListingCard = data => {
   const history = useHistory()
-  const { course, isLoading } = data
+  const user = useSelector(state => state.user)
+  const viewOnly = user.userType === USER_TYPE_ENUM.ADMIN || user.userType === USER_TYPE_ENUM.SENSEI
+  const { course, isLoading, className } = data
 
   return (
-    <div className="col-12 col-md-4 col-xl-3">
+    <div className={isNil(className) ? 'col-12 col-md-4 col-xl-3' : className}>
       <Skeleton active loading={isLoading}>
         <div
           role="button"
           tabIndex={0}
-          className="card btn text-left w-100"
-          onClick={() => history.push(`/courses/${course.courseId}`)}
+          className={`card text-left w-100 ${viewOnly ? 'defocus-btn' : 'btn p-0 rounded-lg'}`}
+          onClick={() => !viewOnly && history.push(`/courses/${course.courseId}`)}
           onKeyDown={event => event.preventDefault()}
         >
-          <div className="card-header p-0 text-secondary">
+          <div className="card-header pl-2 pt-1 pb-1 text-secondary">
             <span>
               <i className="fe fe-book" />
               &nbsp;&nbsp;COURSE
@@ -55,15 +59,8 @@ const CourseListingCard = data => {
                   </span>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-12">
-                  <span className="w-100 mt-2 text-dark text-2-lines truncate-2-overflow text-break">
-                    {course.description}
-                  </span>
-                </div>
-              </div>
             </div>
-            <Divider className="mt-4 mb-3" />
+            <Divider className="mt-2 mb-3" />
             <div className="row align-items-center justify-content-between">
               <div className="col-auto">
                 <Avatar
@@ -72,7 +69,7 @@ const CourseListingCard = data => {
                   src={
                     course.Sensei?.profileImgUrl
                       ? course.Sensei.profileImgUrl
-                      : '/resources/images/avatars/master.png'
+                      : '/resources/images/avatars/avatar-2.png'
                   }
                 />
               </div>

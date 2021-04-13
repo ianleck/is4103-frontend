@@ -175,7 +175,7 @@ const ViewCourseDetailsPublic = () => {
                         src={
                           currentSensei.profileImgUrl
                             ? currentSensei.profileImgUrl
-                            : '/resources/images/avatars/master.png'
+                            : '/resources/images/avatars/avatar-2.png'
                         }
                         alt="Display Pic"
                       />

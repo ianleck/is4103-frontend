@@ -3,7 +3,7 @@ import { TweenOneGroup } from 'rc-tween-one'
 import { useHistory } from 'react-router-dom'
 import { sendToSocialProfile } from 'components/utils'
 import { map } from 'lodash'
-import { mentorData } from 'constants/hardcode'
+import { mentorData } from 'constants/hardcode/landing'
 
 const FeaturedMentors = () => {
   const history = useHistory()

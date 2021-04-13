@@ -4,7 +4,7 @@ import TweenOne from 'rc-tween-one'
 import { Row, Col } from 'antd'
 import OverPack from 'rc-scroll-anim/lib/ScrollOverPack'
 import { map } from 'lodash'
-import { mentorshipProcessSteps } from 'constants/hardcode'
+import { mentorshipProcessSteps } from 'constants/hardcode/landing'
 
 const MentorshipProcess = () => {
   const renderMentorshipSteps = (step, index) => {
