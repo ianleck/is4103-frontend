@@ -3,6 +3,7 @@ import { TweenOneGroup } from 'rc-tween-one'
 import { useHistory } from 'react-router-dom'
 import { sendToSocialProfile } from 'components/utils'
 import { map } from 'lodash'
+import { mentorData } from 'constants/hardcode'
 
 const FeaturedMentors = () => {
   const history = useHistory()
@@ -60,28 +61,5 @@ const FeaturedMentors = () => {
     </div>
   )
 }
-
-const mentorData = [
-  {
-    name: 'Bill Gates',
-    accountId: '4601895e-0c58-445d-8613-44f568e2f2f0',
-    img: '/resources/images/avatars/sample/billgates.jpg',
-  },
-  {
-    name: 'Mark Zuckerberg',
-    accountId: '8ee5934e-08c8-4afd-919b-dbfba131c851',
-    img: '/resources/images/avatars/sample/markzuckerberg.jpg',
-  },
-  {
-    name: '이지은 (IU)',
-    accountId: '690562e9-5697-4a78-8050-20568802d3d5',
-    img: '/resources/images/avatars/sample/leejieun.jpg',
-  },
-  {
-    name: 'Sam McDonald',
-    accountId: 'a09b9e6d-5876-4958-bbbc-fd6f209e93d6',
-    img: '/resources/images/avatars/sample/sammcdonald.jpg',
-  },
-]
 
 export default FeaturedMentors

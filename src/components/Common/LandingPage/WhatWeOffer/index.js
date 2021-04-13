@@ -3,6 +3,7 @@ import QueueAnim from 'rc-queue-anim'
 import { Row, Col, Image, Carousel } from 'antd'
 import OverPack from 'rc-scroll-anim/lib/ScrollOverPack'
 import { map } from 'lodash'
+import { offers } from 'constants/hardcode'
 
 const WhatWeOffer = () => {
   return (
@@ -45,30 +46,3 @@ const WhatWeOffer = () => {
 }
 
 export default WhatWeOffer
-
-const offers = [
-  {
-    title: 'Mentorships',
-    subtitle:
-      'Achieve your goals by consulting our mentors and make sure you are well-equipped to handle the journey ahead.',
-    url: '/resources/images/pages/icons/mentorship.svg',
-  },
-  {
-    title: 'Courses',
-    subtitle:
-      'If you prefer a more laid-back approach, feel free to learn from the mentors on our platform through their various online courses.',
-    url: '/resources/images/pages/icons/course.svg',
-  },
-  {
-    title: 'Achievements',
-    subtitle:
-      'We award certificates of achievements based on your level of completion. This way, you get proof of your hard work and it also helps boost your portfolio.',
-    url: '/resources/images/pages/icons/achievement.svg',
-  },
-  {
-    title: 'Social Network',
-    subtitle:
-      'In order to help you stay connected with your mentors, we have integrated our own social network as a convenient method of communication.',
-    url: '/resources/images/pages/icons/socialnetworking.svg',
-  },
-]
