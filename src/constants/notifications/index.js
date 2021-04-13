@@ -123,3 +123,5 @@ export const TESTIMONIAL_EDIT_ERR = 'There was an error editing your testimonial
 
 export const COURSE_REFUND_REQUESTED = 'Refund for your course has been submitted.'
 export const MENTORSHIP_REFUND_REQUESTED = 'Refund for your mentorship passes has been submitted.'
+export const REFUND_APPROVED = 'Refund has been successfully approved.'
+export const REFUND_REJECTED = 'Refund has been successfully rejected.'

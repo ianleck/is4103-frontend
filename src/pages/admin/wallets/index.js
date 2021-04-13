@@ -98,7 +98,8 @@ const WalletManagement = () => {
       render: record => (
         <Button
           type="primary"
-          shape="round"
+          shape="circle"
+          size="large"
           onClick={() => onButtonClick(record)}
           icon={<InfoCircleOutlined />}
         />
