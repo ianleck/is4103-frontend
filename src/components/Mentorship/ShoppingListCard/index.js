@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Avatar, Rate, Skeleton, Space, Tag } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { isNil, random } from 'lodash'
+import { isNil } from 'lodash'
 import { useSelector } from 'react-redux'
 import { USER_TYPE_ENUM } from 'constants/constants'
 
@@ -67,8 +67,7 @@ const MentorshipListingCard = data => {
             <div className="row">
               <div className="col-12">
                 <span>
-                  <Rate disabled defaultValue={random(0, 5)} />
-                  <small>&nbsp;&nbsp;{random(1, 15000)}</small>
+                  <Rate disabled defaultValue={listing.rating} />
                 </span>
               </div>
             </div>

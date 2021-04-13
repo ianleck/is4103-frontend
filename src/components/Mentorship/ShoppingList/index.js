@@ -7,10 +7,16 @@ import { getMentorshipListings } from 'services/mentorship/listings'
 import ShoppingListCard from 'components/Mentorship/ShoppingListCard'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 import BackBtn from 'components/Common/BackBtn'
+import { initPageItems } from 'components/utils'
+import PaginationWrapper from 'components/Common/Pagination'
 
 const MentorshipListingList = () => {
   const [listings, setListings] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [paginatedListings, setPaginatedListings] = useState([])
+  const [currentPageIdx, setCurrentPageIdx] = useState(1)
+  const [showLoadMore, setShowLoadMore] = useState(false)
+
   const { categoryId } = useParams()
   const categories = useSelector(state => state.categories)
 
@@ -28,6 +34,13 @@ const MentorshipListingList = () => {
       } else {
         setListings(response.mentorshipListings)
       }
+      initPageItems(
+        setIsLoading,
+        response.mentorshipListings,
+        setPaginatedListings,
+        setCurrentPageIdx,
+        setShowLoadMore,
+      )
     }
     setTimeout(() => {
       setIsLoading(false)
@@ -60,18 +73,28 @@ const MentorshipListingList = () => {
           />
         </div>
       )}
-      <div className="row">
-        {size(listings) > 0 &&
-          listings.map(l => {
+      <PaginationWrapper
+        setIsLoading={setIsLoading}
+        totalData={listings}
+        paginatedData={paginatedListings}
+        setPaginatedData={setPaginatedListings}
+        currentPageIdx={currentPageIdx}
+        setCurrentPageIdx={setCurrentPageIdx}
+        showLoadMore={showLoadMore}
+        setShowLoadMore={setShowLoadMore}
+        buttonStyle="link"
+        className="row"
+        wrapperContent={
+          size(paginatedListings) > 0 &&
+          paginatedListings.map(l => {
             return (
               <ShoppingListCard listing={l} key={l.mentorshipListingId} isLoading={isLoading} />
             )
-          })}
-        {size(listings) === 0 && (
-          <div className="col-12">
-            <Empty />
-          </div>
-        )}
+          })
+        }
+      />
+      <div className="row">
+        <div className="col-12">{size(listings) === 0 && <Empty />}</div>
       </div>
     </div>
   )
