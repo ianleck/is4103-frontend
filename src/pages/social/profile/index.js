@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { isNil, size } from 'lodash'
+import { filter, isNil, map, size } from 'lodash'
 import { getProfile } from 'services/user'
 import SocialProfileCard from 'components/Common/Social/ProfileCard'
 import { getPosts } from 'services/social/posts'
@@ -19,6 +19,10 @@ import SocialFollowingList from 'components/Common/Social/FollowingList'
 import { getFollowingList, getFollowerList } from 'services/social'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
+import { getMentorshipListings } from 'services/mentorship/listings'
+import MentorshipListingCard from 'components/Mentorship/ShoppingListCard'
+import { getCourses } from 'services/courses'
+import CourseListingCard from 'components/Course/CourseListingCard'
 
 const SocialProfile = () => {
   const user = useSelector(state => state.user)
@@ -41,6 +45,8 @@ const SocialProfile = () => {
   const [currentTab, setCurrentTab] = useState('socialfeed')
   const [followingList, setFollowingList] = useState([])
   const [followerList, setFollowerList] = useState([])
+  const [mentorships, setMentorships] = useState([])
+  const [courses, setCourses] = useState([])
 
   const changeCurrentTab = tabKey => {
     setCurrentTab(tabKey)
@@ -84,6 +90,26 @@ const SocialProfile = () => {
     }
   }
 
+  const getMentorshipListingsSvc = async () => {
+    const response = await getMentorshipListings()
+    if (response && !isNil(response.mentorshipListings)) {
+      const userMentorships = filter(response.mentorshipListings, listing => {
+        return listing.accountId === accountId
+      })
+      setMentorships(userMentorships)
+    }
+  }
+
+  const getCoursesSvc = async () => {
+    const result = await getCourses()
+    if (result && !isNil(result.courses)) {
+      const userCourses = result.courses.filter(course => {
+        return course.accountId === accountId
+      })
+      setCourses(userCourses)
+    }
+  }
+
   useEffect(() => {
     if (user.accountId === accountId)
       switch (user.userType) {
@@ -99,6 +125,13 @@ const SocialProfile = () => {
     getUserProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [social])
+
+  useEffect(() => {
+    if (currentTab === 'mentorships') getMentorshipListingsSvc()
+    if (currentTab === 'courses') getCoursesSvc()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTab])
 
   return (
     <div className="row">
@@ -119,6 +152,26 @@ const SocialProfile = () => {
               ref={button => button && button.blur()}
             >
               Social Feed
+            </Button>
+            <Button
+              block
+              className={`${currentTab === 'mentorships' ? 'btn btn-light' : 'btn'} border-0`}
+              onClick={() => changeCurrentTab('mentorships')}
+              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
+              size="large"
+              ref={button => button && button.blur()}
+            >
+              Mentorships
+            </Button>
+            <Button
+              block
+              className={`${currentTab === 'courses' ? 'btn btn-light' : 'btn'} border-0`}
+              onClick={() => changeCurrentTab('courses')}
+              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
+              size="large"
+              ref={button => button && button.blur()}
+            >
+              Courses
             </Button>
             <Button
               block
@@ -164,6 +217,38 @@ const SocialProfile = () => {
               btnSize="medium"
             />
           )}
+        {currentTab === 'mentorships' && mentorships && (
+          <div className="row">
+            {size(mentorships) > 0 &&
+              map(mentorships, l => {
+                return (
+                  <MentorshipListingCard
+                    listing={l}
+                    key={l.mentorshipListingId}
+                    className="col-12"
+                  />
+                )
+              })}
+            {size(mentorships) === 0 && (
+              <div className="col-12 text-center">
+                <Empty />
+              </div>
+            )}
+          </div>
+        )}
+        {currentTab === 'courses' && courses && (
+          <div className="row">
+            {size(courses) > 0 &&
+              map(courses, c => {
+                return <CourseListingCard key={c.courseId} course={c} className="col-12 col-md-6" />
+              })}
+            {size(courses) === 0 && (
+              <div className="col-12 text-center">
+                <Empty />
+              </div>
+            )}
+          </div>
+        )}
         {currentTab === 'profile' && (
           <div>
             <PersonalInformationCard user={viewUser} />

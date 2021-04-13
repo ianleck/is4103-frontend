@@ -72,7 +72,7 @@ const ProductCard = data => {
     }
 
     if (isNil(sensei.profileImgUrl)) {
-      return '/resources/images/avatars/master.png'
+      return '/resources/images/avatars/avatar-2.png'
     }
     return sensei.profileImgUrl
   }

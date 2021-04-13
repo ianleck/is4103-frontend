@@ -2,33 +2,36 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Avatar, Rate, Space, Tag } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { random } from 'lodash'
+import { isNil, random } from 'lodash'
+import { useSelector } from 'react-redux'
+import { USER_TYPE_ENUM } from 'constants/constants'
 
 const MentorshipListingCard = data => {
-  const { listing } = data
+  const { listing, className } = data
   const history = useHistory()
-  const redirect = id => {
-    history.push({
-      pathname: `/student/mentorship/view/${id}`,
-    })
-  }
+  const user = useSelector(state => state.user)
+  const viewOnly = user.userType === USER_TYPE_ENUM.ADMIN || user.userType === USER_TYPE_ENUM.SENSEI
 
   return (
-    <div className="col-12 col-md-6 col-xl-4">
+    <div className={isNil(className) ? 'col-12 col-md-6 col-xl-4' : className}>
       <div
         role="button"
         tabIndex={0}
-        className="card btn text-left w-100 mentorship-listing-card"
-        onClick={() => redirect(listing.mentorshipListingId)}
+        className={`card text-left w-100 mentorship-listing-card ${
+          viewOnly ? 'defocus-btn' : 'btn p-0 rounded-lg'
+        }`}
+        onClick={() =>
+          !viewOnly && history.push(`/student/mentorship/view/${listing.mentorshipListingId}`)
+        }
         onKeyDown={event => event.preventDefault()}
       >
-        <div className="card-header p-0 text-secondary">
+        <div className="card-header pl-2 pt-1 pb-1 text-secondary">
           <span>
             <i className="fa fa-graduation-cap" />
             &nbsp;&nbsp;MENTORSHIP
           </span>
         </div>
-        <div className="card-body pt-3 pl-2 pr-2 pb-2">
+        <div className="card-body">
           <div className="row align-items-center justify-content-start">
             <div className="col-auto">
               <Avatar
@@ -75,7 +78,7 @@ const MentorshipListingCard = data => {
               </span>
             </div>
           </div>
-          <div className="w-100 text-truncate mt-4 mb-2">
+          <div className="w-100 text-truncate mt-4 pt-3 pb-0 mb-0">
             {listing.Categories?.map(c => {
               return (
                 <Space key={c.categoryId}>
