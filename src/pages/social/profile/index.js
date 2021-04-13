@@ -166,26 +166,30 @@ const SocialProfile = () => {
             >
               Social Feed
             </Button>
-            <Button
-              block
-              className={`${currentTab === 'mentorships' ? 'btn btn-light' : 'btn'} border-0`}
-              onClick={() => changeCurrentTab('mentorships')}
-              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
-              size="large"
-              ref={button => button && button.blur()}
-            >
-              Mentorships
-            </Button>
-            <Button
-              block
-              className={`${currentTab === 'courses' ? 'btn btn-light' : 'btn'} border-0`}
-              onClick={() => changeCurrentTab('courses')}
-              disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
-              size="large"
-              ref={button => button && button.blur()}
-            >
-              Courses
-            </Button>
+            {viewUser.userType === USER_TYPE_ENUM.SENSEI && (
+              <Button
+                block
+                className={`${currentTab === 'mentorships' ? 'btn btn-light' : 'btn'} border-0`}
+                onClick={() => changeCurrentTab('mentorships')}
+                disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
+                size="large"
+                ref={button => button && button.blur()}
+              >
+                Mentorships
+              </Button>
+            )}
+            {viewUser.userType === USER_TYPE_ENUM.SENSEI && (
+              <Button
+                block
+                className={`${currentTab === 'courses' ? 'btn btn-light' : 'btn'} border-0`}
+                onClick={() => changeCurrentTab('courses')}
+                disabled={isBlocked || (!amIFollowingThisUser && viewUser.isPrivateProfile)}
+                size="large"
+                ref={button => button && button.blur()}
+              >
+                Courses
+              </Button>
+            )}
             <Button
               block
               className={`${currentTab === 'profile' ? 'btn btn-light' : 'btn'} border-0`}
