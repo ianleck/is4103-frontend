@@ -9,6 +9,7 @@ import { CONTRACT_TYPE_ENUM_FILTER, REFUND_STATUS_ENUM_FILTER } from 'constants/
 import { CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { CONTRACT_TYPES, REFUND_STATUS } from 'constants/constants'
 import Paragraph from 'antd/lib/typography/Paragraph'
+import RefundRequestsWidget from './RefundRequestsWidget'
 
 const { TabPane } = Tabs
 
@@ -49,6 +50,10 @@ const RefundsManagement = () => {
   const formatName = record => {
     const name = `${record.firstName} ${record.lastName}`
     return name
+  }
+
+  const showRefundRequestsWidget = () => {
+    return <RefundRequestsWidget data={refundRequests} />
   }
 
   const showRefundRequests = () => {
@@ -158,6 +163,8 @@ const RefundsManagement = () => {
           </div>
 
           <div className="card-body">
+            {tabKey === 'Refund Requests' && showRefundRequestsWidget()}
+
             <div className="row">
               <div className="col-12 overflow-x-scroll">
                 {tabKey === 'Refund Requests' && showRefundRequests()}
