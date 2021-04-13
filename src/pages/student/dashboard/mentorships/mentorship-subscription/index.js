@@ -1,16 +1,22 @@
-import { DollarCircleOutlined, UserOutlined } from '@ant-design/icons'
-import { Descriptions, Button, Modal, Form, Input } from 'antd'
+import { CloseOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons'
+import { Descriptions, Button, Modal, Form, Input, Popconfirm } from 'antd'
 import Avatar from 'antd/lib/avatar/avatar'
 import BackBtn from 'components/Common/BackBtn'
 import TaskComponent from 'components/Mentorship/Subscription/Task'
 import { showNotification } from 'components/utils'
-import { REFUND_TYPES } from 'constants/constants'
-import { MENTORSHIP_REFUND_REQUESTED, SUCCESS } from 'constants/notifications'
+import { CONTRACT_PROGRESS_ENUM, REFUND_TYPES } from 'constants/constants'
+import {
+  CONTRACT_CANCEL_ERR,
+  CONTRACT_CANCEL_SUCCESS,
+  ERROR,
+  MENTORSHIP_REFUND_REQUESTED,
+  SUCCESS,
+} from 'constants/notifications'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
-import { getSubscription } from 'services/mentorship/subscription'
+import { getSubscription, terminateMentorshipContract } from 'services/mentorship/subscription'
 import { requestRefund } from 'services/wallet'
 
 const MentorshipSubscriptionView = () => {
@@ -18,21 +24,30 @@ const MentorshipSubscriptionView = () => {
   const [mentorshipSubscription, setMentorshipSubscription] = useState([])
   const [mentorshipListing, setMentorshipListing] = useState([])
   const [showRefundModal, setShowRefundModal] = useState(false)
+  const [isCancellable, setIsCancellable] = useState(true)
+  const [showCancelPopconfirm, setShowCancelPopconfirm] = useState(false)
 
-  useEffect(() => {
-    const getMentorshipSubscription = async () => {
-      const result = await getSubscription(id)
+  const getMentorshipSubscription = async () => {
+    const result = await getSubscription(id)
 
-      if (result && !isNil(result.contract)) {
-        setMentorshipSubscription(result.contract)
-        if (!isNil(result.contract.MentorshipListing)) {
-          setMentorshipListing(result.contract.MentorshipListing)
-        }
+    if (result && !isNil(result.contract)) {
+      setMentorshipSubscription(result.contract)
+      if (!isNil(result.contract.progress)) {
+        setIsCancellable(
+          result.contract.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
+            result.contract.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED,
+        )
+      }
+      if (!isNil(result.contract.MentorshipListing)) {
+        setMentorshipListing(result.contract.MentorshipListing)
       }
     }
+  }
 
+  useEffect(() => {
     getMentorshipSubscription()
-  }, [id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   console.log('mentorshipSubscription is ', mentorshipSubscription) // Nat to deal with this in a later PR to populate the page with more subscription specific deets
 
@@ -64,6 +79,21 @@ const MentorshipSubscriptionView = () => {
     setShowRefundModal(false)
   }
 
+  const onCancelContract = async () => {
+    const response = await terminateMentorshipContract({
+      mentorshipContractId: mentorshipSubscription.mentorshipContractId,
+      action: CONTRACT_PROGRESS_ENUM.CANCELLED,
+    })
+
+    if (response) {
+      showNotification('success', SUCCESS, CONTRACT_CANCEL_SUCCESS)
+      getMentorshipSubscription()
+      setShowCancelPopconfirm(false)
+    } else {
+      showNotification('error', ERROR, CONTRACT_CANCEL_ERR)
+    }
+  }
+
   return (
     <div>
       <Helmet title="Mentorship Subscription" />
@@ -72,6 +102,25 @@ const MentorshipSubscriptionView = () => {
         <div className="row pt-2 justify-content-between">
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <BackBtn />
+          </div>
+          <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+            <Popconfirm
+              title="Do you wish to cancel this mentorship contract?"
+              onConfirm={() => onCancelContract()}
+              okText="Yes"
+              okType="danger"
+              visible={showCancelPopconfirm}
+            >
+              <Button
+                shape="round"
+                size="large"
+                onClick={() => setShowCancelPopconfirm(true)}
+                disabled={!isCancellable}
+                icon={<CloseOutlined />}
+              >
+                Cancel Mentorship Contract
+              </Button>
+            </Popconfirm>
           </div>
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <Button
@@ -106,6 +155,11 @@ const MentorshipSubscriptionView = () => {
                   <div className="col-12 text-left mt-2">
                     <Descriptions title="Mentorship Description">
                       <p>{mentorshipListing.description}</p>
+                    </Descriptions>
+                  </div>
+                  <div className="col-12 text-left mt-2">
+                    <Descriptions title="Mentorship Progress">
+                      <p>{mentorshipSubscription.progress}</p>
                     </Descriptions>
                   </div>
                 </div>
