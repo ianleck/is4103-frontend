@@ -22,7 +22,7 @@ import {
 } from 'constants/notifications'
 import { getUserFirstName, getUserFullName, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
-import { FRONTEND_API, REFUND_TYPES, USER_TYPE_ENUM } from 'constants/constants'
+import { FRONTEND_API, CONTRACT_TYPES, USER_TYPE_ENUM } from 'constants/constants'
 import { requestRefund } from 'services/wallet'
 
 const StudentCourseDetails = () => {
@@ -123,7 +123,7 @@ const StudentCourseDetails = () => {
         }
       }
 
-      const response2 = await requestRefund(cID, REFUND_TYPES.COURSE)
+      const response2 = await requestRefund(cID, CONTRACT_TYPES.COURSE)
 
       if (response2) {
         showNotification('success', SUCCESS, COURSE_REFUND_REQUESTED)
