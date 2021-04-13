@@ -131,7 +131,7 @@ const ViewListing = () => {
 
   const showReviewButton = () => (
     <>
-      <div className="mt-2">
+      <div className="mt-3">
         <Button
           block
           type="default"
