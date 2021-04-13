@@ -3,7 +3,7 @@ import QueueAnim from 'rc-queue-anim'
 import { Row, Col, Image, Carousel } from 'antd'
 import OverPack from 'rc-scroll-anim/lib/ScrollOverPack'
 import { map } from 'lodash'
-import { offers } from 'constants/hardcode'
+import { offers } from 'constants/hardcode/landing'
 
 const WhatWeOffer = () => {
   return (
