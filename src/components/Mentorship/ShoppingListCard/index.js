@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Avatar, Divider, Rate, Space, Tag } from 'antd'
+import { Avatar, Rate, Space, Tag } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { random } from 'lodash'
 
@@ -75,8 +75,7 @@ const MentorshipListingCard = data => {
               </span>
             </div>
           </div>
-          <Divider className="mt-4 mb-3" />
-          <div className="w-100 text-truncate">
+          <div className="w-100 text-truncate mt-4 mb-2">
             {listing.Categories?.map(c => {
               return (
                 <Space key={c.categoryId}>
