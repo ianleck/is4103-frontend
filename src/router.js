@@ -412,6 +412,11 @@ const routes = [
     Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
+  {
+    path: '/student/dashboard/testimonials',
+    Component: lazy(() => import('pages/student/dashboard/testimonials')),
+    exact: true,
+  },
 ]
 
 const mapStateToProps = ({ settings }) => ({
