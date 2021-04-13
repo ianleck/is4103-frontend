@@ -37,7 +37,11 @@ const Footer = () => {
           <div className="home-page">
             <div className="copyright">
               <span>
-                ©2021 by <a href="https://digi.dojo">Digi Dojo</a> All Rights Reserved
+                ©2021 by&nbsp;
+                <a className="text-white" href="https://digi.dojo">
+                  Digi Dojo
+                </a>
+                &nbsp;All Rights Reserved
               </span>
             </div>
           </div>
