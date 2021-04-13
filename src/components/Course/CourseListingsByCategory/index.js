@@ -1,6 +1,7 @@
 import React from 'react'
-import { map } from 'lodash'
+import { map, size } from 'lodash'
 import CourseListingCard from 'components/Course/CourseListingCard'
+import { Empty } from 'antd'
 
 const CourseListingsByCategory = data => {
   const { courses, isLoading } = data
@@ -12,7 +13,14 @@ const CourseListingsByCategory = data => {
 
   return (
     <div>
-      <div className="row">{map(courseData, course => showCourseCard(course))}</div>
+      <div className="row">
+        {size(courseData) > 0 && map(courseData, course => showCourseCard(course))}
+        {size(courseData) === 0 && (
+          <div className="col-12">
+            <Empty />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
