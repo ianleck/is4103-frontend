@@ -8,6 +8,8 @@ import {
   STATUS_ENUM,
   TASK_PROGRESS,
   USER_TYPE_ENUM,
+  CONTRACT_TYPES,
+  REFUND_STATUS,
 } from 'constants/constants'
 
 import { isNil } from 'lodash'
@@ -189,6 +191,44 @@ const StatusTag = data => {
     }
     return <Tag color={colour}>{dataSource}</Tag>
   }
+
+  if (type === 'CONTRACT_TYPE') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case CONTRACT_TYPES.COURSE:
+        colour = 'volcano'
+        break
+      case CONTRACT_TYPES.MENTORSHIP:
+        colour = 'purple'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
+  }
+
+  if (type === 'REFUND_STATUS') {
+    const dataSource = data.data
+
+    switch (dataSource) {
+      case REFUND_STATUS.PENDING:
+        colour = 'processing'
+        break
+      case REFUND_STATUS.APPROVED:
+        colour = 'green'
+        break
+      case REFUND_STATUS.REJECTED:
+        colour = 'error'
+        break
+      default:
+        colour = 'default'
+        break
+    }
+    return <Tag color={colour}>{dataSource}</Tag>
+  }
+
   return <Tag>{NA}</Tag>
 }
 
