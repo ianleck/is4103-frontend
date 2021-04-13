@@ -54,6 +54,20 @@ export async function getActiveMentorshipContractList(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function terminateMentorshipContract(payload) {
+  const { mentorshipContractId, action } = payload
+  const url = `/mentorship/contract?mentorshipContractId=${mentorshipContractId}&action=${action}`
+  return apiClient
+    .put(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 // ============================ TASK BUCKET ============================
 
 export async function getTaskBuckets(mentorshipContractId) {
