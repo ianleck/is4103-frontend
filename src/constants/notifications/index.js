@@ -126,3 +126,6 @@ export const MENTORSHIP_REFUND_REQUESTED = 'Refund for your mentorship passes ha
 
 export const CONTRACT_CANCEL_SUCCESS = 'Your mentorship contract was successfully cancelled.'
 export const CONTRACT_CANCEL_ERR = 'There was an error cancelling your mentorship contract.'
+
+export const REFUND_APPROVED = 'Refund has been successfully approved.'
+export const REFUND_REJECTED = 'Refund has been successfully rejected.'

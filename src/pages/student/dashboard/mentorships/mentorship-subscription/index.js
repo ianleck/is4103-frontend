@@ -4,7 +4,7 @@ import Avatar from 'antd/lib/avatar/avatar'
 import BackBtn from 'components/Common/BackBtn'
 import TaskComponent from 'components/Mentorship/Subscription/Task'
 import { showNotification } from 'components/utils'
-import { CONTRACT_PROGRESS_ENUM, REFUND_TYPES } from 'constants/constants'
+import { CONTRACT_PROGRESS_ENUM, CONTRACT_TYPES } from 'constants/constants'
 import {
   CONTRACT_CANCEL_ERR,
   CONTRACT_CANCEL_SUCCESS,
@@ -71,7 +71,7 @@ const MentorshipSubscriptionView = () => {
   }
 
   const onRequestRefund = async values => {
-    const response = await requestRefund(values.mentorshipContractId, REFUND_TYPES.MENTORSHIP)
+    const response = await requestRefund(values.mentorshipContractId, CONTRACT_TYPES.MENTORSHIP)
 
     if (response) {
       showNotification('success', SUCCESS, MENTORSHIP_REFUND_REQUESTED)

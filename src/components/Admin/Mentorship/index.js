@@ -195,7 +195,6 @@ const Mentorship = () => {
       render: record => (
         <Space size="large">
           <Button
-            disabled={record.isResolved}
             type="primary"
             shape="circle"
             size="large"
@@ -272,7 +271,6 @@ const Mentorship = () => {
       render: record => (
         <Space size="large">
           <Button
-            disabled={record.isResolved}
             type="primary"
             shape="circle"
             size="large"
@@ -355,7 +353,6 @@ const Mentorship = () => {
       render: record => (
         <Space size="large">
           <Button
-            disabled={record.isResolved}
             type="primary"
             shape="circle"
             size="large"

@@ -280,3 +280,29 @@ export async function banUser(userId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function approveRefund(refundRequestId) {
+  const url = `/admin/refund/${refundRequestId}`
+  return apiClient
+    .post(url, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function rejectRefund(refundRequestId) {
+  const url = `/admin/refund/${refundRequestId}`
+  return apiClient
+    .put(url, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
