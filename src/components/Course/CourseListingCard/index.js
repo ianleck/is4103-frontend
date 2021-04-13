@@ -60,7 +60,7 @@ const CourseListingCard = data => {
                 </div>
               </div>
             </div>
-            <Divider className="mt-4 mb-3" />
+            <Divider className="mt-2 mb-3" />
             <div className="row align-items-center justify-content-between">
               <div className="col-auto">
                 <Avatar
