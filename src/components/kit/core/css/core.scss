@@ -5,21 +5,21 @@
 
 :root {
   --kit-color-primary: #4b7cf3;
-  --kit-font-family: 'Mukta', sans-serif;
+  --kit-font-family: 'Avenir', sans-serif;
 }
 
 html {
-  font-size: 15px;
+  font-size: 16px;
   @media (max-width: $sm-max-width) {
     font-size: 14px;
   }
 }
 
 body {
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.5;
   font-family: $base-font-family;
-  color: $text;
+  color: #000;
   overflow-x: hidden;
   position: relative;
   font-variant: normal;

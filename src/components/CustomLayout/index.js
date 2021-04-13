@@ -20,6 +20,7 @@ const CustomLayout = ({
   isGrayTopbar,
   children,
   isPublic,
+  maxWidth,
 }) => {
   const { pathname } = useLocation()
   const showStudentDashboardMenu = /^\/student\/dashboard(?=\/|$)/i.test(pathname)
@@ -53,7 +54,7 @@ const CustomLayout = ({
             </Layout.Header>
           )}
           <Layout.Content style={{ height: '100%', position: 'relative' }}>
-            <div className="cui__utils__content">{children}</div>
+            <div className={maxWidth ? '' : 'cui__utils__content'}>{children}</div>
           </Layout.Content>
         </Layout>
       </Layout>
