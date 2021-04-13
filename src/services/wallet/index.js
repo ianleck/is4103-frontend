@@ -108,3 +108,16 @@ export async function requestRefund(contractId, productType) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getRefunds() {
+  const url = `/wallet/refund`
+  return apiClient
+    .get(url, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
