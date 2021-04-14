@@ -1,16 +1,16 @@
 import BackBtn from 'components/Common/BackBtn'
-import TaskComponent from 'components/Mentorship/Subscription/Task'
+import TaskComponent from 'components/Mentorship/Task'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getSubscription } from 'services/mentorship/subscription'
+import { getContract } from 'services/mentorship/contracts'
 
 const MentorshipContract = () => {
   const { id } = useParams()
   const [contract, setContract] = useState([])
 
   const getMentorshipContract = async () => {
-    const response = await getSubscription(id)
+    const response = await getContract(id)
     if (response && !isNil(response.contract)) {
       setContract(response.contract)
     }

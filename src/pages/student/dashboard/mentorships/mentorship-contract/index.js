@@ -2,7 +2,7 @@ import { CloseOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/i
 import { Descriptions, Button, Modal, Form, Input, Popconfirm } from 'antd'
 import Avatar from 'antd/lib/avatar/avatar'
 import BackBtn from 'components/Common/BackBtn'
-import TaskComponent from 'components/Mentorship/Subscription/Task'
+import TaskComponent from 'components/Mentorship/Task'
 import { showNotification } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM, CONTRACT_TYPES } from 'constants/constants'
 import {
@@ -16,22 +16,22 @@ import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
-import { getSubscription, terminateMentorshipContract } from 'services/mentorship/subscription'
+import { getContract, terminateMentorshipContract } from 'services/mentorship/contracts'
 import { requestRefund } from 'services/wallet'
 
-const MentorshipSubscriptionView = () => {
+const MentorshipContractView = () => {
   const { id } = useParams()
-  const [mentorshipSubscription, setMentorshipSubscription] = useState([])
+  const [mentorshipContract, setMentorshipContract] = useState([])
   const [mentorshipListing, setMentorshipListing] = useState([])
   const [showRefundModal, setShowRefundModal] = useState(false)
   const [isCancellable, setIsCancellable] = useState(true)
   const [showCancelPopconfirm, setShowCancelPopconfirm] = useState(false)
 
-  const getMentorshipSubscription = async () => {
-    const result = await getSubscription(id)
+  const getMentorshipContract = async () => {
+    const result = await getContract(id)
 
     if (result && !isNil(result.contract)) {
-      setMentorshipSubscription(result.contract)
+      setMentorshipContract(result.contract)
       if (!isNil(result.contract.progress)) {
         setIsCancellable(
           result.contract.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
@@ -45,11 +45,11 @@ const MentorshipSubscriptionView = () => {
   }
 
   useEffect(() => {
-    getMentorshipSubscription()
+    getMentorshipContract()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  console.log('mentorshipSubscription is ', mentorshipSubscription) // Nat to deal with this in a later PR to populate the page with more subscription specific deets
+  console.log('mentorshipContract is ', mentorshipContract) // Nat to deal with this in a later PR to populate the page with more subscription specific deets
 
   const refundFormFooter = (
     <div className="row justify-content-between">
@@ -81,13 +81,13 @@ const MentorshipSubscriptionView = () => {
 
   const onCancelContract = async () => {
     const response = await terminateMentorshipContract({
-      mentorshipContractId: mentorshipSubscription.mentorshipContractId,
+      mentorshipContractId: mentorshipContract.mentorshipContractId,
       action: CONTRACT_PROGRESS_ENUM.CANCELLED,
     })
 
     if (response) {
       showNotification('success', SUCCESS, CONTRACT_CANCEL_SUCCESS)
-      getMentorshipSubscription()
+      getMentorshipContract()
       setShowCancelPopconfirm(false)
     } else {
       showNotification('error', ERROR, CONTRACT_CANCEL_ERR)
@@ -96,9 +96,9 @@ const MentorshipSubscriptionView = () => {
 
   return (
     <div>
-      <Helmet title="Mentorship Subscription" />
+      <Helmet title="Mentorship Contract" />
       <div>
-        <Helmet title="View Mentorship Subscription" />
+        <Helmet title="View Mentorship Contract" />
         <div className="row pt-2 justify-content-between">
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <BackBtn />
@@ -160,7 +160,7 @@ const MentorshipSubscriptionView = () => {
                   </div>
                   <div className="col-12 text-left mt-2">
                     <Descriptions title="Mentorship Progress">
-                      <p>{mentorshipSubscription.progress}</p>
+                      <p>{mentorshipContract.progress}</p>
                     </Descriptions>
                   </div>
                 </div>
@@ -200,9 +200,9 @@ const MentorshipSubscriptionView = () => {
               onFinish={onRequestRefund}
               onFinishFailed={onFinishFailed}
               initialValues={{
-                mentorshipContractId: mentorshipSubscription.mentorshipContractId,
+                mentorshipContractId: mentorshipContract.mentorshipContractId,
                 name: mentorshipListing.name,
-                mentorPassCount: mentorshipSubscription.mentorPassCount,
+                mentorPassCount: mentorshipContract.mentorPassCount,
               }}
             >
               <div className="row">
@@ -230,4 +230,4 @@ const MentorshipSubscriptionView = () => {
   )
 }
 
-export default MentorshipSubscriptionView
+export default MentorshipContractView

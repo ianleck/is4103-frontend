@@ -38,7 +38,7 @@ const StudentTestimonials = () => {
   }
 
   const sendToMentorshipContractPage = id => {
-    const path = `/student/dashboard/mentorship/subscription/${id}`
+    const path = `/student/dashboard/mentorship/contract/${id}`
     history.push(path)
   }
 

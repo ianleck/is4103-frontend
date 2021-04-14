@@ -10,11 +10,10 @@ import {
   createTaskBucket,
   deleteTask,
   deleteTaskBucket,
-  // getSubscription,
   getTaskBuckets,
   updateTask,
   updateTaskBucket,
-} from 'services/mentorship/subscription'
+} from 'services/mentorship/contracts'
 import TaskBucket from './TaskBucket'
 import TaskRow from './TaskRow'
 
@@ -28,7 +27,6 @@ const TaskComponent = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    // getSubscriptionsData()
     getTaskBucketsData().then(buckets => {
       if (buckets.length > 0) {
         const Tasks = [...buckets[0].Tasks]

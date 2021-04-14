@@ -6,8 +6,6 @@ import {
 } from '@ant-design/icons'
 import {
   Button,
-  ConfigProvider,
-  Empty,
   Popconfirm,
   Space,
   Table,
@@ -25,7 +23,7 @@ import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector, useDispatch } from 'react-redux'
 import { formatTime, onFinishFailed, showNotification } from 'components/utils'
-import { terminateMentorshipContract } from 'services/mentorship/subscription'
+import { terminateMentorshipContract } from 'services/mentorship/contracts'
 import {
   CONTRACT_CANCEL_ERR,
   CONTRACT_CANCEL_SUCCESS,
@@ -64,7 +62,7 @@ const MentorshipContractsTable = () => {
 
   const viewListing = listing => {
     history.push({
-      pathname: `/student/dashboard/mentorship/subscription/${listing.mentorshipContractId}`,
+      pathname: `/student/dashboard/mentorship/contract/${listing.mentorshipContractId}`,
     })
   }
 
@@ -161,7 +159,7 @@ const MentorshipContractsTable = () => {
           {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
             record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
             <Popconfirm
-              title="Are you sure you wish to cancel your subscription?"
+              title="Are you sure you wish to cancel your mentorship contract?"
               icon={<QuestionCircleOutlined className="text-danger" />}
               onConfirm={() => onCancelContract(record)}
             >
@@ -224,15 +222,9 @@ const MentorshipContractsTable = () => {
     </div>
   )
 
-  const showContracts = (subscriptionStatus, dataSource, columns) => {
-    const numSubscriptions = size(dataSource)
-    const isRenderEmpty = numSubscriptions === 0
+  const showContracts = (contractStatus, dataSource, columns) => {
+    const numContracts = size(dataSource)
 
-    const customizeRenderEmpty = () => (
-      <div className="text-center">
-        <Empty />
-      </div>
-    )
     const renderStyledStatus = status => {
       let textStyle = ''
       if (status === CONTRACT_PROGRESS_ENUM.CANCELLED) {
@@ -246,21 +238,20 @@ const MentorshipContractsTable = () => {
     return (
       <div>
         <div className="row justify-content-between align-items-center mt-2">
-          {subscriptionStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
+          {contractStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
             <div className="col-auto">
-              You currently have {numSubscriptions} {renderStyledStatus(subscriptionStatus)}{' '}
-              mentorship {numSubscriptions === 1 ? 'subscription' : 'subscriptions'}.
+              You currently have {numContracts} {renderStyledStatus(contractStatus)} mentorship{' '}
+              {numContracts === 1 ? 'contract' : 'contracts'}.
             </div>
           )}
         </div>
-        <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-          <Table
-            className="mt-4"
-            dataSource={dataSource}
-            columns={columns}
-            rowKey="mentorshipContractId"
-          />
-        </ConfigProvider>
+
+        <Table
+          className="mt-4"
+          dataSource={dataSource}
+          columns={columns}
+          rowKey="mentorshipContractId"
+        />
       </div>
     )
   }

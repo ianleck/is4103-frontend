@@ -8,7 +8,7 @@ import { isNil, isNull, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { getMentees } from 'services/mentorship/subscription'
+import { getMentees } from 'services/mentorship/contracts'
 
 const MenteeOverviewPage = () => {
   const history = useHistory()

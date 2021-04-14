@@ -398,8 +398,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/student/dashboard/mentorship/subscription/:id',
-    Component: lazy(() => import('pages/student/dashboard/mentorships/mentorship-subscription')),
+    path: '/student/dashboard/mentorship/contract/:id',
+    Component: lazy(() => import('pages/student/dashboard/mentorships/mentorship-contract')),
     exact: true,
   },
   {
