@@ -236,7 +236,7 @@ const MentorshipContractView = () => {
             <Button block type="default" size="large" style={{ height: '100%' }}>
               <div className="row text-center">
                 <div className="col-12 p-1">
-                  <Avatar src={getImage(mentorshipListing?.Sensei)} />
+                  <Avatar src={getImage('user', mentorshipListing?.Sensei)} />
                 </div>
                 <div className="col-12 mt-1 text-wrap">Book a Consultation</div>
               </div>

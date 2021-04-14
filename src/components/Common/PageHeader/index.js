@@ -1,24 +1,11 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Avatar } from 'antd'
-import { isNil } from 'lodash'
-import { getUserFullName, sendToSocialProfile } from 'components/utils'
+import { getImage, getUserFullName, sendToSocialProfile } from 'components/utils'
 import style from './style.module.scss'
 
 const PageHeader = ({ type, listing, course, children }) => {
   const history = useHistory()
-
-  const getBackgroundImage = object => {
-    if (type === 'user')
-      return object?.profileImgUrl ? object.profileImgUrl : '/resources/images/avatars/avatar-2.png'
-    if (type === 'mentorship')
-      return object.Sensei?.profileImgUrl
-        ? object.Sensei?.profileImgUrl
-        : '/resources/images/avatars/avatar-2.png'
-    if (type === 'course')
-      return !isNil(object.imgUrl) ? object.imgUrl : '/resources/images/course-placeholder.png'
-    return null
-  }
 
   return (
     <div className="col-12 pl-0 pr-0 mt-4">
@@ -26,21 +13,12 @@ const PageHeader = ({ type, listing, course, children }) => {
         <div className="card-body">
           <div className="row align-items-center">
             <div className="col-auto col-lg-auto">
-              {type === 'mentorship' && (
-                <Avatar
-                  src={
-                    listing.Sensei?.profileImgUrl
-                      ? listing.Sensei?.profileImgUrl
-                      : '/resources/images/avatars/avatar-2.png'
-                  }
-                  size={48}
-                />
-              )}
+              {type === 'mentorship' && <Avatar src={getImage('user', listing.Sensei)} size={48} />}
               {type === 'course' && (
                 <div
                   className={style.resultThumb}
                   style={{
-                    backgroundImage: `url(${getBackgroundImage('course', course)})`,
+                    backgroundImage: `url(${getImage('course', course)})`,
                   }}
                 />
               )}

@@ -65,10 +65,7 @@ const StudentMentorships = () => {
         <div className="card-body">
           <div className="row align-items-center">
             <div className="col-auto">
-              <Avatar
-                src={getImage('mentorship', activeMentorship.MentorshipListing.Sensei)}
-                size={32}
-              />
+              <Avatar src={getImage('user', activeMentorship.MentorshipListing.Sensei)} size={48} />
             </div>
             <div className="col">
               <span className="h5 m-0 truncate-2-overflow text-wrap font-weight-bold">
