@@ -102,8 +102,20 @@ const Search = ({ intl: { formatMessage } }) => {
         sendToSocialProfile(history, id)
       }
     }
-    if (type === 'mentorship') history.push(`/student/mentorship/view/${id}`)
-    if (type === 'course') history.push(`/courses/${id}`)
+    if (type === 'mentorship') {
+      if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {
+        history.push(`/admin/mentorship-content-management`)
+      } else {
+        history.push(`/student/mentorship/view/${id}`)
+      }
+    }
+    if (type === 'course') {
+      if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {
+        history.push(`/admin/course-content-management/${id}`)
+      } else {
+        history.push(`/courses/${id}`)
+      }
+    }
   }
 
   const getBackgroundImage = (type, object) => {
