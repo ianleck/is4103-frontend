@@ -1,6 +1,7 @@
 import { Empty, Progress } from 'antd'
 import { formatTime, getUserFullName } from 'components/utils'
-import { isEmpty, isNil, map } from 'lodash'
+import { TASK_PROGRESS } from 'constants/constants'
+import { isEmpty, isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -28,6 +29,23 @@ const StudentMentorships = () => {
   const viewMentorshipContract = id => {
     const path = `/student/dashboard/mentorship/subscription/${id}`
     history.push(path)
+  }
+
+  const calculateOverallProgress = buckets => {
+    let numCompleted = 0
+    let totalTasks = 0
+    map(buckets, bucket => {
+      totalTasks += size(bucket.Tasks)
+      map(bucket.Tasks, taskItem => {
+        if (taskItem.progress === TASK_PROGRESS.COMPLETED) {
+          numCompleted += 1
+        }
+      })
+    })
+    if (numCompleted === 0) {
+      return 0
+    }
+    return ((numCompleted / totalTasks) * 100).toFixed(0)
   }
 
   const OngoingMentorships = () => {
@@ -60,7 +78,10 @@ const StudentMentorships = () => {
                 {activeMentorship.MentorshipListing.description}
               </div>
               <div className="col-12 mt-1">
-                <Progress percent={50} status="active" />
+                <Progress
+                  percent={calculateOverallProgress(activeMentorship.TaskBuckets)}
+                  status="active"
+                />
               </div>
               <div className="col-12 mt-1">
                 <small className="text-uppercase text-secondary">
