@@ -15,6 +15,7 @@ import {
   Divider,
   InputNumber,
   Descriptions,
+  Typography,
 } from 'antd'
 import { filter, isNil, size } from 'lodash'
 import React, { useState, useEffect } from 'react'
@@ -33,6 +34,7 @@ import {
 
 const MentorshipContractsTable = () => {
   const { TabPane } = Tabs
+  const { Paragraph } = Typography
   const history = useHistory()
   const user = useSelector(state => state.user)
   const cart = useSelector(state => state.cart)
@@ -111,6 +113,11 @@ const MentorshipContractsTable = () => {
       responsive: ['lg'],
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['ascend', 'descend'],
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
       title: 'Pass Price (S$)',
