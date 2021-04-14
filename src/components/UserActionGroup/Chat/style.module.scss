@@ -1,0 +1,19 @@
+@import 'components/mixins.scss';
+
+.icon {
+  position: relative;
+  font-size: rem(17);
+  color: $gray-5;
+  @include transition-slow;
+  &:hover {
+    color: $blue;
+
+    &::after {
+      color: $gray-6;
+    }
+
+    .icon {
+      color: $primary;
+    }
+  }
+}

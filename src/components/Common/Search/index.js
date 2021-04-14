@@ -186,12 +186,12 @@ const Search = ({ intl: { formatMessage } }) => {
   }
 
   return (
-    <div className="d-inline-block">
+    <div className="text-center text-lg-right">
       <Input
         className={style.extInput}
         placeholder={formatMessage({ id: 'topBar.typeToSearch' })}
         prefix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-        style={{ width: 200 }}
+        style={{ width: 150 }}
         onFocus={showLiveSearch}
       />
       <div

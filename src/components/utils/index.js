@@ -271,7 +271,8 @@ export const getDetailsColumn = viewItem => {
     render: record => (
       <Button
         type="primary"
-        shape="round"
+        shape="circle"
+        size="large"
         onClick={() => viewItem(record)}
         icon={<InfoCircleOutlined />}
       />

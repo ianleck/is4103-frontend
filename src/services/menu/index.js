@@ -20,17 +20,15 @@ export async function getStudentMenuData() {
     {
       title: 'Mentors',
       key: 'mentors',
-      icon: 'fa fa-mortar-board',
       url: '/mentorships',
     },
     {
       title: 'Courses',
       key: 'courses',
-      icon: 'fa fa-cubes',
       url: '/courses',
     },
     {
-      title: 'My Dashboard',
+      title: 'Dashboard',
       key: 'studentDashboardAccess',
       url: '/student/dashboard',
     },
@@ -62,16 +60,6 @@ export async function getAdminMenuData() {
       icon: 'fe fe-briefcase',
       children: [
         {
-          title: 'Revenue',
-          key: 'revenue',
-          url: '/admin/revenue-management',
-        },
-        {
-          title: 'Profit',
-          key: 'profit',
-          url: '/admin/profit',
-        },
-        {
           title: 'User Statistics',
           key: 'userStatistics',
           url: '/admin/user-statistics',
@@ -92,11 +80,6 @@ export async function getAdminMenuData() {
           title: 'Courses',
           key: 'courseContent',
           url: '/admin/course-content-management',
-        },
-        {
-          title: 'Announcements',
-          key: 'announcementContent',
-          url: '/admin/announcement-content-management',
         },
         {
           title: 'Complaints',
@@ -168,14 +151,14 @@ export async function getSenseiMenuData() {
           url: '/sensei/tasks',
         },
         {
+          title: 'Consultations',
+          key: 'consultation',
+          url: '/sensei/consultation',
+        },
+        {
           title: 'Testimonials',
           key: 'testimonials',
           url: '/sensei/testimonials',
-        },
-        {
-          title: 'Chat/Video Call',
-          key: 'chatVideoCall',
-          url: '/sensei/chatVideoCall',
         },
       ],
     },
@@ -189,27 +172,22 @@ export async function getSenseiMenuData() {
           key: 'courses',
           url: '/sensei/courses',
         },
-        {
-          title: 'Announcements',
-          key: 'announcements',
-          url: '/sensei/announcements',
-        },
       ],
     },
     {
-      title: 'Profile',
-      key: 'profile',
+      title: 'Social',
+      key: 'social',
       icon: 'fe fe-user',
       children: [
         {
-          title: 'Mentor Feed',
+          title: 'Feed',
           key: 'mentorFeed',
-          url: '/sensei/mentorFeed',
+          url: '/sensei/social/feed',
         },
         {
           title: 'My Profile',
           key: 'myProfile',
-          url: '/sensei/myProfile',
+          url: '/sensei/profile',
         },
       ],
     },
