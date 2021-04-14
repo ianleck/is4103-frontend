@@ -1,5 +1,5 @@
 import { CloseOutlined, DollarCircleOutlined, EditOutlined } from '@ant-design/icons'
-import { Button, Modal, Form, Input, Popconfirm, Skeleton } from 'antd'
+import { Button, Modal, Form, Input, Popconfirm, Skeleton, Avatar } from 'antd'
 import BackBtn from 'components/Common/BackBtn'
 import PageHeader from 'components/Common/PageHeader'
 import Reviews from 'components/Common/Reviews'
@@ -8,7 +8,7 @@ import MentorshipActions from 'components/Mentorship/MentorshipActions'
 import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
 import TaskComponent from 'components/Mentorship/Task'
 import ReviewModal from 'components/Review/ReviewModal'
-import { initPageItems, showNotification } from 'components/utils'
+import { getImage, initPageItems, showNotification } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM, CONTRACT_TYPES, DEFAULT_TIMEOUT } from 'constants/constants'
 import {
   CONTRACT_CANCEL_ERR,
@@ -229,6 +229,23 @@ const MentorshipContractView = () => {
   const ExtMentorshipActions = () => {
     return (
       <MentorshipActions listing={mentorshipListing} history={history}>
+        <div className="row align-items-center">
+          <div className="col-6">
+            <div className="text-center m-0">You have</div>
+            <div className="text-center h3 m-0">{mentorshipContract.mentorPassCount}</div>
+            <div className="text-center m-0">MentorPasses.</div>
+          </div>
+          <div className="col-6">
+            <Button block type="default" size="large" style={{ height: '100%' }}>
+              <div className="row text-center">
+                <div className="col-12 p-1">
+                  <Avatar src={getImage(mentorshipListing?.Sensei)} />
+                </div>
+                <div className="col-12 mt-1 text-wrap">Book a Consultation</div>
+              </div>
+            </Button>
+          </div>
+        </div>
         <div className="row">
           <div className="col-12 mb-2">{showReviewButton()}</div>
           <div className="col-12 mb-2">
