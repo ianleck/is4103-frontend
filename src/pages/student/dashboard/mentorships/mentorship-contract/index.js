@@ -63,7 +63,6 @@ const MentorshipContractView = () => {
   const getMentorshipContract = async () => {
     setIsLoading(true)
     const result = await getContract(id)
-    console.log(result)
     if (result && !isNil(result.contract)) {
       setMentorshipContract(result.contract)
       if (!isNil(result.contract.progress)) {
@@ -181,8 +180,6 @@ const MentorshipContractView = () => {
     if (currentTab === 'profile') getUserProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTab])
-
-  console.log('mentorshipContract is ', mentorshipContract) // Nat to deal with this in a later PR to populate the page with more subscription specific deets
 
   const refundFormFooter = (
     <div className="row justify-content-between">
