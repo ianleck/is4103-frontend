@@ -27,7 +27,7 @@ const MentorshipContractView = () => {
   const [isCancellable, setIsCancellable] = useState(true)
   const [showCancelPopconfirm, setShowCancelPopconfirm] = useState(false)
 
-  const getMentorshipSubscription = async () => {
+  const getMentorshipContract = async () => {
     const result = await getContract(id)
 
     if (result && !isNil(result.contract)) {
@@ -45,7 +45,7 @@ const MentorshipContractView = () => {
   }
 
   useEffect(() => {
-    getMentorshipSubscription()
+    getMentorshipContract()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -87,7 +87,7 @@ const MentorshipContractView = () => {
 
     if (response) {
       showNotification('success', SUCCESS, CONTRACT_CANCEL_SUCCESS)
-      getMentorshipSubscription()
+      getMentorshipContract()
       setShowCancelPopconfirm(false)
     } else {
       showNotification('error', ERROR, CONTRACT_CANCEL_ERR)
@@ -96,9 +96,9 @@ const MentorshipContractView = () => {
 
   return (
     <div>
-      <Helmet title="Mentorship Subscription" />
+      <Helmet title="Mentorship Contract" />
       <div>
-        <Helmet title="View Mentorship Subscription" />
+        <Helmet title="View Mentorship Contract" />
         <div className="row pt-2 justify-content-between">
           <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
             <BackBtn />
