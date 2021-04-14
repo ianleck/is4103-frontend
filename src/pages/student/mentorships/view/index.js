@@ -292,13 +292,13 @@ const ViewListing = () => {
         </div>
       </MentorshipHeader>
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
-        <div className="col-12 col-lg-6 col-xl-8">
+        <div className="col-12 col-lg-6 col-xl-7">
           <Skeleton active loading={isLoading}>
             {currentTab === 'info' && <MentorshipInfo />}
             {currentTab === 'profile' && <MentorProfile />}
           </Skeleton>
         </div>
-        <div className="col-12 col-lg-6 col-xl-4">
+        <div className="col-12 col-lg-6 col-xl-5">
           <MentorshipActions />
         </div>
       </div>

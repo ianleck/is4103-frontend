@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Menu, Row, Col } from 'antd'
+import { Menu } from 'antd'
 import { Link, useHistory, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import store from 'store'
@@ -144,16 +144,16 @@ const MenuTop = ({ menuData = [], location: { pathname }, menuColor, logo, role,
           {generateMenuItems()}
         </Menu>
       </div>
-      <Row className={style.action}>
+      <div className={`${style.action} row justify-content-end text-right`}>
         {authorized && (
-          <Col>
+          <div className="col pr-0 text-center text-md-right">
             <Search />
-          </Col>
+          </div>
         )}
-        <Col>
+        <div className="col pr-4">
           <UserActionGroup />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   )
 }
