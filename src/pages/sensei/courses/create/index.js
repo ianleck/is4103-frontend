@@ -816,6 +816,7 @@ const SenseiCreateCourse = () => {
                           onConfirm={() => submitCourseForApproval()}
                           okText="Yes"
                           cancelText="No"
+                          disabled={!isCourseCreated}
                         >
                           <Button
                             disabled={!isCourseCreated}

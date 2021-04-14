@@ -10,7 +10,7 @@ const UserGroupTopBar = () => {
   return (
     <div className={`${style.topbar}`}>
       <div className="row justify-content-end">
-        {user.userType !== USER_TYPE_ENUM.ADMIN && <Search />}
+        <div className="col-auto mr-2">{user.userType !== USER_TYPE_ENUM.ADMIN && <Search />}</div>
         <div className="col-auto pl-0">
           <UserActionGroup />
         </div>
