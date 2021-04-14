@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Image, List, Rate, Skeleton } from 'antd'
+import { Button, List, Rate, Skeleton } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { isEmpty, isNil } from 'lodash'
@@ -21,6 +21,7 @@ import OccupationCard from 'components/Profile/OccupationCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import Reviews from 'components/Common/Reviews'
+import CourseActions from 'components/Common/CourseActionCard'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -54,7 +55,6 @@ const ViewCourseDetailsPublic = () => {
       setCurrentSensei(result.course.Sensei)
       if (!isNil(result.course.Reviews)) {
         setReviews(result.course.Reviews)
-        console.log('reviews', result.course.Reviews)
         initPageItems(
           setIsReviewLoading,
           result.course.Reviews,
@@ -166,57 +166,6 @@ const ViewCourseDetailsPublic = () => {
     return <ProfileBlockedCard />
   }
 
-  const CourseActions = () => {
-    return (
-      <div className="card">
-        <div className="course-card-img-max overflow-hidden">
-          <Image
-            className="course-card-img"
-            src={
-              !isNil(currentCourse.imgUrl)
-                ? currentCourse.imgUrl
-                : '/resources/images/course-placeholder.png'
-            }
-          />
-        </div>
-        <div className="card-body">
-          <span className="text-secondary text-uppercase">{CURRENT_PRICE}</span>
-          <h2 className="font-weight-bold">${parseFloat(currentCourse.priceAmount).toFixed(2)}</h2>
-          <div className="row align-items-center">
-            <div className="col pr-0">
-              <Button
-                block
-                type="primary"
-                size="large"
-                className="mt-3"
-                onClick={() => addToCart()}
-              >
-                {ADD_TO_CART}
-              </Button>
-            </div>
-            <div className="col-auto">
-              <ShareBtn
-                quote={`${getUserFirstName(user)} is sharing this course: [${
-                  currentCourse.title
-                }] with you!`}
-                url={`${FRONTEND_API}/courses/${currentCourse.courseId}`}
-                btnClassName="mt-3"
-              />
-            </div>
-          </div>
-          <hr className="mt-4" />
-          <div className="mt-4">
-            <CreatorInfo
-              history={history}
-              sensei={currentSensei}
-              accountId={currentCourse.accountId}
-            />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div>
       <Helmet title="View Course" />
@@ -279,7 +228,42 @@ const ViewCourseDetailsPublic = () => {
           </Skeleton>
         </div>
         <div className="col-12 col-lg-5 col-xl-4 mt-4 mt-lg-0">
-          <CourseActions />
+          <CourseActions course={currentCourse}>
+            <span className="text-secondary text-uppercase">{CURRENT_PRICE}</span>
+            <h2 className="font-weight-bold">
+              ${parseFloat(currentCourse.priceAmount).toFixed(2)}
+            </h2>
+            <div className="row align-items-center">
+              <div className="col pr-0">
+                <Button
+                  block
+                  type="primary"
+                  size="large"
+                  className="mt-3"
+                  onClick={() => addToCart()}
+                >
+                  {ADD_TO_CART}
+                </Button>
+              </div>
+              <div className="col-auto">
+                <ShareBtn
+                  quote={`${getUserFirstName(user)} is sharing this course: [${
+                    currentCourse.title
+                  }] with you!`}
+                  url={`${FRONTEND_API}/courses/${currentCourse.courseId}`}
+                  btnClassName="mt-3"
+                />
+              </div>
+            </div>
+            <hr className="mt-4" />
+            <div className="mt-4">
+              <CreatorInfo
+                history={history}
+                sensei={currentSensei}
+                accountId={currentCourse.accountId}
+              />
+            </div>
+          </CourseActions>
         </div>
       </div>
     </div>

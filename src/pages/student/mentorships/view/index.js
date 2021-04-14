@@ -175,7 +175,7 @@ const ViewListing = () => {
       <>
         <div className="row p-0 mb-4 align-items-center">
           <div className="col-12 col-lg mt-2">
-            <span className="h3">{listing.name}</span>
+            <span className="h3 font-weight-bold">{listing.name}</span>
             <br />
             <div className="mt-2">
               <Rate disabled defaultValue={listing.rating} />

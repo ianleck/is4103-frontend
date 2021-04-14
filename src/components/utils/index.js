@@ -6,7 +6,7 @@ import { filter, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
-  return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
+  return moment(dateTime).format('DD MMM YYYY h:mm a')
 }
 
 export const sortArrByCreatedAt = (objArr, direction) => {

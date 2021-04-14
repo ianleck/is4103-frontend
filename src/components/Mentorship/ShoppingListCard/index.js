@@ -33,7 +33,7 @@ const MentorshipListingCard = data => {
             </span>
           </div>
           <div className="card-body">
-            <div className="row align-items-center justify-content-start">
+            <div className="row align-items-center justify-content-start mentorship-avatar">
               <div className="col-auto">
                 <Avatar
                   size={42}
