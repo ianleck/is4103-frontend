@@ -2,7 +2,7 @@ import { CloseOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/i
 import { Descriptions, Button, Modal, Form, Input, Popconfirm } from 'antd'
 import Avatar from 'antd/lib/avatar/avatar'
 import BackBtn from 'components/Common/BackBtn'
-import TaskComponent from 'components/Mentorship/Subscription/Task'
+import TaskComponent from 'components/Mentorship/Task'
 import { showNotification } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM, CONTRACT_TYPES } from 'constants/constants'
 import {

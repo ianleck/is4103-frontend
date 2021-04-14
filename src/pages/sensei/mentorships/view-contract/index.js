@@ -1,5 +1,5 @@
 import BackBtn from 'components/Common/BackBtn'
-import TaskComponent from 'components/Mentorship/Subscription/Task'
+import TaskComponent from 'components/Mentorship/Task'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
