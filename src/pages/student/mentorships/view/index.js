@@ -29,7 +29,7 @@ import OccupationCard from 'components/Profile/OccupationCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
-import MentorshipHeader from 'components/Mentorship/MentorshipHeader'
+import PageHeader from 'components/Common/PageHeader'
 
 const ViewListing = () => {
   const { id } = useParams()
@@ -160,15 +160,17 @@ const ViewListing = () => {
     return (
       <>
         <div className="row p-0 mb-4 align-items-center">
-          <div className="col-12">
-            <Rate disabled defaultValue={listing.rating} />
-          </div>
           <div className="col-12 col-lg mt-2">
             <span className="h3">{listing.name}</span>
             <br />
-            <small className="text-muted text-uppercase">
-              {`Last Updated On ${formatTime(listing.updatedAt)}`}
-            </small>
+            <div className="mt-2">
+              <Rate disabled defaultValue={listing.rating} />
+            </div>
+            <div className="mt-2">
+              <small className="text-muted text-uppercase">
+                {`Last Updated On ${formatTime(listing.updatedAt)}`}
+              </small>
+            </div>
           </div>
           <div className="col-12 col-lg-auto">
             <div className="card mb-0 border-0 shadow-none">
@@ -259,7 +261,7 @@ const ViewListing = () => {
           <BackBtn />
         </div>
       </div>
-      <MentorshipHeader listing={listing}>
+      <PageHeader type="mentorship" listing={listing}>
         <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto pr-0 mt-4 mt-lg-0">
           <Button
             key="mentorship-tab"
@@ -290,7 +292,7 @@ const ViewListing = () => {
             Mentor Profile
           </Button>
         </div>
-      </MentorshipHeader>
+      </PageHeader>
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
         <div className="col-12 col-lg-6 col-xl-7">
           <Skeleton active loading={isLoading}>

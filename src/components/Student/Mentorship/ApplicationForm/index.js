@@ -6,7 +6,7 @@ import {
   updateMentorshipApplication,
 } from 'services/mentorship/applications'
 import BackBtn from 'components/Common/BackBtn'
-import MentorshipHeader from 'components/Mentorship/MentorshipHeader'
+import PageHeader from 'components/Common/PageHeader'
 import { isEmpty, isNil, keys, map, trim } from 'lodash'
 import { getMentorshipListing } from 'services/mentorship/listings'
 import { formatTime, onFinishFailed, showNotification } from 'components/utils'
@@ -86,7 +86,7 @@ const ApplyListingForm = () => {
           <BackBtn />
         </div>
       </div>
-      <MentorshipHeader listing={listing}>
+      <PageHeader type="mentorship" listing={listing}>
         <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto mt-4 mt-lg-0">
           <Button
             key="showDetailsModal"
@@ -103,7 +103,7 @@ const ApplyListingForm = () => {
             {!isNil(contract.mentorshipContractId) ? 'Update Application' : 'Submit Application'}
           </Button>
         </div>
-      </MentorshipHeader>
+      </PageHeader>
       <div className="row mt-4">
         <div className="col-12">
           <div className="card">
