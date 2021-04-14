@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Descriptions, Image, List, Rate, Typography } from 'antd'
+import { Button, Image, List, Rate, Typography } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { indexOf, isEmpty, isNil, map, random } from 'lodash'
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import { ADD_TO_CART, CREATOR_INFO, CURRENT_PRICE, DIGI_DOJO, NA } from 'constants/text'
-import {
-  formatTime,
-  getUserFirstName,
-  getUserFullName,
-  sendToSocialProfile,
-} from 'components/utils'
-import SocialFollowBtn from 'components/Common/Social/FollowBtn'
-import { FRONTEND_API, USER_TYPE_ENUM } from 'constants/constants'
+import { ADD_TO_CART, CURRENT_PRICE } from 'constants/text'
+import { formatTime, getUserFirstName } from 'components/utils'
+import { FRONTEND_API } from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
+import CreatorInfo from 'components/Common/CreatorInfo'
+import BackBtn from 'components/Common/BackBtn'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -56,20 +51,11 @@ const ViewCourseDetailsPublic = () => {
   }
 
   return (
-    <div className="container">
+    <div>
       <Helmet title="View Course" />
       <div className="row pt-2">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
-          <Button
-            block
-            type="primary"
-            size="large"
-            shape="round"
-            icon={<ArrowLeftOutlined />}
-            onClick={() => history.goBack()}
-          >
-            Back
-          </Button>
+          <BackBtn />
         </div>
       </div>
       <div className="row mt-4">
@@ -167,54 +153,11 @@ const ViewCourseDetailsPublic = () => {
               </div>
               <hr className="mt-4" />
               <div className="mt-4">
-                <small className="text-uppercase text-secondary">{CREATOR_INFO}</small>
-                <div className="row mt-2 align-items-center">
-                  <div className="col-auto">
-                    <div className="kit__utils__avatar kit__utils__avatar--size64 mb-3">
-                      <img
-                        src={
-                          currentSensei.profileImgUrl
-                            ? currentSensei.profileImgUrl
-                            : '/resources/images/avatars/avatar-2.png'
-                        }
-                        alt="Display Pic"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12">
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      className="h3 font-weight-bold clickable defocus-btn"
-                      onClick={() => sendToSocialProfile(history, currentCourse.accountId)}
-                      onKeyDown={e => e.preventDefault()}
-                    >
-                      {getUserFullName(currentSensei)}
-                    </div>
-                  </div>
-                  <div className="col-12 mt-2">
-                    <div className="h5 text-uppercase">
-                      {`${DIGI_DOJO} ${USER_TYPE_ENUM.SENSEI}`}
-                    </div>
-                  </div>
-                  <div className="col-12 mt-2">
-                    <SocialFollowBtn targetAccountId={currentCourse.accountId} />
-                  </div>
-                  <div className="col-12 mt-4">
-                    <Descriptions
-                      title="Credentials"
-                      bordered
-                      size="small"
-                      column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
-                    >
-                      <Descriptions.Item label="Occupation">
-                        {!isNil(currentSensei.occupation) ? currentSensei.occupation : NA}
-                      </Descriptions.Item>
-                    </Descriptions>
-                  </div>
-                </div>
+                <CreatorInfo
+                  history={history}
+                  sensei={currentSensei}
+                  accountId={currentCourse.accountId}
+                />
               </div>
             </div>
           </div>

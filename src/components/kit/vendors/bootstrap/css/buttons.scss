@@ -221,16 +221,19 @@ label.btn {
     }
   }
   &.btn-light {
+    color: $black;
     background-color: $light;
     border-color: $light;
     &:hover,
     &:active {
+      color: $gray-6;
       background-color: darken($light, 6%);
       border-color: darken($light, 6%);
     }
     &:hover:active,
     &:focus,
     &.active {
+      color: $gray-6;
       background-color: darken($light, 10%);
       border-color: darken($light, 10%);
     }

@@ -18,7 +18,7 @@ const BackBtn = ({ url }) => {
   return (
     <Button
       block
-      type="primary"
+      className="btn btn-light"
       size="large"
       shape="round"
       icon={<ArrowLeftOutlined />}

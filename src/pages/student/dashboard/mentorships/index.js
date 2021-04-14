@@ -42,32 +42,30 @@ const StudentMentorships = () => {
       <div
         role="button"
         tabIndex={0}
-        className="btn border-0 text-left w-100"
+        className="card btn border-0 text-left w-100"
         onClick={() => viewMentorshipContract(activeMentorship.mentorshipContractId)}
         onKeyDown={event => event.preventDefault()}
         key={i}
       >
-        <div className="card">
-          <div className="card-body">
-            <div className="row align-items-center">
-              <div className="col-12">
-                <h5 className="truncate-2-overflow text-wrap font-weight-bold">
-                  {activeMentorship.MentorshipListing.name}
-                </h5>
-                <span className="mb-2 h6 text-dark text-uppercase text-wrap">
-                  {getUserFullName(activeMentorship.MentorshipListing.Sensei)}
-                </span>
-                <div className="truncate-2-overflow text-wrap text-muted">
-                  {activeMentorship.MentorshipListing.description}
-                </div>
-                <div className="col-12 mt-1">
-                  <Progress percent={50} status="active" />
-                </div>
-                <div className="col-12 mt-1">
-                  <small className="text-uppercase text-secondary">
-                    Created on {formatTime(activeMentorship.createdAt)}
-                  </small>
-                </div>
+        <div className="card-body">
+          <div className="row align-items-center">
+            <div className="col-12">
+              <h5 className="truncate-2-overflow text-wrap font-weight-bold">
+                {activeMentorship.MentorshipListing.name}
+              </h5>
+              <span className="mb-2 h6 text-dark text-uppercase text-wrap">
+                {getUserFullName(activeMentorship.MentorshipListing.Sensei)}
+              </span>
+              <div className="truncate-2-overflow text-wrap text-muted">
+                {activeMentorship.MentorshipListing.description}
+              </div>
+              <div className="col-12 mt-1">
+                <Progress percent={50} status="active" />
+              </div>
+              <div className="col-12 mt-1">
+                <small className="text-uppercase text-secondary">
+                  Created on {formatTime(activeMentorship.createdAt)}
+                </small>
               </div>
             </div>
           </div>

@@ -4,7 +4,7 @@ import { FacebookOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/
 import { FacebookShareButton } from 'react-share'
 import QRCode from 'react-qr-code'
 
-const ShareBtn = ({ quote, url, btnType, btnClassName, btnSize, btnShape }) => {
+const ShareBtn = ({ quote, url, btnType, btnClassName, btnSize, btnShape, block }) => {
   const { Paragraph } = Typography
   const [showQRCode, setShowQRCode] = useState(false)
 
@@ -45,6 +45,7 @@ const ShareBtn = ({ quote, url, btnType, btnClassName, btnSize, btnShape }) => {
           className={btnClassName || ''}
           shape={btnShape || false}
           icon={<ShareAltOutlined />}
+          block={block}
         >
           Share
         </Button>
