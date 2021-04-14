@@ -224,6 +224,7 @@ const SenseiCreateCourse = () => {
           onConfirm={() => handleDeleteLesson(record)}
           okText="Delete"
           okType="danger"
+          disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING}
         >
           <Button
             type="danger"
@@ -816,6 +817,7 @@ const SenseiCreateCourse = () => {
                           onConfirm={() => submitCourseForApproval()}
                           okText="Yes"
                           cancelText="No"
+                          disabled={!isCourseCreated}
                         >
                           <Button
                             disabled={!isCourseCreated}
