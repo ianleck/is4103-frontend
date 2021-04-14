@@ -297,6 +297,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/sensei/mentorships/contracts',
+    Component: lazy(() => import('pages/sensei/mentorships/contracts')),
+    exact: true,
+  },
+  {
     path: '/sensei/mentees',
     Component: lazy(() => import('pages/sensei/mentees')),
     exact: true,
