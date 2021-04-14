@@ -1,8 +1,8 @@
 import { DeleteOutlined, FileOutlined, MoreOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Dropdown, Input, Menu, message, Popconfirm, Upload } from 'antd'
+import { Button, DatePicker, Dropdown, Input, Menu, message, Popconfirm, Space, Upload } from 'antd'
 import Axios from 'axios'
 import StatusTag from 'components/Common/StatusTag'
-import { BACKEND_API } from 'constants/constants'
+import { BACKEND_API, TASK_PROGRESS } from 'constants/constants'
 import download from 'js-file-download'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
@@ -63,16 +63,16 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="COMPLETED">COMPLETED</Menu.Item>
-      <Menu.Item key="ONGOING">ONGOING</Menu.Item>
-      <Menu.Item key="NOT_STARTED">NOT STARTED</Menu.Item>
+      <Menu.Item key={TASK_PROGRESS.COMPLETED}>{TASK_PROGRESS.COMPLETED}</Menu.Item>
+      <Menu.Item key={TASK_PROGRESS.ONGOING}>{TASK_PROGRESS.ONGOING}</Menu.Item>
+      <Menu.Item key={TASK_PROGRESS.NOT_STARTED}>{TASK_PROGRESS.NOT_STARTED}</Menu.Item>
     </Menu>
   )
 
   return (
     <div className="d-flex align-items-center justify-content-start" style={{ width: '100%' }}>
       <div className="col-12 col-md-7 d-flex justify-content-center align-items-center">
-        <div className="col-12 col-md-4 d-flex ">
+        <div className="col-12 col-md-4 d-flex">
           <Dropdown overlay={menu} trigger={['click']} placement="topRight" className="clickable">
             <div style={{ width: '100%' }} className="d-flex align-items-center">
               <StatusTag
@@ -119,23 +119,25 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
         />
       </div>
       <div className="col-2 d-flex justify-content-end">
-        <Upload {...uploadProps(data.taskId)}>
-          <Button icon={<UploadOutlined />} shape="circle" />
-        </Upload>
-        <Button
-          icon={<FileOutlined />}
-          shape="circle"
-          disabled={!data.attachmentUrl}
-          onClick={() => downloadFile(data.attachmentUrl)}
-        />
-        <Popconfirm
-          title="Do you wish to delete the task?"
-          onConfirm={() => deleteOneTask(data.taskId)}
-          okText="Delete"
-          okType="danger"
-        >
-          <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
-        </Popconfirm>
+        <Space size="small">
+          <Upload {...uploadProps(data.taskId)}>
+            <Button icon={<UploadOutlined />} shape="circle" />
+          </Upload>
+          <Button
+            icon={<FileOutlined />}
+            shape="circle"
+            disabled={!data.attachmentUrl}
+            onClick={() => downloadFile(data.attachmentUrl)}
+          />
+          <Popconfirm
+            title="Do you wish to delete the task?"
+            onConfirm={() => deleteOneTask(data.taskId)}
+            okText="Delete"
+            okType="danger"
+          >
+            <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Space>
       </div>
     </div>
   )

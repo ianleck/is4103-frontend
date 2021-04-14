@@ -136,6 +136,11 @@ export async function getSenseiMenuData() {
           url: '/sensei/mentorships/applications',
         },
         {
+          title: 'Mentorship Contracts',
+          key: 'mentorshipContracts',
+          url: '/sensei/mentorships/contracts',
+        },
+        {
           title: 'Mentee Overview',
           key: 'menteeOverview',
           url: '/sensei/mentees',

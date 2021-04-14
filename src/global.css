@@ -61,6 +61,9 @@
   height: 250px;
 }
 
+.mentorship-application-modal-body {
+  height: 500px;
+}
 .menu-item {
   width: 275px;
   white-space: normal !important;

@@ -24,7 +24,7 @@ import { useHistory } from 'react-router-dom'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector, useDispatch } from 'react-redux'
-import { formatTime, showNotification } from 'components/utils'
+import { formatTime, onFinishFailed, showNotification } from 'components/utils'
 import { terminateMentorshipContract } from 'services/mentorship/subscription'
 import {
   CONTRACT_CANCEL_ERR,
@@ -132,6 +132,9 @@ const MentorshipContractsTable = () => {
       width: '10%',
       sorter: (a, b) => a.mentorPassCount - b.mentorPassCount,
       sortDirections: ['ascend', 'descend'],
+      render: record => {
+        return record || '-'
+      },
     },
     {
       title: 'Action',
@@ -173,10 +176,6 @@ const MentorshipContractsTable = () => {
   const recordSelected = record => {
     setSelectedRecord(record)
     setShowBuyPass(true)
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const checkInCart = listingId => {
