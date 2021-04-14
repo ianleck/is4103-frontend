@@ -110,6 +110,7 @@ const MentorshipSubscriptionView = () => {
               okText="Yes"
               okType="danger"
               visible={showCancelPopconfirm}
+              disabled={!isCancellable}
             >
               <Button
                 shape="round"
