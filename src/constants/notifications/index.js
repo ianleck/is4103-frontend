@@ -124,6 +124,11 @@ export const TESTIMONIAL_EDIT_ERR = 'There was an error editing your testimonial
 export const COURSE_REFUND_REQUESTED = 'Refund for your course has been submitted.'
 export const MENTORSHIP_REFUND_REQUESTED = 'Refund for your mentorship passes has been submitted.'
 
+export const MTS_APP_SUB_SUCCESS = 'Your mentorship application was submitted successfully.'
+export const MTS_APP_UPDATE_SUCCESS = 'Your mentorship application was updated successfully.'
+export const MTS_APP_SUB_ERR = 'There was an error submitting your mentorship application.'
+export const MTS_APP_UPDATE_ERR = 'There was an error updating your mentorship application.'
+
 export const CONTRACT_CANCEL_SUCCESS = 'Your mentorship contract was successfully cancelled.'
 export const CONTRACT_CANCEL_ERR = 'There was an error cancelling your mentorship contract.'
 

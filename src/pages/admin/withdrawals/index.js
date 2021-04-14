@@ -13,9 +13,11 @@ import {
 import { WITHDRAWALS, WITHDRAWAL_MGT } from 'constants/text'
 import { filter, isNil, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { approveWithdrawalRequest, rejectWithdrawalRequest, viewBillings } from 'services/wallet'
 
 const WithdrawalManagement = () => {
+  const history = useHistory()
   const [currentTableData, setCurrentTableData] = useState([])
   const [currentFilter, setCurrentFilter] = useState('all')
 
@@ -53,6 +55,11 @@ const WithdrawalManagement = () => {
     } else {
       showNotification('error', ERROR, APPROVE_WITHDRAWAL_REQ_ERR)
     }
+  }
+
+  const viewWithdrawalRequestBilling = id => {
+    const path = `/admin/billing/view/${id}`
+    history.push(path)
   }
 
   const getBillings = async () => {
@@ -157,7 +164,7 @@ const WithdrawalManagement = () => {
             size="large"
             icon={<InfoCircleOutlined />}
             onClick={() => {
-              console.log('record is ', record)
+              viewWithdrawalRequestBilling(record.billingId)
             }}
           />
           <Button
