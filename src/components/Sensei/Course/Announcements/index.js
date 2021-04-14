@@ -130,6 +130,7 @@ const CourseAnnouncements = ({ currentCourse, isCourseCreated }) => {
           onConfirm={() => removeAnnouncement(record)}
           okText="Delete"
           okType="danger"
+          disabled={currentCourse.adminVerified === ADMIN_VERIFIED_ENUM.PENDING}
         >
           <Button
             type="danger"

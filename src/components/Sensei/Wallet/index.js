@@ -60,6 +60,7 @@ const SenseiWallet = ({
         okText="Withdraw"
         okType="primary"
         onCancel={handleCancel}
+        disabled={!isWithdrawable || isExistingWithdrawalRequest}
       >
         <Button
           block
