@@ -173,7 +173,7 @@ const TaskComponent = () => {
   return (
     <Card title="Tasks">
       <div className="row">
-        <div className="col-12 col-md-3 d-flex align-items-start justify-content-center flex-column">
+        <div className="col-12 col-md-3 d-flex align-items-start justify-content-center flex-column mb-md-4">
           <TaskBucket
             taskBuckets={taskBuckets}
             showTasks={showTasks}
@@ -183,21 +183,23 @@ const TaskComponent = () => {
           />
         </div>
         <div className="col-12 col-md-9 align-items-center justify-content-center flex-col">
-          <div className="col-12 d-flex align-items-center justify-content-between">
-            <div className="col-12 col-md-8">
+          <div className="row d-flex align-items-center justify-content-between">
+            <div className="col-xs-12 col-lg-10 p-2">
               <span style={{ fontSize: '18px', fontWeight: 'bold', marginRight: '12px' }}>
                 Task Progress
               </span>
               <Progress percent={progressNumber} status="active" />
             </div>
-
-            <Button
-              type="primary"
-              onClick={() => addEmptyTask()}
-              disabled={taskBuckets.length === 0}
-            >
-              Add Task
-            </Button>
+            <div className="col-xs-12 col-lg-2">
+              <Button
+                type="primary"
+                block
+                onClick={() => addEmptyTask()}
+                disabled={taskBuckets.length === 0}
+              >
+                Add Task
+              </Button>
+            </div>
           </div>
           <div className="col-12 d-flex align-items-center justify-content-center height-400">
             {activeTaskBucket.tasks.length > 0 ? (
