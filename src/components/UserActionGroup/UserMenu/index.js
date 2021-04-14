@@ -185,24 +185,6 @@ const UserMenu = () => {
     </Menu>
   )
 
-  const pendingLoginSubMenu = (
-    <Menu selectable={false}>
-      <Menu.Item>
-        <a href="#" onClick={redirectToLogin(false)}>
-          <i className="fe fe-user mr-2" />
-          Login as Sensei
-        </a>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item>
-        <a href="/auth/register">
-          <i className="fe fe-user mr-2" />
-          Sign Up
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
-
   const GetDefaultProfilePic = () => {
     if (user.userType === USER_TYPE_ENUM.STUDENT) {
       return '/resources/images/avatars/apprentice.png'
@@ -213,11 +195,36 @@ const UserMenu = () => {
     return '/resources/images/avatars/administrator.png'
   }
 
+  const pendingLoginSubMenu = (
+    <Menu selectable={false}>
+      <Menu.Item>
+        <a href="#" onClick={redirectToLogin(false)}>
+          <i className="fe fe-user mr-2" />
+          Login as Sensei
+        </a>
+      </Menu.Item>
+    </Menu>
+  )
+
   const PendingLoginMenu = () => {
     return (
-      <Dropdown.Button overlay={pendingLoginSubMenu} onClick={redirectToLogin(true)}>
-        Login
-      </Dropdown.Button>
+      <div className="row">
+        <div className="col-auto">
+          <Dropdown.Button
+            type="default"
+            overlay={pendingLoginSubMenu}
+            onClick={redirectToLogin(true)}
+            size="large"
+          >
+            Login
+          </Dropdown.Button>
+        </div>
+        <div className="col-auto pl-0">
+          <Button type="default" size="large" onClick={() => history.push(`/auth/register`)}>
+            Sign up
+          </Button>
+        </div>
+      </div>
     )
   }
 
