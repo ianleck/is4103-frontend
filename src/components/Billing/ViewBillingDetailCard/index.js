@@ -30,7 +30,7 @@ const ViewBillingDetailCard = data => {
     return item.billingType === BILLING_TYPE.COURSE
   }
 
-  const isMentorshipSubscription = billing.billingType === BILLING_TYPE.MENTORSHIP
+  const isMentorshipContract = billing.billingType === BILLING_TYPE.MENTORSHIP
 
   const printIframe = documentId => {
     const iframe = document.frames
@@ -121,7 +121,7 @@ const ViewBillingDetailCard = data => {
     if (isWithdrawal && isAdmin) {
       return <AdminWithdrawalContent />
     }
-    if (isMentorshipSubscription) {
+    if (isMentorshipContract) {
       return (
         <div className="row mb-2">
           <div className="w-100 col-12">

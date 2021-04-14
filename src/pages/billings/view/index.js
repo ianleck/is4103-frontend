@@ -42,11 +42,11 @@ const BillingView = () => {
           setIsLoading(false)
         }
       }
-      // for SUBSCRIPTION billing
+      // for MENTORSHIP billing
       if (result.billings[0].billingType === BILLING_TYPE.MENTORSHIP) {
-        const subscription = await getContract(result.billings[0].contractId)
-        if (subscription && !isNil(subscription.contract.MentorshipListing)) {
-          setProduct(subscription.contract.MentorshipListing)
+        const contract = await getContract(result.billings[0].contractId)
+        if (contract && !isNil(contract.contract.MentorshipListing)) {
+          setProduct(contract.contract.MentorshipListing)
           setIsLoading(false)
         }
       }
