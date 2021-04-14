@@ -99,7 +99,8 @@ const AdminTable = () => {
         render: record => (
           <Button
             type="primary"
-            shape="round"
+            size="large"
+            shape="circle"
             onClick={() => buttonClick(record)}
             icon={<InfoCircleOutlined />}
           />

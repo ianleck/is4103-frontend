@@ -24,7 +24,14 @@ import { useHistory } from 'react-router-dom'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector, useDispatch } from 'react-redux'
-import { formatTime } from 'components/utils'
+import { formatTime, showNotification } from 'components/utils'
+import { terminateMentorshipContract } from 'services/mentorship/subscription'
+import {
+  CONTRACT_CANCEL_ERR,
+  CONTRACT_CANCEL_SUCCESS,
+  ERROR,
+  SUCCESS,
+} from 'constants/notifications'
 
 const MentorshipContractsTable = () => {
   const { TabPane } = Tabs
@@ -59,6 +66,21 @@ const MentorshipContractsTable = () => {
     history.push({
       pathname: `/student/dashboard/mentorship/subscription/${listing.mentorshipContractId}`,
     })
+  }
+
+  const onCancelContract = async record => {
+    const response = await terminateMentorshipContract({
+      mentorshipContractId: record.mentorshipContractId,
+      action: CONTRACT_PROGRESS_ENUM.CANCELLED,
+    })
+
+    if (response) {
+      showNotification('success', SUCCESS, CONTRACT_CANCEL_SUCCESS)
+      getContracts()
+      changeTab('cancelled')
+    } else {
+      showNotification('error', ERROR, CONTRACT_CANCEL_ERR)
+    }
   }
 
   const tableColumns = [
@@ -138,7 +160,7 @@ const MentorshipContractsTable = () => {
             <Popconfirm
               title="Are you sure you wish to cancel your subscription?"
               icon={<QuestionCircleOutlined className="text-danger" />}
-              onConfirm={() => {}}
+              onConfirm={() => onCancelContract(record)}
             >
               <Button type="danger" shape="circle" size="large" icon={<CloseOutlined />} />
             </Popconfirm>

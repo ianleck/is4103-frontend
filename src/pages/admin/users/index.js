@@ -106,7 +106,7 @@ const UsersManagement = () => {
                 onClick={() => redirectToUserProfile(record)}
               />
               <Button
-                className="btn btn-success"
+                type="primary"
                 size="large"
                 shape="circle"
                 icon={<CheckOutlined />}
