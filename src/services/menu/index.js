@@ -62,16 +62,6 @@ export async function getAdminMenuData() {
       icon: 'fe fe-briefcase',
       children: [
         {
-          title: 'Revenue',
-          key: 'revenue',
-          url: '/admin/revenue-management',
-        },
-        {
-          title: 'Profit',
-          key: 'profit',
-          url: '/admin/profit',
-        },
-        {
           title: 'User Statistics',
           key: 'userStatistics',
           url: '/admin/user-statistics',
@@ -92,11 +82,6 @@ export async function getAdminMenuData() {
           title: 'Courses',
           key: 'courseContent',
           url: '/admin/course-content-management',
-        },
-        {
-          title: 'Announcements',
-          key: 'announcementContent',
-          url: '/admin/announcement-content-management',
         },
         {
           title: 'Complaints',
@@ -163,14 +148,14 @@ export async function getSenseiMenuData() {
           url: '/sensei/tasks',
         },
         {
+          title: 'Consultations',
+          key: 'consultation',
+          url: '/sensei/consultation',
+        },
+        {
           title: 'Testimonials',
           key: 'testimonials',
           url: '/sensei/testimonials',
-        },
-        {
-          title: 'Chat/Video Call',
-          key: 'chatVideoCall',
-          url: '/sensei/chatVideoCall',
         },
       ],
     },
@@ -204,7 +189,7 @@ export async function getSenseiMenuData() {
         {
           title: 'My Profile',
           key: 'myProfile',
-          url: '/sensei/myProfile',
+          url: '/sensei/profile',
         },
       ],
     },
