@@ -28,6 +28,19 @@ export async function getMentees(accountId) {
     .catch(err => console.log(err))
 }
 
+export async function getSenseiMentorshipContracts(accountId) {
+  const url = `/mentorship/contract/sensei/${accountId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getActiveMentorshipContract(mentorshipContractId) {
   const url = `/mentorship/contract/active/${mentorshipContractId}`
   return apiClient
