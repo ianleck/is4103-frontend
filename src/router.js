@@ -192,12 +192,12 @@ const routes = [
   },
   {
     path: '/admin/course-content-management/:id',
-    Component: lazy(() => import('pages/admin/courses/view')),
+    Component: lazy(() => import('pages/student/dashboard/courses/view')),
     exact: true,
   },
   {
     path: '/admin/course-content-management/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/admin/courses/view-lesson')),
+    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
     exact: true,
   },
   {

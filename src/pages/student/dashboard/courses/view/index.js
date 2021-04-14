@@ -2,12 +2,18 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { filter, isEmpty, isNil } from 'lodash'
 import { getAnnouncements, getCourseById, getPurchasedCourses } from 'services/courses'
-import { LESSONS, COURSE_DESC } from 'constants/text'
+import { LESSONS, COURSE_DESC, APPROVE_COURSE, REJECT_COURSE } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button, Modal, Form, Input } from 'antd'
-import { ArrowDownOutlined, DollarCircleOutlined, EditOutlined } from '@ant-design/icons'
+import { Button, Modal, Form, Input, Space } from 'antd'
+import {
+  ArrowDownOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  DollarCircleOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
 import ReviewModal from 'components/Review/ReviewModal'
 import { useSelector } from 'react-redux'
 import { addCourseReview, editCourseReview } from 'services/review'
@@ -19,15 +25,25 @@ import {
   REVIEW_EDIT_SUCCESS,
   SUCCESS,
   COURSE_REFUND_REQUESTED,
+  COURSE_ACCEPT_SUCCESS,
+  COURSE_ACCEPT_ERROR,
+  COURSE_REJECT_SUCCESS,
+  COURSE_REJECT_ERROR,
 } from 'constants/notifications'
 import { getUserFirstName, initPageItems, onFinishFailed, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
-import { FRONTEND_API, CONTRACT_TYPES, USER_TYPE_ENUM } from 'constants/constants'
+import {
+  FRONTEND_API,
+  CONTRACT_TYPES,
+  USER_TYPE_ENUM,
+  ADMIN_VERIFIED_ENUM,
+} from 'constants/constants'
 import { requestRefund } from 'services/wallet'
 import PageHeader from 'components/Common/PageHeader'
 import CourseActions from 'components/Common/CourseActionCard'
 import CreatorInfo from 'components/Common/CreatorInfo'
 import Reviews from 'components/Common/Reviews'
+import { acceptCourseRequest, rejectCourseRequest } from 'services/courses/requests'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -55,7 +71,26 @@ const StudentCourseDetails = () => {
   const changeTab = tab => {
     setCurrentTab(tab)
   }
-  console.log('reviews', reviews) // this is needed as a placeholder, Nat will deal with reviews in a later PR
+
+  const approveCourse = async () => {
+    const result = await acceptCourseRequest(id)
+    if (result && result.success) {
+      getCourseDetails()
+      showNotification('success', SUCCESS, COURSE_ACCEPT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_ACCEPT_ERROR)
+    }
+  }
+
+  const rejectCourse = async () => {
+    const result = await rejectCourseRequest(id)
+    if (result && result.success) {
+      getCourseDetails()
+      showNotification('success', SUCCESS, COURSE_REJECT_SUCCESS)
+    } else {
+      showNotification('error', ERROR, COURSE_REJECT_ERROR)
+    }
+  }
 
   const getCourseDetails = async () => {
     const courseDetails = await getCourseById(id)
@@ -185,12 +220,42 @@ const StudentCourseDetails = () => {
     )
   }
 
+  const AdminCourseActions = () => {
+    return (
+      <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
+        <Space size="large">
+          <Button
+            className="btn btn-success text-white"
+            shape="round"
+            size="large"
+            icon={<CheckOutlined />}
+            disabled={course.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED}
+            onClick={() => approveCourse()}
+          >
+            {APPROVE_COURSE}
+          </Button>
+          <Button
+            className="btn btn-danger text-white"
+            shape="round"
+            size="large"
+            icon={<CloseOutlined />}
+            disabled={course.adminVerified === ADMIN_VERIFIED_ENUM.REJECTED}
+            onClick={() => rejectCourse()}
+          >
+            {REJECT_COURSE}
+          </Button>
+        </Space>
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className="row pt-2 justify-content-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />
         </div>
+        {user.userType === USER_TYPE_ENUM.ADMIN && <AdminCourseActions />}
       </div>
       <PageHeader type="course" course={course}>
         <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto pr-0 mt-4 mt-lg-0">
@@ -320,7 +385,7 @@ const StudentCourseDetails = () => {
       </div>
       <div className="row mt-4 pb-5" ref={myRef}>
         <div className="col-12">
-          <CourseLessonsList course={course} />
+          <CourseLessonsList course={course} isAdmin={user.userType === USER_TYPE_ENUM.ADMIN} />
         </div>
       </div>
 
