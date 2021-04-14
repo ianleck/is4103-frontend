@@ -16,7 +16,7 @@ import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
-import { getSubscription, terminateMentorshipContract } from 'services/mentorship/subscription'
+import { getContract, terminateMentorshipContract } from 'services/mentorship/subscription'
 import { requestRefund } from 'services/wallet'
 
 const MentorshipContractView = () => {
@@ -28,7 +28,7 @@ const MentorshipContractView = () => {
   const [showCancelPopconfirm, setShowCancelPopconfirm] = useState(false)
 
   const getMentorshipSubscription = async () => {
-    const result = await getSubscription(id)
+    const result = await getContract(id)
 
     if (result && !isNil(result.contract)) {
       setMentorshipContract(result.contract)

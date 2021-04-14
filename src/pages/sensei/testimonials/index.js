@@ -20,7 +20,7 @@ import {
   getTestimonialByFilter,
 } from 'services/mentorship/testimonials'
 import { getProfile } from 'services/user'
-import { getSubscription } from 'services/mentorship/subscription'
+import { getContract } from 'services/mentorship/subscription'
 
 const TestimonialPage = () => {
   const { accountId, mentorshipContractId } = useParams()
@@ -43,7 +43,7 @@ const TestimonialPage = () => {
   }
 
   const getMentorshipContract = async () => {
-    const response = await getSubscription(mentorshipContractId)
+    const response = await getContract(mentorshipContractId)
     if (response && !isNil(response.contract)) {
       if (!isNil(response.contract.MentorshipListing))
         setMentorshipListing(response.contract.MentorshipListing)

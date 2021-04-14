@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSensei } from 'services/admin'
 import { getCourseById } from 'services/courses'
-import { getSubscription } from 'services/mentorship/subscription'
+import { getContract } from 'services/mentorship/subscription'
 import { viewBilling, viewWallet } from 'services/wallet'
 
 const BillingView = () => {
@@ -44,7 +44,7 @@ const BillingView = () => {
       }
       // for SUBSCRIPTION billing
       if (result.billings[0].billingType === BILLING_TYPE.MENTORSHIP) {
-        const subscription = await getSubscription(result.billings[0].contractId)
+        const subscription = await getContract(result.billings[0].contractId)
         if (subscription && !isNil(subscription.contract.MentorshipListing)) {
           setProduct(subscription.contract.MentorshipListing)
           setIsLoading(false)
