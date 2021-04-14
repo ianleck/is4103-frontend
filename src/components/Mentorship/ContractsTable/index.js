@@ -161,7 +161,7 @@ const MentorshipContractsTable = () => {
           {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
             record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
             <Popconfirm
-              title="Are you sure you wish to cancel your subscription?"
+              title="Are you sure you wish to cancel your mentorship contract?"
               icon={<QuestionCircleOutlined className="text-danger" />}
               onConfirm={() => onCancelContract(record)}
             >
@@ -224,9 +224,9 @@ const MentorshipContractsTable = () => {
     </div>
   )
 
-  const showContracts = (subscriptionStatus, dataSource, columns) => {
-    const numSubscriptions = size(dataSource)
-    const isRenderEmpty = numSubscriptions === 0
+  const showContracts = (contractStatus, dataSource, columns) => {
+    const numContracts = size(dataSource)
+    const isRenderEmpty = numContracts === 0
 
     const customizeRenderEmpty = () => (
       <div className="text-center">
@@ -246,10 +246,10 @@ const MentorshipContractsTable = () => {
     return (
       <div>
         <div className="row justify-content-between align-items-center mt-2">
-          {subscriptionStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
+          {contractStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
             <div className="col-auto">
-              You currently have {numSubscriptions} {renderStyledStatus(subscriptionStatus)}{' '}
-              mentorship {numSubscriptions === 1 ? 'subscription' : 'subscriptions'}.
+              You currently have {numContracts} {renderStyledStatus(contractStatus)} mentorship{' '}
+              {numContracts === 1 ? 'contract' : 'contracts'}.
             </div>
           )}
         </div>
