@@ -62,8 +62,7 @@ const ViewBillingDetailCard = data => {
 
   const viewUserProfilePage = () => {
     if (!isNil(recipient)) {
-      const type = recipient.userType.toLowerCase()
-      const path = `/admin/user-management/${type}/${recipient.accountId}`
+      const path = `/admin/user-management/profile/${recipient.accountId}`
       history.push(path)
     }
   }
