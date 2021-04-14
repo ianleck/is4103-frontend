@@ -351,3 +351,15 @@ export const mapCategoriesToMenu = (categories, type) => {
   })
   return menuData
 }
+
+export const getImage = (type, object) => {
+  if (type === 'user')
+    return object?.profileImgUrl ? object.profileImgUrl : '/resources/images/avatars/avatar-2.png'
+  if (type === 'mentorship')
+    return object.Sensei?.profileImgUrl
+      ? object.Sensei?.profileImgUrl
+      : '/resources/images/avatars/avatar-2.png'
+  if (type === 'course')
+    return !isNil(object.imgUrl) ? object.imgUrl : '/resources/images/course-placeholder.png'
+  return '/resources/images/avatars/avatar-2.png'
+}

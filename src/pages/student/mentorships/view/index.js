@@ -16,7 +16,7 @@ import {
   SUCCESS,
 } from 'constants/notifications'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
-import { formatTime, getUserFirstName, showNotification } from 'components/utils'
+import { formatTime, getUserFirstName, initPageItems, showNotification } from 'components/utils'
 import { DEFAULT_TIMEOUT, FRONTEND_API, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import BackBtn from 'components/Common/BackBtn'
 import ShareBtn from 'components/Common/Social/ShareBtn'
@@ -30,6 +30,7 @@ import PersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
 import PageHeader from 'components/Common/PageHeader'
+import Reviews from 'components/Common/Reviews'
 
 const ViewListing = () => {
   const { id } = useParams()
@@ -50,6 +51,11 @@ const ViewListing = () => {
 
   const [hasExistingContract, setHasExistingContract] = useState(false)
   const [hasExistingApprovedContract, setHasExistingApprovedContract] = useState(false)
+
+  const [isReviewLoading, setIsReviewLoading] = useState(false)
+  const [paginatedReviews, setPaginatedReviews] = useState([])
+  const [currentPageIdx, setCurrentPageIdx] = useState(1)
+  const [showLoadMore, setShowLoadMore] = useState(false)
 
   const changeTab = tab => {
     setCurrentTab(tab)
@@ -77,6 +83,14 @@ const ViewListing = () => {
 
       if (!isNil(response.mentorshipListing.Reviews)) {
         setReviews(response.mentorshipListing.Reviews)
+        initPageItems(
+          setIsReviewLoading,
+          response.mentorshipListing.Reviews,
+          setPaginatedReviews,
+          setCurrentPageIdx,
+          setShowLoadMore,
+        )
+
         const reviewByUser = filter(response.mentorshipListing.Reviews, review => {
           return review.accountId === user.accountId
         })
@@ -297,6 +311,20 @@ const ViewListing = () => {
         <div className="col-12 col-lg-6 col-xl-7">
           <Skeleton active loading={isLoading}>
             {currentTab === 'info' && <MentorshipInfo />}
+            {currentTab === 'reviews' && (
+              <Reviews
+                reviews={reviews}
+                rating={listing.rating}
+                isReviewLoading={isReviewLoading}
+                setIsReviewLoading={setIsReviewLoading}
+                paginatedReviews={paginatedReviews}
+                setPaginatedReviews={setPaginatedReviews}
+                currentPageIdx={currentPageIdx}
+                setCurrentPageIdx={setCurrentPageIdx}
+                showLoadMore={showLoadMore}
+                setShowLoadMore={setShowLoadMore}
+              />
+            )}
             {currentTab === 'profile' && <MentorProfile />}
           </Skeleton>
         </div>

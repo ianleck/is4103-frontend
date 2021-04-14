@@ -1,13 +1,12 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, Image, List, Rate, Skeleton, Typography } from 'antd'
+import { Button, Image, List, Rate, Skeleton } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
-import { indexOf, isEmpty, isNil, map, random } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import { ADD_TO_CART, CURRENT_PRICE } from 'constants/text'
-import { formatTime, getUserFirstName, sortArrByCreatedAt } from 'components/utils'
+import { formatTime, getUserFirstName, initPageItems, sortArrByCreatedAt } from 'components/utils'
 import { DEFAULT_TIMEOUT, DIRECTION, FRONTEND_API } from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import CreatorInfo from 'components/Common/CreatorInfo'
@@ -21,6 +20,7 @@ import IndustryCard from 'components/Profile/IndustryCard'
 import OccupationCard from 'components/Profile/OccupationCard'
 import PersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
+import Reviews from 'components/Common/Reviews'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -30,11 +30,17 @@ const ViewCourseDetailsPublic = () => {
 
   const [currentCourse, setCurrentCourse] = useState('')
   const [currentSensei, setCurrentSensei] = useState('')
+  const [reviews, setReviews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const [currentTab, setCurrentTab] = useState('info')
   const [viewUser, setViewUser] = useState('')
   const [isBlocked, setIsBlocked] = useState('')
+
+  const [isReviewLoading, setIsReviewLoading] = useState(false)
+  const [paginatedReviews, setPaginatedReviews] = useState([])
+  const [currentPageIdx, setCurrentPageIdx] = useState(1)
+  const [showLoadMore, setShowLoadMore] = useState(false)
 
   const changeTab = tab => {
     setCurrentTab(tab)
@@ -46,6 +52,17 @@ const ViewCourseDetailsPublic = () => {
     if (result && !isNil(result.course)) {
       setCurrentCourse(result.course)
       setCurrentSensei(result.course.Sensei)
+      if (!isNil(result.course.Reviews)) {
+        setReviews(result.course.Reviews)
+        console.log('reviews', result.course.Reviews)
+        initPageItems(
+          setIsReviewLoading,
+          result.course.Reviews,
+          setPaginatedReviews,
+          setCurrentPageIdx,
+          setShowLoadMore,
+        )
+      }
     }
     setTimeout(() => {
       setIsLoading(false)
@@ -241,13 +258,27 @@ const ViewCourseDetailsPublic = () => {
         </div>
       </PageHeader>
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
-        <div className="col-12 col-lg-8 text-center text-lg-left order-12 order-lg-1">
+        <div className="col-12 col-lg-7 col-xl-8">
           <Skeleton active loading={isLoading}>
             {currentTab === 'info' && <CourseInfo />}
+            {currentTab === 'reviews' && (
+              <Reviews
+                reviews={reviews}
+                rating={currentCourse.rating}
+                isReviewLoading={isReviewLoading}
+                setIsReviewLoading={setIsReviewLoading}
+                paginatedReviews={paginatedReviews}
+                setPaginatedReviews={setPaginatedReviews}
+                currentPageIdx={currentPageIdx}
+                setCurrentPageIdx={setCurrentPageIdx}
+                showLoadMore={showLoadMore}
+                setShowLoadMore={setShowLoadMore}
+              />
+            )}
             {currentTab === 'profile' && <SenseiProfile />}
           </Skeleton>
         </div>
-        <div className="col-12 col-lg-4 order-1 order-lg-12">
+        <div className="col-12 col-lg-5 col-xl-4 mt-4 mt-lg-0">
           <CourseActions />
         </div>
       </div>

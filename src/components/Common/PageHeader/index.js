@@ -1,10 +1,13 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Avatar } from 'antd'
 import { isNil } from 'lodash'
-import { getUserFullName } from 'components/utils'
+import { getUserFullName, sendToSocialProfile } from 'components/utils'
 import style from './style.module.scss'
 
 const PageHeader = ({ type, listing, course, children }) => {
+  const history = useHistory()
+
   const getBackgroundImage = object => {
     if (type === 'user')
       return object?.profileImgUrl ? object.profileImgUrl : '/resources/images/avatars/avatar-2.png'
@@ -45,7 +48,18 @@ const PageHeader = ({ type, listing, course, children }) => {
             <div className="col-10 col-lg-5 col-xl-6">
               <span className="h5">{type === 'mentorship' ? listing.name : course.title}</span>
               <br />
-              <small className="text-muted">
+              <small
+                role="button"
+                tabIndex={0}
+                className="text-muted defocus-btn clickable"
+                onClick={() =>
+                  sendToSocialProfile(
+                    history,
+                    type === 'mentorship' ? listing.accountId : course.accountId,
+                  )
+                }
+                onKeyDown={e => e.preventDefault()}
+              >
                 {`by ${getUserFullName(type === 'mentorship' ? listing.Sensei : course.Sensei)}`}
               </small>
             </div>
