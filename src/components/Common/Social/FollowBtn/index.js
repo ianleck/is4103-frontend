@@ -1,6 +1,6 @@
 import { Button } from 'antd'
 import { showNotification } from 'components/utils'
-import { FOLLOWING_ENUM, SOCIAL_ACTIONS } from 'constants/constants'
+import { FOLLOWING_ENUM, SOCIAL_ACTIONS, USER_TYPE_ENUM } from 'constants/constants'
 import { ERROR } from 'constants/notifications'
 import { FOLLOW, REQUESTED, UNAVAILABLE, UNFOLLOW } from 'constants/text'
 import { isNil } from 'lodash'
@@ -10,12 +10,17 @@ import { getProfile } from 'services/user'
 
 const SocialFollowBtn = ({ targetAccountId }) => {
   const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
   const social = useSelector(state => state.social)
 
   const [isBlocked, setIsBlocked] = useState(false)
 
   const checkUserBlocked = async () => {
     if (!isNil(targetAccountId)) {
+      if (user.userType === USER_TYPE_ENUM.ADMIN || user.accountId === targetAccountId) {
+        setIsBlocked(true)
+        return true
+      }
       const response = await getProfile(targetAccountId)
       if (response && !isNil(response.isBlocking)) {
         setIsBlocked(response.isBlocking)
