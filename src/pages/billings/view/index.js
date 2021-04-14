@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSensei } from 'services/admin'
 import { getCourseById } from 'services/courses'
-import { getContract } from 'services/mentorship/subscription'
+import { getContract } from 'services/mentorship/contracts'
 import { viewBilling, viewWallet } from 'services/wallet'
 
 const BillingView = () => {

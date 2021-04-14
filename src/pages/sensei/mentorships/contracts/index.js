@@ -7,7 +7,7 @@ import { isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { getSenseiMentorshipContracts } from 'services/mentorship/subscription'
+import { getSenseiMentorshipContracts } from 'services/mentorship/contracts'
 
 const SenseiMentorshipContracts = () => {
   const history = useHistory()

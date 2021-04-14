@@ -3,7 +3,7 @@ import TaskComponent from 'components/Mentorship/Task'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getContract } from 'services/mentorship/subscription'
+import { getContract } from 'services/mentorship/contracts'
 
 const MentorshipContract = () => {
   const { id } = useParams()

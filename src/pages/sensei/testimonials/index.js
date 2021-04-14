@@ -20,7 +20,7 @@ import {
   getTestimonialByFilter,
 } from 'services/mentorship/testimonials'
 import { getProfile } from 'services/user'
-import { getContract } from 'services/mentorship/subscription'
+import { getContract } from 'services/mentorship/contracts'
 
 const TestimonialPage = () => {
   const { accountId, mentorshipContractId } = useParams()

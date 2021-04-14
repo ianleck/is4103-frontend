@@ -5,7 +5,7 @@ import { isEmpty, isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { getActiveMentorshipContractList } from 'services/mentorship/subscription'
+import { getActiveMentorshipContractList } from 'services/mentorship/contracts'
 
 const StudentMentorships = () => {
   const user = useSelector(state => state.user)

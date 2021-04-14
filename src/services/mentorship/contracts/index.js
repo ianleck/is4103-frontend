@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import apiClient from 'services/axios'
 
-// ============================ MENTORSHIP SUBSCRIPTION / CONTRACT ============================
+// ============================ MENTORSHIP CONTRACT ============================
 export async function getContract(mentorshipContractId) {
   const url = `/mentorship/contract/${mentorshipContractId}`
   return apiClient

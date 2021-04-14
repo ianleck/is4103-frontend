@@ -23,7 +23,7 @@ import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector, useDispatch } from 'react-redux'
 import { formatTime, onFinishFailed, showNotification } from 'components/utils'
-import { terminateMentorshipContract } from 'services/mentorship/subscription'
+import { terminateMentorshipContract } from 'services/mentorship/contracts'
 import {
   CONTRACT_CANCEL_ERR,
   CONTRACT_CANCEL_SUCCESS,
