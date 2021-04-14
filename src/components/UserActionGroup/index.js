@@ -17,12 +17,12 @@ const UserActionGroup = () => {
   return (
     <div className={`${style.userActionGroup} pr-4`}>
       {user.authorized && user.userType !== USER_TYPE_ENUM.ADMIN && (
-        <div className="pr-3">
+        <div className="pr-4">
           <ChatAction />
         </div>
       )}
       {checkIfShowCart && (
-        <div className="pr-3">
+        <div className="pr-4">
           <Cart />
         </div>
       )}
