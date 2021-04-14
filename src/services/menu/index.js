@@ -184,7 +184,7 @@ export async function getSenseiMenuData() {
         {
           title: 'Mentor Feed',
           key: 'mentorFeed',
-          url: '/sensei/mentorFeed',
+          url: '/sensei/social/feed',
         },
         {
           title: 'My Profile',
