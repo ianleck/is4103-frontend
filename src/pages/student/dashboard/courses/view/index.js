@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { filter, isEmpty, isNil } from 'lodash'
 import { getAnnouncements, getCourseById, getPurchasedCourses } from 'services/courses'
-import { LESSONS, COURSE_DESC, APPROVE_COURSE, REJECT_COURSE } from 'constants/text'
+import { LESSONS, APPROVE_COURSE, REJECT_COURSE, COURSE_DESC } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button, Modal, Form, Input, Space } from 'antd'
+import { Button, Modal, Form, Input, Space, Rate } from 'antd'
 import {
   ArrowDownOutlined,
   CheckOutlined,
@@ -30,7 +30,13 @@ import {
   COURSE_REJECT_SUCCESS,
   COURSE_REJECT_ERROR,
 } from 'constants/notifications'
-import { getUserFirstName, initPageItems, onFinishFailed, showNotification } from 'components/utils'
+import {
+  formatTime,
+  getUserFirstName,
+  initPageItems,
+  onFinishFailed,
+  showNotification,
+} from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import {
   FRONTEND_API,
@@ -196,25 +202,25 @@ const StudentCourseDetails = () => {
   const CourseInfo = () => {
     return (
       <div>
-        <div className="row align-items-center">
-          <div className="col-12 col-lg-8 mt-4 mt-lg-0 order-12 order-lg-1">
-            <span className="h3 font-weight-bold">{course.title}</span>
-            <div className="mt-2">
-              <span>{course.subTitle}</span>
-            </div>
-          </div>
+        <span className="h3 font-weight-bold">{course.title}</span>
+        <div className="mt-2">
+          <span>{course.subTitle}</span>
         </div>
-        <div className="row mt-4">
-          <div className="col-12">
-            <div className="card">
-              <div className="card-header">
-                <div className="text-dark h5 text-uppercase m-0">
-                  <strong>{COURSE_DESC}</strong>
-                </div>
-              </div>
-              <div className="card-body">{course.description}</div>
-            </div>
-          </div>
+
+        <div className="mt-2">
+          <Rate disabled defaultValue={course.rating} />
+        </div>
+
+        <div className="mt-2">
+          <small className="text-muted text-uppercase">
+            {`Last Updated On ${formatTime(course.updatedAt)}`}
+          </small>
+        </div>
+        <hr className="mt-4" />
+
+        <div className="mt-4">
+          <h3>{COURSE_DESC}</h3>
+          <span className="mt-4 description-body">{course.description}</span>
         </div>
       </div>
     )
