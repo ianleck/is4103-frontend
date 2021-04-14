@@ -12,7 +12,12 @@ import ProfileExperienceCard from 'components/Profile/ExperienceCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
-import { ADMIN_ROLE_ENUM, ADMIN_VERIFIED_ENUM, STATUS_ENUM } from 'constants/constants'
+import {
+  ADMIN_ROLE_ENUM,
+  ADMIN_VERIFIED_ENUM,
+  STATUS_ENUM,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import { getDetailsColumn, showNotification, sortDescAndKeyBillingId } from 'components/utils'
 import {
   SUCCESS,
@@ -28,16 +33,17 @@ import BackBtn from 'components/Common/BackBtn'
 import { viewWallet } from 'services/wallet'
 import { concat, isNil } from 'lodash'
 import Mentorship from './MentorshipListing'
-
-const { TabPane } = Tabs
+import MentorshipContracts from './MentorshipContracts'
 
 const SenseiProfileComponent = () => {
+  const { TabPane } = Tabs
   const history = useHistory()
   const { userId } = useParams()
   const user = useSelector(state => state.user)
   const isAdminRole = user.role === ADMIN_ROLE_ENUM.ADMIN
 
-  const [sensei, setSensei] = useState('')
+  const [viewUser, setViewUser] = useState('')
+  const [isSensei, setIsSensei] = useState(false)
   const [billingsSent, setBillingsSent] = useState([])
   const [billingsReceived, setBillingsReceived] = useState([])
 
@@ -46,36 +52,35 @@ const SenseiProfileComponent = () => {
     setBillingsTabKey(key)
   }
 
-  const getSensei = async () => {
-    const getWallet = async senseiWalletId => {
-      const result = await viewWallet(senseiWalletId)
-      if (result && !isNil(result.wallet)) {
-        if (!isNil(result.wallet.BillingsSent)) {
-          setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
-        }
-        if (!isNil(result.wallet.BillingsReceived)) {
-          setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
-        }
+  const getWallet = async senseiWalletId => {
+    const result = await viewWallet(senseiWalletId)
+    if (result && !isNil(result.wallet)) {
+      if (!isNil(result.wallet.BillingsSent)) {
+        setBillingsSent(sortDescAndKeyBillingId(result.wallet.BillingsSent))
       }
-    }
-
-    const response = await jwtAdmin.getSensei(userId)
-    setSensei(response)
-    if (!isAdminRole) {
-      getWallet(response.walletId)
+      if (!isNil(result.wallet.BillingsReceived)) {
+        setBillingsReceived(sortDescAndKeyBillingId(result.wallet.BillingsReceived))
+      }
     }
   }
 
-  useEffect(() => {
-    getSensei()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const getProfile = async () => {
+    const response = await jwtAdmin.getProfile(userId)
+    if (response && !isNil(response.userType)) {
+      console.log('response', response)
+      setViewUser(response)
+      setIsSensei(response.userType === USER_TYPE_ENUM.SENSEI)
+    }
+    if (!isAdminRole && response.userType === USER_TYPE_ENUM.SENSEI) {
+      getWallet(response.walletId)
+    }
+  }
 
   const onAccept = async () => {
     const response = await jwtAdmin.acceptSensei(userId)
     if (response) {
       if (response.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED) {
-        getSensei()
+        getProfile()
         showNotification('success', SUCCESS, ACCEPT_SENSEI_PROFILE)
       }
     } else {
@@ -87,7 +92,7 @@ const SenseiProfileComponent = () => {
     const response = await jwtAdmin.rejectSensei(userId)
     if (response) {
       if (response.adminVerified === 'REJECTED') {
-        getSensei()
+        getProfile()
         showNotification('success', SUCCESS, REJECT_SENSEI_PROFILE)
       }
     } else {
@@ -101,12 +106,32 @@ const SenseiProfileComponent = () => {
   }
   const billingColumnsWithDetail = concat(billingColumns, getDetailsColumn(viewBilling))
 
+  const showBillings = (dataSource, tableColumns) => {
+    return <Table dataSource={dataSource} columns={tableColumns} />
+  }
+
+  const onBan = async () => {
+    const response = await jwtAdmin.banUser(userId)
+
+    if (response.success && viewUser.status === STATUS_ENUM.ACTIVE) {
+      showNotification('success', SUCCESS, USER_BANNED)
+    } else if (response.success && viewUser.status === STATUS_ENUM.BANNED) {
+      showNotification('success', SUCCESS, USER_UNBANNED)
+    }
+    getProfile()
+  }
+
+  useEffect(() => {
+    getProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const AdminVerificationCard = () => {
     return (
       <div className="card">
         <div className="card-body">
-          <ProfileVerificationCard user={sensei} isAdmin />
-          {sensei.adminVerified === ADMIN_VERIFIED_ENUM.PENDING && (
+          <ProfileVerificationCard user={viewUser} isAdmin />
+          {viewUser.adminVerified === ADMIN_VERIFIED_ENUM.PENDING && (
             <div className="row justify-content-end">
               <div className="col-auto">
                 <Button
@@ -137,21 +162,6 @@ const SenseiProfileComponent = () => {
     )
   }
 
-  const showBillings = (dataSource, tableColumns) => {
-    return <Table dataSource={dataSource} columns={tableColumns} />
-  }
-
-  const onBan = async () => {
-    const response = await jwtAdmin.banUser(userId)
-
-    if (response.success && sensei.status === STATUS_ENUM.ACTIVE) {
-      showNotification('success', SUCCESS, USER_BANNED)
-    } else if (response.success && sensei.status === STATUS_ENUM.BANNED) {
-      showNotification('success', SUCCESS, USER_UNBANNED)
-    }
-    getSensei()
-  }
-
   return (
     <div>
       <div className="row pt-2 justify-content-md-between">
@@ -159,7 +169,7 @@ const SenseiProfileComponent = () => {
           <BackBtn />
         </div>
         <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
-          {sensei.status === STATUS_ENUM.ACTIVE ? (
+          {viewUser.status === STATUS_ENUM.ACTIVE ? (
             <Popconfirm
               title="Do you wish to ban this sensei?"
               onConfirm={onBan}
@@ -187,26 +197,35 @@ const SenseiProfileComponent = () => {
 
       <div className="row mt-4">
         <div className="col-12 col-md-6">
-          <ProfilePersonalInfoCard user={sensei} isAdmin />
-          <ProfileExperienceCard user={sensei} isAdmin />
+          <ProfilePersonalInfoCard user={viewUser} isAdmin />
+          <ProfileExperienceCard user={viewUser} isAdmin />
         </div>
         <div className="col-12 col-md-6">
-          <AdminVerificationCard />
-          <ProfileAboutCard user={sensei} />
-          <ProfileUploadFilesCard user={sensei} accessToken={user.accessToken} />
-          <ProfileIndustryCard user={sensei} />
-          <ProfileOccupationCard user={sensei} />
-          <ProfilePersonalityCard user={sensei} />
+          {isSensei && <AdminVerificationCard />}
+          <ProfileAboutCard user={viewUser} />
+          <ProfileUploadFilesCard user={viewUser} accessToken={user.accessToken} />
+          <ProfileIndustryCard user={viewUser} />
+          <ProfileOccupationCard user={viewUser} />
+          <ProfilePersonalityCard user={viewUser} />
         </div>
       </div>
+      {!isSensei && (
+        <div className="row mt-4">
+          <div className="col-12">
+            <MentorshipContracts id={userId} />
+          </div>
+        </div>
+      )}
       {/* Mentorship Listings of a Sensei */}
-      <div className="row mt-4">
-        <div className="col-12">
-          <Mentorship id={userId} user={sensei} />
+      {isSensei && (
+        <div className="row mt-4">
+          <div className="col-12">
+            <Mentorship id={userId} user={viewUser} />
+          </div>
         </div>
-      </div>
+      )}
       {/* Billings of a Sensei - cannot be viewed by admins with just ADMIN role */}
-      {!isAdminRole && (
+      {!isAdminRole && isSensei && (
         <div className="row mt-4">
           <div className="col-12">
             <div className="card">

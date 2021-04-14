@@ -141,13 +141,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/user-management/student/:userId',
-    Component: lazy(() => import('pages/admin/users/student-profile')),
-    exact: true,
-  },
-  {
-    path: '/admin/user-management/sensei/:userId',
-    Component: lazy(() => import('pages/admin/users/sensei-profile')),
+    path: '/admin/user-management/profile/:userId',
+    Component: lazy(() => import('pages/admin/users/profile')),
     exact: true,
   },
   {

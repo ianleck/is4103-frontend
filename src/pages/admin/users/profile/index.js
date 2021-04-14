@@ -1,12 +1,12 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import StudentProfileComponent from 'components/Admin/UsersManagement/StudentProfileComponent'
+import UserProfileComponent from 'components/Admin/UsersManagement/UserProfileComponent'
 
 const UserProfile = () => {
   return (
     <div>
       <Helmet title="Student's Page" />
-      <StudentProfileComponent />
+      <UserProfileComponent />
     </div>
   )
 }

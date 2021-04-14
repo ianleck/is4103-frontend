@@ -97,7 +97,7 @@ const Search = ({ intl: { formatMessage } }) => {
     setShowSearch(false)
     if (type === 'user') {
       if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {
-        history.push(`/admin/user-management/student/${id}`)
+        history.push(`/admin/user-management/profile/${id}`)
       } else {
         sendToSocialProfile(history, id)
       }

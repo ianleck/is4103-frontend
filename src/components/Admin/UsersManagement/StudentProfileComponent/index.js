@@ -13,7 +13,7 @@ import BackBtn from 'components/Common/BackBtn'
 import { showNotification } from 'components/utils'
 import { SUCCESS, USER_BANNED, USER_UNBANNED } from 'constants/notifications'
 import { STATUS_ENUM } from 'constants/constants'
-import MentorshipContracts from './MentorshipContracts'
+import MentorshipContracts from '../UserProfileComponent/MentorshipContracts'
 
 const StudentProfileComponent = () => {
   const { userId } = useParams()
