@@ -6,8 +6,6 @@ import {
 } from '@ant-design/icons'
 import {
   Button,
-  ConfigProvider,
-  Empty,
   Popconfirm,
   Space,
   Table,
@@ -226,13 +224,7 @@ const MentorshipContractsTable = () => {
 
   const showContracts = (contractStatus, dataSource, columns) => {
     const numContracts = size(dataSource)
-    const isRenderEmpty = numContracts === 0
 
-    const customizeRenderEmpty = () => (
-      <div className="text-center">
-        <Empty />
-      </div>
-    )
     const renderStyledStatus = status => {
       let textStyle = ''
       if (status === CONTRACT_PROGRESS_ENUM.CANCELLED) {
@@ -253,14 +245,13 @@ const MentorshipContractsTable = () => {
             </div>
           )}
         </div>
-        <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-          <Table
-            className="mt-4"
-            dataSource={dataSource}
-            columns={columns}
-            rowKey="mentorshipContractId"
-          />
-        </ConfigProvider>
+
+        <Table
+          className="mt-4"
+          dataSource={dataSource}
+          columns={columns}
+          rowKey="mentorshipContractId"
+        />
       </div>
     )
   }
