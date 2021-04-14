@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Input, Modal, Rate } from 'antd'
+import { Button, Form, Input, Modal } from 'antd'
 import { useParams, useHistory } from 'react-router-dom'
 import {
   createMentorshipApplication,
@@ -9,10 +9,11 @@ import BackBtn from 'components/Common/BackBtn'
 import PageHeader from 'components/Common/PageHeader'
 import { isEmpty, isNil, keys, map, trim } from 'lodash'
 import { getMentorshipListing } from 'services/mentorship/listings'
-import { formatTime, onFinishFailed, showNotification } from 'components/utils'
+import { onFinishFailed, showNotification } from 'components/utils'
 import { MTS_APP_SUB_SUCCESS, MTS_APP_UPDATE_SUCCESS, SUCCESS } from 'constants/notifications'
 import { CLOSE } from 'constants/text'
 import { EyeOutlined } from '@ant-design/icons'
+import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
 
 const ApplyListingForm = () => {
   const { TextArea } = Input
@@ -173,40 +174,13 @@ const ApplyListingForm = () => {
         title="Quick View"
         centered
         className="w-75"
-        bodyStyle={{ maxHeight: '50vh', overflowY: 'scroll' }}
+        bodyStyle={{ maxHeight: '65vh', overflowY: 'scroll' }}
         visible={showMentorshipModal}
         cancelText={CLOSE}
         onCancel={() => setShowMentorshipModal(false)}
         okButtonProps={{ style: { display: 'none' } }}
       >
-        <div className="row p-0 mb-4 align-items-center">
-          <div className="col-12">
-            <Rate disabled defaultValue={listing.rating} />
-          </div>
-          <div className="col-12 col-lg mt-2">
-            <span className="h3">{listing.name}</span>
-            <br />
-            <small className="text-muted text-uppercase">
-              {`Last Updated On ${formatTime(listing.updatedAt)}`}
-            </small>
-          </div>
-          <div className="col-12 col-lg-auto">
-            <div className="card mb-0 border-0 shadow-none">
-              <div className="card-body pt-0 pb-0 pr-3 text-right">
-                <span className="h3 align-middle">
-                  {`$${parseFloat(listing.priceAmount).toFixed(2)}`}
-                </span>
-                <span className="align-middle">/pass</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <hr className="mt-4" />
-        <div className="mt-4">
-          <h3>Mentorship Description</h3>
-          <p className="mt-4 pb-4 description-body">{listing.description}</p>
-        </div>
+        <MentorshipInfo listing={listing} />
       </Modal>
     </div>
   )
