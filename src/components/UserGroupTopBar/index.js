@@ -11,7 +11,7 @@ const UserGroupTopBar = () => {
     <div className={`${style.topbar}`}>
       <div className="row justify-content-end">
         {user.userType !== USER_TYPE_ENUM.ADMIN && (
-          <div className="col text-right pr-0 mr-0 mr-md-4">
+          <div className="col text-right">
             <Search />
           </div>
         )}
