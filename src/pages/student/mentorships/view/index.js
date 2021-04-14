@@ -6,7 +6,7 @@ import { filter, isEmpty, isNil } from 'lodash'
 import { useSelector } from 'react-redux'
 import { Button, Skeleton } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
-import ReviewModal from 'components/Review/ReviewModal'
+import ReviewModal from 'components/Common/Reviews/ReviewModal'
 import {
   ERROR,
   REVIEW_ADD_ERR,

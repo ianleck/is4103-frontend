@@ -7,7 +7,7 @@ import MentorProfile from 'components/Mentorship/MentorProfile'
 import MentorshipActions from 'components/Mentorship/MentorshipActions'
 import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
 import TaskComponent from 'components/Mentorship/Task'
-import ReviewModal from 'components/Review/ReviewModal'
+import ReviewModal from 'components/Common/Reviews/ReviewModal'
 import { getImage, initPageItems, showNotification } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM, CONTRACT_TYPES, DEFAULT_TIMEOUT } from 'constants/constants'
 import {

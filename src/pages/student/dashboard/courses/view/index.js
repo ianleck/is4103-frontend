@@ -14,7 +14,7 @@ import {
   DollarCircleOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import ReviewModal from 'components/Review/ReviewModal'
+import ReviewModal from 'components/Common/Reviews/ReviewModal'
 import { useSelector } from 'react-redux'
 import { addCourseReview, editCourseReview } from 'services/review'
 import {
