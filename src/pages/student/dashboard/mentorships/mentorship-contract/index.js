@@ -229,7 +229,7 @@ const MentorshipContractView = () => {
         <div className="row align-items-center">
           <div className="col-6">
             <div className="text-center m-0">You have</div>
-            <div className="text-center h3 m-0">{mentorshipContract.mentorPassCount}</div>
+            <div className="text-center h3 m-0">{mentorshipContract.mentorPassCount || 0}</div>
             <div className="text-center m-0">MentorPasses.</div>
           </div>
           <div className="col-6">
@@ -245,7 +245,7 @@ const MentorshipContractView = () => {
         </div>
         <div className="row">
           <div className="col-12 mb-2">{showReviewButton()}</div>
-          <div className="col-12 mb-2">
+          <div className="col-12">
             <Popconfirm
               title="Do you wish to cancel this mentorship contract?"
               onConfirm={() => onCancelContract()}
@@ -264,17 +264,23 @@ const MentorshipContractView = () => {
               </Button>
             </Popconfirm>
           </div>
-          <div className="col-12">
-            <Button
-              block
-              type="default"
-              size="large"
-              onClick={() => setShowRefundModal(true)}
-              icon={<DollarCircleOutlined className="text-info" />}
-            >
-              Refund All Passes
-            </Button>
-          </div>
+          {mentorshipContract.mentorPassCount && mentorshipContract.mentorPassCount !== 0 && (
+            <div className="col-12 mt-2">
+              <Button
+                block
+                type="default"
+                size="large"
+                onClick={() => setShowRefundModal(true)}
+                icon={<DollarCircleOutlined className="text-info" />}
+                disabled={
+                  isNil(mentorshipContract.mentorPassCount) ||
+                  mentorshipContract.mentorPassCount === 0
+                }
+              >
+                Refund All Passes
+              </Button>
+            </div>
+          )}
         </div>
       </MentorshipActions>
     )
