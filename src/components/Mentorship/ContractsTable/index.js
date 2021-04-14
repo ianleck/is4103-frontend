@@ -64,7 +64,7 @@ const MentorshipContractsTable = () => {
 
   const viewListing = listing => {
     history.push({
-      pathname: `/student/dashboard/mentorship/subscription/${listing.mentorshipContractId}`,
+      pathname: `/student/dashboard/mentorship/contract/${listing.mentorshipContractId}`,
     })
   }
 
