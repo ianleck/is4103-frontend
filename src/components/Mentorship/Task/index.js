@@ -13,7 +13,7 @@ import {
   getTaskBuckets,
   updateTask,
   updateTaskBucket,
-} from 'services/mentorship/subscription'
+} from 'services/mentorship/contracts'
 import TaskBucket from './TaskBucket'
 import TaskRow from './TaskRow'
 
