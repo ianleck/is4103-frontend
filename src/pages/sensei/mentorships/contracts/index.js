@@ -1,10 +1,16 @@
-import { Table } from 'antd'
-import { size } from 'lodash'
+import { EyeOutlined } from '@ant-design/icons'
+import { Button, Table } from 'antd'
+import StatusTag from 'components/Common/StatusTag'
+import { formatTime } from 'components/utils'
+import { CONTRACT_PROGRESS_ENUM_FILTER } from 'constants/filters'
+import { isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { getSenseiMentorshipContracts } from 'services/mentorship/subscription'
 
 const SenseiMentorshipContracts = () => {
+  const history = useHistory()
   const user = useSelector(state => state.user)
   const [mentorshipContracts, setMentorshipContracts] = useState([])
 
@@ -13,7 +19,9 @@ const SenseiMentorshipContracts = () => {
   const getMentorshipContracts = async () => {
     const response = await getSenseiMentorshipContracts(accountId)
     console.log('response is ', response)
-    setMentorshipContracts([])
+    if (response && !isNil(response.contracts)) {
+      setMentorshipContracts(map(response.contracts, (c, i) => ({ ...c, key: i })))
+    }
   }
 
   useEffect(() => {
@@ -36,7 +44,82 @@ const SenseiMentorshipContracts = () => {
     )
   }
 
-  const tableColumns = [] // to change
+  const viewMentorshipContract = record => {
+    const path = `/sensei/mentorships/contract/${record.mentorshipContractId}`
+    history.push(path)
+  }
+
+  const tableColumns = [
+    {
+      title: 'Mentorship Contract ID',
+      dataIndex: 'mentorshipContractId',
+      key: 'mentorshipContractId',
+      width: '15%',
+    },
+    {
+      title: 'First Name of Mentee',
+      dataIndex: ['Student', 'firstName'],
+      key: 'firstName',
+      width: '10%',
+      sorter: (a, b) =>
+        !isNil(a.Student.firstName) && !isNil(b.Student.firstName)
+          ? a.Student.firstName.length - b.Student.firstName.length
+          : '',
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Last Name of Mentee',
+      dataIndex: ['Student', 'lastName'],
+      key: 'lastName',
+      width: '10%',
+      responsive: ['md'],
+      sorter: (a, b) =>
+        !isNil(a.Student.lastName) && !isNil(b.Student.lastName)
+          ? a.Student.lastName.length - b.Student.lastName.length
+          : '',
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Date Applied',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      width: '15%',
+      render: record => formatTime(record),
+      responsive: ['lg'],
+      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Mentorship Title',
+      dataIndex: ['MentorshipListing', 'name'],
+      key: 'mentorshipTitle',
+      responsive: ['sm'],
+      sorter: (a, b) => a.MentorshipListing.name.length - b.MentorshipListing.name.length,
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Progress',
+      key: 'progress',
+      dataIndex: 'progress',
+      width: '15%',
+      render: record => <StatusTag data={record} type="CONTRACT_PROGRESS_ENUM" />,
+      filters: CONTRACT_PROGRESS_ENUM_FILTER,
+      onFilter: (value, record) => record.progress.indexOf(value) === 0,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: record => (
+        <Button
+          type="default"
+          shape="circle"
+          size="large"
+          icon={<EyeOutlined />}
+          onClick={() => viewMentorshipContract(record)}
+        />
+      ),
+    },
+  ]
 
   return (
     <div className="card">
