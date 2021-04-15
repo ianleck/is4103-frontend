@@ -16,6 +16,7 @@ const initialState = {
   firstName: '',
   headline: '',
   industry: '',
+  Interests: [],
   isPrivateProfile: '',
   lastName: '',
   occupation: '',

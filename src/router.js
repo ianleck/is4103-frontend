@@ -248,7 +248,7 @@ const routes = [
   },
   {
     path: '/sensei/profile',
-    Component: lazy(() => import('pages/sensei/profile')),
+    Component: lazy(() => import('pages/account/profile')),
     exact: true,
   },
   {
@@ -346,6 +346,11 @@ const routes = [
     Component: lazy(() => import('pages/sensei/testimonials')),
     exact: true,
   },
+  {
+    path: '/sensei/support',
+    Component: lazy(() => import('pages/support')),
+    exact: true,
+  },
   // Student Pages
   {
     path: '/student',
@@ -379,7 +384,7 @@ const routes = [
   },
   {
     path: '/student/profile',
-    Component: lazy(() => import('pages/student/profile')),
+    Component: lazy(() => import('pages/account/profile')),
     exact: true,
   },
   {
@@ -430,6 +435,11 @@ const routes = [
   {
     path: '/student/dashboard/testimonials',
     Component: lazy(() => import('pages/student/dashboard/testimonials')),
+    exact: true,
+  },
+  {
+    path: '/student/support',
+    Component: lazy(() => import('pages/support')),
     exact: true,
   },
 ]

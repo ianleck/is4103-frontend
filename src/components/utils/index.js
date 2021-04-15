@@ -5,6 +5,7 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
   DEFAULT_TIMEOUT,
   DIRECTION,
+  TASK_PROGRESS,
   USER_TYPE_ENUM,
 } from 'constants/constants'
 import { filter, isNil, map, size } from 'lodash'
@@ -152,6 +153,7 @@ export const resetUser = {
   firstName: '',
   headline: '',
   industry: '',
+  Interests: [],
   isPrivateProfile: '',
   lastName: '',
   occupation: '',
@@ -189,6 +191,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     firstName: currentUser.firstName,
     headline: currentUser.headline,
     industry: currentUser.industry,
+    Interests: isNil(currentUser.Interests) ? [] : currentUser.Interests,
     isPrivateProfile: currentUser.isPrivateProfile,
     lastName: currentUser.lastName,
     occupation: currentUser.occupation,
@@ -237,21 +240,21 @@ export const showNotification = (type, msg, description) => {
       notification.success({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'error':
       notification.error({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'warn':
       notification.warn({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     default:
@@ -378,4 +381,23 @@ export const getImage = (type, object) => {
   if (type === 'course')
     return !isNil(object.imgUrl) ? object.imgUrl : '/resources/images/course-placeholder.png'
   return '/resources/images/avatars/avatar-2.png'
+}
+
+// takes in an array of Task Bucket objects
+// each Task Bucket has an array of Tasks
+export const calculateOverallProgress = buckets => {
+  let numCompleted = 0
+  let totalTasks = 0
+  map(buckets, bucket => {
+    totalTasks += size(bucket.Tasks)
+    map(bucket.Tasks, taskItem => {
+      if (taskItem.progress === TASK_PROGRESS.COMPLETED) {
+        numCompleted += 1
+      }
+    })
+  })
+  if (numCompleted === 0) {
+    return 0
+  }
+  return ((numCompleted / totalTasks) * 100).toFixed(0)
 }
