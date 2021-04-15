@@ -349,13 +349,13 @@ const SenseiConsultationComponent = () => {
             <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
               {consultationDetails.MentorshipListing
                 ? consultationDetails.MentorshipListing.description
-                : null}
+                : '-'}
             </Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label="Pass Price">
             {consultationDetails.MentorshipListing
               ? parseFloat(consultationDetails.MentorshipListing.priceAmount).toFixed(2)
-              : null}
+              : '-'}
           </Descriptions.Item>
           <Descriptions.Item label="Consultation ID">
             {consultationDetails.consultationId}
