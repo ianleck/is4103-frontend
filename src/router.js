@@ -303,7 +303,7 @@ const routes = [
   },
   {
     path: '/sensei/consultation',
-    Component: lazy(() => import('pages/sensei/mentees')),
+    Component: lazy(() => import('pages/sensei/consultation')),
     exact: true,
   },
   {
