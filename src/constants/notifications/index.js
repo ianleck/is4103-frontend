@@ -141,3 +141,6 @@ export const NOTE_ADD_SUCCESS = 'Note has been successfully created.'
 export const NOTE_ADD_ERR = 'There was an error creating your note.'
 export const NOTE_EDIT_SUCCESS = 'Note has been successfully edited.'
 export const NOTE_EDIT_ERR = 'There was an error editing your note.'
+
+export const CONSULTATION_CREATED = 'Consultation has been successfully created'
+export const CONSULTATION_DELETED = 'Consultation has been successfully deleted'
