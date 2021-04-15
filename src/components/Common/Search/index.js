@@ -88,18 +88,30 @@ const Search = ({ intl: { formatMessage } }) => {
   const NoResultsFound = () => {
     return (
       <div className={style.results}>
-        <div className={style.resultsTitle}>
-          <span>No Results Found</span>
-        </div>
+        <span>No Results Found</span>
       </div>
     )
   }
 
   const sendToPage = (type, id) => {
     setShowSearch(false)
-    if (type === 'user') sendToSocialProfile(history, id)
-    if (type === 'mentorship') history.push(`/student/mentorship/view/${id}`)
-    if (type === 'course') history.push(`/courses/${id}`)
+    if (type === 'user') {
+      sendToSocialProfile(currentUser, history, id)
+    }
+    if (type === 'mentorship') {
+      if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {
+        history.push(`/admin/mentorship-content-management`)
+      } else {
+        history.push(`/student/mentorship/view/${id}`)
+      }
+    }
+    if (type === 'course') {
+      if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {
+        history.push(`/admin/course-content-management/${id}`)
+      } else {
+        history.push(`/courses/${id}`)
+      }
+    }
   }
 
   const getBackgroundImage = (type, object) => {
@@ -120,7 +132,7 @@ const Search = ({ intl: { formatMessage } }) => {
         <div
           role="button"
           tabIndex={0}
-          className="clickable row align-items-center mb-4"
+          className="defocus-btn clickable row align-items-center mb-4"
           onClick={() => {
             if (type === 'user') sendToPage(type, user.accountId)
             if (type === 'mentorship') sendToPage(type, listing.mentorshipListingId)
@@ -186,12 +198,12 @@ const Search = ({ intl: { formatMessage } }) => {
   }
 
   return (
-    <div className="d-inline-block">
+    <div className="text-center text-lg-right">
       <Input
         className={style.extInput}
         placeholder={formatMessage({ id: 'topBar.typeToSearch' })}
         prefix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-        style={{ width: 200 }}
+        style={{ width: 150 }}
         onFocus={showLiveSearch}
       />
       <div
@@ -203,7 +215,7 @@ const Search = ({ intl: { formatMessage } }) => {
         <button className={style.close} type="button" onClick={hideLiveSearch}>
           <i className="icmn-cross" />
         </button>
-        <div className="container-fluid">
+        <div className="container-fluid text-left">
           <div className={style.wrapper}>
             <input
               type="search"
@@ -215,29 +227,31 @@ const Search = ({ intl: { formatMessage } }) => {
               ref={handleNode}
             />
             {!searchText && <NoResultsFound />}
-            {searchText && currentUser.userType === USER_TYPE_ENUM.STUDENT && (
+            {searchText && (
               <div className={style.results}>
                 <div className={style.resultsTitle}>
                   <span>Search Results</span>
                 </div>
-                <div className="row mb-4">
-                  <div className="col-auto">
-                    <Radio.Group defaultValue="users" size="large">
-                      <Radio.Button value="users" onClick={() => setSearchType('users')}>
-                        Users ({size(userResults)})
-                      </Radio.Button>
-                      <Radio.Button
-                        value="mentorships"
-                        onClick={() => setSearchType('mentorships')}
-                      >
-                        Mentorships ({size(mentorshipResults)})
-                      </Radio.Button>
-                      <Radio.Button value="courses" onClick={() => setSearchType('courses')}>
-                        Courses ({size(courseResults)})
-                      </Radio.Button>
-                    </Radio.Group>
+                {currentUser.userType !== USER_TYPE_ENUM.SENSEI && (
+                  <div className="row mb-4">
+                    <div className="col-auto">
+                      <Radio.Group defaultValue="users" size="large">
+                        <Radio.Button value="users" onClick={() => setSearchType('users')}>
+                          Users ({size(userResults)})
+                        </Radio.Button>
+                        <Radio.Button
+                          value="mentorships"
+                          onClick={() => setSearchType('mentorships')}
+                        >
+                          Mentorships ({size(mentorshipResults)})
+                        </Radio.Button>
+                        <Radio.Button value="courses" onClick={() => setSearchType('courses')}>
+                          Courses ({size(courseResults)})
+                        </Radio.Button>
+                      </Radio.Group>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
             <div className="overflow-y-scroll w-50 text-left" style={{ maxHeight: '50vh' }}>

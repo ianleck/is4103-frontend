@@ -10,12 +10,13 @@ import {
   showNotification,
 } from 'components/utils'
 import { isNil, map, size } from 'lodash'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { unblockUser } from 'services/social'
 import { SUCCESS, USER_UNBLOCKED } from 'constants/notifications'
 
 const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -35,7 +36,7 @@ const UsersBlockedList = ({ usersBlockedList, setShowSocialModal }) => {
   }, [usersBlockedList])
 
   const socialProfileOverride = accountId => {
-    sendToSocialProfile(history, accountId)
+    sendToSocialProfile(user, history, accountId)
     if (!isNil(setShowSocialModal)) setShowSocialModal(false)
   }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Tabs } from 'antd'
 import ChartistGraph from 'react-chartist'
 import ChartistTooltip from 'chartist-plugin-tooltips-updated'
-import { getMentees } from 'services/mentorship/subscription'
+import { getMentees } from 'services/mentorship/contracts'
 import { MENTORSHIP_CONTRACT_APPROVAL, MONTH_NAMES } from 'constants/constants'
 
 const { TabPane } = Tabs

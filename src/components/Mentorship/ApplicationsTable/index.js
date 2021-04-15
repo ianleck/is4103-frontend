@@ -47,6 +47,7 @@ const MentorshipApplicationsTable = () => {
       if (res) {
         notification.success({ message: res.message })
         getApplications()
+        changeTab('approved')
       }
     })
   }
@@ -56,6 +57,7 @@ const MentorshipApplicationsTable = () => {
       if (res) {
         notification.success({ message: res.message })
         getApplications()
+        changeTab('rejected')
       }
     })
   }
@@ -120,7 +122,7 @@ const MentorshipApplicationsTable = () => {
       render: record => (
         <Space size="large">
           <div>
-            <ViewPersonalStatementButton record={record} />
+            <ViewMentorshipApplicationButton record={record} />
           </div>
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm
@@ -197,7 +199,7 @@ const MentorshipApplicationsTable = () => {
       render: record => (
         <Space size="large">
           <div>
-            <ViewPersonalStatementButton record={record} />
+            <ViewMentorshipApplicationButton record={record} />
           </div>
           <Button
             block
@@ -283,24 +285,34 @@ const showApplications = (applicationStatus, dataSource, columns) => {
   )
 }
 
-const ViewPersonalStatementButton = values => {
+const ViewMentorshipApplicationButton = values => {
   const { record } = values
-  const [isViewStatementModalVisible, setIsViewStatementModalVisible] = useState(false)
+  const [isViewApplicationModalVisible, setIsViewApplicationModalVisible] = useState(false)
 
   const showModal = () => {
-    setIsViewStatementModalVisible(true)
+    setIsViewApplicationModalVisible(true)
   }
 
   const handleCancel = () => {
-    setIsViewStatementModalVisible(false)
+    setIsViewApplicationModalVisible(false)
   }
 
   const footer = (
     <div className="row justify-content-end">
       <div className="col-auto">
-        <Button type="default" size="large" onClick={() => setIsViewStatementModalVisible(false)}>
+        <Button type="default" size="large" onClick={() => setIsViewApplicationModalVisible(false)}>
           Close
         </Button>
+      </div>
+    </div>
+  )
+
+  const ItemCard = ({ header, children }) => (
+    <div className="card">
+      <div className="card-body">
+        <div className="card-title font-weight-bold text-dark">{header}</div>
+        <hr />
+        {children}
       </div>
     </div>
   )
@@ -316,14 +328,30 @@ const ViewPersonalStatementButton = values => {
         onClick={showModal}
       />
       <Modal
-        title="View Personal Statement"
-        visible={isViewStatementModalVisible}
+        title="View Mentorship Application"
+        visible={isViewApplicationModalVisible}
         cancelText="Close"
         onCancel={handleCancel}
         okButtonProps={{ style: { display: 'none' } }}
         footer={footer}
       >
-        {record.statement}
+        <div className="mentorship-application-modal-body overflow-y-scroll">
+          <ItemCard header="Application Reason">
+            {record.applicationFields.applicationReason}
+          </ItemCard>
+          <ItemCard header="Goals">{record.applicationFields.goals}</ItemCard>
+          <ItemCard header="Steps Taken (Optional)">
+            {record.applicationFields.stepsTaken ? record.applicationFields.stepsTaken : '-'}
+          </ItemCard>
+          <ItemCard header="Ideal Duration (Optional)">
+            {record.applicationFields.idealDuration ? record.applicationFields.idealDuration : '-'}
+          </ItemCard>
+          <ItemCard header="Additional Remarks (Optional)">
+            {record.applicationFields.additionalInfo
+              ? record.applicationFields.additionalInfo
+              : '-'}
+          </ItemCard>
+        </div>
       </Modal>
     </div>
   )

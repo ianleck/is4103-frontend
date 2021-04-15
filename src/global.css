@@ -1,5 +1,5 @@
 .announcement-card-body {
-  max-height: 175px;
+  max-height: 500px;
 }
 
 .complaint-reason-list-card {
@@ -63,6 +63,14 @@
 
 .lesson-list-card {
   height: 250px;
+}
+
+.mentorship-application-modal-body {
+  height: 500px;
+}
+
+.mentorship-avatar {
+  height: 48px;
 }
 
 .menu-item {
@@ -170,11 +178,11 @@
 }
 
 .text-2-bold-lines {
-  height: 58px !important;
+  height: 55px !important;
 }
 
 .text-4-lines {
-  height: 102px !important;
+  height: 99px !important;
 }
 
 .truncate-1-overflow {

@@ -108,13 +108,20 @@ const StatusTag = data => {
 
   if (type === 'TASK_PROGRESS') {
     const dataSource = data.data
+    let text = ''
 
     switch (dataSource) {
       case TASK_PROGRESS.ONGOING:
         colour = 'processing'
+        text = dataSource
         break
       case TASK_PROGRESS.COMPLETED:
         colour = 'success'
+        text = dataSource
+        break
+      case TASK_PROGRESS.NOT_STARTED:
+        colour = 'default'
+        text = 'NOT STARTED'
         break
       default:
         colour = 'error'
@@ -122,7 +129,7 @@ const StatusTag = data => {
     }
     return (
       <Tag color={colour} style={data.style} className={data.className}>
-        {dataSource}
+        {text}
       </Tag>
     )
   }

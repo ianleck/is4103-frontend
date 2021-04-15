@@ -20,17 +20,15 @@ export async function getStudentMenuData() {
     {
       title: 'Mentors',
       key: 'mentors',
-      icon: 'fa fa-mortar-board',
       url: '/mentorships',
     },
     {
       title: 'Courses',
       key: 'courses',
-      icon: 'fa fa-cubes',
       url: '/courses',
     },
     {
-      title: 'My Dashboard',
+      title: 'Dashboard',
       key: 'studentDashboardAccess',
       url: '/student/dashboard',
     },
@@ -138,6 +136,11 @@ export async function getSenseiMenuData() {
           url: '/sensei/mentorships/applications',
         },
         {
+          title: 'Mentorship Contracts',
+          key: 'mentorshipContracts',
+          url: '/sensei/mentorships/contracts',
+        },
+        {
           title: 'Mentee Overview',
           key: 'menteeOverview',
           url: '/sensei/mentees',
@@ -169,20 +172,15 @@ export async function getSenseiMenuData() {
           key: 'courses',
           url: '/sensei/courses',
         },
-        {
-          title: 'Announcements',
-          key: 'announcements',
-          url: '/sensei/announcements',
-        },
       ],
     },
     {
-      title: 'Profile',
-      key: 'profile',
+      title: 'Social',
+      key: 'social',
       icon: 'fe fe-user',
       children: [
         {
-          title: 'Mentor Feed',
+          title: 'Feed',
           key: 'mentorFeed',
           url: '/sensei/social/feed',
         },

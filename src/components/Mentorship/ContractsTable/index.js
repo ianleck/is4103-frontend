@@ -6,8 +6,6 @@ import {
 } from '@ant-design/icons'
 import {
   Button,
-  ConfigProvider,
-  Empty,
   Popconfirm,
   Space,
   Table,
@@ -17,6 +15,7 @@ import {
   Divider,
   InputNumber,
   Descriptions,
+  Typography,
 } from 'antd'
 import { filter, isNil, size } from 'lodash'
 import React, { useState, useEffect } from 'react'
@@ -24,8 +23,8 @@ import { useHistory } from 'react-router-dom'
 import { CONTRACT_PROGRESS_ENUM } from 'constants/constants'
 import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
 import { useSelector, useDispatch } from 'react-redux'
-import { formatTime, showNotification } from 'components/utils'
-import { terminateMentorshipContract } from 'services/mentorship/subscription'
+import { formatTime, onFinishFailed, showNotification } from 'components/utils'
+import { terminateMentorshipContract } from 'services/mentorship/contracts'
 import {
   CONTRACT_CANCEL_ERR,
   CONTRACT_CANCEL_SUCCESS,
@@ -35,6 +34,7 @@ import {
 
 const MentorshipContractsTable = () => {
   const { TabPane } = Tabs
+  const { Paragraph } = Typography
   const history = useHistory()
   const user = useSelector(state => state.user)
   const cart = useSelector(state => state.cart)
@@ -64,7 +64,7 @@ const MentorshipContractsTable = () => {
 
   const viewListing = listing => {
     history.push({
-      pathname: `/student/dashboard/mentorship/subscription/${listing.mentorshipContractId}`,
+      pathname: `/student/dashboard/mentorship/contract/${listing.mentorshipContractId}`,
     })
   }
 
@@ -113,6 +113,11 @@ const MentorshipContractsTable = () => {
       responsive: ['lg'],
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['ascend', 'descend'],
+      render: record => {
+        return (
+          <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}> {record} </Paragraph>
+        )
+      },
     },
     {
       title: 'Pass Price (S$)',
@@ -132,6 +137,9 @@ const MentorshipContractsTable = () => {
       width: '10%',
       sorter: (a, b) => a.mentorPassCount - b.mentorPassCount,
       sortDirections: ['ascend', 'descend'],
+      render: record => {
+        return record || '-'
+      },
     },
     {
       title: 'Action',
@@ -158,7 +166,7 @@ const MentorshipContractsTable = () => {
           {(record.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
             record.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED) && (
             <Popconfirm
-              title="Are you sure you wish to cancel your subscription?"
+              title="Are you sure you wish to cancel your mentorship contract?"
               icon={<QuestionCircleOutlined className="text-danger" />}
               onConfirm={() => onCancelContract(record)}
             >
@@ -173,10 +181,6 @@ const MentorshipContractsTable = () => {
   const recordSelected = record => {
     setSelectedRecord(record)
     setShowBuyPass(true)
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const checkInCart = listingId => {
@@ -225,15 +229,9 @@ const MentorshipContractsTable = () => {
     </div>
   )
 
-  const showContracts = (subscriptionStatus, dataSource, columns) => {
-    const numSubscriptions = size(dataSource)
-    const isRenderEmpty = numSubscriptions === 0
+  const showContracts = (contractStatus, dataSource, columns) => {
+    const numContracts = size(dataSource)
 
-    const customizeRenderEmpty = () => (
-      <div className="text-center">
-        <Empty />
-      </div>
-    )
     const renderStyledStatus = status => {
       let textStyle = ''
       if (status === CONTRACT_PROGRESS_ENUM.CANCELLED) {
@@ -247,21 +245,20 @@ const MentorshipContractsTable = () => {
     return (
       <div>
         <div className="row justify-content-between align-items-center mt-2">
-          {subscriptionStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
+          {contractStatus !== CONTRACT_PROGRESS_ENUM.NOT_STARTED && (
             <div className="col-auto">
-              You currently have {numSubscriptions} {renderStyledStatus(subscriptionStatus)}{' '}
-              mentorship {numSubscriptions === 1 ? 'subscription' : 'subscriptions'}.
+              You currently have {numContracts} {renderStyledStatus(contractStatus)} mentorship{' '}
+              {numContracts === 1 ? 'contract' : 'contracts'}.
             </div>
           )}
         </div>
-        <ConfigProvider renderEmpty={isRenderEmpty && customizeRenderEmpty}>
-          <Table
-            className="mt-4"
-            dataSource={dataSource}
-            columns={columns}
-            rowKey="mentorshipContractId"
-          />
-        </ConfigProvider>
+
+        <Table
+          className="mt-4"
+          dataSource={dataSource}
+          columns={columns}
+          rowKey="mentorshipContractId"
+        />
       </div>
     )
   }

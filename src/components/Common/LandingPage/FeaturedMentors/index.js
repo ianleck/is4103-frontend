@@ -4,8 +4,10 @@ import { useHistory } from 'react-router-dom'
 import { sendToSocialProfile } from 'components/utils'
 import { map } from 'lodash'
 import { mentorData } from 'constants/hardcode/landing'
+import { useSelector } from 'react-redux'
 
 const FeaturedMentors = () => {
+  const user = useSelector(state => state.user)
   const history = useHistory()
 
   const FeaturedMentorCard = ({ mentor }) => {
@@ -15,7 +17,7 @@ const FeaturedMentors = () => {
           <a
             role="button"
             tabIndex={0}
-            onClick={() => sendToSocialProfile(history, mentor.accountId)}
+            onClick={() => sendToSocialProfile(user, history, mentor.accountId)}
             onKeyDown={e => e.preventDefault()}
           >
             <span>

@@ -4,10 +4,8 @@ import { MoreOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import { getUserFullName, sendToSocialProfile } from 'components/utils'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
-const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) => {
-  const user = useSelector(state => state.user)
+const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions, user }) => {
   const history = useHistory()
 
   const CommentMenu = () => {
@@ -74,7 +72,7 @@ const PostCommentItem = ({ comment, isLoading, showCommentModalWithOptions }) =>
               role="button"
               tabIndex={0}
               className="clickable font-weight-bold"
-              onClick={() => sendToSocialProfile(history, comment.User?.accountId)}
+              onClick={() => sendToSocialProfile(user, history, comment.User?.accountId)}
               onKeyDown={e => e.preventDefault()}
             >
               {getUserFullName(comment.User)}

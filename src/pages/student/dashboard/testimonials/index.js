@@ -38,7 +38,7 @@ const StudentTestimonials = () => {
   }
 
   const sendToMentorshipContractPage = id => {
-    const path = `/student/dashboard/mentorship/subscription/${id}`
+    const path = `/student/dashboard/mentorship/contract/${id}`
     history.push(path)
   }
 
@@ -55,6 +55,7 @@ const StudentTestimonials = () => {
                 className="btn border-0 w-100 p-0"
                 onClick={() =>
                   sendToSocialProfile(
+                    user,
                     history,
                     testimonial.MentorshipContract.MentorshipListing.accountId,
                   )

@@ -115,6 +115,7 @@ export const FOLLOWING_ENUM = {
 export const TASK_PROGRESS = {
   ONGOING: 'ONGOING',
   COMPLETED: 'COMPLETED',
+  NOT_STARTED: 'NOT_STARTED',
 }
 
 export const SOCIAL_ACTIONS = {

@@ -6,14 +6,14 @@ export const ADMIN_DET_CHANGED = 'Administrator details were successfully update
 export const ADMIN_NAMES_CHANGED = 'Only Administrator names were updated.'
 export const ADMIN_PERMISSIONS_CHANGED = 'Only Administrator permissions were updated.'
 
-export const COURSE_IMG_DEL_SUCCESS = 'Course Image removed successfully.'
+export const COURSE_IMG_DEL_SUCCESS = 'Course image removed successfully.'
 export const COURSE_IMG_DEL_ERR = 'There was an error removing your course image.'
-export const COURSE_ACCEPT_SUCCESS = 'The course request was successfully accepted.'
-export const COURSE_ACCEPT_ERROR = 'There was an error accepting the course request.'
-export const COURSE_REJECT_SUCCESS = 'The course request was successfully rejected.'
-export const COURSE_REJECT_ERROR = 'There was an error rejecting the course request.'
-export const COURSE_DRAFT_DEL_SUCCESS = 'Course Draft deleted successully.'
-export const COURSE_DRAFT_DEL_ERROR = 'There was an error deleting your Course Draft.'
+export const COURSE_ACCEPT_SUCCESS = 'The course was successfully accepted.'
+export const COURSE_ACCEPT_ERROR = 'There was an error accepting the course.'
+export const COURSE_REJECT_SUCCESS = 'The course was successfully rejected.'
+export const COURSE_REJECT_ERROR = 'There was an error rejecting the course.'
+export const COURSE_DRAFT_DEL_SUCCESS = 'Course draft deleted successully.'
+export const COURSE_DRAFT_DEL_ERROR = 'There was an error deleting your course draft.'
 
 export const ASSESSMENT_VID_DELETE_ERR = 'There was an error deleting your assessment video.'
 export const ASSESSMENT_VID_DELETE_SUCCESS = 'Your assessment video was successfully deleted.'
@@ -134,6 +134,11 @@ export const CONTRACT_CANCEL_ERR = 'There was an error cancelling your mentorshi
 
 export const REFUND_APPROVED = 'Refund has been successfully approved.'
 export const REFUND_REJECTED = 'Refund has been successfully rejected.'
+
+export const NOTE_ADD_SUCCESS = 'Note has been successfully created.'
+export const NOTE_ADD_ERR = 'There was an error creating your note.'
+export const NOTE_EDIT_SUCCESS = 'Note has been successfully edited.'
+export const NOTE_EDIT_ERR = 'There was an error editing your note.'
 
 export const CONSULTATION_CREATED = 'Consultation has been successfully created'
 export const CONSULTATION_DELETED = 'Consultation has been successfully deleted'
