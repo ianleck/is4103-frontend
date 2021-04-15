@@ -267,7 +267,7 @@ const ViewCourseDetailsPublic = () => {
           </CourseActions>
         </div>
       </div>
-      <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
+      <div className="row mt-5 pl-md-5 pr-md-5 pt-lg-2">
         <UpsellBar type="courses" id={id} />
       </div>
     </div>
