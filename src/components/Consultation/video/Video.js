@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Button, notification } from 'antd'
+import { notification } from 'antd'
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 import { useParams } from 'react-router-dom'
 import apiClient from 'services/axios'
+import { getUserFullName } from 'components/utils'
 import { SOCKET_API, BACKEND_API } from '../../../constants/constants'
 import UserVid from './UserVideo'
 import CallButtons from './CallButtons'
+
 // const consultationData = {
 //   studentId: 'studentId',
 //   senseiId: 'senseiId',
@@ -204,50 +206,123 @@ const Video = () => {
         flexDirection: 'column',
       }}
     >
+      {console.log('consultatino =', consultation)}
       <div
-        className="d-flex no-gutters"
+        className="row no-gutters"
         style={{
           minHeight: '600px',
           widtH: '100%',
         }}
       >
         <div
-          className="col-lg-8 col-8"
+          className="col-12 col-md-8"
           style={{
             position: 'relative',
-            height: '600px',
+            // height: '600px',
             width: '100%',
-            border: '1px solid #e8e8e8',
           }}
         >
-          <UserVid stream={stream} minimize={onCall} muted />
-          {PartnerVideo}
-          <CallButtons
-            onCall={onCall}
-            incomingCall={incomingCall}
-            userToCallIsOnline={users[userToCall]}
-            endCall={endCall}
-            calling={calling}
-            startCall={startCall}
-            acceptCall={acceptCall}
-          />
+          <div
+            className="h-100"
+            style={{
+              border: '1px solid #e8e8e8',
+              backgroundColor: 'black',
+              overflow: 'hidden',
+            }}
+          >
+            <UserVid stream={stream} minimize={onCall} muted />
+            {PartnerVideo}
+            <CallButtons
+              onCall={onCall}
+              incomingCall={incomingCall}
+              userToCallIsOnline={users[userToCall]}
+              endCall={endCall}
+              calling={calling}
+              startCall={startCall}
+              acceptCall={acceptCall}
+            />
+          </div>
         </div>
-        <div className="col-4 col-lg-4 d-flex flex-column" style={{ border: '1px solid #e8e8e8' }}>
-          <div className="col-5 col-lg-4 col-md-4">{consultation.title}</div>
-          <div>NOTES</div>
+        <div
+          className="col-12 col-md-4 no-gutters"
+          style={{ border: '1px solid #e8e8e8', backgroundColor: 'white' }}
+        >
+          <div
+            className="col-12 w-100 p-4 card mb-0"
+            style={{ height: '200px', borderBottom: '1px solid #e8e8e8' }}
+          >
+            <ConsultationCard consultation={consultation} />
+          </div>
+          <div className="card mb-0 col-12 w-100 p-4" style={{ height: '400px' }}>
+            <ConsultationNotes
+              notes={[
+                'rearear231231231312',
+                'rearear231231231312',
+                'rearear231231231312',
+                'rearear231231231312',
+                'rearear231231231312',
+                'rearear231231231312',
+              ]}
+            />
+          </div>
         </div>
       </div>
-      <div style={{ display: 'flex', width: '100%' }}>
-        {Object.keys(users).map(key => {
-          if (key === yourID) {
-            return null
-          }
-          return <Button onClick={() => startCall(key)}>Call {key}</Button>
+    </div>
+  )
+}
+
+const ConsultationCard = ({ consultation }) => {
+  const sensei = consultation.Sensei
+  return (
+    <>
+      <small className="text-uppercase text-secondary">CONSULTATION INFO</small>
+      <div
+        className="row align-items-center no-gutters d-flex pl-4 pr-4"
+        style={{ justifyContent: 'space-around' }}
+      >
+        <div className="h3 font-weight-bold defocus-btn col-8">{consultation.title}</div>
+        <div className="row align-items-center no-gutters col-4">
+          <div className="col-12 d-flex justify-content-center">
+            <div className=" kit__utils__avatar kit__utils__avatar--size64 mb-3">
+              <img
+                src={
+                  sensei?.profileImgUrl
+                    ? sensei?.profileImgUrl
+                    : '/resources/images/avatars/avatar-2.png'
+                }
+                alt="Display Pic"
+              />
+            </div>
+          </div>
+          <div
+            className="col-12 d-flex justify-content-center"
+            style={{ textAlign: 'center', fontSize: '14px' }}
+          >
+            {getUserFullName(sensei)}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+const ConsultationNotes = ({ notes }) => {
+  return (
+    <>
+      <div>Consultation Notes</div>
+      <div
+        style={{
+          overflow: 'scroll',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+        }}
+      >
+        {notes.map(note => {
+          return <div>{note}</div>
         })}
       </div>
-      <Button onClick={() => setOnCall(!onCall)}> Minimize </Button>
-      <div style={{ display: 'flex', width: '100%' }}>{incomingCall}</div>
-    </div>
+    </>
   )
 }
 

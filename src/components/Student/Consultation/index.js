@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { CloseOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons'
 import {
   Avatar,
@@ -33,6 +34,7 @@ const { Option } = Select
 
 const StudentConsultationComponent = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
   const [showAddConsultationModal, setShowAddConsultationModal] = useState(false)
 
   const [showConsultationDetails, setShowConsultationDetails] = useState(false)
@@ -189,6 +191,10 @@ const StudentConsultationComponent = () => {
     return false
   }
 
+  const startCall = () => {
+    history.push(`/student/consultation/${consultationDetails.consultationId}`)
+  }
+
   const getConsultationListOfDay = () => {
     let listOfConsult = []
 
@@ -240,7 +246,7 @@ const StudentConsultationComponent = () => {
         </Button>
       </div>
       <div className="col-auto">
-        <Button type="primary" size="large" icon={<PhoneOutlined />}>
+        <Button type="primary" size="large" icon={<PhoneOutlined />} onClick={() => startCall()}>
           Start Call
         </Button>
       </div>

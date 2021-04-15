@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react'
 
 const UserVideo = ({ stream, muted, minimize }) => {
   const userVid = useRef()
-  const video = false
+  const video = true
   const sizes = {
     minimized: {
       container: {
@@ -14,7 +14,7 @@ const UserVideo = ({ stream, muted, minimize }) => {
         right: '40px',
       },
       video: {
-        height: '100%',
+        // height: '100%',
         width: '100%',
         border: '1px solid #e8e8e8',
       },
@@ -23,10 +23,11 @@ const UserVideo = ({ stream, muted, minimize }) => {
       container: {
         height: '100%',
         width: '100%',
-        position: 'absolute',
+        display: 'flex',
+        justifyContent: 'center',
       },
       video: {
-        height: '100%',
+        // height: '100%',
         width: '100%',
       },
     },
@@ -41,7 +42,8 @@ const UserVideo = ({ stream, muted, minimize }) => {
     <div style={minimize ? sizes.minimized.container : sizes.maximized.container}>
       {video ? (
         <video
-          style={{ height: '100%', width: '100%' }}
+          className={`${minimize ? 'w-100' : ''}`}
+          style={{ height: '100%' }}
           playsInline
           muted={muted}
           ref={userVid}
