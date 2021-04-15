@@ -154,6 +154,7 @@ export const NOTE_EDIT_SUCCESS = 'Note has been successfully edited.'
 export const NOTE_EDIT_ERR = 'There was an error editing your note.'
 
 export const CONSULTATION_CREATED = 'Consultation has been successfully created'
+export const CONSULTATION_PAST_DATE = 'You cannot create a consultation for the past.'
 export const CONSULTATION_DELETED = 'Consultation has been successfully deleted'
 export const CONSULTATION_REGISTERED =
   'You have been successfully registered for the selected consultation slot'

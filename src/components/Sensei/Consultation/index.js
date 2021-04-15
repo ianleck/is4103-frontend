@@ -31,7 +31,13 @@ import { isEmpty, isNil, map } from 'lodash'
 import { getSenseiMentorshipListings } from 'services/mentorship/listings'
 import moment from 'moment'
 import { showNotification } from 'components/utils'
-import { SUCCESS, CONSULTATION_CREATED, CONSULTATION_DELETED } from 'constants/notifications'
+import {
+  SUCCESS,
+  CONSULTATION_CREATED,
+  CONSULTATION_DELETED,
+  ERROR,
+  CONSULTATION_PAST_DATE,
+} from 'constants/notifications'
 import Paragraph from 'antd/lib/typography/Paragraph'
 
 const { Option } = Select
@@ -52,8 +58,8 @@ const SenseiConsultationComponent = () => {
 
   const retrieveConsultations = async () => {
     const date = new Date()
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
@@ -74,8 +80,8 @@ const SenseiConsultationComponent = () => {
 
   const onDateSelect = values => {
     const date = new Date(values.format())
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
@@ -155,23 +161,27 @@ const SenseiConsultationComponent = () => {
     const title = values.name
     const mentorshipListingId = values.id
 
-    const startDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeStart
-      .format('HH:mm:ss')
-      .toString()}`
-    const timeStart = new Date(startDateTime).toString()
+    if (moment(values.date) < moment()) {
+      showNotification('error', ERROR, CONSULTATION_PAST_DATE)
+    } else {
+      const startDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeStart
+        .format('HH:mm:ss')
+        .toString()}`
+      const timeStart = new Date(startDateTime).toString()
 
-    const endDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeEnd
-      .format('HH:mm:ss')
-      .toString()}`
+      const endDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeEnd
+        .format('HH:mm:ss')
+        .toString()}`
 
-    const timeEnd = new Date(endDateTime).toString()
-    const payload = { title, mentorshipListingId, timeStart, timeEnd }
-    const response = await createConsultation(monthStart, monthEnd, payload)
+      const timeEnd = new Date(endDateTime).toString()
+      const payload = { title, mentorshipListingId, timeStart, timeEnd }
+      const response = await createConsultation(monthStart, monthEnd, payload)
 
-    if (response) {
-      refreshConsultations()
-      setShowAddConsultationModal(false)
-      showNotification('success', SUCCESS, CONSULTATION_CREATED)
+      if (response) {
+        refreshConsultations()
+        setShowAddConsultationModal(false)
+        showNotification('success', SUCCESS, CONSULTATION_CREATED)
+      }
     }
   }
 

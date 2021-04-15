@@ -39,6 +39,7 @@ const StudentConsultationComponent = () => {
   const [consultationDetails, setConsultationDetails] = useState([])
   const [available, setAvailable] = useState(true) // Flag if the slot has been booked by someone
   const [booked, setBooked] = useState(false) // Flag for booked by you
+  const [isPast, setIsPast] = useState(false) // Flag to check if the slot is in a past date
 
   const [selectedDate, setSelectedDate] = useState(new Date().toString())
   const [monthStart, setMonthStart] = useState(new Date().toString())
@@ -48,8 +49,8 @@ const StudentConsultationComponent = () => {
 
   const retrieveConsultations = async () => {
     const date = new Date()
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
@@ -63,8 +64,8 @@ const StudentConsultationComponent = () => {
 
   const onDateSelect = values => {
     const date = new Date(values.format())
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
@@ -153,6 +154,7 @@ const StudentConsultationComponent = () => {
 
   const selectConsultation = record => {
     checkIfBooked(record)
+    checkIfPast(record)
     setConsultationDetails(record)
     setShowConsultationDetails(true)
   }
@@ -168,6 +170,12 @@ const StudentConsultationComponent = () => {
       setBooked(true)
     } else {
       setBooked(false)
+    }
+  }
+
+  const checkIfPast = record => {
+    if (moment(record.timeStart) < moment()) {
+      setIsPast(true)
     }
   }
 
@@ -215,12 +223,13 @@ const StudentConsultationComponent = () => {
         <Popconfirm
           title="Are you sure you wish to book this consultation?"
           icon={<QuestionCircleOutlined className="text-danger" />}
+          disabled={!available || isPast}
           onConfirm={() => onBookConsultation()}
         >
           <Button
             type="primary"
             size="large"
-            disabled={!available}
+            disabled={!available || isPast}
             icon={<VideoCameraAddOutlined />}
           >
             Book Consultation
