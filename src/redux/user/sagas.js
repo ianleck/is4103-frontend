@@ -50,15 +50,14 @@ export function* LOAD_CURRENT_ACCOUNT() {
   })
   let currentUser = resetUser
   const user = yield call(jwt.getLocalUserData)
+  const token = localStorage.getItem('accessToken')
   if (user) {
     if (user.userType === USER_TYPE_ENUM.ADMIN) {
       currentUser = createAdminObj(user, user.authorized, user.loading)
     } else if (!isEmpty(user.accountId)) {
       const userFromAPI = yield call(jwt.getProfile, user.accountId)
-      console.log('userrr =', user)
-      console.log('userFromApirr =', userFromAPI)
       if (userFromAPI) {
-        userFromAPI.accessToken = user.accessToken
+        userFromAPI.accessToken = token
         currentUser = createUserObj(
           userFromAPI,
           user.authorized,
