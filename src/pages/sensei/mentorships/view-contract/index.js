@@ -10,11 +10,22 @@ import {
   CONTRACT_COMPLETE_SUCCESS,
   ERROR,
   SUCCESS,
+  WARNING,
 } from 'constants/notifications'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getContract, terminateMentorshipContract } from 'services/mentorship/contracts'
+import {
+  addTask,
+  createTaskBucket,
+  deleteTask,
+  deleteTaskBucket,
+  getContract,
+  getTaskBuckets,
+  terminateMentorshipContract,
+  updateTask,
+  updateTaskBucket,
+} from 'services/mentorship/contracts'
 
 const MentorshipContract = () => {
   const { id } = useParams()
@@ -23,23 +34,47 @@ const MentorshipContract = () => {
   const [showCompletePopConfirm, setShowCompletePopConfirm] = useState(false)
   const [isContractOngoing, setisContractOngoing] = useState(false)
 
+  const [taskBuckets, setTaskBuckets] = useState([])
+  const [activeTaskBucket, setActiveTaskBucket] = useState({
+    bucket: {},
+    tasks: [],
+  })
+
   const getMentorshipContract = async () => {
     const response = await getContract(id)
     if (response && !isNil(response.contract)) {
       setContract(response.contract)
-      if (!isNil(response.contract.TaskBuckets)) {
-        setOverallTaskProgress(calculateOverallProgress(response.contract.TaskBuckets))
-      }
       if (!isNil(response.contract.progress)) {
         setisContractOngoing(response.contract.progress === CONTRACT_PROGRESS_ENUM.ONGOING)
       }
     }
   }
 
+  const getTaskBucketsData = async () => {
+    const res = await getTaskBuckets(id)
+    if (res) {
+      setTaskBuckets(res.taskBuckets)
+      setOverallTaskProgress(calculateOverallProgress(res.taskBuckets))
+      return res.taskBuckets
+    }
+    return []
+  }
+
   useEffect(() => {
     getMentorshipContract()
+    getTaskBucketsData().then(buckets => {
+      if (buckets.length > 0) {
+        const Tasks = [...buckets[0].Tasks]
+        setActiveTaskBucket({
+          bucket: buckets[0],
+          tasks: Tasks,
+        })
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // ======================== MENTORSHIP CONTRACT FUNCTIONS ========================
 
   const onCompleteContract = async () => {
     const response = await terminateMentorshipContract({
@@ -56,6 +91,136 @@ const MentorshipContract = () => {
     }
   }
 
+  // ======================== TASK BUCKETS OPERATIONS ========================
+
+  const addTaskBucket = async title => {
+    if (!title || title === '') {
+      showNotification('warn', WARNING, 'Task bucket name cannot be empty')
+      return
+    }
+    const res = await createTaskBucket(id, { title })
+    if (res) {
+      const buckets = [...taskBuckets]
+      buckets.push(res.newBucket)
+      showNotification('success', SUCCESS, res.message)
+      setTaskBuckets(buckets)
+    }
+  }
+
+  const rearrangeTasks = async tasksData => {
+    const newTaskOrder = tasksData.map(t => t.taskId)
+    const taskBucket = {
+      ...activeTaskBucket.bucket,
+      taskOrder: newTaskOrder,
+    }
+    const res = await updateTaskBucket(activeTaskBucket.bucket.taskBucketId, taskBucket)
+    if (res && !isNil(res.updatedTaskBucket)) {
+      const rearrangedTasks = [...tasksData]
+      setActiveTaskBucket({
+        bucket: res.updatedTaskBucket,
+        tasks: rearrangedTasks,
+      })
+      getTaskBucketsData()
+    }
+  }
+
+  const deleteOneTaskBucket = async taskBucketId => {
+    const res = await deleteTaskBucket(taskBucketId)
+    if (res) {
+      showNotification('success', SUCCESS, res.message)
+      getTaskBucketsData()
+      setActiveTaskBucket({
+        bucket: {},
+        tasks: [],
+      })
+    }
+  }
+
+  // ======================== TASKS OPERATIONS ========================
+
+  const addEmptyTask = async () => {
+    const res = await addTask(activeTaskBucket.bucket.taskBucketId)
+    if (res) {
+      const updatedTasks = isEmpty(activeTaskBucket.bucket.Tasks)
+        ? []
+        : activeTaskBucket.bucket.Tasks && [...activeTaskBucket.bucket.Tasks]
+      updatedTasks.push(res.createdTask)
+      const updatedTaskBucket = {
+        bucket: activeTaskBucket.bucket,
+        tasks: updatedTasks,
+      }
+      showNotification('success', SUCCESS, res.message)
+      setActiveTaskBucket(updatedTaskBucket)
+      getTaskBucketsData()
+    }
+  }
+
+  const showTasks = taskBucket => {
+    const Tasks = (taskBucket.Tasks && [...taskBucket.Tasks]) || []
+    setActiveTaskBucket({
+      bucket: taskBucket,
+      tasks: Tasks,
+    })
+  }
+
+  const updateOneTask = async task => {
+    const { body, dueAt, progress } = task
+    const res = await updateTask(task.taskId, {
+      body,
+      dueAt,
+      progress,
+    })
+    if (res) {
+      showNotification('success', SUCCESS, res.message)
+      updateActiveTasks(task)
+      getTaskBucketsData()
+    }
+  }
+
+  const deleteOneTask = async taskId => {
+    const res = await deleteTask(taskId)
+    const updatedTasks = activeTaskBucket.tasks.filter(t => t.taskId !== taskId)
+
+    if (res) {
+      showNotification('success', SUCCESS, res.message)
+      setActiveTaskBucket({
+        bucket: {
+          ...activeTaskBucket.bucket,
+          Tasks: updatedTasks,
+        },
+        tasks: updatedTasks,
+      })
+
+      getTaskBucketsData()
+    }
+  }
+
+  // ======================== TASKS COMPONENT FUNCTIONS ========================
+  const progressNumber =
+    (activeTaskBucket.tasks.length > 0 &&
+      (
+        (activeTaskBucket.tasks.filter(task => task.progress === 'COMPLETED').length /
+          activeTaskBucket.tasks.length) *
+        100
+      ).toFixed(0)) ||
+    0
+
+  const updateActiveTasks = newTask => {
+    const updatedTasks = activeTaskBucket.tasks.map(t => {
+      if (t.taskId === newTask.taskId) {
+        return newTask
+      }
+      return t
+    })
+    const newBucket = activeTaskBucket.bucket
+    newBucket.Tasks = updatedTasks
+    setActiveTaskBucket({
+      bucket: newBucket,
+      tasks: updatedTasks,
+    })
+  }
+
+  // ======================== MISC FUNCTIONS ========================
   const getPopconfirmTitle = () => {
     const main = 'Do you wish to mark this mentorship contract as completed? '
 
@@ -66,6 +231,8 @@ const MentorshipContract = () => {
 
     return main + addendum
   }
+
+  // ======================== COMPONENTS ========================
 
   const DetailsComponent = () => (
     <div className="card">
@@ -126,7 +293,20 @@ const MentorshipContract = () => {
           <ProgressComponent />
         </div>
       </div>
-      <TaskComponent isEditable={isContractOngoing} />
+      <TaskComponent
+        activeTaskBucket={activeTaskBucket}
+        addEmptyTask={addEmptyTask}
+        addTaskBucket={addTaskBucket}
+        deleteOneTask={deleteOneTask}
+        deleteOneTaskBucket={deleteOneTaskBucket}
+        isEditable={isContractOngoing}
+        progressNumber={progressNumber}
+        rearrangeTasks={rearrangeTasks}
+        showTasks={showTasks}
+        taskBuckets={taskBuckets}
+        updateActiveTasks={updateActiveTasks}
+        updateOneTask={updateOneTask}
+      />
       <br />
       <NotesComponent isEditable={isContractOngoing} />
     </div>

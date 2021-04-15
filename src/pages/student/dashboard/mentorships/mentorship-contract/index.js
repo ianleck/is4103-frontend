@@ -8,7 +8,7 @@ import MentorshipActions from 'components/Mentorship/MentorshipActions'
 import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
 import TaskComponent from 'components/Mentorship/Task'
 import ReviewModal from 'components/Common/Reviews/ReviewModal'
-import { getImage, initPageItems, showNotification } from 'components/utils'
+import { getImage, initPageItems, onFinishFailed, showNotification } from 'components/utils'
 import { CONTRACT_PROGRESS_ENUM, CONTRACT_TYPES, DEFAULT_TIMEOUT } from 'constants/constants'
 import {
   CONTRACT_CANCEL_ERR,
@@ -20,13 +20,24 @@ import {
   REVIEW_EDIT_ERR,
   REVIEW_EDIT_SUCCESS,
   SUCCESS,
+  WARNING,
 } from 'constants/notifications'
 import { filter, isEmpty, isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { getContract, terminateMentorshipContract } from 'services/mentorship/contracts'
+import {
+  addTask,
+  createTaskBucket,
+  deleteTask,
+  deleteTaskBucket,
+  getContract,
+  getTaskBuckets,
+  terminateMentorshipContract,
+  updateTask,
+  updateTaskBucket,
+} from 'services/mentorship/contracts'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
 import { getProfile } from 'services/user'
 import { requestRefund } from 'services/wallet'
@@ -43,6 +54,7 @@ const MentorshipContractView = () => {
 
   const [showRefundModal, setShowRefundModal] = useState(false)
   const [isCancellable, setIsCancellable] = useState(true)
+  const [isContractOngoing, setIsContractOngoing] = useState(false)
 
   const [currentTab, setCurrentTab] = useState('info')
   const [viewUser, setViewUser] = useState('')
@@ -55,6 +67,12 @@ const MentorshipContractView = () => {
   const [paginatedReviews, setPaginatedReviews] = useState([])
   const [currentPageIdx, setCurrentPageIdx] = useState(1)
   const [showLoadMore, setShowLoadMore] = useState(false)
+
+  const [taskBuckets, setTaskBuckets] = useState([])
+  const [activeTaskBucket, setActiveTaskBucket] = useState({
+    bucket: {},
+    tasks: [],
+  })
 
   const changeTab = tab => {
     setCurrentTab(tab)
@@ -70,6 +88,7 @@ const MentorshipContractView = () => {
           result.contract.progress === CONTRACT_PROGRESS_ENUM.ONGOING ||
             result.contract.progress === CONTRACT_PROGRESS_ENUM.NOT_STARTED,
         )
+        setIsContractOngoing(result.contract.progress === CONTRACT_PROGRESS_ENUM.ONGOING)
       }
       if (!isNil(result.contract.MentorshipListing)) {
         setMentorshipListing(result.contract.MentorshipListing)
@@ -97,6 +116,15 @@ const MentorshipContractView = () => {
     setTimeout(() => {
       setIsLoading(false)
     }, DEFAULT_TIMEOUT)
+  }
+
+  const getTaskBucketsData = async () => {
+    const res = await getTaskBuckets(id)
+    if (res) {
+      setTaskBuckets(res.taskBuckets)
+      return res.taskBuckets
+    }
+    return []
   }
 
   const getUserProfile = async () => {
@@ -146,6 +174,134 @@ const MentorshipContractView = () => {
     setShowReviewModal(false)
   }
 
+  // ======================== TASK BUCKETS OPERATIONS ========================
+
+  const addTaskBucket = async title => {
+    if (!title || title === '') {
+      showNotification('warn', WARNING, 'Task bucket name cannot be empty')
+      return
+    }
+    const res = await createTaskBucket(id, { title })
+    if (res) {
+      const buckets = [...taskBuckets]
+      buckets.push(res.newBucket)
+      showNotification('success', SUCCESS, res.message)
+      setTaskBuckets(buckets)
+    }
+  }
+
+  const rearrangeTasks = async tasksData => {
+    const newTaskOrder = tasksData.map(t => t.taskId)
+    const taskBucket = {
+      ...activeTaskBucket.bucket,
+      taskOrder: newTaskOrder,
+    }
+    const res = await updateTaskBucket(activeTaskBucket.bucket.taskBucketId, taskBucket)
+    if (res && !isNil(res.updatedTaskBucket)) {
+      const rearrangedTasks = [...tasksData]
+      setActiveTaskBucket({
+        bucket: res.updatedTaskBucket,
+        tasks: rearrangedTasks,
+      })
+      getTaskBucketsData()
+    }
+  }
+
+  const deleteOneTaskBucket = async taskBucketId => {
+    const res = await deleteTaskBucket(taskBucketId)
+    if (res) {
+      showNotification('success', SUCCESS, res.message)
+      getTaskBucketsData()
+      setActiveTaskBucket({
+        bucket: {},
+        tasks: [],
+      })
+    }
+  }
+
+  // ======================== TASKS OPERATIONS ========================
+
+  const addEmptyTask = async () => {
+    const res = await addTask(activeTaskBucket.bucket.taskBucketId)
+    if (res) {
+      const updatedTasks = isEmpty(activeTaskBucket.bucket.Tasks)
+        ? []
+        : activeTaskBucket.bucket.Tasks && [...activeTaskBucket.bucket.Tasks]
+      updatedTasks.push(res.createdTask)
+      const updatedTaskBucket = {
+        bucket: activeTaskBucket.bucket,
+        tasks: updatedTasks,
+      }
+      showNotification('success', SUCCESS, res.message)
+      setActiveTaskBucket(updatedTaskBucket)
+      getTaskBucketsData()
+    }
+  }
+
+  const showTasks = taskBucket => {
+    const Tasks = (taskBucket.Tasks && [...taskBucket.Tasks]) || []
+    setActiveTaskBucket({
+      bucket: taskBucket,
+      tasks: Tasks,
+    })
+  }
+
+  const updateOneTask = async task => {
+    const { body, dueAt, progress } = task
+    const res = await updateTask(task.taskId, {
+      body,
+      dueAt,
+      progress,
+    })
+    if (res) {
+      showNotification('success', SUCCESS, res.message)
+      updateActiveTasks(task)
+      getTaskBucketsData()
+    }
+  }
+
+  const deleteOneTask = async taskId => {
+    const res = await deleteTask(taskId)
+    const updatedTasks = activeTaskBucket.tasks.filter(t => t.taskId !== taskId)
+
+    if (res) {
+      showNotification('success', SUCCESS, res.message)
+      setActiveTaskBucket({
+        bucket: {
+          ...activeTaskBucket.bucket,
+          Tasks: updatedTasks,
+        },
+        tasks: updatedTasks,
+      })
+      getTaskBucketsData()
+    }
+  }
+
+  // ======================== TASKS COMPONENT FUNCTIONS ========================
+  const progressNumber =
+    (activeTaskBucket.tasks.length > 0 &&
+      (
+        (activeTaskBucket.tasks.filter(task => task.progress === 'COMPLETED').length /
+          activeTaskBucket.tasks.length) *
+        100
+      ).toFixed(0)) ||
+    0
+
+  const updateActiveTasks = newTask => {
+    const updatedTasks = activeTaskBucket.tasks.map(t => {
+      if (t.taskId === newTask.taskId) {
+        return newTask
+      }
+      return t
+    })
+    const newBucket = activeTaskBucket.bucket
+    newBucket.Tasks = updatedTasks
+    setActiveTaskBucket({
+      bucket: newBucket,
+      tasks: updatedTasks,
+    })
+  }
+
   const showReviewButton = () => (
     <>
       <div className="mt-3">
@@ -181,6 +337,19 @@ const MentorshipContractView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTab])
 
+  useEffect(() => {
+    getTaskBucketsData().then(buckets => {
+      if (buckets.length > 0) {
+        const Tasks = [...buckets[0].Tasks]
+        setActiveTaskBucket({
+          bucket: buckets[0],
+          tasks: Tasks,
+        })
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const refundFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
@@ -195,10 +364,6 @@ const MentorshipContractView = () => {
       </div>
     </div>
   )
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
-  }
 
   const onRequestRefund = async values => {
     const response = await requestRefund(values.mentorshipContractId, CONTRACT_TYPES.MENTORSHIP)
@@ -366,7 +531,20 @@ const MentorshipContractView = () => {
       {currentTab === 'tasks' && (
         <div className="row">
           <div className="col-12">
-            <TaskComponent />
+            <TaskComponent
+              activeTaskBucket={activeTaskBucket}
+              addEmptyTask={addEmptyTask}
+              addTaskBucket={addTaskBucket}
+              deleteOneTask={deleteOneTask}
+              deleteOneTaskBucket={deleteOneTaskBucket}
+              isEditable={isContractOngoing}
+              progressNumber={progressNumber}
+              rearrangeTasks={rearrangeTasks}
+              showTasks={showTasks}
+              taskBuckets={taskBuckets}
+              updateActiveTasks={updateActiveTasks}
+              updateOneTask={updateOneTask}
+            />
           </div>
         </div>
       )}
