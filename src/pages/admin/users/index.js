@@ -181,13 +181,7 @@ const UsersManagement = () => {
   }
 
   const redirectToUserProfile = record => {
-    if (record.userType === 'STUDENT') {
-      const path = `/admin/user-management/student/${record.accountId}`
-      history.push(path)
-    } else {
-      const path = `/admin/user-management/sensei/${record.accountId}`
-      history.push(path)
-    }
+    history.push(`/admin/user-management/profile/${record.accountId}`)
   }
 
   const acceptSenseiProfile = async record => {

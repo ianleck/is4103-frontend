@@ -141,13 +141,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/user-management/student/:userId',
-    Component: lazy(() => import('pages/admin/users/student-profile')),
-    exact: true,
-  },
-  {
-    path: '/admin/user-management/sensei/:userId',
-    Component: lazy(() => import('pages/admin/users/sensei-profile')),
+    path: '/admin/user-management/profile/:userId',
+    Component: lazy(() => import('pages/admin/users/profile')),
     exact: true,
   },
   {
@@ -192,12 +187,12 @@ const routes = [
   },
   {
     path: '/admin/course-content-management/:id',
-    Component: lazy(() => import('pages/admin/courses/view')),
+    Component: lazy(() => import('pages/student/dashboard/courses/view')),
     exact: true,
   },
   {
     path: '/admin/course-content-management/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/admin/courses/view-lesson')),
+    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
     exact: true,
   },
   {

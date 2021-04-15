@@ -161,6 +161,18 @@ export async function getAllSenseis() {
     .catch(err => console.log(err))
 }
 
+export async function getProfile(accountId) {
+  return apiClient
+    .get(`/user/${accountId}`, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.userProfile
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getSensei(accountId) {
   return apiClient
     .get(`/user/${accountId}`, { withCredentials: true })
