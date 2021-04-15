@@ -108,7 +108,6 @@ const MentorshipContract = () => {
   }
 
   const rearrangeTasks = async tasksData => {
-    console.log('rearrange task')
     const newTaskOrder = tasksData.map(t => t.taskId)
     const taskBucket = {
       ...activeTaskBucket.bucket,
