@@ -308,7 +308,7 @@ const routes = [
   },
   {
     path: '/sensei/consultation',
-    Component: lazy(() => import('pages/sensei/mentees')),
+    Component: lazy(() => import('pages/sensei/consultation')),
     exact: true,
   },
   {
@@ -355,6 +355,11 @@ const routes = [
   {
     path: '/student/dashboard',
     Component: lazy(() => import('pages/student/dashboard')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/consultations',
+    Component: lazy(() => import('pages/student/dashboard/consultations')),
     exact: true,
   },
   {

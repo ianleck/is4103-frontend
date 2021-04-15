@@ -6,6 +6,10 @@
   height: 120px;
 }
 
+.consultation-list-card {
+  height: 670px;
+}
+
 .clickable:hover {
   cursor: pointer;
 }
