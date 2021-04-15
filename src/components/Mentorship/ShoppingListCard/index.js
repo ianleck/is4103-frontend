@@ -1,16 +1,18 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Avatar, Rate, Skeleton, Space, Tag } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Rate, Skeleton, Space, Tag } from 'antd'
+import { EyeOutlined, UserOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { useSelector } from 'react-redux'
 import { USER_TYPE_ENUM } from 'constants/constants'
 
-const MentorshipListingCard = data => {
-  const { listing, isLoading, className } = data
+const MentorshipListingCard = ({ listing, isLoading, className, isUpsellItem }) => {
   const history = useHistory()
   const user = useSelector(state => state.user)
-  const viewOnly = user.userType === USER_TYPE_ENUM.ADMIN || user.userType === USER_TYPE_ENUM.SENSEI
+  const viewOnly =
+    user.userType === USER_TYPE_ENUM.ADMIN ||
+    user.userType === USER_TYPE_ENUM.SENSEI ||
+    isUpsellItem
 
   return (
     <div className={isNil(className) ? 'col-12 col-md-6 col-xl-4' : className}>
@@ -18,8 +20,8 @@ const MentorshipListingCard = data => {
         <div
           role="button"
           tabIndex={0}
-          className={`card text-left w-100 mentorship-listing-card ${
-            viewOnly ? 'defocus-btn' : 'btn p-0 rounded-lg'
+          className={`card text-left w-100 ${
+            viewOnly ? 'defocus-btn font-small' : 'btn p-0 rounded-lg'
           }`}
           onClick={() =>
             !viewOnly && history.push(`/student/mentorship/view/${listing.mentorshipListingId}`)
@@ -33,7 +35,7 @@ const MentorshipListingCard = data => {
             </span>
           </div>
           <div className="card-body">
-            <div className="row align-items-center justify-content-start mentorship-avatar">
+            <div className="row align-items-center justify-content-start">
               <div className="col-auto">
                 <Avatar
                   size={42}
@@ -45,11 +47,13 @@ const MentorshipListingCard = data => {
                   }
                 />
               </div>
-              <div className="col-auto pl-0">
-                <p className="m-0 text-dark text-wrap">
+              <div className="col pl-0">
+                <p className="truncate-1-overflow m-0 text-break">
                   {listing?.Sensei?.firstName} {listing?.Sensei?.lastName}
                 </p>
-                <p className="m-0 text-secondary text-wrap">{listing?.Sensei?.occupation}</p>
+                <p className="m-0 text-secondary text-break truncate-1-overflow">
+                  {listing?.Sensei?.occupation}
+                </p>
               </div>
             </div>
             <div className="row mt-4 text-2-lines">
@@ -64,29 +68,50 @@ const MentorshipListingCard = data => {
                 <span className="font-weight-bold">${listing.priceAmount.toFixed(2)}/month</span>
               </div>
             </div>
-            <div className="row">
-              <div className="col-12">
-                <span>
-                  <Rate disabled defaultValue={listing.rating} />
-                </span>
+            {!isUpsellItem && (
+              <div className="row">
+                <div className="col-12">
+                  <span>
+                    <Rate disabled defaultValue={listing.rating} />
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="row text-2-lines">
-              <div className="col-12">
-                <span className="w-100 mt-2 text-dark truncate-2-overflow">
-                  {listing.description}
-                </span>
+            )}
+            {!isUpsellItem && (
+              <div className="row text-2-lines">
+                <div className="col-12">
+                  <span className="w-100 mt-2 text-dark truncate-2-overflow">
+                    {listing.description}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="w-100 text-truncate mt-4 pt-3 pb-0 mb-0">
-              {listing.Categories?.map(c => {
-                return (
-                  <Space key={c.categoryId}>
-                    <Tag color="default">{c.name}</Tag>
-                  </Space>
-                )
-              })}
-            </div>
+            )}
+            {!isUpsellItem && (
+              <div className="w-100 text-truncate mt-4 pt-3 pb-0 mb-0">
+                {listing.Categories?.map(c => {
+                  return (
+                    <Space key={c.categoryId}>
+                      <Tag color="default">{c.name}</Tag>
+                    </Space>
+                  )
+                })}
+              </div>
+            )}
+            {isUpsellItem && (
+              <div className="mt-2">
+                <Button
+                  block
+                  type="default"
+                  size="large"
+                  icon={<EyeOutlined />}
+                  onClick={() =>
+                    history.push(`/student/mentorship/view/${listing.mentorshipListingId}`)
+                  }
+                >
+                  View
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </Skeleton>

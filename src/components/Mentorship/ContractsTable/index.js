@@ -110,6 +110,7 @@ const MentorshipContractsTable = () => {
       title: 'Mentorship Description',
       dataIndex: ['MentorshipListing', 'description'],
       key: ['MentorshipListing', 'description'],
+      width: '15%',
       responsive: ['lg'],
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['ascend', 'descend'],
