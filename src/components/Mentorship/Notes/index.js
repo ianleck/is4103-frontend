@@ -19,7 +19,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { createNote, getAllNotes, updateNote } from 'services/mentorship/contracts'
 
-const NotesComponent = () => {
+const NotesComponent = ({ isEditable }) => {
   const { id } = useParams()
   const [notes, setNotes] = useState([])
   const [isEditMode, setIsEditMode] = useState(false)
@@ -106,14 +106,14 @@ const NotesComponent = () => {
               label="Note Title"
               rules={[{ required: true, message: 'Please input a note title' }]}
             >
-              <Input />
+              <Input disabled={!isEditable} />
             </Form.Item>
             <Form.Item
               name="noteBody"
               label="Note Content"
               rules={[{ required: true, message: 'Please input note content' }]}
             >
-              <TextArea autoSize={{ minRows: 5, maxRows: 10 }} />
+              <TextArea autoSize={{ minRows: 5, maxRows: 10 }} disabled={!isEditable} />
             </Form.Item>
             <Form.Item shouldUpdate>
               {() => (
@@ -167,11 +167,12 @@ const NotesComponent = () => {
                       </div>
                     </div>
                     <div className="mt-2">
-                      {activeNoteId !== note.noteId ? (
-                        <Button onClick={() => onEditNote(note)}>Edit this note</Button>
-                      ) : (
-                        <Button onClick={() => onReset()}>Cancel editing this note</Button>
-                      )}
+                      {isEditable &&
+                        (activeNoteId !== note.noteId ? (
+                          <Button onClick={() => onEditNote(note)}>Edit this note</Button>
+                        ) : (
+                          <Button onClick={() => onReset()}>Cancel editing this note</Button>
+                        ))}
                     </div>
                   </Panel>
                 )

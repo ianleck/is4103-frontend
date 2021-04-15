@@ -1,5 +1,7 @@
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Input, Popconfirm } from 'antd'
+import { showNotification } from 'components/utils'
+import { WARNING } from 'constants/notifications'
 import { map } from 'lodash'
 import React, { useState } from 'react'
 
@@ -9,8 +11,19 @@ const TaskBucket = ({
   activeTaskBucket,
   deleteOneTaskBucket,
   addTaskBucket,
+  isEditable,
 }) => {
   const [input, setInput] = useState('')
+
+  const onAddTaskBucket = () => {
+    if (input === '') {
+      showNotification('warn', WARNING, 'Task bucket name cannot be empty')
+      return
+    }
+    addTaskBucket(input)
+    setInput('')
+  }
+
   return (
     <div
       role="menu"
@@ -46,6 +59,7 @@ const TaskBucket = ({
                 size="small"
                 shape="circle"
                 icon={<CloseOutlined style={{ fontSize: '12px' }} />}
+                disabled={!isEditable}
               />
             </Popconfirm>
           </div>
@@ -55,15 +69,9 @@ const TaskBucket = ({
         placeholder="Add new task bucket"
         value={input}
         onChange={e => setInput(e.target.value)}
-        onPressEnter={e => {
-          addTaskBucket(e.target.value)
-          setInput('')
-        }}
-        enterButton={
-          <Button type="default">
-            <PlusOutlined />
-          </Button>
-        }
+        disabled={!isEditable}
+        onSearch={() => onAddTaskBucket()}
+        enterButton={<Button type="default" disabled={!isEditable} icon={<PlusOutlined />} />}
       />
     </div>
   )

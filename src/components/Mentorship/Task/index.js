@@ -17,7 +17,7 @@ import {
 import TaskBucket from './TaskBucket'
 import TaskRow from './TaskRow'
 
-const TaskComponent = () => {
+const TaskComponent = ({ isEditable }) => {
   const { id } = useParams()
   const [taskBuckets, setTaskBuckets] = useState([])
   const [activeTaskBucket, setActiveTaskBucket] = useState({
@@ -178,6 +178,7 @@ const TaskComponent = () => {
             activeTaskBucket={activeTaskBucket}
             deleteOneTaskBucket={deleteOneTaskBucket}
             addTaskBucket={addTaskBucket}
+            isEditable={isEditable}
           />
         </div>
         <div className="col-12 col-md-9 align-items-center justify-content-center flex-col">
@@ -193,7 +194,7 @@ const TaskComponent = () => {
                 type="primary"
                 block
                 onClick={() => addEmptyTask()}
-                disabled={taskBuckets.length === 0}
+                disabled={taskBuckets.length === 0 || !isEditable}
               >
                 Add Task
               </Button>
@@ -214,6 +215,7 @@ const TaskComponent = () => {
                       updateOneTask={updateOneTask}
                       updateActiveTasks={updateActiveTasks}
                       deleteOneTask={deleteOneTask}
+                      isEditable={isEditable}
                     />
                   ) : (
                     <span>{node.body}:</span>
