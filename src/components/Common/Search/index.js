@@ -96,11 +96,7 @@ const Search = ({ intl: { formatMessage } }) => {
   const sendToPage = (type, id) => {
     setShowSearch(false)
     if (type === 'user') {
-      if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {
-        history.push(`/admin/user-management/profile/${id}`)
-      } else {
-        sendToSocialProfile(history, id)
-      }
+      sendToSocialProfile(currentUser, history, id)
     }
     if (type === 'mentorship') {
       if (currentUser.userType === USER_TYPE_ENUM.ADMIN) {

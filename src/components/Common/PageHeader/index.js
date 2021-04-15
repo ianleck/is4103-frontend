@@ -1,10 +1,12 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Avatar } from 'antd'
 import { getImage, getUserFullName, sendToSocialProfile } from 'components/utils'
 import style from './style.module.scss'
 
 const PageHeader = ({ type, listing, course, children }) => {
+  const user = useSelector(state => state.user)
   const history = useHistory()
 
   return (
@@ -32,6 +34,7 @@ const PageHeader = ({ type, listing, course, children }) => {
                 className="text-muted defocus-btn clickable"
                 onClick={() =>
                   sendToSocialProfile(
+                    user,
                     history,
                     type === 'mentorship' ? listing.accountId : course.accountId,
                   )
