@@ -48,7 +48,7 @@ const Success = () => {
     }
 
     populateCart()
-    updateBackend()
+    if (paymentId && token && payerID && cartId) updateBackend()
   }, [user, paymentId, token, payerID, cartId])
 
   const getSubTotal = () => {

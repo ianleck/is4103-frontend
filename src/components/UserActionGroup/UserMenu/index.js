@@ -156,14 +156,14 @@ const UserMenu = () => {
       <Menu.Item>
         <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
-          My profile
+          My Profile
         </a>
       </Menu.Item>
       {user.userType !== USER_TYPE_ENUM.ADMIN && (
         <Menu.Item>
           <a href="#" onClick={viewFeed}>
             <SolutionOutlined className="mr-2" />
-            My feed
+            My Feed
           </a>
         </Menu.Item>
       )}

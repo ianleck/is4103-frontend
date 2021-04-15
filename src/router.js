@@ -40,7 +40,7 @@ const routes = [
   },
   {
     path: '/courses/:id',
-    Component: lazy(() => import('pages/courses/view')),
+    Component: lazy(() => import('pages/courses/browse')),
     exact: true,
   },
   {
@@ -141,13 +141,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/user-management/student/:userId',
-    Component: lazy(() => import('pages/admin/users/student-profile')),
-    exact: true,
-  },
-  {
-    path: '/admin/user-management/sensei/:userId',
-    Component: lazy(() => import('pages/admin/users/sensei-profile')),
+    path: '/admin/user-management/profile/:userId',
+    Component: lazy(() => import('pages/admin/users/profile')),
     exact: true,
   },
   {
@@ -192,12 +187,12 @@ const routes = [
   },
   {
     path: '/admin/course-content-management/:id',
-    Component: lazy(() => import('pages/admin/courses/view')),
+    Component: lazy(() => import('pages/courses/view')),
     exact: true,
   },
   {
     path: '/admin/course-content-management/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/admin/courses/view-lesson')),
+    Component: lazy(() => import('pages/courses/view-lesson')),
     exact: true,
   },
   {
@@ -278,12 +273,12 @@ const routes = [
   },
   {
     path: '/sensei/courses/view/:id',
-    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    Component: lazy(() => import('pages/courses/view')),
     exact: true,
   },
   {
     path: '/sensei/courses/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    Component: lazy(() => import('pages/courses/view-lesson')),
     exact: true,
   },
   {
@@ -369,12 +364,12 @@ const routes = [
   },
   {
     path: '/student/dashboard/courses/:id',
-    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    Component: lazy(() => import('pages/courses/view')),
     exact: true,
   },
   {
     path: '/student/dashboard/courses/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    Component: lazy(() => import('pages/courses/view-lesson')),
     exact: true,
   },
   {

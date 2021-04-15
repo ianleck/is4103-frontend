@@ -1,12 +1,17 @@
 import React from 'react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT, DIRECTION } from 'constants/constants'
+import {
+  DEFAULT_ITEMS_PER_PAGE,
+  DEFAULT_TIMEOUT,
+  DIRECTION,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import { filter, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
-  return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
+  return moment(dateTime).format('DD MMM YYYY h:mm a')
 }
 
 export const sortArrByCreatedAt = (objArr, direction) => {
@@ -291,8 +296,12 @@ export const isFollowing = (followingList, accountId) => {
   return size(followingList.filter(following => following.followingId === accountId)) === 1
 }
 
-export const sendToSocialProfile = (history, accountId) => {
-  history.push(`/social/profile/${accountId}`)
+export const sendToSocialProfile = (user, history, accountId) => {
+  if (user.userType === USER_TYPE_ENUM.ADMIN) {
+    history.push(`/admin/user-management/profile/${accountId}`)
+  } else {
+    history.push(`/social/profile/${accountId}`)
+  }
 }
 
 export const initPageItems = (
@@ -357,4 +366,16 @@ export const mapCategoriesToMenu = (categories, type) => {
     })
   })
   return menuData
+}
+
+export const getImage = (type, object) => {
+  if (type === 'user')
+    return object?.profileImgUrl ? object.profileImgUrl : '/resources/images/avatars/avatar-2.png'
+  if (type === 'mentorship')
+    return object.Sensei?.profileImgUrl
+      ? object.Sensei?.profileImgUrl
+      : '/resources/images/avatars/avatar-2.png'
+  if (type === 'course')
+    return !isNil(object.imgUrl) ? object.imgUrl : '/resources/images/course-placeholder.png'
+  return '/resources/images/avatars/avatar-2.png'
 }

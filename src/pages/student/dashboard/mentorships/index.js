@@ -1,5 +1,6 @@
 import { Empty, Progress } from 'antd'
-import { formatTime, getUserFullName } from 'components/utils'
+import Avatar from 'antd/lib/avatar/avatar'
+import { formatTime, getImage, getUserFullName } from 'components/utils'
 import { TASK_PROGRESS } from 'constants/constants'
 import { isEmpty, isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -50,40 +51,43 @@ const StudentMentorships = () => {
 
   const OngoingMentorships = () => {
     if (isEmpty(activeMentorships)) {
-      return (
-        <div className="col-12 mt-4">
-          <Empty />
-        </div>
-      )
+      return <Empty />
     }
     return map(activeMentorships, (activeMentorship, i) => (
       <div
         role="button"
         tabIndex={0}
-        className="card btn border-0 text-left w-100"
+        className="card btn rounded-lg text-left w-100"
         onClick={() => viewMentorshipContract(activeMentorship.mentorshipContractId)}
         onKeyDown={event => event.preventDefault()}
         key={i}
       >
         <div className="card-body">
           <div className="row align-items-center">
-            <div className="col-12">
-              <h5 className="truncate-2-overflow text-wrap font-weight-bold">
+            <div className="col-auto">
+              <Avatar src={getImage('user', activeMentorship.MentorshipListing.Sensei)} size={48} />
+            </div>
+            <div className="col">
+              <span className="h5 m-0 truncate-2-overflow text-wrap font-weight-bold">
                 {activeMentorship.MentorshipListing.name}
-              </h5>
-              <span className="mb-2 h6 text-dark text-uppercase text-wrap">
-                {getUserFullName(activeMentorship.MentorshipListing.Sensei)}
               </span>
-              <div className="truncate-2-overflow text-wrap text-muted">
+              <div className="text-wrap pt-1">
+                {`by ${getUserFullName(activeMentorship.MentorshipListing.Sensei)}`}
+              </div>
+            </div>
+          </div>
+          <div className="row align-items-center mt-2">
+            <div className="col-12">
+              <div className="text-2-lines truncate-2-overflow text-wrap text-muted">
                 {activeMentorship.MentorshipListing.description}
               </div>
-              <div className="col-12 mt-1">
+              <div className="mt-2">
                 <Progress
                   percent={calculateOverallProgress(activeMentorship.TaskBuckets)}
                   status="active"
                 />
               </div>
-              <div className="col-12 mt-1">
+              <div className="mt-2">
                 <small className="text-uppercase text-secondary">
                   Created on {formatTime(activeMentorship.createdAt)}
                 </small>
@@ -104,7 +108,11 @@ const StudentMentorships = () => {
           </div>
         </div>
       </div>
-      <OngoingMentorships />
+      <div className="row mt-4">
+        <div className="col-12 col-md-6">
+          <OngoingMentorships />
+        </div>
+      </div>
     </div>
   )
 }

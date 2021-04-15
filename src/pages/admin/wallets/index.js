@@ -15,8 +15,7 @@ const WalletManagement = () => {
   const [wallets, setWallets] = useState([])
 
   const onButtonClick = record => {
-    const path = `/admin/user-management/sensei/${record.accountId}`
-    history.push(path)
+    history.push(`/admin/user-management/profile/${record.accountId}`)
   }
 
   const viewSenseiWallets = async () => {

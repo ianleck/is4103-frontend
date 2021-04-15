@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Descriptions } from 'antd'
 import { isNil } from 'lodash'
 import { getUserFullName, sendToSocialProfile } from 'components/utils'
@@ -7,6 +8,8 @@ import { CREATOR_INFO, DIGI_DOJO, NA } from 'constants/text'
 import SocialFollowBtn from '../Social/FollowBtn'
 
 const CreatorInfo = ({ history, sensei, accountId }) => {
+  const user = useSelector(state => state.user)
+
   return (
     <div>
       <small className="text-uppercase text-secondary">{CREATOR_INFO}</small>
@@ -30,7 +33,7 @@ const CreatorInfo = ({ history, sensei, accountId }) => {
             role="button"
             tabIndex={0}
             className="h3 font-weight-bold clickable defocus-btn"
-            onClick={() => sendToSocialProfile(history, accountId)}
+            onClick={() => sendToSocialProfile(user, history, accountId)}
             onKeyDown={e => e.preventDefault()}
           >
             {getUserFullName(sensei)}

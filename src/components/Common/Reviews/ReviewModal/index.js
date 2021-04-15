@@ -63,7 +63,11 @@ const ReviewModal = ({ isVisible, setShowReviewModal, review, editMode, onSubmit
           <Rate />
         </Form.Item>
 
-        <Form.Item label="Review Comment" name="comment">
+        <Form.Item
+          label="Review Comment"
+          name="comment"
+          rules={[{ required: true, message: 'Please write a short review statement.' }]}
+        >
           <TextArea
             placeholder="Tell us more about your experience."
             autoSize={{ minRows: 2, maxRows: 6 }}

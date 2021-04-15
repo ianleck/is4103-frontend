@@ -55,6 +55,7 @@ const StudentTestimonials = () => {
                 className="btn border-0 w-100 p-0"
                 onClick={() =>
                   sendToSocialProfile(
+                    user,
                     history,
                     testimonial.MentorshipContract.MentorshipListing.accountId,
                   )

@@ -4,9 +4,9 @@ import { useHistory, useParams } from 'react-router-dom'
 import { getMentorshipListing } from 'services/mentorship/listings'
 import { filter, isEmpty, isNil } from 'lodash'
 import { useSelector } from 'react-redux'
-import { Button, Rate, Skeleton } from 'antd'
+import { Button, Skeleton } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
-import ReviewModal from 'components/Review/ReviewModal'
+import ReviewModal from 'components/Common/Reviews/ReviewModal'
 import {
   ERROR,
   REVIEW_ADD_ERR,
@@ -16,20 +16,16 @@ import {
   SUCCESS,
 } from 'constants/notifications'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
-import { formatTime, getUserFirstName, showNotification } from 'components/utils'
+import { getUserFirstName, initPageItems, showNotification } from 'components/utils'
 import { DEFAULT_TIMEOUT, FRONTEND_API, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
 import BackBtn from 'components/Common/BackBtn'
 import ShareBtn from 'components/Common/Social/ShareBtn'
-import CreatorInfo from 'components/Common/CreatorInfo'
 import { getProfile } from 'services/user'
-import PersonalInformationCard from 'components/Profile/PersonalInformationCard'
-import AboutCard from 'components/Profile/AboutCard'
-import IndustryCard from 'components/Profile/IndustryCard'
-import OccupationCard from 'components/Profile/OccupationCard'
-import PersonalityCard from 'components/Profile/PersonalityCard'
-import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
-import ProfilePrivateCard from 'components/Common/Social/ProfilePrivateCard'
-import MentorshipHeader from 'components/Mentorship/MentorshipHeader'
+import PageHeader from 'components/Common/PageHeader'
+import Reviews from 'components/Common/Reviews'
+import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
+import MentorshipActions from 'components/Mentorship/MentorshipActions'
+import MentorProfile from 'components/Mentorship/MentorProfile'
 
 const ViewListing = () => {
   const { id } = useParams()
@@ -50,6 +46,11 @@ const ViewListing = () => {
 
   const [hasExistingContract, setHasExistingContract] = useState(false)
   const [hasExistingApprovedContract, setHasExistingApprovedContract] = useState(false)
+
+  const [isReviewLoading, setIsReviewLoading] = useState(false)
+  const [paginatedReviews, setPaginatedReviews] = useState([])
+  const [currentPageIdx, setCurrentPageIdx] = useState(1)
+  const [showLoadMore, setShowLoadMore] = useState(false)
 
   const changeTab = tab => {
     setCurrentTab(tab)
@@ -77,6 +78,14 @@ const ViewListing = () => {
 
       if (!isNil(response.mentorshipListing.Reviews)) {
         setReviews(response.mentorshipListing.Reviews)
+        initPageItems(
+          setIsReviewLoading,
+          response.mentorshipListing.Reviews,
+          setPaginatedReviews,
+          setCurrentPageIdx,
+          setShowLoadMore,
+        )
+
         const reviewByUser = filter(response.mentorshipListing.Reviews, review => {
           return review.accountId === user.accountId
         })
@@ -154,93 +163,6 @@ const ViewListing = () => {
     </>
   )
 
-  console.log('reviews are ', reviews) // needed as a placeholder, Nat to deal with it in a later PR
-
-  const MentorshipInfo = () => {
-    return (
-      <>
-        <div className="row p-0 mb-4 align-items-center">
-          <div className="col-12">
-            <Rate disabled defaultValue={listing.rating} />
-          </div>
-          <div className="col-12 col-lg mt-2">
-            <span className="h3">{listing.name}</span>
-            <br />
-            <small className="text-muted text-uppercase">
-              {`Last Updated On ${formatTime(listing.updatedAt)}`}
-            </small>
-          </div>
-          <div className="col-12 col-lg-auto">
-            <div className="card mb-0 border-0 shadow-none">
-              <div className="card-body mt-4 mt-md-0 pt-0 pb-0 pr-3 text-center text-md-right">
-                <span className="h3 align-middle">
-                  {`$${parseFloat(listing.priceAmount).toFixed(2)}`}
-                </span>
-                <span className="align-middle">/pass</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <hr className="mt-4" />
-        <div className="mt-4">
-          <h3>Mentorship Description</h3>
-          <p className="mt-4 pb-4 description-body">{listing.description}</p>
-        </div>
-      </>
-    )
-  }
-
-  const MentorProfile = () => {
-    if (viewUser.isPrivateProfile) return <ProfilePrivateCard />
-    if (!isBlocked && !viewUser.isPrivateProfile)
-      return (
-        <div>
-          <PersonalInformationCard user={viewUser} />
-          <AboutCard user={viewUser} />
-          <IndustryCard user={viewUser} />
-          <OccupationCard user={viewUser} />
-          <PersonalityCard user={viewUser} />
-        </div>
-      )
-    return <ProfileBlockedCard />
-  }
-
-  const MentorshipActions = () => {
-    return (
-      <div className="card">
-        <div className="card-body">
-          <div className="row align-items-center">
-            <div className="col pr-0">
-              <Button
-                block
-                type="primary"
-                size="large"
-                disabled={hasExistingContract}
-                onClick={() => history.push(`/student/mentorship/apply/${id}`)}
-              >
-                Apply for Mentorship
-              </Button>
-            </div>
-            <div className="col-auto">
-              <ShareBtn
-                quote={`${getUserFirstName(user)} is sharing this post with you!`}
-                url={`${FRONTEND_API}/student/mentorship/view/${listing.mentorshipListingId}`}
-                btnSize="large"
-                block
-              />
-            </div>
-            <div className="col-12">{hasExistingApprovedContract && showReviewButton()}</div>
-          </div>
-          <hr />
-          <div className="mt-4">
-            <CreatorInfo history={history} sensei={listing.Sensei} accountId={listing.accountId} />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   useEffect(() => {
     getListing()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -259,7 +181,7 @@ const ViewListing = () => {
           <BackBtn />
         </div>
       </div>
-      <MentorshipHeader listing={listing}>
+      <PageHeader type="mentorship" listing={listing}>
         <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto pr-0 mt-4 mt-lg-0">
           <Button
             key="mentorship-tab"
@@ -290,16 +212,55 @@ const ViewListing = () => {
             Mentor Profile
           </Button>
         </div>
-      </MentorshipHeader>
+      </PageHeader>
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
         <div className="col-12 col-lg-6 col-xl-7">
           <Skeleton active loading={isLoading}>
-            {currentTab === 'info' && <MentorshipInfo />}
-            {currentTab === 'profile' && <MentorProfile />}
+            {currentTab === 'info' && <MentorshipInfo listing={listing} />}
+            {currentTab === 'reviews' && (
+              <Reviews
+                reviews={reviews}
+                rating={listing.rating}
+                isReviewLoading={isReviewLoading}
+                setIsReviewLoading={setIsReviewLoading}
+                paginatedReviews={paginatedReviews}
+                setPaginatedReviews={setPaginatedReviews}
+                currentPageIdx={currentPageIdx}
+                setCurrentPageIdx={setCurrentPageIdx}
+                showLoadMore={showLoadMore}
+                setShowLoadMore={setShowLoadMore}
+              />
+            )}
+            {currentTab === 'profile' && (
+              <MentorProfile viewUser={viewUser} isBlocked={isBlocked} />
+            )}
           </Skeleton>
         </div>
         <div className="col-12 col-lg-6 col-xl-5">
-          <MentorshipActions />
+          <MentorshipActions listing={listing} history={history}>
+            <div className="row align-items-center">
+              <div className="col pr-0">
+                <Button
+                  block
+                  type="primary"
+                  size="large"
+                  disabled={hasExistingContract}
+                  onClick={() => history.push(`/student/mentorship/apply/${id}`)}
+                >
+                  Apply for Mentorship
+                </Button>
+              </div>
+              <div className="col-auto">
+                <ShareBtn
+                  quote={`${getUserFirstName(user)} is sharing this post with you!`}
+                  url={`${FRONTEND_API}/student/mentorship/view/${listing.mentorshipListingId}`}
+                  btnSize="large"
+                  block
+                />
+              </div>
+              <div className="col-12">{hasExistingApprovedContract && showReviewButton()}</div>
+            </div>
+          </MentorshipActions>
         </div>
       </div>
     </div>
