@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Rate } from 'antd'
 import { map, size } from 'lodash'
 import PaginationWrapper from 'components/Common/Pagination'
@@ -16,6 +17,8 @@ const Reviews = ({
   showLoadMore,
   setShowLoadMore,
 }) => {
+  const user = useSelector(state => state.user)
+
   return (
     <div>
       <span className="h3">{`Reviews (${size(reviews)})`}</span>
@@ -44,7 +47,12 @@ const Reviews = ({
           size(paginatedReviews) > 0 &&
           map(paginatedReviews, review => {
             return (
-              <ReviewItem key={review.reviewId} review={review} isReviewLoading={isReviewLoading} />
+              <ReviewItem
+                key={review.reviewId}
+                review={review}
+                isReviewLoading={isReviewLoading}
+                user={user}
+              />
             )
           })
         }

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Avatar, Rate, Skeleton, Tag } from 'antd'
 import { getImage, getUserFirstName, sendToSocialProfile } from 'components/utils'
 
-const ReviewItem = ({ review, isReviewLoading }) => {
+const ReviewItem = ({ user, review, isReviewLoading }) => {
   const history = useHistory()
 
   return (
@@ -16,7 +16,7 @@ const ReviewItem = ({ review, isReviewLoading }) => {
           role="button"
           tabIndex={0}
           className="col-6 text-break defocus-btn clickable"
-          onClick={() => sendToSocialProfile(history, review?.User.accountId)}
+          onClick={() => sendToSocialProfile(user, history, review?.User.accountId)}
           onKeyDown={e => e.preventDefault()}
         >
           <span className="font-weight-bold">{getUserFirstName(review?.User)}</span>

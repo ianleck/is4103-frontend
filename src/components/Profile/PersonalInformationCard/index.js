@@ -235,9 +235,6 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
                 </Descriptions.Item>
               )}
               {!!isAdmin && (
-                <Descriptions.Item label="Paypal ID">{user.paypalId}</Descriptions.Item>
-              )}
-              {!!isAdmin && (
                 <Descriptions.Item label="Created At">
                   {moment(user.createdAt).format('YYYY-MM-DD')}
                 </Descriptions.Item>

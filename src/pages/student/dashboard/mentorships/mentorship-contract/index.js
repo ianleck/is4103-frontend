@@ -272,10 +272,6 @@ const MentorshipContractView = () => {
                 size="large"
                 onClick={() => setShowRefundModal(true)}
                 icon={<DollarCircleOutlined className="text-info" />}
-                disabled={
-                  isNil(mentorshipContract.mentorPassCount) ||
-                  mentorshipContract.mentorPassCount === 0
-                }
               >
                 Refund All Passes
               </Button>

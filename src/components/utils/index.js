@@ -1,7 +1,12 @@
 import React from 'react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT, DIRECTION } from 'constants/constants'
+import {
+  DEFAULT_ITEMS_PER_PAGE,
+  DEFAULT_TIMEOUT,
+  DIRECTION,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import { filter, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
@@ -284,8 +289,12 @@ export const isFollowing = (followingList, accountId) => {
   return size(followingList.filter(following => following.followingId === accountId)) === 1
 }
 
-export const sendToSocialProfile = (history, accountId) => {
-  history.push(`/social/profile/${accountId}`)
+export const sendToSocialProfile = (user, history, accountId) => {
+  if (user.userType === USER_TYPE_ENUM.ADMIN) {
+    history.push(`/admin/user-management/profile/${accountId}`)
+  } else {
+    history.push(`/social/profile/${accountId}`)
+  }
 }
 
 export const initPageItems = (

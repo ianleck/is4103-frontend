@@ -18,7 +18,6 @@ const SenseiMentorshipContracts = () => {
 
   const getMentorshipContracts = async () => {
     const response = await getSenseiMentorshipContracts(accountId)
-    console.log('response is ', response)
     if (response && !isNil(response.contracts)) {
       setMentorshipContracts(map(response.contracts, (c, i) => ({ ...c, key: i })))
     }
