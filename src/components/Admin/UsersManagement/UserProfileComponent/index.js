@@ -68,7 +68,6 @@ const SenseiProfileComponent = () => {
   const getProfileSvc = async () => {
     const response = await getProfile(userId)
     if (response && !isNil(response.userType)) {
-      console.log('response', response)
       setViewUser(response)
       setIsSensei(response.userType === USER_TYPE_ENUM.SENSEI)
     }
