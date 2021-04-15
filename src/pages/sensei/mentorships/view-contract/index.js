@@ -53,8 +53,6 @@ const MentorshipContract = () => {
   const getTaskBucketsData = async () => {
     const res = await getTaskBuckets(id)
     if (res) {
-      console.log('res is ', res)
-      console.log('updated state =', activeTaskBucket)
       setTaskBuckets(res.taskBuckets)
       setOverallTaskProgress(calculateOverallProgress(res.taskBuckets))
       return res.taskBuckets
@@ -160,7 +158,6 @@ const MentorshipContract = () => {
 
   const showTasks = taskBucket => {
     const Tasks = (taskBucket.Tasks && [...taskBucket.Tasks]) || []
-    console.log('showTasks')
     setActiveTaskBucket({
       bucket: taskBucket,
       tasks: Tasks,

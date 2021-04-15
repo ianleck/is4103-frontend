@@ -121,7 +121,6 @@ const MentorshipContractView = () => {
   const getTaskBucketsData = async () => {
     const res = await getTaskBuckets(id)
     if (res) {
-      console.log('res is ', res)
       setTaskBuckets(res.taskBuckets)
       return res.taskBuckets
     }
