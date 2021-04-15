@@ -5,7 +5,7 @@ import { Button, List, Skeleton } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { isEmpty, isNil } from 'lodash'
-import { ADD_TO_CART, COURSE_DESC, CURRENT_PRICE } from 'constants/text'
+import { ADD_TO_CART, CURRENT_PRICE } from 'constants/text'
 import { getUserFirstName, initPageItems, sortArrByCreatedAt } from 'components/utils'
 import { DEFAULT_TIMEOUT, DIRECTION, FRONTEND_API } from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
@@ -115,10 +115,6 @@ const ViewCourseDetailsPublic = () => {
   const ExtCourseInfo = () => {
     return (
       <CourseInfo course={currentCourse}>
-        <div className="mt-4">
-          <h3>{COURSE_DESC}</h3>
-          <span className="mt-4 description-body">{currentCourse.description}</span>
-        </div>
         <hr className="mt-4" />
 
         <div className="mt-4">
