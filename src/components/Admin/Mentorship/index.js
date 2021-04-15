@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/admin'
 import { getMentorshipListing } from 'services/mentorship/listings'
 import { Tabs, Table, Space, Button, Tag, Modal, Descriptions } from 'antd'
@@ -20,6 +22,7 @@ import ContractsWidget from './ContractsWidget'
 const { TabPane } = Tabs
 
 const Mentorship = () => {
+  const history = useHistory()
   const [tabKey, setTabKey] = useState('Listings')
   const categories = useSelector(state => state.categories)
   const categoryFilters = map(categories, cat => ({ value: cat.categoryId, text: cat.name }))
@@ -198,7 +201,11 @@ const Mentorship = () => {
             type="primary"
             shape="circle"
             size="large"
-            onClick={() => selectListing(record)}
+            onClick={() =>
+              history.push(
+                `/admin/mentorship-content-management/view/${record.mentorshipListingId}`,
+              )
+            }
             icon={<InfoCircleOutlined />}
           />
         </Space>
