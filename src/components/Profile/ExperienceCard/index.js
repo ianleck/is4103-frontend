@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import { isEmpty, isNil } from 'lodash'
-import * as jwt from 'services/user'
+import { getProfile } from 'services/user'
 
 const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
   const { TextArea } = Input
@@ -17,21 +18,6 @@ const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
   const [editExperienceForm] = Form.useForm()
-
-  useEffect(() => {
-    const getProfile = async () => {
-      if (!isAdmin && !isNil(user.accountId)) {
-        const userRsp = await jwt.getProfile(user.accountId)
-        dispatch({
-          type: 'user/SET_STATE',
-          payload: {
-            Experience: userRsp.Experience,
-          },
-        })
-      }
-    }
-    getProfile()
-  }, [dispatch, isAdmin, user.accountId])
 
   const sortExperienceByDate = () => {
     if (user) {
