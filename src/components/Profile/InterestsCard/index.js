@@ -9,7 +9,6 @@ const InterestsCard = ({ user, showEditTools }) => {
   const categories = useSelector(state => state.categories)
 
   const [showInterests, setShowInterests] = useState(isEmpty(user.Interests))
-  console.log(showInterests)
   const [editInterestsMode, setEditInterestsMode] = useState(false)
 
   const [updateInterestsForm] = Form.useForm()
