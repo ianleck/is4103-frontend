@@ -91,3 +91,39 @@ export async function capturePayment(paymentId, token, payerID, cartId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function upsellCheckout() {
+  return apiClient
+    .get(`/cart/checkout`)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function upsellOnMentorships(mentorshipListingId) {
+  return apiClient
+    .get(`/cart/mentorship/${mentorshipListingId}`)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function upsellOnCourses(courseId) {
+  return apiClient
+    .get(`/cart/course/${courseId}`)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

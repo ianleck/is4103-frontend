@@ -1,17 +1,19 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Avatar, Divider, Rate, Skeleton } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Divider, Rate, Skeleton } from 'antd'
+import { EyeOutlined, UserOutlined } from '@ant-design/icons'
 import { isNil } from 'lodash'
 import { getUserFullName } from 'components/utils'
 import { USER_TYPE_ENUM } from 'constants/constants'
 import { useSelector } from 'react-redux'
 
-const CourseListingCard = data => {
+const CourseListingCard = ({ course, isLoading, className, isUpsellItem }) => {
   const history = useHistory()
   const user = useSelector(state => state.user)
-  const viewOnly = user.userType === USER_TYPE_ENUM.ADMIN || user.userType === USER_TYPE_ENUM.SENSEI
-  const { course, isLoading, className } = data
+  const viewOnly =
+    user.userType === USER_TYPE_ENUM.ADMIN ||
+    user.userType === USER_TYPE_ENUM.SENSEI ||
+    isUpsellItem
 
   return (
     <div className={isNil(className) ? 'col-12 col-md-4 col-xl-3' : className}>
@@ -19,7 +21,9 @@ const CourseListingCard = data => {
         <div
           role="button"
           tabIndex={0}
-          className={`card text-left w-100 ${viewOnly ? 'defocus-btn' : 'btn p-0 rounded-lg'}`}
+          className={`card text-left w-100 ${
+            viewOnly ? 'defocus-btn font-small' : 'btn p-0 rounded-lg'
+          }`}
           onClick={() => !viewOnly && history.push(`/courses/${course.courseId}`)}
           onKeyDown={event => event.preventDefault()}
         >
@@ -52,33 +56,50 @@ const CourseListingCard = data => {
                   <span className="font-weight-bold">${course.priceAmount.toFixed(2)}</span>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-12">
-                  <span>
-                    <Rate disabled defaultValue={course.rating} />
+              {!isUpsellItem && (
+                <div className="row">
+                  <div className="col-12">
+                    <span>
+                      <Rate disabled defaultValue={course.rating} />
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+            {!isUpsellItem && <Divider className="mt-2 mb-3" />}
+            {!isUpsellItem && (
+              <div className="row align-items-center justify-content-between">
+                <div className="col-auto">
+                  <Avatar
+                    size={32}
+                    icon={<UserOutlined />}
+                    src={
+                      course.Sensei?.profileImgUrl
+                        ? course.Sensei.profileImgUrl
+                        : '/resources/images/avatars/avatar-2.png'
+                    }
+                  />
+                </div>
+                <div className="col pl-0">
+                  <span className="p-0 text-dark text-wrap truncate-1-overflow">
+                    {getUserFullName(course.Sensei)}
                   </span>
                 </div>
               </div>
-            </div>
-            <Divider className="mt-2 mb-3" />
-            <div className="row align-items-center justify-content-between">
-              <div className="col-auto">
-                <Avatar
-                  size={32}
-                  icon={<UserOutlined />}
-                  src={
-                    course.Sensei?.profileImgUrl
-                      ? course.Sensei.profileImgUrl
-                      : '/resources/images/avatars/avatar-2.png'
-                  }
-                />
+            )}
+            {isUpsellItem && (
+              <div className="mt-2">
+                <Button
+                  block
+                  type="default"
+                  size="large"
+                  icon={<EyeOutlined />}
+                  onClick={() => history.push(`/courses/${course.courseId}`)}
+                >
+                  View
+                </Button>
               </div>
-              <div className="col pl-0">
-                <span className="p-0 text-dark text-wrap truncate-1-overflow">
-                  {getUserFullName(course.Sensei)}
-                </span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </Skeleton>

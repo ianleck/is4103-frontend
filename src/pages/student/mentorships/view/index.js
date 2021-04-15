@@ -26,6 +26,7 @@ import Reviews from 'components/Common/Reviews'
 import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
 import MentorshipActions from 'components/Mentorship/MentorshipActions'
 import MentorProfile from 'components/Mentorship/MentorProfile'
+import UpsellBar from 'components/Common/UpsellBar'
 
 const ViewListing = () => {
   const { id } = useParams()
@@ -262,6 +263,9 @@ const ViewListing = () => {
             </div>
           </MentorshipActions>
         </div>
+      </div>
+      <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
+        <UpsellBar type="mentorships" id={id} />
       </div>
     </div>
   )

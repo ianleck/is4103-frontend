@@ -22,6 +22,7 @@ import PersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import Reviews from 'components/Common/Reviews'
 import CourseActions from 'components/Common/CourseActionCard'
+import UpsellBar from 'components/Common/UpsellBar'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -265,6 +266,9 @@ const ViewCourseDetailsPublic = () => {
             </div>
           </CourseActions>
         </div>
+      </div>
+      <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
+        <UpsellBar type="courses" id={id} />
       </div>
     </div>
   )
