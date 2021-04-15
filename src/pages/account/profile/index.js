@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
@@ -7,6 +6,7 @@ import ProfileAboutCard from 'components/Profile/AboutCard'
 import ProfileOccupationCard from 'components/Profile/OccupationCard'
 import ProfileIndustryCard from 'components/Profile/IndustryCard'
 import ProfileExperienceCard from 'components/Profile/ExperienceCard'
+import ProfileInterestsCard from 'components/Profile/InterestsCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUpdateProfileBanner from 'components/Profile/UpdateProfileBanner'
@@ -32,6 +32,7 @@ const AccountProfile = () => {
         <ProfilePersonalInfoCard user={user} showEditTools />
         <ProfileIndustryCard user={user} showEditTools />
         <ProfileOccupationCard user={user} showEditTools />
+        <ProfileInterestsCard user={user} showEditTools />
       </>
     )
   }

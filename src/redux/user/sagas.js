@@ -1,8 +1,18 @@
 import { all, takeEvery, put, call, select, putResolve } from 'redux-saga/effects'
-import { notification } from 'antd'
 import { history } from 'index'
 import { USER_TYPE_ENUM } from 'constants/constants'
-import { DP_REMOVED, SUCCESS } from 'constants/notifications'
+import {
+  ACCOUNT_CREATED_SUCCESS,
+  ACCOUNT_DEL_SUCCESS,
+  DP_REMOVED,
+  EXP_ADDED_SUCCESS,
+  EXP_EDITED_SUCCESS,
+  EXP_DEL_SUCCESS,
+  LET_US_KNOW,
+  PASSWORD_CHANGED_SUCCESS,
+  PROFILE_UPDATE_SUCCESS,
+  SUCCESS,
+} from 'constants/notifications'
 import { isEmpty, isNil } from 'lodash'
 import * as jwt from 'services/user'
 import {
@@ -12,6 +22,7 @@ import {
   resetUser,
   showNotification,
 } from 'components/utils'
+import { DIGI_DOJO } from 'constants/text'
 import actions from './actions'
 import * as selectors from '../selectors'
 
@@ -24,7 +35,8 @@ function checkProfileUpdateRqd(user) {
     user.firstName === '' ||
     isNil(user.firstName) ||
     user.lastName === '' ||
-    isNil(user.lastName)
+    isNil(user.lastName) ||
+    isEmpty(user.Interests)
 
   return user.requiresProfileUpdate
 }
@@ -129,10 +141,11 @@ export function* LOGIN({ payload }) {
     })
     if (isNil(currentUser.firstName)) currentUser.firstName = 'Anonymous'
     if (isNil(currentUser.lastName)) currentUser.lastName = 'Pigeon'
-    notification.success({
-      message: 'Logged In',
-      description: `Welcome to Digi Dojo, ${currentUser.firstName} ${currentUser.lastName}.`,
-    })
+    showNotification(
+      'success',
+      'Logged In',
+      `Welcome to ${DIGI_DOJO}, ${currentUser.firstName} ${currentUser.lastName}.`,
+    )
     yield putResolve({
       type: 'menu/GET_DATA',
     })
@@ -172,10 +185,7 @@ export function* REGISTER({ payload }) {
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
-    notification.success({
-      message: 'Account created successfully.',
-      description: 'Let us know more about you!',
-    })
+    showNotification('success', ACCOUNT_CREATED_SUCCESS, LET_US_KNOW)
   }
   yield put({
     type: 'menu/GET_DATA',
@@ -198,9 +208,7 @@ export function* CHANGE_PASSWORD({ payload }) {
   })
   const response = yield call(jwt.changePassword, oldPassword, newPassword, confirmPassword)
   if (response) {
-    notification.success({
-      message: 'Password changed successfully.',
-    })
+    showNotification('success', SUCCESS, PASSWORD_CHANGED_SUCCESS)
   }
   yield put({
     type: 'user/SET_STATE',
@@ -258,7 +266,15 @@ export function* UPDATE_PROFILE({ payload }) {
   const { accountId } = payload
   delete payload.accountId
 
-  const response = yield call(jwt.updateProfile, accountId, payload)
+  let response = false
+  if (!isNil(payload.interests)) {
+    const interests = [...payload.interests]
+    delete payload.interests
+    response = yield call(jwt.updateProfile, accountId, payload, interests)
+  } else {
+    response = yield call(jwt.updateProfile, accountId, payload)
+  }
+
   if (response) {
     const updatedUser = handleProfileUpdateRsp(response)
     if (updatedUser) {
@@ -270,13 +286,9 @@ export function* UPDATE_PROFILE({ payload }) {
       })
       jwt.updateLocalUserData(updatedUser)
       if (settingsUpdate) {
-        notification.success({
-          message: 'Your settings were successfully updated.',
-        })
+        showNotification('success', SUCCESS, PASSWORD_CHANGED_SUCCESS)
       } else {
-        notification.success({
-          message: 'Your profile was successfully updated.',
-        })
+        showNotification('success', SUCCESS, PROFILE_UPDATE_SUCCESS)
       }
     }
   }
@@ -333,9 +345,7 @@ export function* ADD_EXPERIENCE({ payload }) {
         },
       })
       yield call(jwt.updateLocalUserData, currentUser)
-      notification.success({
-        message: 'New experience added',
-      })
+      showNotification('success', SUCCESS, EXP_ADDED_SUCCESS)
     }
   }
   yield put({
@@ -389,9 +399,7 @@ export function* EDIT_EXPERIENCE({ payload }) {
         },
       })
       yield call(jwt.updateLocalUserData, currentUser)
-      notification.success({
-        message: 'Your experience was updated successfully.',
-      })
+      showNotification('success', SUCCESS, EXP_EDITED_SUCCESS)
     }
   }
   yield put({
@@ -424,9 +432,7 @@ export function* DELETE_EXPERIENCE({ payload }) {
       },
     })
     yield call(jwt.updateLocalUserData, currentUser)
-    notification.success({
-      message: 'Your experience was deleted successfully.',
-    })
+    showNotification('success', SUCCESS, EXP_DEL_SUCCESS)
   }
   yield put({
     type: 'user/SET_STATE',
@@ -461,9 +467,8 @@ export function* DELETE_ACCOUNT({ payload }) {
       type: 'menu/GET_DATA',
     })
     yield history.push('/')
-    yield notification.success({
-      message: 'Your account was sucessfully deleted.',
-    })
+
+    yield showNotification('success', SUCCESS, ACCOUNT_DEL_SUCCESS)
   }
 }
 
