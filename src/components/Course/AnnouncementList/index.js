@@ -29,7 +29,7 @@ const CourseAnnouncementList = ({ announcements }) => {
               <strong>{ANNOUNCEMENTS}</strong>
             </div>
           </div>
-          {size(announcements) > 1 && (
+          {size(announcements) > 5 && (
             <div className="col-auto">
               <Button
                 ghost

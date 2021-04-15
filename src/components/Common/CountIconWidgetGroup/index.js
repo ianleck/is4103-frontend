@@ -11,13 +11,23 @@ const CountIconWidgetGroup = ({
   handleAcceptedWidgetOnClick,
   handlePendingWidgetOnClick,
   handleRejectedWidgetOnClick,
+  noClick,
+  pendingPrefix,
+  acceptedPrefix,
+  rejectedPrefix,
 }) => {
+  const getClassName = filterName => {
+    if (noClick) return null
+    if (currentFilter === filterName) return 'btn btn-light'
+    return 'btn'
+  }
+
   return (
     <div className="row mt-4">
       <div className="col-12 col-md-4">
         <CountIconWidget
-          title={`Pending ${objectType}`}
-          className={`${currentFilter === 'pending' ? 'btn btn-light' : 'btn'}`}
+          title={`${pendingPrefix} ${objectType}`}
+          className={getClassName('pending')}
           count={numPending}
           icon={<ExceptionOutlined />}
           onClick={handlePendingWidgetOnClick}
@@ -27,8 +37,8 @@ const CountIconWidgetGroup = ({
 
       <div className="col-6 col-md-4">
         <CountIconWidget
-          title={`Accepted ${objectType}`}
-          className={`${currentFilter === 'accepted' ? 'btn btn-light' : 'btn'}`}
+          title={`${acceptedPrefix} ${objectType}`}
+          className={getClassName('accepted')}
           count={numAccepted}
           icon={<CheckOutlined />}
           onClick={handleAcceptedWidgetOnClick}
@@ -38,8 +48,8 @@ const CountIconWidgetGroup = ({
 
       <div className="col-6 col-md-4">
         <CountIconWidget
-          title={`Rejected ${objectType}`}
-          className={`${currentFilter === 'rejected' ? 'btn btn-light' : 'btn'}`}
+          title={`${rejectedPrefix} ${objectType}`}
+          className={getClassName('rejected')}
           count={numRejected}
           icon={<CloseOutlined />}
           onClick={handleRejectedWidgetOnClick}

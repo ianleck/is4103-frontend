@@ -20,7 +20,11 @@ const PublicLayout = ({ children }) => {
     }
   }
 
-  return <CustomLayout isPublic>{children}</CustomLayout>
+  return (
+    <CustomLayout isPublic maxWidth={/^\/(?=\/|$)/i.test(pathname)}>
+      {children}
+    </CustomLayout>
+  )
 }
 
 export default withRouter(PublicLayout)

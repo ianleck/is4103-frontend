@@ -73,6 +73,12 @@ const UserMenu = () => {
     history.push(path)
   }
 
+  const viewSupportPage = e => {
+    e.preventDefault()
+    const path = `/${userType.toLowerCase()}/support`
+    history.push(path)
+  }
+
   const displayFollowerRequests = () => {
     setShowFollowingList(false)
     setShowFollowerRequests(true)
@@ -156,14 +162,14 @@ const UserMenu = () => {
       <Menu.Item>
         <a href="#" onClick={viewProfile}>
           <i className="fe fe-user mr-2" />
-          My profile
+          My Profile
         </a>
       </Menu.Item>
       {user.userType !== USER_TYPE_ENUM.ADMIN && (
         <Menu.Item>
           <a href="#" onClick={viewFeed}>
             <SolutionOutlined className="mr-2" />
-            My feed
+            My Feed
           </a>
         </Menu.Item>
       )}
@@ -176,28 +182,19 @@ const UserMenu = () => {
           </a>
         </Menu.Item>
       )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={viewSupportPage}>
+            <i className="fe fe-help-circle mr-2" />
+            Request Support
+          </a>
+        </Menu.Item>
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && <Menu.Divider />}
       <Menu.Item>
         <a href="#" onClick={logout}>
           <i className="fe fe-log-out mr-2" />
           <FormattedMessage id="topBar.profileMenu.logout" />
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
-
-  const pendingLoginSubMenu = (
-    <Menu selectable={false}>
-      <Menu.Item>
-        <a href="#" onClick={redirectToLogin(false)}>
-          <i className="fe fe-user mr-2" />
-          Login as Sensei
-        </a>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item>
-        <a href="/auth/register">
-          <i className="fe fe-user mr-2" />
-          Sign Up
         </a>
       </Menu.Item>
     </Menu>
@@ -213,11 +210,36 @@ const UserMenu = () => {
     return '/resources/images/avatars/administrator.png'
   }
 
+  const pendingLoginSubMenu = (
+    <Menu selectable={false}>
+      <Menu.Item>
+        <a href="#" onClick={redirectToLogin(false)}>
+          <i className="fe fe-user mr-2" />
+          Login as Sensei
+        </a>
+      </Menu.Item>
+    </Menu>
+  )
+
   const PendingLoginMenu = () => {
     return (
-      <Dropdown.Button overlay={pendingLoginSubMenu} onClick={redirectToLogin(true)}>
-        Login
-      </Dropdown.Button>
+      <div className="row">
+        <div className="col-auto">
+          <Dropdown.Button
+            type="default"
+            overlay={pendingLoginSubMenu}
+            onClick={redirectToLogin(true)}
+            size="large"
+          >
+            Login
+          </Dropdown.Button>
+        </div>
+        <div className="col-auto pl-0">
+          <Button type="default" size="large" onClick={() => history.push(`/auth/register`)}>
+            Sign up
+          </Button>
+        </div>
+      </div>
     )
   }
 

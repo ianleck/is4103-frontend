@@ -1,31 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Menu, Row, Col } from 'antd'
-import { Link, withRouter } from 'react-router-dom'
+import { Menu } from 'antd'
+import { Link, useHistory, withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import store from 'store'
 import { find } from 'lodash'
 import UserActionGroup from 'components/UserActionGroup'
 import { DIGI_DOJO } from 'constants/text'
+import Search from 'components/Common/Search'
 import style from './style.module.scss'
-import Search from '../Search'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
   menuData: menu.menuData,
   logo: settings.logo,
   menuColor: settings.menuColor,
   role: user.role,
+  authorized: user.authorized,
 })
 
-const MenuTop = ({
-  menuData = [],
-  location: { pathname },
-
-  menuColor,
-  logo,
-  role,
-}) => {
+const MenuTop = ({ menuData = [], location: { pathname }, menuColor, logo, role, authorized }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
+  const history = useHistory()
 
   useEffect(() => {
     applySelectedKeys()
@@ -133,7 +128,13 @@ const MenuTop = ({
       })}
     >
       <div className={style.logoContainer}>
-        <div className={style.logo}>
+        <div
+          role="button"
+          tabIndex={0}
+          className={`${style.logo} defocus-btn clickable`}
+          onClick={() => history.replace('/')}
+          onKeyDown={e => e.preventDefault()}
+        >
           <img src="/resources/images/logo.svg" width="32" className="mr-2" alt={DIGI_DOJO} />
           <div className={style.name}>{logo}</div>
         </div>
@@ -143,14 +144,16 @@ const MenuTop = ({
           {generateMenuItems()}
         </Menu>
       </div>
-      <Row className={style.action}>
-        <Col className="d-md-none d-lg-block">
-          <Search />
-        </Col>
-        <Col>
+      <div className={`${style.action} row justify-content-end text-right`}>
+        {authorized && (
+          <div className="col pr-0 text-center text-md-right">
+            <Search />
+          </div>
+        )}
+        <div className="col pr-4">
           <UserActionGroup />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   )
 }

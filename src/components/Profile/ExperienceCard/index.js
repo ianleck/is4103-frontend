@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import { isEmpty, isNil } from 'lodash'
-import * as jwt from 'services/user'
 
-const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
+const ExperienceCard = ({ user, showEditTools }) => {
   const { TextArea } = Input
 
   let isExperienceEmpty = false
@@ -17,21 +16,6 @@ const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
   const [showEditExperience, setShowEditExperience] = useState(false)
   const [currentEditExpObj, setCurrentEditExpObj] = useState('')
   const [editExperienceForm] = Form.useForm()
-
-  useEffect(() => {
-    const getProfile = async () => {
-      if (!isAdmin && !isNil(user.accountId)) {
-        const userRsp = await jwt.getProfile(user.accountId)
-        dispatch({
-          type: 'user/SET_STATE',
-          payload: {
-            Experience: userRsp.Experience,
-          },
-        })
-      }
-    }
-    getProfile()
-  }, [dispatch, isAdmin, user.accountId])
 
   const sortExperienceByDate = () => {
     if (user) {
@@ -206,7 +190,7 @@ const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
             <div className="col-12 mt-3 h5 font-weight-bold">
               <span>{item.role}</span>
             </div>
-            <div className="col-12">
+            <div className="col-12 description-body">
               <span>{item.description}</span>
             </div>
           </div>

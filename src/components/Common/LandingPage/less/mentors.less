@@ -1,0 +1,86 @@
+@mentors: mentors;
+.@{mentors}-wrapper {
+  background: url('/resources/images/pages/landing/wavy.svg') no-repeat top;
+  background-size: cover;
+  min-height: 220px;
+  text-align: center;
+  .@{mentors} {
+    > p {
+      text-align: center;
+      font-size: 12px;
+      line-height: 20px;
+      margin-bottom: 32px;
+      color: rgba(256, 256, 256, 0.7);
+    }
+    h1 {
+      margin: 50px auto 32px;
+      color: #fff;
+    }
+    h4 {
+      color: #fff;
+      font-size: 24px;
+      line-height: 28px;
+      margin-bottom: 24px;
+      text-shadow: 0 8px 12px #194ec1;
+    }
+    &-img-wrapper {
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      .block {
+        margin-bottom: 24px;
+        .mentors-block-content {
+          display: block;
+          background: #fff;
+          border-radius: 4px;
+          padding: 10px;
+          text-align: center;
+          position: relative;
+          overflow: hidden;
+          .page-pro();
+          border: none;
+          color: @text-color;
+          transition: box-shadow 0.3s @ease-out, transform 0.3s @ease-out;
+          & > span {
+            width: 100%;
+            height: 260px;
+            display: block;
+            overflow: hidden;
+          }
+          & p {
+            width: 100%;
+            line-height: 30px;
+          }
+          &:hover {
+            & p {
+              bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .@{mentors}-wrapper {
+    min-height: 200px;
+    overflow: hidden;
+    .@{mentors} {
+      ul {
+        li {
+          display: block;
+          width: 100%;
+          padding: 2%;
+          span {
+            height: 168px;
+          }
+          p {
+            position: relative;
+            bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

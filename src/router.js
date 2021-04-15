@@ -24,13 +24,23 @@ const routes = [
     exact: true,
   },
   {
+    path: '/mentorships/category/:categoryId',
+    Component: lazy(() => import('pages/mentorships')),
+    exact: true,
+  },
+  {
     path: '/courses',
     Component: lazy(() => import('pages/courses')),
     exact: true,
   },
   {
+    path: '/courses/category/:categoryId',
+    Component: lazy(() => import('pages/courses')),
+    exact: true,
+  },
+  {
     path: '/courses/:id',
-    Component: lazy(() => import('pages/courses/view')),
+    Component: lazy(() => import('pages/courses/browse')),
     exact: true,
   },
   {
@@ -131,13 +141,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/admin/user-management/student/:userId',
-    Component: lazy(() => import('pages/admin/users/student-profile')),
-    exact: true,
-  },
-  {
-    path: '/admin/user-management/sensei/:userId',
-    Component: lazy(() => import('pages/admin/users/sensei-profile')),
+    path: '/admin/user-management/profile/:userId',
+    Component: lazy(() => import('pages/admin/users/profile')),
     exact: true,
   },
   {
@@ -182,12 +187,12 @@ const routes = [
   },
   {
     path: '/admin/course-content-management/:id',
-    Component: lazy(() => import('pages/admin/courses/view')),
+    Component: lazy(() => import('pages/courses/view')),
     exact: true,
   },
   {
     path: '/admin/course-content-management/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/admin/courses/view-lesson')),
+    Component: lazy(() => import('pages/courses/view-lesson')),
     exact: true,
   },
   {
@@ -243,7 +248,7 @@ const routes = [
   },
   {
     path: '/sensei/profile',
-    Component: lazy(() => import('pages/sensei/profile')),
+    Component: lazy(() => import('pages/account/profile')),
     exact: true,
   },
   {
@@ -267,6 +272,16 @@ const routes = [
     exact: true,
   },
   {
+    path: '/sensei/courses/view/:id',
+    Component: lazy(() => import('pages/courses/view')),
+    exact: true,
+  },
+  {
+    path: '/sensei/courses/:courseId/view-lesson/:lessonId',
+    Component: lazy(() => import('pages/courses/view-lesson')),
+    exact: true,
+  },
+  {
     path: '/sensei/mentorships/',
     Component: lazy(() => import('pages/sensei/mentorships')),
     exact: true,
@@ -277,8 +292,23 @@ const routes = [
     exact: true,
   },
   {
+    path: '/sensei/mentorships/contracts',
+    Component: lazy(() => import('pages/sensei/mentorships/contracts')),
+    exact: true,
+  },
+  {
+    path: '/sensei/mentorships/contract/:id',
+    Component: lazy(() => import('pages/sensei/mentorships/view-contract')),
+    exact: true,
+  },
+  {
     path: '/sensei/mentees',
     Component: lazy(() => import('pages/sensei/mentees')),
+    exact: true,
+  },
+  {
+    path: '/sensei/consultation',
+    Component: lazy(() => import('pages/sensei/consultation')),
     exact: true,
   },
   {
@@ -306,6 +336,21 @@ const routes = [
     Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
+  {
+    path: '/sensei/testimonials',
+    Component: lazy(() => import('pages/sensei/testimonials/testimonial-management')),
+    exact: true,
+  },
+  {
+    path: '/sensei/testimonial/:mentorshipContractId/:accountId',
+    Component: lazy(() => import('pages/sensei/testimonials')),
+    exact: true,
+  },
+  {
+    path: '/sensei/support',
+    Component: lazy(() => import('pages/support')),
+    exact: true,
+  },
   // Student Pages
   {
     path: '/student',
@@ -318,23 +363,28 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/dashboard/consultations',
+    Component: lazy(() => import('pages/student/dashboard/consultations')),
+    exact: true,
+  },
+  {
     path: '/student/dashboard/courses',
     Component: lazy(() => import('pages/student/dashboard/courses')),
     exact: true,
   },
   {
     path: '/student/dashboard/courses/:id',
-    Component: lazy(() => import('pages/student/dashboard/courses/view')),
+    Component: lazy(() => import('pages/courses/view')),
     exact: true,
   },
   {
     path: '/student/dashboard/courses/:courseId/view-lesson/:lessonId',
-    Component: lazy(() => import('pages/student/dashboard/courses/view-lesson')),
+    Component: lazy(() => import('pages/courses/view-lesson')),
     exact: true,
   },
   {
     path: '/student/profile',
-    Component: lazy(() => import('pages/student/profile')),
+    Component: lazy(() => import('pages/account/profile')),
     exact: true,
   },
   {
@@ -353,8 +403,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/student/mentorship/subscription/:id',
-    Component: lazy(() => import('pages/student/mentorships/subscription')),
+    path: '/student/dashboard/mentorship/contract/:id',
+    Component: lazy(() => import('pages/student/dashboard/mentorships/mentorship-contract')),
     exact: true,
   },
   {
@@ -368,6 +418,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/dashboard/mentorships',
+    Component: lazy(() => import('pages/student/dashboard/mentorships')),
+    exact: true,
+  },
+  {
     path: '/student/dashboard/billings',
     Component: lazy(() => import('pages/billings')),
     exact: true,
@@ -377,290 +432,25 @@ const routes = [
     Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
+  {
+    path: '/student/dashboard/testimonials',
+    Component: lazy(() => import('pages/student/dashboard/testimonials')),
+    exact: true,
+  },
+  {
+    path: '/student/support',
+    Component: lazy(() => import('pages/support')),
+    exact: true,
+  },
   // Consultation
   {
-    path: '/mentorships/consultation/:consultationId',
+    path: '/student/consultation/:consultationId',
     Component: lazy(() => import('pages/consultation')),
     exact: true,
   },
   {
     path: '/sensei/consultation/:consultationId',
     Component: lazy(() => import('pages/consultation')),
-    exact: true,
-  },
-  /*
-
-
-  SAMPLE PAGES
-  
-  
-  */
-  // Dashboards
-  {
-    path: '/dashboard/alpha',
-    Component: lazy(() => import('pages/dashboard/alpha')),
-    exact: true,
-  },
-  {
-    path: '/dashboard/beta',
-    Component: lazy(() => import('pages/dashboard/beta')),
-    exact: true,
-  },
-  {
-    path: '/dashboard/gamma',
-    Component: lazy(() => import('pages/dashboard/gamma')),
-    exact: true,
-  },
-  {
-    path: '/dashboard/crypto',
-    Component: lazy(() => import('pages/dashboard/crypto')),
-    exact: true,
-  },
-
-  // Ecommerce
-  {
-    path: '/ecommerce/dashboard',
-    Component: lazy(() => import('pages/ecommerce/dashboard')),
-    exact: true,
-  },
-  {
-    path: '/ecommerce/orders',
-    Component: lazy(() => import('pages/ecommerce/orders')),
-    exact: true,
-  },
-  {
-    path: '/ecommerce/product-catalog',
-    Component: lazy(() => import('pages/ecommerce/product-catalog')),
-    exact: true,
-  },
-  {
-    path: '/ecommerce/product-details',
-    Component: lazy(() => import('pages/ecommerce/product-details')),
-    exact: true,
-  },
-  {
-    path: '/ecommerce/cart',
-    Component: lazy(() => import('pages/ecommerce/cart')),
-    exact: true,
-  },
-
-  // Apps
-  {
-    path: '/apps/messaging',
-    Component: lazy(() => import('pages/apps/messaging')),
-    exact: true,
-  },
-  {
-    path: '/apps/calendar',
-    Component: lazy(() => import('pages/apps/calendar')),
-    exact: true,
-  },
-  {
-    path: '/apps/mail',
-    Component: lazy(() => import('pages/apps/mail')),
-    exact: true,
-  },
-  {
-    path: '/apps/profile',
-    Component: lazy(() => import('pages/apps/profile')),
-    exact: true,
-  },
-  {
-    path: '/apps/gallery',
-    Component: lazy(() => import('pages/apps/gallery')),
-    exact: true,
-  },
-  // Extra Apps
-  {
-    path: '/apps/github-explore',
-    Component: lazy(() => import('pages/apps/github-explore')),
-    exact: true,
-  },
-  {
-    path: '/apps/github-discuss',
-    Component: lazy(() => import('pages/apps/github-discuss')),
-    exact: true,
-  },
-  {
-    path: '/apps/digitalocean-droplets',
-    Component: lazy(() => import('pages/apps/digitalocean-droplets')),
-    exact: true,
-  },
-  {
-    path: '/apps/digitalocean-create',
-    Component: lazy(() => import('pages/apps/digitalocean-create')),
-    exact: true,
-  },
-  {
-    path: '/apps/google-analytics',
-    Component: lazy(() => import('pages/apps/google-analytics')),
-    exact: true,
-  },
-  {
-    path: '/apps/wordpress-post',
-    Component: lazy(() => import('pages/apps/wordpress-post')),
-    exact: true,
-  },
-  {
-    path: '/apps/wordpress-posts',
-    Component: lazy(() => import('pages/apps/wordpress-posts')),
-    exact: true,
-  },
-  {
-    path: '/apps/wordpress-add',
-    Component: lazy(() => import('pages/apps/wordpress-add')),
-    exact: true,
-  },
-  {
-    path: '/apps/todoist-list',
-    Component: lazy(() => import('pages/apps/todoist-list')),
-    exact: true,
-  },
-  {
-    path: '/apps/jira-dashboard',
-    Component: lazy(() => import('pages/apps/jira-dashboard')),
-    exact: true,
-  },
-  {
-    path: '/apps/jira-agile-board',
-    Component: lazy(() => import('pages/apps/jira-agile-board')),
-    exact: true,
-  },
-  {
-    path: '/apps/helpdesk-dashboard',
-    Component: lazy(() => import('pages/apps/helpdesk-dashboard')),
-    exact: true,
-  },
-  // Widgets
-  {
-    path: '/widgets/general',
-    Component: lazy(() => import('pages/widgets/general')),
-    exact: true,
-  },
-  {
-    path: '/widgets/lists',
-    Component: lazy(() => import('pages/widgets/lists')),
-    exact: true,
-  },
-  {
-    path: '/widgets/tables',
-    Component: lazy(() => import('pages/widgets/tables')),
-    exact: true,
-  },
-  {
-    path: '/widgets/charts',
-    Component: lazy(() => import('pages/widgets/charts')),
-    exact: true,
-  },
-  // Cards
-  {
-    path: '/cards/basic-cards',
-    Component: lazy(() => import('pages/cards/basic-cards')),
-    exact: true,
-  },
-  {
-    path: '/cards/tabbed-cards',
-    Component: lazy(() => import('pages/cards/tabbed-cards')),
-    exact: true,
-  },
-  // UI Kits
-  {
-    path: '/ui-kits/bootstrap',
-    Component: lazy(() => import('pages/ui-kits/bootstrap')),
-    exact: true,
-  },
-  {
-    path: '/ui-kits/antd',
-    Component: lazy(() => import('pages/ui-kits/antd')),
-    exact: true,
-  },
-  // Tables
-  {
-    path: '/tables/bootstrap',
-    Component: lazy(() => import('pages/tables/bootstrap')),
-    exact: true,
-  },
-  {
-    path: '/tables/antd',
-    Component: lazy(() => import('pages/tables/antd')),
-    exact: true,
-  },
-  // Charts
-  {
-    path: '/charts/chartistjs',
-    Component: lazy(() => import('pages/charts/chartistjs')),
-    exact: true,
-  },
-  {
-    path: '/charts/chartjs',
-    Component: lazy(() => import('pages/charts/chartjs')),
-    exact: true,
-  },
-  {
-    path: '/charts/c3',
-    Component: lazy(() => import('pages/charts/c3')),
-    exact: true,
-  },
-  // Icons
-  {
-    path: '/icons/feather-icons',
-    Component: lazy(() => import('pages/icons/feather-icons')),
-    exact: true,
-  },
-  {
-    path: '/icons/fontawesome',
-    Component: lazy(() => import('pages/icons/fontawesome')),
-    exact: true,
-  },
-  {
-    path: '/icons/linearicons-free',
-    Component: lazy(() => import('pages/icons/linearicons-free')),
-    exact: true,
-  },
-  {
-    path: '/icons/icomoon-free',
-    Component: lazy(() => import('pages/icons/icomoon-free')),
-    exact: true,
-  },
-  // Advanced
-  {
-    path: '/advanced/form-examples',
-    Component: lazy(() => import('pages/advanced/form-examples')),
-    exact: true,
-  },
-  {
-    path: '/advanced/email-templates',
-    Component: lazy(() => import('pages/advanced/email-templates')),
-    exact: true,
-  },
-  {
-    path: '/advanced/utilities',
-    Component: lazy(() => import('pages/advanced/utilities')),
-    exact: true,
-  },
-  {
-    path: '/advanced/grid',
-    Component: lazy(() => import('pages/advanced/grid')),
-    exact: true,
-  },
-  {
-    path: '/advanced/typography',
-    Component: lazy(() => import('pages/advanced/typography')),
-    exact: true,
-  },
-  {
-    path: '/advanced/pricing-tables',
-    Component: lazy(() => import('pages/advanced/pricing-tables')),
-    exact: true,
-  },
-  {
-    path: '/advanced/invoice',
-    Component: lazy(() => import('pages/advanced/invoice')),
-    exact: true,
-  },
-  {
-    path: '/advanced/colors',
-    Component: lazy(() => import('pages/advanced/colors')),
     exact: true,
   },
 ]

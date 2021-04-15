@@ -62,6 +62,7 @@ const PaginationWrapper = ({
   showLoadMore,
   setShowLoadMore,
   buttonStyle,
+  className,
   wrapperContent,
 }) => {
   const numTotalData = size(totalData)
@@ -91,7 +92,7 @@ const PaginationWrapper = ({
   }
 
   return (
-    <div>
+    <div className={className}>
       {wrapperContent}
       {numTotalData > DEFAULT_ITEMS_PER_PAGE && (
         <Button

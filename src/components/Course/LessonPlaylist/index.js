@@ -2,20 +2,41 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, List, Space, Typography } from 'antd'
 import { EMPTY_LESSON_TITLE, LESSON_LIST } from 'constants/text'
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, ArrowRightOutlined, CheckOutlined } from '@ant-design/icons'
 import { indexOf, isEmpty, isNil, map, size } from 'lodash'
 import { sortArrByCreatedAt } from 'components/utils'
-import { DIRECTION } from 'constants/constants'
+import { DIRECTION, USER_TYPE_ENUM } from 'constants/constants'
+import { useSelector } from 'react-redux'
 
-const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
+const LessonList = ({ currentCourseContract, currentCourse, currentLesson, isAdmin }) => {
   const history = useHistory()
+  const user = useSelector(state => state.user)
   let sortedLessonList = []
   let prevLessonId
   let nextLessonId
 
+  const getLessonTitle = lesson => {
+    if (
+      !isNil(currentCourseContract.lessonProgress) &&
+      size(currentCourseContract.lessonProgress) > 0
+    ) {
+      if (indexOf(currentCourseContract.lessonProgress, lesson.lessonId) !== -1)
+        return (
+          <span>
+            {lesson.title} <CheckOutlined />
+          </span>
+        )
+    }
+    return lesson.title
+  }
+
   const sendToLessonUrl = (sendToCourseId, sendToLessonId) => {
     if (!isAdmin)
-      history.replace(`/student/dashboard/courses/${sendToCourseId}/view-lesson/${sendToLessonId}`)
+      history.replace(
+        `/${user.userType.toLowerCase()}/${
+          user.userType === USER_TYPE_ENUM.STUDENT ? 'dashboard/' : ''
+        }courses/${sendToCourseId}/view-lesson/${sendToLessonId}`,
+      )
     else
       history.replace(
         `/admin/course-content-management/${sendToCourseId}/view-lesson/${sendToLessonId}`,
@@ -77,9 +98,8 @@ const LessonList = ({ currentCourse, currentLesson, isAdmin }) => {
                     className="btn btn-link text-left pl-0"
                     onClick={() => sendToLessonUrl(currentCourse.courseId, item.lessonId)}
                   >
-                    {`Lesson ${item.listNumber}: ${
-                      !isEmpty(item.title) ? item.title : EMPTY_LESSON_TITLE
-                    }`}
+                    {`Lesson ${item.listNumber}: `}
+                    {!isEmpty(item.title) ? getLessonTitle(item) : EMPTY_LESSON_TITLE}
                   </Typography.Text>
                 </List.Item>
               )}

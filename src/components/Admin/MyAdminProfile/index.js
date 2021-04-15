@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Descriptions, Modal, Form, Input, notification } from 'antd'
-import { EditOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { EditOutlined } from '@ant-design/icons'
 import moment from 'moment'
+import BackBtn from 'components/Common/BackBtn'
 
 const MyAdminProfile = () => {
   // const accessToken = useSelector(state => state.accessToken)
@@ -11,12 +11,6 @@ const MyAdminProfile = () => {
   const [showEditInformation, setShowEditInformation] = useState(false)
   const [showChangePassword, setshowChangePassword] = useState(false)
   const dispatch = useDispatch()
-  const history = useHistory()
-
-  const onBack = e => {
-    e.preventDefault()
-    history.goBack()
-  }
 
   const saveFormFooter = (
     <div className="row justify-content-between">
@@ -104,16 +98,7 @@ const MyAdminProfile = () => {
     <div>
       <div className="row mt-4">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
-          <Button
-            block
-            type="primary"
-            size="large"
-            shape="round"
-            onClick={onBack}
-            icon={<ArrowLeftOutlined />}
-          >
-            Back
-          </Button>
+          <BackBtn />
         </div>
       </div>
 

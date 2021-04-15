@@ -1,5 +1,6 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
+import { isNil } from 'lodash'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -12,16 +13,16 @@ USAGE:
 </div>
 */
 
-const BackBtn = () => {
+const BackBtn = ({ url }) => {
   const history = useHistory()
   return (
     <Button
       block
-      type="primary"
+      className="btn btn-light"
       size="large"
       shape="round"
       icon={<ArrowLeftOutlined />}
-      onClick={() => history.goBack()}
+      onClick={() => (!isNil(url) ? history.replace(url) : history.goBack())}
     >
       Back
     </Button>

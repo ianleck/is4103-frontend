@@ -16,8 +16,8 @@ const StudentPurchasedCourses = () => {
   const getAllPurchasedCourses = async () => {
     setIsLoading(true)
     const result = await getPurchasedCourses(user.accountId)
-    if (result && !isNil(result.requests)) {
-      setCourses(result.requests)
+    if (result && !isNil(result.courses)) {
+      setCourses(result.courses)
     }
     setTimeout(() => {
       setIsLoading(false)

@@ -221,6 +221,30 @@ export async function getAllMentorshipContracts() {
     .catch(err => console.log(err))
 }
 
+export async function getSenseiMentorshipContracts(accountId) {
+  return apiClient
+    .get(`/mentorship/contract/sensei/${accountId}`, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.contracts
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getStudentMentorshipContracts(accountId) {
+  return apiClient
+    .get(`/mentorship/contract/student/${accountId}`, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data.contracts
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
 export async function getAllBannedStudents() {
   return apiClient
     .get(`/admin/all/user?userType=STUDENT&status=BANNED`, { withCredentials: true })
@@ -251,6 +275,32 @@ export async function banUser(userId) {
     .then(response => {
       if (response && !isNil(response.data)) {
         if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function approveRefund(refundRequestId) {
+  const url = `/admin/refund/${refundRequestId}`
+  return apiClient
+    .post(url, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function rejectRefund(refundRequestId) {
+  const url = `/admin/refund/${refundRequestId}`
+  return apiClient
+    .put(url, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
       }
       return false
     })

@@ -75,6 +75,9 @@ const UserCountIconWidget = ({
         handleAcceptedWidgetOnClick={() => setTableData('accepted')}
         handlePendingWidgetOnClick={() => setTableData('pending')}
         handleRejectedWidgetOnClick={() => setTableData('rejected')}
+        pendingPrefix="Pending"
+        acceptedPrefix="Accepted"
+        rejectedPrefix="Rejected"
       />
     )
   }

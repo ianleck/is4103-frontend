@@ -401,6 +401,7 @@ const PostComments = ({ user, post, setNumComments }) => {
                       comment={comment}
                       isLoading={isLoading}
                       showCommentModalWithOptions={showCommentModalWithOptions}
+                      user={user}
                     />
                   )
                 })

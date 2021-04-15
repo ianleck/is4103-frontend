@@ -45,9 +45,9 @@ export async function requestWithdrawal(walletId) {
 }
 
 export async function approveWithdrawalRequest(billingId) {
-  const url = `/admin/withdrawal/approve/${billingId}`
+  const url = `/admin/withdrawal/${billingId}`
   return apiClient
-    .put(url)
+    .post(url)
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data
@@ -58,7 +58,7 @@ export async function approveWithdrawalRequest(billingId) {
 }
 
 export async function rejectWithdrawalRequest(billingId) {
-  const url = `/admin/withdrawal/reject/${billingId}`
+  const url = `/admin/withdrawal/${billingId}`
   return apiClient
     .put(url)
     .then(response => {
@@ -87,6 +87,32 @@ export async function viewBilling(body) {
   const url = `/wallet/billings/filter`
   return apiClient
     .get(url, { params: { filter: { ...body } } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function requestRefund(contractId, productType) {
+  const url = `/wallet/refund?contractId=${contractId}&contractType=${productType}`
+  return apiClient
+    .post(url, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getRefunds() {
+  const url = `/wallet/refund`
+  return apiClient
+    .get(url, { withCredentials: true })
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data

@@ -1,0 +1,62 @@
+@mentorship: mentorship;
+.@{mentorship}-wrapper {
+  min-height: 764px;
+  .home-page {
+    padding-top: 50px;
+    padding-left: 20vh;
+    padding-right: 20vh;
+  }
+  .@{mentorship} {
+    height: 100%;
+    overflow: hidden;
+    & .title-content {
+      text-align: center;
+    }
+    &-block-wrapper {
+      position: relative;
+      .@{mentorship}-block {
+        display: inline-block;
+        padding: 48px 24px;
+        vertical-align: top;
+        .@{mentorship}-icon {
+          display: inline-block;
+          width: 15%;
+          vertical-align: top;
+        }
+        .@{mentorship}-text {
+          width: 85%;
+          display: inline-block;
+          padding-left: 8%;
+        }
+        &.clear-both {
+          clear: both;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .@{mentorship}-wrapper {
+    min-height: 1080px;
+    .home-page {
+      padding-top: 50px;
+      padding-left: 3vh;
+      padding-right: 3vh;
+    }
+    .@{mentorship} {
+      &-block-wrapper {
+        margin: 20px auto;
+        height: auto;
+        .@{mentorship}-block {
+          .@{mentorship}-title {
+            font-size: 20px;
+          }
+          &.queue-anim-leaving {
+            position: relative !important;
+          }
+        }
+      }
+    }
+  }
+}

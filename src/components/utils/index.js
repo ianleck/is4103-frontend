@@ -1,12 +1,18 @@
 import React from 'react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { notification, message, Button } from 'antd'
-import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_TIMEOUT, DIRECTION } from 'constants/constants'
+import {
+  DEFAULT_ITEMS_PER_PAGE,
+  DEFAULT_TIMEOUT,
+  DIRECTION,
+  TASK_PROGRESS,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import { filter, isNil, map, size } from 'lodash'
 import moment from 'moment'
 
 export const formatTime = dateTime => {
-  return moment(dateTime).format('DD MMM YYYY h:mm:ss a')
+  return moment(dateTime).format('DD MMM YYYY h:mm a')
 }
 
 export const sortArrByCreatedAt = (objArr, direction) => {
@@ -67,6 +73,13 @@ export const sortDescAndKeyPostId = data => {
       key: post.postId,
     }),
   )
+}
+
+export const sortDescAndKeyNoteId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), (note, i) => ({
+    ...note,
+    key: i,
+  }))
 }
 
 export const filterDataByAdminVerified = (data, adminVerified) => {
@@ -140,6 +153,7 @@ export const resetUser = {
   firstName: '',
   headline: '',
   industry: '',
+  Interests: [],
   isPrivateProfile: '',
   lastName: '',
   occupation: '',
@@ -177,6 +191,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     firstName: currentUser.firstName,
     headline: currentUser.headline,
     industry: currentUser.industry,
+    Interests: isNil(currentUser.Interests) ? [] : currentUser.Interests,
     isPrivateProfile: currentUser.isPrivateProfile,
     lastName: currentUser.lastName,
     occupation: currentUser.occupation,
@@ -225,21 +240,21 @@ export const showNotification = (type, msg, description) => {
       notification.success({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'error':
       notification.error({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'warn':
       notification.warn({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     default:
@@ -271,7 +286,8 @@ export const getDetailsColumn = viewItem => {
     render: record => (
       <Button
         type="primary"
-        shape="round"
+        shape="circle"
+        size="large"
         onClick={() => viewItem(record)}
         icon={<InfoCircleOutlined />}
       />
@@ -283,8 +299,12 @@ export const isFollowing = (followingList, accountId) => {
   return size(followingList.filter(following => following.followingId === accountId)) === 1
 }
 
-export const sendToSocialProfile = (history, accountId) => {
-  history.push(`/social/profile/${accountId}`)
+export const sendToSocialProfile = (user, history, accountId) => {
+  if (user.userType === USER_TYPE_ENUM.ADMIN) {
+    history.push(`/admin/user-management/profile/${accountId}`)
+  } else {
+    history.push(`/social/profile/${accountId}`)
+  }
 }
 
 export const initPageItems = (
@@ -336,4 +356,48 @@ export const getUserFullName = user => {
   const firstName = getUserFirstName(user)
   const lastName = getUserLastName(user)
   return `${firstName} ${lastName}`
+}
+
+export const mapCategoriesToMenu = (categories, type) => {
+  const menuData = []
+  map(categories, category => {
+    menuData.push({
+      categoryId: category.categoryId,
+      key: category.categoryId,
+      title: category.name,
+      url: `/${type}/category/${category.categoryId}`,
+    })
+  })
+  return menuData
+}
+
+export const getImage = (type, object) => {
+  if (type === 'user')
+    return object?.profileImgUrl ? object.profileImgUrl : '/resources/images/avatars/avatar-2.png'
+  if (type === 'mentorship')
+    return object.Sensei?.profileImgUrl
+      ? object.Sensei?.profileImgUrl
+      : '/resources/images/avatars/avatar-2.png'
+  if (type === 'course')
+    return !isNil(object.imgUrl) ? object.imgUrl : '/resources/images/course-placeholder.png'
+  return '/resources/images/avatars/avatar-2.png'
+}
+
+// takes in an array of Task Bucket objects
+// each Task Bucket has an array of Tasks
+export const calculateOverallProgress = buckets => {
+  let numCompleted = 0
+  let totalTasks = 0
+  map(buckets, bucket => {
+    totalTasks += size(bucket.Tasks)
+    map(bucket.Tasks, taskItem => {
+      if (taskItem.progress === TASK_PROGRESS.COMPLETED) {
+        numCompleted += 1
+      }
+    })
+  })
+  if (numCompleted === 0) {
+    return 0
+  }
+  return ((numCompleted / totalTasks) * 100).toFixed(0)
 }

@@ -96,7 +96,7 @@ export async function deleteCourseDraft(courseId, accountId) {
 }
 
 export async function getAnnouncements(courseId) {
-  const url = `course/all/announcement/${courseId}`
+  const url = `/course/all/announcement/${courseId}`
   return apiClient
     .get(url)
     .then(response => {
@@ -109,7 +109,7 @@ export async function getAnnouncements(courseId) {
 }
 
 export async function createAnnouncement(courseId, payload) {
-  const url = `course/announcement/${courseId}`
+  const url = `/course/announcement/${courseId}`
   return apiClient
     .post(url, { newAnnouncement: { ...payload } })
     .then(response => {
@@ -122,7 +122,7 @@ export async function createAnnouncement(courseId, payload) {
 }
 
 export async function updateAnnouncement(announcementId, payload) {
-  const url = `course/announcement/${announcementId}`
+  const url = `/course/announcement/${announcementId}`
   return apiClient
     .put(url, { updateAnnouncement: { ...payload } })
     .then(response => {
@@ -135,7 +135,7 @@ export async function updateAnnouncement(announcementId, payload) {
 }
 
 export async function deleteAnnouncement(announcementId) {
-  const url = `course/announcement/${announcementId}`
+  const url = `/course/announcement/${announcementId}`
   return apiClient
     .delete(url)
     .then(response => {

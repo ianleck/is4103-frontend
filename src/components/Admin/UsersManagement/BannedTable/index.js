@@ -4,7 +4,6 @@ import { Tabs, Table, Button } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import BannedWidget from 'components/Admin/UsersManagement/BannedWidget'
 import { getAllBannedSenseis, getAllBannedStudents } from 'services/admin'
-import { USER_TYPE_ENUM } from 'constants/constants'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -33,13 +32,7 @@ const BannedTable = () => {
   }
 
   const onButtonClick = record => {
-    if (record.userType === USER_TYPE_ENUM.STUDENT) {
-      const path = `/admin/user-management/student/${record.accountId}`
-      history.push(path)
-    }
-
-    const path = `/admin/user-management/sensei/${record.accountId}`
-    history.push(path)
+    history.push(`/admin/user-management/profile/${record.accountId}`)
   }
 
   const showBannedStudent = () => {

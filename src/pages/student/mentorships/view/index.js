@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useParams } from 'react-router-dom'
-import MentorshipProfilePicture from 'components/Mentorship/ListingDetails/MentorshipProfilePicture'
-import MentorshipExperienceCard from 'components/Mentorship/ListingDetails/MentorshipExperienceCard'
-import MentorshipDescriptionCard from 'components/Mentorship/ListingDetails/MentorshipDescriptionCard'
-import MentorshipProfileHeader from 'components/Mentorship/ListingDetails/MentorshipProfileHeader'
-import MentorshipPricingCard from 'components/Mentorship/ListingDetails/MentorshipPricingCard'
+import { useHistory, useParams } from 'react-router-dom'
 import { getMentorshipListing } from 'services/mentorship/listings'
 import { filter, isEmpty, isNil } from 'lodash'
 import { useSelector } from 'react-redux'
 import { Button, Skeleton } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
-import ReviewModal from 'components/Review/ReviewModal'
+import ReviewModal from 'components/Common/Reviews/ReviewModal'
 import {
   ERROR,
   REVIEW_ADD_ERR,
@@ -21,18 +16,59 @@ import {
   SUCCESS,
 } from 'constants/notifications'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
-import { showNotification } from 'components/utils'
+import { getUserFirstName, initPageItems, showNotification } from 'components/utils'
+import { DEFAULT_TIMEOUT, FRONTEND_API, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import BackBtn from 'components/Common/BackBtn'
+import ShareBtn from 'components/Common/Social/ShareBtn'
+import { getProfile } from 'services/user'
+import PageHeader from 'components/Common/PageHeader'
+import Reviews from 'components/Common/Reviews'
+import MentorshipInfo from 'components/Mentorship/MentorshipInfo'
+import MentorshipActions from 'components/Mentorship/MentorshipActions'
+import MentorProfile from 'components/Mentorship/MentorProfile'
 
 const ViewListing = () => {
   const { id } = useParams()
   const user = useSelector(state => state.user)
+  const history = useHistory()
+
   const [listing, setListing] = useState('')
   const [reviews, setReviews] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const [currentTab, setCurrentTab] = useState('info')
+  const [viewUser, setViewUser] = useState('')
+  const [isBlocked, setIsBlocked] = useState('')
+
   const [ownReview, setOwnReview] = useState([])
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
+
   const [hasExistingContract, setHasExistingContract] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [hasExistingApprovedContract, setHasExistingApprovedContract] = useState(false)
+
+  const [isReviewLoading, setIsReviewLoading] = useState(false)
+  const [paginatedReviews, setPaginatedReviews] = useState([])
+  const [currentPageIdx, setCurrentPageIdx] = useState(1)
+  const [showLoadMore, setShowLoadMore] = useState(false)
+
+  const changeTab = tab => {
+    setCurrentTab(tab)
+  }
+
+  const getUserProfile = async () => {
+    setIsLoading(true)
+    if (!isNil(listing.accountId)) {
+      const response = await getProfile(listing.accountId)
+      if (response) {
+        setViewUser(response)
+        if (!isNil(response.isBlocking)) setIsBlocked(response.isBlocking)
+      }
+    }
+    setTimeout(() => {
+      setIsLoading(false)
+    }, DEFAULT_TIMEOUT)
+  }
 
   const getListing = async () => {
     const response = await getMentorshipListing(id)
@@ -42,6 +78,14 @@ const ViewListing = () => {
 
       if (!isNil(response.mentorshipListing.Reviews)) {
         setReviews(response.mentorshipListing.Reviews)
+        initPageItems(
+          setIsReviewLoading,
+          response.mentorshipListing.Reviews,
+          setPaginatedReviews,
+          setCurrentPageIdx,
+          setShowLoadMore,
+        )
+
         const reviewByUser = filter(response.mentorshipListing.Reviews, review => {
           return review.accountId === user.accountId
         })
@@ -54,15 +98,15 @@ const ViewListing = () => {
 
       if (!isNil(response.existingContract && !isEmpty(response.existingContract))) {
         setHasExistingContract(true)
+        if (!isNil(response.existingContract.senseiApproval)) {
+          setHasExistingApprovedContract(
+            response.existingContract.senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED,
+          )
+        }
       }
       setIsLoading(false)
     }
   }
-
-  useEffect(() => {
-    getListing()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const onSubmitReview = async values => {
     const formValues = {
@@ -96,11 +140,11 @@ const ViewListing = () => {
 
   const showReviewButton = () => (
     <>
-      <div className="col-auto d-flex justify-content-center mt-4 mt-md-0">
+      <div className="mt-3">
         <Button
-          type="primary"
+          block
+          type="default"
           size="large"
-          shape="round"
           onClick={() => {
             setShowReviewModal(true)
           }}
@@ -119,32 +163,106 @@ const ViewListing = () => {
     </>
   )
 
-  console.log('reviews are ', reviews) // needed as a placeholder, Nat to deal with it in a later PR
+  useEffect(() => {
+    getListing()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (currentTab === 'profile') getUserProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTab])
 
   return (
-    <div>
+    <div className="ml-3 mr-3 ml-md-0 mr-md-0">
       <Helmet title="View Mentorship Listing" />
-      <Skeleton active loading={isLoading}>
-        <MentorshipProfileHeader isSubscribed={hasExistingContract}>
-          {showReviewButton()}
-        </MentorshipProfileHeader>
-        <div className="row mt-4">
-          <div className="col-12 col-md-2 d-flex align-items-center justify-content-center">
-            <MentorshipProfilePicture listing={listing} />
-          </div>
-          {/* DON'T COPY STUFF FROM THIS COMPONENT */}
-          <div className="col-12 col-md-5 my-2 d-flex align-items-stretch">
-            <MentorshipDescriptionCard listing={listing} />
-          </div>
-          <div className="col-12 col-md-5 my-2 d-flex align-items-stretch">
-            <MentorshipPricingCard />
-          </div>
-          {/* DON'T COPY STUFF FROM THIS COMPONENT */}
-          <div className="col-12">
-            <MentorshipExperienceCard />
-          </div>
+      <div className="row pt-2">
+        <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
+          <BackBtn />
         </div>
-      </Skeleton>
+      </div>
+      <PageHeader type="mentorship" listing={listing}>
+        <div className="col-12 col-sm-auto col-lg-auto ml-lg-auto pr-0 mt-4 mt-lg-0">
+          <Button
+            key="mentorship-tab"
+            type={currentTab === 'info' ? 'primary' : 'default'}
+            size="large"
+            onClick={() => changeTab('info')}
+          >
+            Mentorship Info
+          </Button>
+        </div>
+        <div className="col-auto col-sm-auto col-lg-auto pl-sm-2 pr-0 mt-4 mt-lg-0">
+          <Button
+            key="reviews-tab"
+            type={currentTab === 'reviews' ? 'primary' : 'default'}
+            size="large"
+            onClick={() => changeTab('reviews')}
+          >
+            Reviews
+          </Button>
+        </div>
+        <div className="col-auto col-sm-auto col-lg-auto pl-sm-2 mt-4 mt-lg-0">
+          <Button
+            key="profile-tab"
+            type={currentTab === 'profile' ? 'primary' : 'default'}
+            size="large"
+            onClick={() => changeTab('profile')}
+          >
+            Mentor Profile
+          </Button>
+        </div>
+      </PageHeader>
+      <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
+        <div className="col-12 col-lg-6 col-xl-7">
+          <Skeleton active loading={isLoading}>
+            {currentTab === 'info' && <MentorshipInfo listing={listing} />}
+            {currentTab === 'reviews' && (
+              <Reviews
+                reviews={reviews}
+                rating={listing.rating}
+                isReviewLoading={isReviewLoading}
+                setIsReviewLoading={setIsReviewLoading}
+                paginatedReviews={paginatedReviews}
+                setPaginatedReviews={setPaginatedReviews}
+                currentPageIdx={currentPageIdx}
+                setCurrentPageIdx={setCurrentPageIdx}
+                showLoadMore={showLoadMore}
+                setShowLoadMore={setShowLoadMore}
+              />
+            )}
+            {currentTab === 'profile' && (
+              <MentorProfile viewUser={viewUser} isBlocked={isBlocked} />
+            )}
+          </Skeleton>
+        </div>
+        <div className="col-12 col-lg-6 col-xl-5">
+          <MentorshipActions listing={listing} history={history}>
+            <div className="row align-items-center">
+              <div className="col pr-0">
+                <Button
+                  block
+                  type="primary"
+                  size="large"
+                  disabled={hasExistingContract}
+                  onClick={() => history.push(`/student/mentorship/apply/${id}`)}
+                >
+                  Apply for Mentorship
+                </Button>
+              </div>
+              <div className="col-auto">
+                <ShareBtn
+                  quote={`${getUserFirstName(user)} is sharing this post with you!`}
+                  url={`${FRONTEND_API}/student/mentorship/view/${listing.mentorshipListingId}`}
+                  btnSize="large"
+                  block
+                />
+              </div>
+              <div className="col-12">{hasExistingApprovedContract && showReviewButton()}</div>
+            </div>
+          </MentorshipActions>
+        </div>
+      </div>
     </div>
   )
 }

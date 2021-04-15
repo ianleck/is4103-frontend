@@ -53,6 +53,9 @@
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
     "qs": "^6.9.3",
+    "rc-queue-anim": "^1.8.5",
+    "rc-scroll-anim": "^2.7.6",
+    "rc-tween-one": "^2.7.3",
     "react": "^16.13.1",
     "react-c3js": "^0.1.20",
     "react-chartist": "^0.14.3",
@@ -86,7 +89,8 @@
     "simple-peer": "^9.10.0",
     "socket.io-client": "^4.0.1",
     "sortablejs": "1.10.2",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "use-debounce": "^6.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
