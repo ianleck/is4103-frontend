@@ -12,7 +12,9 @@ export const ADMIN_VERIFIED_ENUM = {
   DRAFT: 'DRAFT',
 }
 
-export const BACKEND_API = 'http://localhost:5000/api'
+export const BACKEND_API = 'https://a222350f2af1.ngrok.io/api'
+export const SOCKET_API = 'wss://a222350f2af1.ngrok.io'
+// export const BACKEND_API = 'http://localhost:5000/api'
 export const FRONTEND_API = 'http://localhost:3000'
 
 export const DEFAULT_TIMEOUT = 550

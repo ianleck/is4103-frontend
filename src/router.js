@@ -377,6 +377,17 @@ const routes = [
     Component: lazy(() => import('pages/billings/view')),
     exact: true,
   },
+  // Consultation
+  {
+    path: '/mentorships/consultation/:consultationId',
+    Component: lazy(() => import('pages/consultation')),
+    exact: true,
+  },
+  {
+    path: '/sensei/consultation/:consultationId',
+    Component: lazy(() => import('pages/consultation')),
+    exact: true,
+  },
   /*
 
 
