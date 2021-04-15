@@ -138,10 +138,7 @@ const NotesComponent = () => {
   return (
     <Card title="Notes">
       <div className="row d-flex align-items-center justify-content-center mb-md-4">
-        <div
-          className="col-12 col-md-4"
-          style={{ paddingRight: '20px', borderRight: '1px solid #e8e8e8' }}
-        >
+        <div className="col-12 col-md-4 border-right">
           <NoteFormComponent />
         </div>
         <div className="col-12 col-md-8">
@@ -155,14 +152,18 @@ const NotesComponent = () => {
                     <p>{note.body}</p>
                     <div>
                       <div className="row">
-                        <small className="text-muted text-uppercase">
-                          {`Created on: ${formatTime(note.createdAt)}`}
-                        </small>
+                        <div className="col-12">
+                          <small className="text-muted text-uppercase">
+                            {`Created on: ${formatTime(note.createdAt)}`}
+                          </small>
+                        </div>
                       </div>
                       <div className="row mt-2">
-                        <small className="text-muted text-uppercase">
-                          {`Last Updated on: ${formatTime(note.updatedAt)}`}
-                        </small>
+                        <div className="col-12">
+                          <small className="text-muted text-uppercase">
+                            {`Last Updated on: ${formatTime(note.updatedAt)}`}
+                          </small>
+                        </div>
                       </div>
                     </div>
                     <div className="mt-2">
