@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select, Tag } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isNil, map, size } from 'lodash'
+import { isEmpty, map, size } from 'lodash'
 
 const InterestsCard = ({ user, showEditTools }) => {
   const { Option } = Select
@@ -17,7 +17,7 @@ const InterestsCard = ({ user, showEditTools }) => {
     if (activate) {
       setShowInterests(false)
       setEditInterestsMode(true)
-    } else if (!isNil(user.Interests)) {
+    } else if (!isEmpty(user.Interests)) {
       setShowInterests(false)
       setEditInterestsMode(false)
     } else {
@@ -36,7 +36,7 @@ const InterestsCard = ({ user, showEditTools }) => {
       payload: formValues,
     })
     setShowInterests(false)
-    if (isNil(values.interests)) {
+    if (isEmpty(values.interests)) {
       setShowInterests(true)
     }
     setEditInterestsMode(false)
@@ -105,6 +105,7 @@ const InterestsCard = ({ user, showEditTools }) => {
         hideRequiredMark
         onFinish={onSaveInterests}
         onFinishFailed={onFinishFailed}
+        style={{ display: !editInterestsMode && 'none' }}
       >
         <Form.Item
           name="interests"
@@ -154,7 +155,7 @@ const InterestsCard = ({ user, showEditTools }) => {
           <div className="col-auto">
             <span className="h3 font-weight-bold text-dark">
               Interests&nbsp;&nbsp;
-              {showInterests && (
+              {isEmpty(user.Interests) && (
                 <Tag color="error" className="text-uppercase align-top">
                   Needs Update
                 </Tag>
@@ -176,7 +177,7 @@ const InterestsCard = ({ user, showEditTools }) => {
                 map(user.Interests, interest => {
                   return <Tag key={interest.categoryId}>{interest.name}</Tag>
                 })}
-              {editInterestsMode && <SelectInterestsDropdown />}
+              <SelectInterestsDropdown />
             </span>
           </div>
           {editInterestsMode && <SaveInterestsButtons />}

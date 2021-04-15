@@ -192,7 +192,7 @@ const AboutCard = ({ user, showEditTools }) => {
       <div className="card-header pb-1">
         <div className="h3 font-weight-bold text-dark">
           About&nbsp;&nbsp;
-          {(showBio || showHeadline) && (
+          {(isNil(user.bio) || isNil(user.headline)) && (
             <Tag color="error" className="text-uppercase align-top">
               Needs Update
             </Tag>
