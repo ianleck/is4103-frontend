@@ -9,6 +9,7 @@ import ProfileAboutCard from 'components/Profile/AboutCard'
 import ProfileOccupationCard from 'components/Profile/OccupationCard'
 import ProfileIndustryCard from 'components/Profile/IndustryCard'
 import ProfileExperienceCard from 'components/Profile/ExperienceCard'
+import ProfileInterestsCard from 'components/Profile/InterestsCard'
 import ProfilePersonalityCard from 'components/Profile/PersonalityCard'
 import ProfileVerificationCard from 'components/Profile/ProfileVerificationCard'
 import ProfileUploadFilesCard from 'components/Profile/UploadFilesCard'
@@ -205,6 +206,7 @@ const SenseiProfileComponent = () => {
           <ProfileAboutCard user={viewUser} />
           <ProfileUploadFilesCard user={viewUser} accessToken={user.accessToken} />
           <ProfileIndustryCard user={viewUser} />
+          <ProfileInterestsCard user={viewUser} />
           <ProfileOccupationCard user={viewUser} />
           <ProfilePersonalityCard user={viewUser} />
         </div>

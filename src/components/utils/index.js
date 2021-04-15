@@ -153,6 +153,7 @@ export const resetUser = {
   firstName: '',
   headline: '',
   industry: '',
+  Interests: [],
   isPrivateProfile: '',
   lastName: '',
   occupation: '',
@@ -190,6 +191,7 @@ export const createUserObj = (currentUser, isAuthorized, isLoading, isProfileUpd
     firstName: currentUser.firstName,
     headline: currentUser.headline,
     industry: currentUser.industry,
+    Interests: isNil(currentUser.Interests) ? [] : currentUser.Interests,
     isPrivateProfile: currentUser.isPrivateProfile,
     lastName: currentUser.lastName,
     occupation: currentUser.occupation,
@@ -238,21 +240,21 @@ export const showNotification = (type, msg, description) => {
       notification.success({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'error':
       notification.error({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'warn':
       notification.warn({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     default:

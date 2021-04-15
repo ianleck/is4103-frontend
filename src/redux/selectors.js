@@ -15,6 +15,7 @@ export const user = state => {
     firstName: state.user.firstName,
     headline: state.user.headline,
     industry: state.user.industry,
+    Interests: state.user.Interests,
     isPrivateProfile: state.user.isPrivateProfile,
     lastName: state.user.lastName,
     occupation: state.user.occupation,

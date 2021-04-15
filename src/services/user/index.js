@@ -154,14 +154,27 @@ export async function getProfile(accountId) {
     .catch(err => console.log(err))
 }
 
-export async function updateProfile(accountId, payload) {
+export async function updateProfile(accountId, payload, interests) {
+  let profileData
+  if (interests) {
+    profileData = {
+      user: {
+        ...payload,
+      },
+      interests,
+    }
+  } else {
+    profileData = {
+      user: {
+        ...payload,
+      },
+    }
+  }
   return apiClient
     .put(
       `/user/${accountId}`,
       {
-        user: {
-          ...payload,
-        },
+        ...profileData,
       },
       { withCredentials: true },
     )
