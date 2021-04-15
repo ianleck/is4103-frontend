@@ -230,7 +230,9 @@ const MentorshipContractView = () => {
           <div className="col-6">
             <div className="text-center m-0">You have</div>
             <div className="text-center h3 m-0">{mentorshipContract.mentorPassCount || 0}</div>
-            <div className="text-center m-0">MentorPasses.</div>
+            <div className="text-center m-0">
+              {`${mentorshipContract.mentorPassCount === 1 ? 'MentorPass.' : 'MentorPasses.'}`}
+            </div>
           </div>
           <div className="col-6">
             <Button block type="default" size="large" style={{ height: '100%' }}>
