@@ -128,18 +128,6 @@ const MentorshipContractView = () => {
     return []
   }
 
-  const setTasksRelatedData = () => {
-    getTaskBucketsData().then(buckets => {
-      if (buckets.length > 0) {
-        const Tasks = [...buckets[0].Tasks]
-        setActiveTaskBucket({
-          bucket: buckets[0],
-          tasks: Tasks,
-        })
-      }
-    })
-  }
-
   const getUserProfile = async () => {
     setIsLoading(true)
     if (!isNil(mentorshipListing.accountId)) {
@@ -237,8 +225,9 @@ const MentorshipContractView = () => {
   const addEmptyTask = async () => {
     const res = await addTask(activeTaskBucket.bucket.taskBucketId)
     if (res) {
-      const updatedTasks =
-        (activeTaskBucket.bucket.Tasks && [...activeTaskBucket.bucket.Tasks]) || []
+      const updatedTasks = isEmpty(activeTaskBucket.bucket.Tasks)
+        ? []
+        : activeTaskBucket.bucket.Tasks && [...activeTaskBucket.bucket.Tasks]
       updatedTasks.push(res.createdTask)
       const updatedTaskBucket = {
         bucket: activeTaskBucket.bucket,
@@ -274,9 +263,18 @@ const MentorshipContractView = () => {
 
   const deleteOneTask = async taskId => {
     const res = await deleteTask(taskId)
+    const updatedTasks = activeTaskBucket.tasks.filter(t => t.taskId !== taskId)
+
     if (res) {
       showNotification('success', SUCCESS, res.message)
-      setTasksRelatedData()
+      setActiveTaskBucket({
+        bucket: {
+          ...activeTaskBucket.bucket,
+          Tasks: updatedTasks,
+        },
+        tasks: updatedTasks,
+      })
+      getTaskBucketsData()
     }
   }
 
@@ -341,7 +339,15 @@ const MentorshipContractView = () => {
   }, [currentTab])
 
   useEffect(() => {
-    setTasksRelatedData()
+    getTaskBucketsData().then(buckets => {
+      if (buckets.length > 0) {
+        const Tasks = [...buckets[0].Tasks]
+        setActiveTaskBucket({
+          bucket: buckets[0],
+          tasks: Tasks,
+        })
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -12,7 +12,7 @@ import {
   SUCCESS,
   WARNING,
 } from 'constants/notifications'
-import { isEmpty, isNil, pickBy } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
@@ -183,23 +183,18 @@ const MentorshipContract = () => {
 
   const deleteOneTask = async taskId => {
     const res = await deleteTask(taskId)
-    console.log('activeTaskBucket is ', activeTaskBucket)
-    const updatedTs = activeTaskBucket.tasks.filter(t => t.taskId !== taskId)
-    const updatedTasks = pickBy(activeTaskBucket.tasks, task => task.taskId !== taskId)
+    const updatedTasks = activeTaskBucket.tasks.filter(t => t.taskId !== taskId)
 
-    console.log('updatedTasks are ', updatedTasks)
     if (res) {
       showNotification('success', SUCCESS, res.message)
       setActiveTaskBucket({
         bucket: {
           ...activeTaskBucket.bucket,
-          Tasks: updatedTs,
+          Tasks: updatedTasks,
         },
-        tasks: updatedTs,
+        tasks: updatedTasks,
       })
-      setTimeout(() => {
-        console.log('updated state =', activeTaskBucket)
-      }, 1000)
+
       getTaskBucketsData()
     }
   }
