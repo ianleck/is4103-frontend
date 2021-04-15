@@ -351,6 +351,11 @@ const routes = [
     Component: lazy(() => import('pages/sensei/testimonials')),
     exact: true,
   },
+  {
+    path: '/sensei/support',
+    Component: lazy(() => import('pages/support')),
+    exact: true,
+  },
   // Student Pages
   {
     path: '/student',
@@ -435,6 +440,11 @@ const routes = [
   {
     path: '/student/dashboard/testimonials',
     Component: lazy(() => import('pages/student/dashboard/testimonials')),
+    exact: true,
+  },
+  {
+    path: '/student/support',
+    Component: lazy(() => import('pages/support')),
     exact: true,
   },
 ]

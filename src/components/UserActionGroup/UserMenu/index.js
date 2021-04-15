@@ -73,6 +73,12 @@ const UserMenu = () => {
     history.push(path)
   }
 
+  const viewSupportPage = e => {
+    e.preventDefault()
+    const path = `/${userType.toLowerCase()}/support`
+    history.push(path)
+  }
+
   const displayFollowerRequests = () => {
     setShowFollowingList(false)
     setShowFollowerRequests(true)
@@ -176,6 +182,15 @@ const UserMenu = () => {
           </a>
         </Menu.Item>
       )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && (
+        <Menu.Item>
+          <a href="#" onClick={viewSupportPage}>
+            <i className="fe fe-help-circle mr-2" />
+            Request Support
+          </a>
+        </Menu.Item>
+      )}
+      {user.userType !== USER_TYPE_ENUM.ADMIN && <Menu.Divider />}
       <Menu.Item>
         <a href="#" onClick={logout}>
           <i className="fe fe-log-out mr-2" />
