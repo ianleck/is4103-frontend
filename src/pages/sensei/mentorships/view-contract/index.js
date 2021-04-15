@@ -184,14 +184,18 @@ const MentorshipContract = () => {
   const deleteOneTask = async taskId => {
     const res = await deleteTask(taskId)
     console.log('activeTaskBucket is ', activeTaskBucket)
+    const updatedTs = activeTaskBucket.tasks.filter(t => t.taskId !== taskId)
     const updatedTasks = pickBy(activeTaskBucket.tasks, task => task.taskId !== taskId)
 
     console.log('updatedTasks are ', updatedTasks)
     if (res) {
       showNotification('success', SUCCESS, res.message)
       setActiveTaskBucket({
-        bucket: activeTaskBucket.bucket,
-        tasks: updatedTasks,
+        bucket: {
+          ...activeTaskBucket.bucket,
+          Tasks: updatedTs,
+        },
+        tasks: updatedTs,
       })
       setTimeout(() => {
         console.log('updated state =', activeTaskBucket)

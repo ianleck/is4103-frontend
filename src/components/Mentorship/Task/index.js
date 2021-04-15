@@ -54,9 +54,6 @@ const TaskComponent = ({
             </div>
           </div>
           <div className="col-12 d-flex align-items-center justify-content-center height-400">
-            {activeTaskBucket.tasks.length === 0
-              ? console.log('activeTaskasket length = 0')
-              : console.log('activeTaskbasket length >0')}
             {activeTaskBucket.tasks.length > 0 ? (
               <SortableTree
                 treeData={activeTaskBucket.tasks}
