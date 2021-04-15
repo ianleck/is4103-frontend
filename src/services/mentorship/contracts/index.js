@@ -177,3 +177,46 @@ export async function deleteTask(taskId) {
     })
     .catch(err => console.log(err))
 }
+
+// ============================ NOTES ============================
+
+export async function getAllNotes(mentorshipContractId) {
+  const url = `/mentorship/note/all/${mentorshipContractId}`
+  return apiClient
+    .get(url)
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function createNote(payload) {
+  const { note, mentorshipContractId } = payload
+  const url = `/mentorship/note/${mentorshipContractId}`
+  return apiClient
+    .post(url, { newNote: { ...note } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function updateNote(payload) {
+  const { note, noteId } = payload
+  const url = `/mentorship/note/${noteId}`
+  return apiClient
+    .put(url, { updateNote: { ...note } })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
