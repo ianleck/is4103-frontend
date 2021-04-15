@@ -7,9 +7,18 @@ import download from 'js-file-download'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 
-const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActiveTasks }) => {
+const TaskRow = ({
+  node,
+  updateOneTask,
+  accessToken,
+  deleteOneTask,
+  updateActiveTasks,
+  isEditable,
+}) => {
   // set data so that UI rerenders when a value is updated.
   const [data, setData] = useState({})
+
+  const dateFormat = 'YYYY-MM-DD'
 
   useEffect(() => {
     setData(node)
@@ -73,7 +82,13 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
     <div className="d-flex align-items-center justify-content-start" style={{ width: '100%' }}>
       <div className="col-12 col-md-7 d-flex justify-content-center align-items-center">
         <div className="col-12 col-md-4 d-flex">
-          <Dropdown overlay={menu} trigger={['click']} placement="topRight" className="clickable">
+          <Dropdown
+            overlay={menu}
+            trigger={['click']}
+            placement="topRight"
+            className="clickable"
+            disabled={!isEditable}
+          >
             <div style={{ width: '100%' }} className="d-flex align-items-center">
               <StatusTag
                 data={data.progress}
@@ -88,6 +103,7 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
         <Input
           style={{ fontWeight: 500, marginLeft: '8px' }}
           value={data.body}
+          disabled={!isEditable}
           onChange={e =>
             setData({
               ...data,
@@ -111,17 +127,18 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
       <div className="col-3 d-flex justify-content-end align-items-center">
         Due at: &nbsp;
         <DatePicker
-          onChange={date => {
-            const task = { ...data, dueAt: date }
+          disabled={!isEditable}
+          onChange={value => {
+            const task = { ...data, dueAt: value }
             updateData(task)
           }}
-          defaultValue={data.dueAt ? moment(data.dueAt) : null}
+          value={data.dueAt && moment(data.dueAt, dateFormat)}
         />
       </div>
       <div className="col-2 d-flex justify-content-end">
         <Space size="small">
           <Upload {...uploadProps(data.taskId)}>
-            <Button icon={<UploadOutlined />} shape="circle" />
+            <Button icon={<UploadOutlined />} shape="circle" disabled={!isEditable} />
           </Upload>
           <Button
             icon={<FileOutlined />}
@@ -135,7 +152,7 @@ const TaskRow = ({ node, updateOneTask, accessToken, deleteOneTask, updateActive
             okText="Delete"
             okType="danger"
           >
-            <Button type="danger" shape="circle" icon={<DeleteOutlined />} />
+            <Button type="danger" shape="circle" disabled={!isEditable} icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       </div>
