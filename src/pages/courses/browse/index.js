@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, List, Rate, Skeleton } from 'antd'
+import { Button, List, Skeleton } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getCourseById } from 'services/courses'
 import { isEmpty, isNil } from 'lodash'
 import { ADD_TO_CART, COURSE_DESC, CURRENT_PRICE } from 'constants/text'
-import { formatTime, getUserFirstName, initPageItems, sortArrByCreatedAt } from 'components/utils'
+import { getUserFirstName, initPageItems, sortArrByCreatedAt } from 'components/utils'
 import { DEFAULT_TIMEOUT, DIRECTION, FRONTEND_API } from 'constants/constants'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import CreatorInfo from 'components/Common/CreatorInfo'
@@ -23,6 +23,7 @@ import ProfileBlockedCard from 'components/Common/Social/ProfileBlockedCard'
 import Reviews from 'components/Common/Reviews'
 import CourseActions from 'components/Common/CourseActionCard'
 import UpsellBar from 'components/Common/UpsellBar'
+import CourseInfo from 'components/Course/CourseInfo'
 
 const ViewCourseDetailsPublic = () => {
   const dispatch = useDispatch()
@@ -111,25 +112,9 @@ const ViewCourseDetailsPublic = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTab])
 
-  const CourseInfo = () => {
+  const ExtCourseInfo = () => {
     return (
-      <div>
-        <span className="h3 font-weight-bold">{currentCourse.title}</span>
-        <div className="mt-2">
-          <span>{currentCourse.subTitle}</span>
-        </div>
-
-        <div className="mt-2">
-          <Rate disabled defaultValue={currentCourse.rating} />
-        </div>
-
-        <div className="mt-2">
-          <small className="text-muted text-uppercase">
-            {`Last Updated On ${formatTime(currentCourse.updatedAt)}`}
-          </small>
-        </div>
-        <hr className="mt-4" />
-
+      <CourseInfo course={currentCourse}>
         <div className="mt-4">
           <h3>{COURSE_DESC}</h3>
           <span className="mt-4 description-body">{currentCourse.description}</span>
@@ -148,7 +133,7 @@ const ViewCourseDetailsPublic = () => {
             />
           </div>
         </div>
-      </div>
+      </CourseInfo>
     )
   }
 
@@ -210,7 +195,7 @@ const ViewCourseDetailsPublic = () => {
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
         <div className="col-12 col-lg-7 col-xl-8">
           <Skeleton active loading={isLoading}>
-            {currentTab === 'info' && <CourseInfo />}
+            {currentTab === 'info' && <ExtCourseInfo />}
             {currentTab === 'reviews' && (
               <Reviews
                 reviews={reviews}
