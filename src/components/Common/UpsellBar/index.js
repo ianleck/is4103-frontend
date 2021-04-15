@@ -136,7 +136,8 @@ const UpsellBar = ({ type, id }) => {
   if (type === 'checkout' && isEmpty(mentorships) && isEmpty(courses)) return <></>
   return (
     <div className="w-100">
-      <div className="h4 mb-4 pl-3">Related Items</div>
+      <hr />
+      <div className="h4 pt-4 mb-4 pl-3">Related Items</div>
       <ScrollMenu
         data={mapUpsellItems()}
         alignCenter={false}
