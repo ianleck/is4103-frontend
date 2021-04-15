@@ -134,3 +134,8 @@ export const CONTRACT_CANCEL_ERR = 'There was an error cancelling your mentorshi
 
 export const REFUND_APPROVED = 'Refund has been successfully approved.'
 export const REFUND_REJECTED = 'Refund has been successfully rejected.'
+
+export const NOTE_ADD_SUCCESS = 'Note has been successfully created.'
+export const NOTE_ADD_ERR = 'There was an error creating your note.'
+export const NOTE_EDIT_SUCCESS = 'Note has been successfully edited.'
+export const NOTE_EDIT_ERR = 'There was an error editing your note.'
