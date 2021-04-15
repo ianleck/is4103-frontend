@@ -1,4 +1,5 @@
 import BackBtn from 'components/Common/BackBtn'
+import NotesComponent from 'components/Mentorship/Notes'
 import TaskComponent from 'components/Mentorship/Task'
 import { isNil } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -20,6 +21,7 @@ const MentorshipContract = () => {
     getMentorshipContract()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
     <div>
       <div className="row pt-2 justify-content-between">
@@ -34,6 +36,8 @@ const MentorshipContract = () => {
         </div>
       </div>
       <TaskComponent />
+      <br />
+      <NotesComponent />
     </div>
   )
 }

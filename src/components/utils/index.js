@@ -74,6 +74,13 @@ export const sortDescAndKeyPostId = data => {
   )
 }
 
+export const sortDescAndKeyNoteId = data => {
+  return map(sortArrByCreatedAt(data, DIRECTION.DESC), (note, i) => ({
+    ...note,
+    key: i,
+  }))
+}
+
 export const filterDataByAdminVerified = (data, adminVerified) => {
   if (!isNil(adminVerified)) {
     return data.filter(o => {
