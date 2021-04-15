@@ -109,7 +109,10 @@ export function* LOGIN({ payload }) {
       currentUser = createAdminObj(response, true, false)
     } else {
       const userProfile = yield call(jwt.getProfile, response.accountId)
-      currentUser = createUserObj(userProfile, true, false, checkProfileUpdateRqd(userProfile))
+      if (userProfile) {
+        userProfile.accessToken = response.accessToken
+        currentUser = createUserObj(userProfile, true, false, checkProfileUpdateRqd(userProfile))
+      }
     }
     yield putResolve({
       type: 'user/SET_STATE',

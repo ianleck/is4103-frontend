@@ -54,6 +54,10 @@
   white-space: pre-line;
 }
 
+.font-small {
+  font-size: 1rem;
+}
+
 .following-list-container {
   height: 450px;
   max-height: 100%;
@@ -69,12 +73,13 @@
   height: 500px;
 }
 
-.mentorship-avatar {
-  height: 48px;
-}
-
 .menu-item {
   width: 275px;
+  white-space: normal !important;
+}
+
+.mentorship-menu-item {
+  width: 300px;
   white-space: normal !important;
 }
 
@@ -174,15 +179,18 @@
 }
 
 .text-2-lines {
-  height: 50px !important;
+  height: 2.2em;
+  line-height: 1.2;
 }
 
 .text-2-bold-lines {
-  height: 55px !important;
+  height: 3.6em;
+  line-height: 1.2;
 }
 
 .text-4-lines {
-  height: 99px !important;
+  height: 4.4em;
+  line-height: 1.2;
 }
 
 .truncate-1-overflow {
