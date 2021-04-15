@@ -239,21 +239,21 @@ export const showNotification = (type, msg, description) => {
       notification.success({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'error':
       notification.error({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     case 'warn':
       notification.warn({
         message: msg,
         description,
-        duration: 2.5,
+        duration: 1.5,
       })
       break
     default:

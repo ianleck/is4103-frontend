@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, DatePicker, Empty, Form, Input, Modal, notification, Popconfirm } from 'antd'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import { isEmpty, isNil } from 'lodash'
-import { getProfile } from 'services/user'
 
-const ExperienceCard = ({ user, showEditTools, isAdmin }) => {
+const ExperienceCard = ({ user, showEditTools }) => {
   const { TextArea } = Input
 
   let isExperienceEmpty = false

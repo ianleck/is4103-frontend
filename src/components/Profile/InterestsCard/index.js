@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Empty, Form, Select, Tag } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isNil, map } from 'lodash'
+import { isEmpty, isNil, map, size } from 'lodash'
 
 const InterestsCard = ({ user, showEditTools }) => {
   const { Option } = Select
@@ -9,7 +9,7 @@ const InterestsCard = ({ user, showEditTools }) => {
   const categories = useSelector(state => state.categories)
 
   const [showInterests, setShowInterests] = useState(isEmpty(user.Interests))
-  console.log(user)
+  console.log(showInterests)
   const [editInterestsMode, setEditInterestsMode] = useState(false)
 
   const [updateInterestsForm] = Form.useForm()
@@ -140,9 +140,11 @@ const InterestsCard = ({ user, showEditTools }) => {
   }
 
   useEffect(() => {
-    updateInterestsForm.setFieldsValue({
-      interests: map(user.Interests, interest => interest.categoryId),
-    })
+    if (size(user.Interests) > 0) setShowInterests(false)
+    if (showEditTools)
+      updateInterestsForm.setFieldsValue({
+        interests: map(user.Interests, interest => interest.categoryId),
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.Interests])
 
@@ -151,7 +153,14 @@ const InterestsCard = ({ user, showEditTools }) => {
       <div className="card-header pb-1">
         <div className="row align-items-center justify-content-between mb-2">
           <div className="col-auto">
-            <span className="h3 font-weight-bold text-dark">Interests</span>
+            <span className="h3 font-weight-bold text-dark">
+              Interests&nbsp;&nbsp;
+              {showInterests && (
+                <Tag color="error" className="text-uppercase align-top">
+                  Needs Update
+                </Tag>
+              )}
+            </span>
           </div>
           <div className="col-auto">
             {!editInterestsMode && !!showEditTools && <EditInterestsButton />}
@@ -166,7 +175,6 @@ const InterestsCard = ({ user, showEditTools }) => {
               {!editInterestsMode &&
                 !showInterests &&
                 map(user.Interests, interest => {
-                  console.log(interest)
                   return <Tag key={interest.categoryId}>{interest.name}</Tag>
                 })}
               {editInterestsMode && <SelectInterestsDropdown />}

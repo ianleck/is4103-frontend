@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Descriptions, Form, Input, Modal, Upload, message } from 'antd'
+import { Button, Descriptions, Form, Input, Modal, Upload, message, Tag } from 'antd'
 import { isNil } from 'lodash'
 import { CameraOutlined, PlusOutlined } from '@ant-design/icons'
 import actions from 'redux/user/actions'
@@ -176,13 +176,13 @@ const PersonalInformationCard = ({ user, showEditTools, isAdmin }) => {
             </div>
           </div>
           <div className="col-12">
-            <div
-              className={`${
-                isNil(user.firstName) || isNil(user.lastName) ? 'text-danger' : 'text-dark'
-              } h3 font-weight-bold`}
-            >
-              {getUserFullName(user)}{' '}
-              {(isNil(user.firstName) || isNil(user.lastName)) && <small>*Update required</small>}
+            <div className="h3 font-weight-bold">
+              {getUserFullName(user)}&nbsp;&nbsp;
+              {(isNil(user.firstName) || isNil(user.lastName)) && (
+                <Tag color="error" className="text-uppercase align-top">
+                  Needs Update
+                </Tag>
+              )}
             </div>
           </div>
           <div className="col-12">

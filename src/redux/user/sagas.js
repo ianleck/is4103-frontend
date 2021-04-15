@@ -103,10 +103,13 @@ export function* LOGIN({ payload }) {
   })
   const response = yield call(jwt.login, email, password, isAdmin)
   if (response && !isNil(response.accountId)) {
-    const userProfile = yield call(jwt.getProfile, response.accountId)
-    const currentUser = isAdmin
-      ? createAdminObj(response, true, false)
-      : createUserObj(userProfile, true, false, checkProfileUpdateRqd(userProfile))
+    let currentUser
+    if (isAdmin) {
+      currentUser = createAdminObj(response, true, false)
+    } else {
+      const userProfile = yield call(jwt.getProfile, response.accountId)
+      currentUser = createUserObj(userProfile, true, false, checkProfileUpdateRqd(userProfile))
+    }
     yield putResolve({
       type: 'user/SET_STATE',
       payload: {
