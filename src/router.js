@@ -353,6 +353,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/student/dashboard/consultations',
+    Component: lazy(() => import('pages/student/dashboard/consultations')),
+    exact: true,
+  },
+  {
     path: '/student/dashboard/courses',
     Component: lazy(() => import('pages/student/dashboard/courses')),
     exact: true,
