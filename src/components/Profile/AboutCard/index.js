@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, Tag } from 'antd'
 import { isNil } from 'lodash'
 
 const AboutCard = ({ user, showEditTools }) => {
@@ -190,7 +190,14 @@ const AboutCard = ({ user, showEditTools }) => {
   return (
     <div className="card">
       <div className="card-header pb-1">
-        <div className="h3 font-weight-bold text-dark">About</div>
+        <div className="h3 font-weight-bold text-dark">
+          About&nbsp;&nbsp;
+          {(isNil(user.bio) || isNil(user.headline)) && (
+            <Tag color="error" className="text-uppercase align-top">
+              Needs Update
+            </Tag>
+          )}
+        </div>
       </div>
       <div className="card-body">
         <div className="row align-items-center justify-content-between mb-2">

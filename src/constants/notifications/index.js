@@ -1,5 +1,16 @@
+export const ACCOUNT_CREATED_SUCCESS = 'Account created successfully.'
+export const ACCOUNT_DEL_SUCCESS = 'Account deleted successfully.'
+export const LET_US_KNOW = 'Let us know more about you!'
+
 export const PASSWORDS_MISMATCH = 'Passwords do not match.'
 export const ENSURE_PASSWORDS_MATCH = 'Please ensure both passwords match.'
+export const PASSWORD_CHANGED_SUCCESS = 'Password changed successfully.'
+export const SETTINGS_CHANGED_SUCCESS = 'Your settings were successfully updated.'
+export const PROFILE_UPDATE_SUCCESS = 'Your profile was successfully updated.'
+
+export const EXP_ADDED_SUCCESS = 'Experience added successfully.'
+export const EXP_EDITED_SUCCESS = 'Experience updated successfully.'
+export const EXP_DEL_SUCCESS = 'Experience deleted successfully.'
 
 export const ADMIN_DELETED = 'Administrator successfully deleted.'
 export const ADMIN_DET_CHANGED = 'Administrator details were successfully updated.'
