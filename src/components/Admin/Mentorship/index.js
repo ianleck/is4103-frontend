@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -31,9 +30,6 @@ const Mentorship = () => {
   const [applications, setApplications] = useState()
   const [contracts, setContracts] = useState()
 
-  const [showListingDetails, setShowListingDetails] = useState(false)
-  const [listingDetails, setListingDetails] = useState(false)
-
   const [showApplicationDetails, setShowApplicationDetails] = useState(false)
   const [applicationDetails, setApplicationDetails] = useState(false)
 
@@ -51,14 +47,8 @@ const Mentorship = () => {
   }
 
   const onCloseDetails = () => {
-    setShowListingDetails(false)
     setShowApplicationDetails(false)
     setShowContractDetails(false)
-  }
-
-  const selectListing = record => {
-    setShowListingDetails(true)
-    setListingDetails(record)
   }
 
   const selectApplication = record => {
@@ -404,56 +394,6 @@ const Mentorship = () => {
             {tabKey === 'Contracts' && showContracts()}
           </div>
         </div>
-      </div>
-
-      <div className="col-xl-4 col-lg-12">
-        <Modal
-          title="Mentorship Listing Details"
-          visible={showListingDetails}
-          cancelText="Close"
-          centered
-          okButtonProps={{ style: { display: 'none' } }}
-          onCancel={() => onCloseDetails()}
-        >
-          <Descriptions column={1}>
-            <Descriptions.Item label="Listing ID">
-              {listingDetails.mentorshipListingId}
-            </Descriptions.Item>
-            <Descriptions.Item label="Name">{listingDetails.name}</Descriptions.Item>
-            <Descriptions.Item label="Description">
-              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
-                {listingDetails.description}
-              </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="Sensei">
-              {listingDetails.Sensei
-                ? `${listingDetails.Sensei.firstName} ${listingDetails.Sensei.lastName}`
-                : null}
-            </Descriptions.Item>
-            <Descriptions.Item label="Pass price">{listingDetails.priceAmount}</Descriptions.Item>
-            <Descriptions.Item label="Categories">
-              {listingDetails
-                ? listingDetails.Categories.map(category => {
-                    const { name, categoryId } = category
-                    return (
-                      <Tag color="geekblue" key={categoryId}>
-                        {name}
-                      </Tag>
-                    )
-                  })
-                : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date Created">
-              {listingDetails.createdAt ? formatTime(listingDetails.createdAt) : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date Published">
-              {listingDetails.publishedAt ? formatTime(listingDetails.publishedAt) : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Visibility">
-              {listingDetails.visibility ? listingDetails.visibility : '-'}
-            </Descriptions.Item>
-          </Descriptions>
-        </Modal>
       </div>
 
       <div className="col-xl-4 col-lg-12">
