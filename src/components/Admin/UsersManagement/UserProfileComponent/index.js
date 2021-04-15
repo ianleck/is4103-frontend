@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import * as jwtAdmin from 'services/admin'
+import { concat, isNil } from 'lodash'
 import { Button, Popconfirm, Table, Tabs } from 'antd'
 import { CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons'
 import ProfilePersonalInfoCard from 'components/Profile/PersonalInformationCard'
@@ -31,7 +31,8 @@ import {
 import billingColumns from 'components/Common/TableColumns/Billing'
 import BackBtn from 'components/Common/BackBtn'
 import { viewWallet } from 'services/wallet'
-import { concat, isNil } from 'lodash'
+import { getProfile } from 'services/user'
+import { acceptSensei, banUser, rejectSensei } from 'services/admin'
 import Mentorship from './MentorshipListing'
 import MentorshipContracts from './MentorshipContracts'
 
@@ -64,8 +65,8 @@ const SenseiProfileComponent = () => {
     }
   }
 
-  const getProfile = async () => {
-    const response = await jwtAdmin.getProfile(userId)
+  const getProfileSvc = async () => {
+    const response = await getProfile(userId)
     if (response && !isNil(response.userType)) {
       console.log('response', response)
       setViewUser(response)
@@ -77,10 +78,10 @@ const SenseiProfileComponent = () => {
   }
 
   const onAccept = async () => {
-    const response = await jwtAdmin.acceptSensei(userId)
+    const response = await acceptSensei(userId)
     if (response) {
       if (response.adminVerified === ADMIN_VERIFIED_ENUM.ACCEPTED) {
-        getProfile()
+        getProfileSvc()
         showNotification('success', SUCCESS, ACCEPT_SENSEI_PROFILE)
       }
     } else {
@@ -89,10 +90,10 @@ const SenseiProfileComponent = () => {
   }
 
   const onReject = async () => {
-    const response = await jwtAdmin.rejectSensei(userId)
+    const response = await rejectSensei(userId)
     if (response) {
       if (response.adminVerified === 'REJECTED') {
-        getProfile()
+        getProfileSvc()
         showNotification('success', SUCCESS, REJECT_SENSEI_PROFILE)
       }
     } else {
@@ -111,18 +112,18 @@ const SenseiProfileComponent = () => {
   }
 
   const onBan = async () => {
-    const response = await jwtAdmin.banUser(userId)
+    const response = await banUser(userId)
 
     if (response.success && viewUser.status === STATUS_ENUM.ACTIVE) {
       showNotification('success', SUCCESS, USER_BANNED)
     } else if (response.success && viewUser.status === STATUS_ENUM.BANNED) {
       showNotification('success', SUCCESS, USER_UNBANNED)
     }
-    getProfile()
+    getProfileSvc()
   }
 
   useEffect(() => {
-    getProfile()
+    getProfileSvc()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
