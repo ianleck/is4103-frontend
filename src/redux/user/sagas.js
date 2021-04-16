@@ -19,6 +19,7 @@ import {
   createAdminObj,
   createUserObj,
   resetCart,
+  resetSocial,
   resetUser,
   showNotification,
 } from 'components/utils'
@@ -245,6 +246,10 @@ export function* LOGOUT() {
     payload: resetCart,
   })
   yield putResolve({
+    type: 'social/SET_STATE',
+    payload: resetSocial,
+  })
+  yield putResolve({
     type: 'menu/GET_DATA',
   })
   yield putResolve({
@@ -302,7 +307,7 @@ export function* UPDATE_PROFILE({ payload }) {
       })
       jwt.updateLocalUserData(updatedUser)
       if (settingsUpdate) {
-        showNotification('success', SUCCESS, PASSWORD_CHANGED_SUCCESS)
+        showNotification('success', SUCCESS, PROFILE_UPDATE_SUCCESS)
       } else {
         showNotification('success', SUCCESS, PROFILE_UPDATE_SUCCESS)
       }
