@@ -33,7 +33,7 @@ export async function getStudentMenuData() {
       title: 'Dashboard',
       key: 'studentDashboardAccess',
       icon: 'fa fa-pie-chart',
-      url: '/student/dashboard',
+      url: '/student/dashboard/mentorships',
     },
   ]
 }

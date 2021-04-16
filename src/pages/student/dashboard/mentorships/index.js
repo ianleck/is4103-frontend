@@ -39,9 +39,9 @@ const StudentMentorships = () => {
         </div>
       )
     }
-    return (
-      <div className="col-12 col-md-6">
-        {map(activeMentorships, (activeMentorship, i) => (
+    return map(activeMentorships, (activeMentorship, i) => {
+      return (
+        <div className="col-12 col-md-6">
           <div
             role="button"
             tabIndex={0}
@@ -87,9 +87,9 @@ const StudentMentorships = () => {
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    )
+        </div>
+      )
+    })
   }
 
   return (
