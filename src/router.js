@@ -447,6 +447,17 @@ const routes = [
     Component: lazy(() => import('pages/support')),
     exact: true,
   },
+  // Consultation
+  {
+    path: '/student/consultation/:consultationId',
+    Component: lazy(() => import('pages/consultation')),
+    exact: true,
+  },
+  {
+    path: '/sensei/consultation/:consultationId',
+    Component: lazy(() => import('pages/consultation')),
+    exact: true,
+  },
 ]
 
 const mapStateToProps = ({ settings }) => ({
