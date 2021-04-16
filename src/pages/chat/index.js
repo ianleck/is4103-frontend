@@ -1,3 +1,4 @@
+import ChatComponent from 'components/Chat'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
@@ -6,7 +7,9 @@ const checkout = () => {
     <div>
       <Helmet title="Chat" />
 
-      <div>hello chat</div>
+      <div>
+        <ChatComponent />
+      </div>
     </div>
   )
 }

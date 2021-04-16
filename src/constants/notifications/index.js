@@ -160,3 +160,5 @@ export const CONSULTATION_REGISTERED =
   'You have been successfully registered for the selected consultation slot'
 export const CONSULTATION_UNREGISTERED =
   'You have been successfully cancelled your registration for the selected consultation slot'
+
+export const CHAT_EMPTY_MSG = 'Please enter a message before sending.'
