@@ -100,11 +100,21 @@ export async function resetPassword(resetToken, accountId, newPassword) {
     .catch(err => console.log(err))
 }
 
-export async function register(username, email, password, confirmPassword, isStudent) {
+export async function register(
+  username,
+  firstName,
+  lastName,
+  email,
+  password,
+  confirmPassword,
+  isStudent,
+) {
   return apiClient
     .post('/auth/register', {
       newUser: {
         username,
+        firstName,
+        lastName,
         email,
         password,
         confirmPassword,
