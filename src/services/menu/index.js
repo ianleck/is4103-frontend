@@ -58,18 +58,6 @@ export async function getAdminMenuData() {
       ],
     },
     {
-      title: 'Business',
-      key: 'businessManagement',
-      icon: 'fe fe-user-check',
-      children: [
-        {
-          title: 'User Statistics',
-          key: 'userStatistics',
-          url: '/admin/user-statistics',
-        },
-      ],
-    },
-    {
       title: 'Content',
       key: 'contentManagement',
       icon: 'fe fe-folder',
