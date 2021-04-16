@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { MessageOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons'
-import { Avatar, Button, Input, List, Space } from 'antd'
+import { Avatar, Button, Input, List, Modal, Space, Form, Select, Divider } from 'antd'
 import { getChats, sendMessage } from 'services/chat'
-import { isNil, map } from 'lodash'
+import { useDebounce } from 'use-debounce'
+import searchByFilter from 'services/search'
+import { isEmpty, isNil, map, size } from 'lodash'
 import { getUserFullName, showNotification } from 'components/utils'
-import { CHAT_EMPTY_MSG, WARNING } from 'constants/notifications'
+import {
+  CHAT_EMPTY_MSG,
+  ERROR,
+  WARNING,
+  CHAT_ALR_EXIST,
+  SUCCESS,
+  NEW_CHAT_CREATED,
+} from 'constants/notifications'
+import { DEFAULT_TIMEOUT } from 'constants/constants'
 
 const { Search } = Input
+const { Option } = Select
 
 const ChatComponent = () => {
   const user = useSelector(state => state.user)
@@ -17,6 +28,12 @@ const ChatComponent = () => {
   const [selectedMsgs, setSelectedMsgs] = useState() // Track Sorted Array of Msgs within selected
 
   const [inputMsg, setInputMsg] = useState()
+
+  const [showNewChat, setShowNewChat] = useState(false)
+  const [searchText, setSearchText] = useState('')
+  const [query] = useDebounce(searchText, 750)
+  const [userResults, setUserResults] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const retrieveChatList = async () => {
     const response = await getChats(user.accountId)
@@ -179,10 +196,88 @@ const ChatComponent = () => {
     }
   }
 
+  const addNewChatFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowNewChat(false)}>
+          Cancel
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="newChatForm" htmlType="submit" size="large">
+          Send Message
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo)
+  }
+
+  const onNewChat = async values => {
+    const receiverId = values.id
+    const body = values.msg
+
+    if (checkIfChatExists(receiverId)) {
+      setSearchText('')
+      setShowNewChat(false)
+      showNotification('error', ERROR, CHAT_ALR_EXIST)
+    } else {
+      const payload = { messageBody: body }
+      const response = await sendMessage(receiverId, payload)
+
+      if (response) {
+        refreshChatList()
+        setSearchText('')
+        setInputMsg()
+        setShowNewChat(false)
+        showNotification('success', SUCCESS, NEW_CHAT_CREATED)
+      }
+    }
+  }
+
+  const checkIfChatExists = id => {
+    for (let i = 0; i < chatList.length; i += 1) {
+      if (chatList[i].accountId1 === id) {
+        return true
+      }
+      if (!isNil(chatList[i].accountId2) && chatList[i].accountId2 === id) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const handleSearch = e => {
+    const nameSearch = e.target.value
+
+    if (!isEmpty(nameSearch)) {
+      setSearchText(nameSearch)
+    }
+  }
+
+  const searchByFilterSvc = async () => {
+    setIsLoading(true)
+    const response = await searchByFilter(query)
+
+    if (response && !isNil(response.success)) {
+      if (!isNil(response.users)) setUserResults(response.users)
+    }
+    setTimeout(() => {
+      setIsLoading(false)
+    }, DEFAULT_TIMEOUT)
+  }
+
   useEffect(() => {
     retrieveChatList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!isEmpty(query)) searchByFilterSvc(query)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query])
 
   return (
     <div className="row">
@@ -195,7 +290,13 @@ const ChatComponent = () => {
               </div>
               <div className="col-12 col-sm-auto mt-3 mt-sm-0 text-center text-sm-right">
                 <Space>
-                  <Button type="primary" size="large" shape="round" icon={<PlusOutlined />}>
+                  <Button
+                    type="primary"
+                    size="large"
+                    shape="round"
+                    onClick={() => setShowNewChat(true)}
+                    icon={<PlusOutlined />}
+                  >
                     New Chat
                   </Button>
                   <Button type="primary" size="large" shape="round" icon={<PlusOutlined />}>
@@ -237,6 +338,67 @@ const ChatComponent = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        visible={showNewChat}
+        title="New Chat"
+        cancelText="Close"
+        centered
+        onCancel={() => setShowNewChat(false)}
+        footer={addNewChatFooter}
+      >
+        <p>
+          To chat with a new user, search for the user using their name in the first input box and
+          confirm the user you want to chat with via the dropdown
+        </p>
+
+        <Search
+          name="message"
+          placeholder="Search for a user..."
+          className="message-input mt-2"
+          onChange={e => handleSearch(e)}
+        />
+
+        <div className="row mt-2">
+          <small className="col-12">{`${size(userResults)} users found`}</small>
+          <small className="col-12">
+            Select the user you want to chat with in the dropdown below
+          </small>
+        </div>
+        <Divider />
+
+        <Form
+          id="newChatForm"
+          layout="vertical"
+          hideRequiredMark
+          onSubmit={e => e.preventDefault()}
+          onFinish={onNewChat}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label="Select User From Search Result"
+            name="id"
+            rules={[{ required: true, message: 'Please search for a user.' }]}
+          >
+            <Select disabled={isLoading} showSearch onSearch={handleSearch}>
+              {map(userResults, u => {
+                return (
+                  <Option value={u.accountId} key={u.accountId}>
+                    {u.firstName} {u.lastName}
+                  </Option>
+                )
+              })}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Write Your Message"
+            name="msg"
+            rules={[{ required: true, message: 'Please write a message to the selected user.' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }
