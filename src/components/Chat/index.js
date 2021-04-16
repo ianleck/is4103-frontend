@@ -188,6 +188,20 @@ const ChatComponent = () => {
   const chatBubble = msg => {
     const body = msg.messageBody
 
+    if (isGroupChatSelected) {
+      if (msg.senderId !== user.accountId) {
+        return (
+          <div key={msg.messageId} className="col-12">
+            <div className="talk-bubble round">
+              <div>
+                {getUserFullName(msg.Sender)} : {body}
+              </div>
+            </div>
+          </div>
+        )
+      }
+    }
+
     if (msg.senderId === user.accountId) {
       return (
         <div key={msg.messageId} className="col-12">
