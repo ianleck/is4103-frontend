@@ -13,7 +13,8 @@ const ChatComponent = () => {
   const user = useSelector(state => state.user)
 
   const [chatList, setChatList] = useState()
-  const [selectedChat, setSelectedChat] = useState()
+  const [selectedChat, setSelectedChat] = useState() // Entire Selected Chat
+  const [selectedMsgs, setSelectedMsgs] = useState() // Track Sorted Array of Msgs within selected
 
   const [inputMsg, setInputMsg] = useState()
 
@@ -35,8 +36,6 @@ const ChatComponent = () => {
   }
 
   const populateChatListCard = item => {
-    // console.log('item', item)
-
     return (
       <div
         role="button"
@@ -94,8 +93,14 @@ const ChatComponent = () => {
   }
 
   const selectChat = record => {
-    setSelectedChat(record)
     refreshChatList()
+    setSelectedChat(record)
+    populateSelectedMsg(record)
+  }
+
+  const populateSelectedMsg = record => {
+    const sortedMessages = sortMsg(record.Messages)
+    setSelectedMsgs(sortedMessages)
   }
 
   const noChatSelected = () => {
@@ -110,14 +115,11 @@ const ChatComponent = () => {
     return objArr.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
   }
 
-  const displayMessages = () => {
-    return populateMessages()
+  const displayMessages = sortedMessages => {
+    return populateMessageBubbles(sortedMessages)
   }
 
-  const populateMessages = () => {
-    const messages = selectedChat.Messages
-    const sortedMessages = sortMsg(messages)
-
+  const populateMessageBubbles = sortedMessages => {
     return <div className="row">{map(sortedMessages, msg => chatBubble(msg))}</div>
   }
 
@@ -148,25 +150,32 @@ const ChatComponent = () => {
     setInputMsg(words)
   }
 
-  const onSend = async () => {
+  const onSend = () => {
     if (isNil(inputMsg)) {
       showNotification('warn', WARNING, CHAT_EMPTY_MSG)
     } else {
-      let receiverId = selectedChat.accountId1
+      // Have not considered Group Chat
+      sendPM()
+    }
+  }
 
-      if (user.accountId === selectedChat.accountId1) {
-        receiverId = selectedChat.accountId2
-      }
+  const sendPM = async () => {
+    let receiverId = selectedChat.accountId1
 
-      const payload = { messageBody: inputMsg }
+    if (user.accountId === selectedChat.accountId1) {
+      receiverId = selectedChat.accountId2
+    }
 
-      const response = await sendMessage(receiverId, payload)
+    const fakeAddition = { senderId: user.accountId, messageBody: inputMsg }
+    const msgList = [...selectedMsgs, fakeAddition]
 
-      if (response) {
-        console.log('response', response)
-        refreshChatList()
-        setInputMsg()
-      }
+    const payload = { messageBody: inputMsg }
+    const response = await sendMessage(receiverId, payload)
+
+    if (response) {
+      refreshChatList()
+      setInputMsg()
+      setSelectedMsgs(msgList)
     }
   }
 
@@ -209,7 +218,7 @@ const ChatComponent = () => {
 
               <div className="col-12 col-md-8">
                 <div className="message-list-card overflow-y-scroll card pb-0 mb-0">
-                  {selectedChat ? displayMessages() : noChatSelected()}
+                  {selectedChat ? displayMessages(selectedMsgs) : noChatSelected()}
                 </div>
                 <div className="m-0 p-0">
                   <Search
