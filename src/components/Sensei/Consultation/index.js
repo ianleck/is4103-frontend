@@ -30,7 +30,7 @@ import {
 import { isEmpty, isNil, map } from 'lodash'
 import { getSenseiMentorshipListings } from 'services/mentorship/listings'
 import moment from 'moment'
-import { showNotification } from 'components/utils'
+import { getUserFullName, showNotification } from 'components/utils'
 import {
   SUCCESS,
   CONSULTATION_CREATED,
@@ -286,10 +286,7 @@ const SenseiConsultationComponent = () => {
             )}
             {!isNil(item.studentId) && (
               <div className="truncate-2-overflow text-wrap text-muted">
-                <Badge
-                  status="error"
-                  text={`Booked by ${item.Student.firstName} ${item.Student.lastName}`}
-                />
+                <Badge status="error" text={`Booked by ${getUserFullName(item.Student)}`} />
               </div>
             )}
           </div>
@@ -407,7 +404,7 @@ const SenseiConsultationComponent = () => {
             <div className="truncate-2-overflow text-wrap text-muted">
               <Badge
                 status="error"
-                text={`Booked by ${consultationDetails.Student.firstName} ${consultationDetails.Student.lastName}`}
+                text={`Booked by ${getUserFullName(consultationDetails.Student)}`}
               />
             </div>
           )}
