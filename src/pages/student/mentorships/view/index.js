@@ -17,7 +17,12 @@ import {
 } from 'constants/notifications'
 import { addMentorshipListingReview, editMentorshipListingReview } from 'services/review'
 import { getUserFirstName, initPageItems, showNotification } from 'components/utils'
-import { DEFAULT_TIMEOUT, FRONTEND_API, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import {
+  DEFAULT_TIMEOUT,
+  FRONTEND_API,
+  MENTORSHIP_CONTRACT_APPROVAL,
+  USER_TYPE_ENUM,
+} from 'constants/constants'
 import BackBtn from 'components/Common/BackBtn'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import { getProfile } from 'services/user'
@@ -31,6 +36,7 @@ import UpsellBar from 'components/Common/UpsellBar'
 const ViewListing = () => {
   const { id } = useParams()
   const user = useSelector(state => state.user)
+  const isAdmin = user.userType === USER_TYPE_ENUM.ADMIN
   const history = useHistory()
 
   const [listing, setListing] = useState('')
@@ -75,6 +81,12 @@ const ViewListing = () => {
     const response = await getMentorshipListing(id)
 
     if (response && !isNil(response.mentorshipListing)) {
+      if (isAdmin) {
+        const senseiProfile = await getProfile(response.mentorshipListing.accountId)
+        if (senseiProfile) {
+          response.mentorshipListing.Sensei = senseiProfile
+        }
+      }
       setListing(response.mentorshipListing)
 
       if (!isNil(response.mentorshipListing.Reviews)) {
@@ -245,7 +257,7 @@ const ViewListing = () => {
                   block
                   type="primary"
                   size="large"
-                  disabled={hasExistingContract}
+                  disabled={hasExistingContract || isAdmin}
                   onClick={() => history.push(`/student/mentorship/apply/${id}`)}
                 >
                   Apply for Mentorship
@@ -264,9 +276,11 @@ const ViewListing = () => {
           </MentorshipActions>
         </div>
       </div>
-      <div className="row mt-5 pl-md-5 pr-md-5 pt-lg-2">
-        <UpsellBar type="mentorships" id={id} />
-      </div>
+      {!isAdmin && (
+        <div className="row mt-5 pl-md-5 pr-md-5 pt-lg-2">
+          <UpsellBar type="mentorships" id={id} />
+        </div>
+      )}
     </div>
   )
 }

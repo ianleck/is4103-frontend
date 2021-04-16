@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import * as jwtAdmin from 'services/admin'
 import { getMentorshipListing } from 'services/mentorship/listings'
 import { Tabs, Table, Space, Button, Tag, Modal, Descriptions } from 'antd'
@@ -19,9 +20,9 @@ import ContractsWidget from '../../../Mentorship/ContractsWidget'
 
 const { TabPane } = Tabs
 
-const Mentorship = ({ id, user }) => {
+const Mentorship = ({ id }) => {
   const userId = id
-  const sensei = user
+  const history = useHistory()
 
   const [tabKey, setTabKey] = useState('Listings')
   const categories = useSelector(state => state.categories)
@@ -30,9 +31,6 @@ const Mentorship = ({ id, user }) => {
   const [listings, setListings] = useState([])
   const [applications, setApplications] = useState([])
   const [contracts, setContracts] = useState([])
-
-  const [showListingDetails, setShowListingDetails] = useState(false)
-  const [listingDetails, setListingDetails] = useState(false)
 
   const [showApplicationDetails, setShowApplicationDetails] = useState(false)
   const [applicationDetails, setApplicationDetails] = useState(false)
@@ -52,14 +50,8 @@ const Mentorship = ({ id, user }) => {
   }
 
   const onCloseDetails = () => {
-    setShowListingDetails(false)
     setShowApplicationDetails(false)
     setShowContractDetails(false)
-  }
-
-  const selectListing = record => {
-    setShowListingDetails(true)
-    setListingDetails(record)
   }
 
   const selectApplication = record => {
@@ -196,7 +188,11 @@ const Mentorship = ({ id, user }) => {
             type="primary"
             shape="circle"
             size="large"
-            onClick={() => selectListing(record)}
+            onClick={() =>
+              history.push(
+                `/admin/mentorship-content-management/view/${record.mentorshipListingId}`,
+              )
+            }
             icon={<InfoCircleOutlined />}
           />
         </Space>
@@ -397,54 +393,6 @@ const Mentorship = ({ id, user }) => {
             {tabKey === 'Contracts' && showContracts()}
           </div>
         </div>
-      </div>
-
-      <div className="col-xl-4 col-lg-12">
-        <Modal
-          title="Mentorship Listing Details"
-          visible={showListingDetails}
-          cancelText="Close"
-          centered
-          okButtonProps={{ style: { display: 'none' } }}
-          onCancel={() => onCloseDetails()}
-        >
-          <Descriptions column={1}>
-            <Descriptions.Item label="Listing ID">
-              {listingDetails.mentorshipListingId}
-            </Descriptions.Item>
-            <Descriptions.Item label="Name">{listingDetails.name}</Descriptions.Item>
-            <Descriptions.Item label="Description">
-              <Paragraph ellipsis={{ rows: 1, expandable: true, symbol: 'More' }}>
-                {listingDetails.description}
-              </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="Sensei">
-              {`${sensei.firstName} ${sensei.lastName}`}
-            </Descriptions.Item>
-            <Descriptions.Item label="Pass price">{listingDetails.priceAmount}</Descriptions.Item>
-            <Descriptions.Item label="Categories">
-              {listingDetails
-                ? listingDetails.Categories.map(category => {
-                    const { name, categoryId } = category
-                    return (
-                      <Tag color="geekblue" key={categoryId}>
-                        {name}
-                      </Tag>
-                    )
-                  })
-                : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date Created">
-              {listingDetails.createdAt ? formatTime(listingDetails.createdAt) : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date Published">
-              {listingDetails.publishedAt ? formatTime(listingDetails.publishedAt) : '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="Visibility">
-              {listingDetails.visibility ? listingDetails.visibility : '-'}
-            </Descriptions.Item>
-          </Descriptions>
-        </Modal>
       </div>
 
       <div className="col-xl-4 col-lg-12">
