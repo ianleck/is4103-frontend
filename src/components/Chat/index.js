@@ -16,6 +16,7 @@ import {
   createChatGroup,
   deleteChatGroup,
   addChatGroupMember,
+  removeChatGroupMember,
 } from 'services/chat'
 import { useDebounce } from 'use-debounce'
 import searchByFilter from 'services/search'
@@ -30,6 +31,7 @@ import {
   NEW_CHAT_CREATED,
   NEW_CHAT_GROUP_CREATED,
   CHAT_MEMBERS_ADDED,
+  CHAT_MEMBERS_REMOVED,
 } from 'constants/notifications'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 
@@ -57,6 +59,7 @@ const ChatComponent = () => {
 
   const [showMembersManagementModal, setShowMembersManagementModal] = useState(false)
   const [showAddMemberModal, setShowAddMemberModal] = useState(false)
+  const [showRemoveMemberModal, setShowRemoveMemberModal] = useState(false)
 
   const retrieveChatList = async () => {
     const response = await getChats(user.accountId)
@@ -368,12 +371,12 @@ const ChatComponent = () => {
   const membersManagementFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <Button type="default" size="large" onClick={() => setShowMembersManagementModal(false)}>
+        <Button type="default" danger size="large" onClick={() => setShowRemoveMemberModal(true)}>
           Remove Member
         </Button>
       </div>
       <div className="col-auto">
-        <Button type="default" size="large" onClick={() => setShowAddMemberModal(true)}>
+        <Button type="primary" size="large" onClick={() => setShowAddMemberModal(true)}>
           Add new Member
         </Button>
       </div>
@@ -395,6 +398,21 @@ const ChatComponent = () => {
     </div>
   )
 
+  const removeMemberFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowRemoveMemberModal(false)}>
+          Cancel
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="danger" form="removeMemberForm" htmlType="submit" size="large">
+          Remove Member
+        </Button>
+      </div>
+    </div>
+  )
+
   const onAddMember = async values => {
     const grpId = selectedChat.chatId
     const userId = values.id
@@ -408,6 +426,22 @@ const ChatComponent = () => {
       setShowMembersManagementModal(false)
       setShowAddMemberModal(false)
       showNotification('success', SUCCESS, CHAT_MEMBERS_ADDED)
+    }
+  }
+
+  const onRemoveMember = async values => {
+    const grpId = selectedChat.chatId
+    const userId = values.id
+
+    const response = await removeChatGroupMember(grpId, userId)
+
+    if (response) {
+      refreshChatList()
+      setSearchText('')
+      setInputMsg()
+      setShowMembersManagementModal(false)
+      setShowRemoveMemberModal(false)
+      showNotification('success', SUCCESS, CHAT_MEMBERS_REMOVED)
     }
   }
 
@@ -599,7 +633,7 @@ const ChatComponent = () => {
         onCancel={() => setShowMembersManagementModal(false)}
         footer={membersManagementFooter}
       >
-        Member Management
+        Which member management action you would like to do?
       </Modal>
 
       <Modal
@@ -657,6 +691,77 @@ const ChatComponent = () => {
         >
           <Form.Item
             label="Select User From Search Result"
+            name="id"
+            rules={[{ required: true, message: 'Please search for a user.' }]}
+          >
+            <Select disabled={isLoading} showSearch onSearch={handleSearch}>
+              {map(userResults, u => {
+                return (
+                  <Option value={u.accountId} key={u.accountId}>
+                    {u.firstName} {u.lastName}
+                  </Option>
+                )
+              })}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        visible={showRemoveMemberModal}
+        title="Remove user from Chat Group"
+        cancelText="Close"
+        centered
+        onCancel={() => setShowRemoveMemberModal(false)}
+        footer={removeMemberFooter}
+      >
+        <p className="text-dark">
+          <strong>List of Users Found from Search</strong>
+        </p>
+        <p>
+          Search for user using the search bar and confirm the user you would like to remove using
+          the second section.
+        </p>
+
+        <div className="card-body complaint-reason-list-card overflow-y-scroll pt-1 mt-2">
+          <div className="row">
+            <div className="col-12">
+              <List
+                itemLayout="horizontal"
+                dataSource={userResults}
+                renderItem={u => (
+                  <List.Item>{`${!isEmpty(u) ? getUserFullName(u) : null}`}</List.Item>
+                )}
+              />
+            </div>
+          </div>
+        </div>
+
+        <Search
+          name="message"
+          placeholder="Search for a user..."
+          className="message-input mt-2"
+          onChange={e => handleSearch(e)}
+        />
+
+        <div className="row mt-2">
+          <small className="col-12">{`${size(userResults)} users found`}</small>
+          <small className="col-12">
+            Select the user you want to remove with in the dropdown below.
+          </small>
+        </div>
+        <Divider />
+
+        <Form
+          id="removeMemberForm"
+          layout="vertical"
+          hideRequiredMark
+          onSubmit={e => e.preventDefault()}
+          onFinish={onRemoveMember}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label="Select User To Remove"
             name="id"
             rules={[{ required: true, message: 'Please search for a user.' }]}
           >
