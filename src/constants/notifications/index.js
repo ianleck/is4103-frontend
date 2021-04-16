@@ -164,3 +164,4 @@ export const CONSULTATION_UNREGISTERED =
 export const CHAT_EMPTY_MSG = 'Please enter a message before sending.'
 export const CHAT_ALR_EXIST = 'You already have an existing chat with the user selected.'
 export const NEW_CHAT_CREATED = 'New chat with selected user created.'
+export const NEW_CHAT_GROUP_CREATED = 'New group chat created.'

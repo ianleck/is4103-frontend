@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { MessageOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons'
+import {
+  FireOutlined,
+  MessageOutlined,
+  PlusOutlined,
+  SendOutlined,
+  TeamOutlined,
+} from '@ant-design/icons'
 import { Avatar, Button, Input, List, Modal, Space, Form, Select, Divider } from 'antd'
-import { getChats, sendMessage } from 'services/chat'
+import { getChats, sendMessage, createChatGroup } from 'services/chat'
 import { useDebounce } from 'use-debounce'
 import searchByFilter from 'services/search'
 import { isEmpty, isNil, map, size } from 'lodash'
@@ -14,6 +20,7 @@ import {
   CHAT_ALR_EXIST,
   SUCCESS,
   NEW_CHAT_CREATED,
+  NEW_CHAT_GROUP_CREATED,
 } from 'constants/notifications'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 
@@ -34,6 +41,10 @@ const ChatComponent = () => {
   const [query] = useDebounce(searchText, 750)
   const [userResults, setUserResults] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+
+  const [showNewChatGroup, setShowNewChatGroup] = useState(false)
+
+  const [isGroupChatSelected, setIsGroupChatSelected] = useState(false)
 
   const retrieveChatList = async () => {
     const response = await getChats(user.accountId)
@@ -82,6 +93,10 @@ const ChatComponent = () => {
   }
 
   const getChatName = item => {
+    if (item.isChatGroup) {
+      return item.nameOfGroup
+    }
+
     const msg = item.Messages[0]
 
     if (msg.senderId === user.accountId) {
@@ -98,6 +113,10 @@ const ChatComponent = () => {
     const messages = item.Messages
     const sortedMessages = sortMsg(messages)
 
+    if (isEmpty(messages)) {
+      return 'No Messages'
+    }
+
     const msg = sortedMessages[lastIdx]
     const body = msg.messageBody
 
@@ -112,6 +131,7 @@ const ChatComponent = () => {
   const selectChat = record => {
     refreshChatList()
     setSelectedChat(record)
+    setIsGroupChatSelected(record.isChatGroup)
     populateSelectedMsg(record)
   }
 
@@ -269,6 +289,34 @@ const ChatComponent = () => {
     }, DEFAULT_TIMEOUT)
   }
 
+  const addNewChatGroupFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowNewChatGroup(false)}>
+          Cancel
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="newChatGroupForm" htmlType="submit" size="large">
+          Create Chat Group
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onNewChatGrp = async values => {
+    const gName = values.grpName
+    const payload = { name: gName }
+
+    const response = await createChatGroup(payload)
+
+    if (response) {
+      refreshChatList()
+      setShowNewChatGroup(false)
+      showNotification('success', SUCCESS, NEW_CHAT_GROUP_CREATED)
+    }
+  }
+
   useEffect(() => {
     retrieveChatList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -299,9 +347,25 @@ const ChatComponent = () => {
                   >
                     New Chat
                   </Button>
-                  <Button type="primary" size="large" shape="round" icon={<PlusOutlined />}>
+                  <Button
+                    type="primary"
+                    size="large"
+                    shape="round"
+                    onClick={() => setShowNewChatGroup(true)}
+                    icon={<PlusOutlined />}
+                  >
                     Create New Chat Group
                   </Button>
+                  {isGroupChatSelected ? (
+                    <Button type="primary" size="large" shape="round" icon={<TeamOutlined />}>
+                      Members Management
+                    </Button>
+                  ) : null}
+                  {isGroupChatSelected ? (
+                    <Button type="danger" size="large" shape="round" icon={<FireOutlined />}>
+                      Delete Chat Group
+                    </Button>
+                  ) : null}
                 </Space>
               </div>
             </div>
@@ -394,6 +458,32 @@ const ChatComponent = () => {
             label="Write Your Message"
             name="msg"
             rules={[{ required: true, message: 'Please write a message to the selected user.' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        visible={showNewChatGroup}
+        title="New Chat Group"
+        cancelText="Close"
+        centered
+        onCancel={() => setShowNewChatGroup(false)}
+        footer={addNewChatGroupFooter}
+      >
+        <Form
+          id="newChatGroupForm"
+          layout="vertical"
+          hideRequiredMark
+          onSubmit={e => e.preventDefault()}
+          onFinish={onNewChatGrp}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label="Name of new Chat Group"
+            name="grpName"
+            rules={[{ required: true, message: 'Please input name for the new chat group.' }]}
           >
             <Input />
           </Form.Item>
