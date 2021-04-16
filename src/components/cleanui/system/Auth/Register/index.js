@@ -11,6 +11,8 @@ const Register = () => {
   const { pathname } = useLocation()
   const [inputUsername, setInputUsername] = useState('')
   const [inputEmailAddr, setInputEmailAddr] = useState('')
+  const [inputFirstName, setInputFirstName] = useState('')
+  const [inputLastName, setInputLastName] = useState('')
 
   let isStudent = true
 
@@ -44,6 +46,8 @@ const Register = () => {
     values.isStudent = isStudent
     setInputUsername(values.username)
     setInputEmailAddr(values.email)
+    setInputFirstName(values.firstName)
+    setInputLastName(values.lastName)
     dispatch({
       type: 'user/REGISTER',
       payload: values,
@@ -163,7 +167,12 @@ const Register = () => {
         hideRequiredMark
         onFinish={onSubmitRegister}
         onFinishFailed={onFinishFailed}
-        initialValues={{ username: inputUsername, email: inputEmailAddr }}
+        initialValues={{
+          username: inputUsername,
+          email: inputEmailAddr,
+          firstName: inputFirstName,
+          lastName: inputLastName,
+        }}
         className="mb-4"
       >
         <Form.Item
@@ -178,14 +187,14 @@ const Register = () => {
           preserve
           rules={[{ required: true, message: 'Please input your first name' }]}
         >
-          <Input size="large" placeholder="First Name" />
+          <Input size="large" placeholder="First Name" value={inputFirstName} />
         </Form.Item>
         <Form.Item
           name="lastName"
           preserve
           rules={[{ required: true, message: 'Please input your last name' }]}
         >
-          <Input size="large" placeholder="Last Name" />
+          <Input size="large" placeholder="Last Name" value={inputLastName} />
         </Form.Item>
         <Form.Item
           name="email"
