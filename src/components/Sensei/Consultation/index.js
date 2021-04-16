@@ -96,8 +96,7 @@ const SenseiConsultationComponent = () => {
   }
 
   const startCall = () => {
-    console.log('consultationDetails=', consultationDetails)
-    history.push()
+    history.push(`/sensei/consultation/${consultationDetails.consultationId}`)
   }
 
   const dateCellRender = values => {

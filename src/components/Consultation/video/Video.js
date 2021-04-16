@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { notification } from 'antd'
+import { Input, notification } from 'antd'
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 import { useParams } from 'react-router-dom'
@@ -26,6 +26,7 @@ const Video = () => {
   const [onCall, setOnCall] = useState(false)
   const [calling, setCalling] = useState(false)
   const [appPeer, setAppPeer] = useState()
+  const [consultNotes, setConsultNotes] = useState([])
   const userVideo = useRef()
   const partnerVideo = useRef()
   const socket = useRef()
@@ -106,6 +107,12 @@ const Video = () => {
         setAppPeer(null)
         setOnCall(false)
       })
+
+      socket.current.on('allNotes', updatedConsultNotes => {
+        if (updatedConsultNotes.length !== consultNotes.length) {
+          setConsultNotes(updatedConsultNotes)
+        }
+      })
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -183,6 +190,16 @@ const Video = () => {
     }
   }
 
+  const addNote = newNote => {
+    const updatedConsultNotes = [...consultNotes]
+    updatedConsultNotes.push(newNote)
+    setConsultNotes(updatedConsultNotes)
+    socket.current.emit('addNote', {
+      newNote,
+      consultationId,
+    })
+  }
+
   let PartnerVideo
   if (onCall) {
     PartnerVideo = (
@@ -206,7 +223,6 @@ const Video = () => {
         flexDirection: 'column',
       }}
     >
-      {console.log('consultatino =', consultation)}
       <div
         className="row no-gutters"
         style={{
@@ -254,16 +270,7 @@ const Video = () => {
             <ConsultationCard consultation={consultation} />
           </div>
           <div className="card mb-0 col-12 w-100 p-4" style={{ height: '400px' }}>
-            <ConsultationNotes
-              notes={[
-                'rearear231231231312',
-                'rearear231231231312',
-                'rearear231231231312',
-                'rearear231231231312',
-                'rearear231231231312',
-                'rearear231231231312',
-              ]}
-            />
+            <ConsultationNotes addNote={addNote} notes={consultNotes} />
           </div>
         </div>
       </div>
@@ -306,21 +313,38 @@ const ConsultationCard = ({ consultation }) => {
   )
 }
 
-const ConsultationNotes = ({ notes }) => {
+const ConsultationNotes = ({ notes, addNote }) => {
+  const [inputVal, setInputVal] = useState('')
+
   return (
     <>
-      <div>Consultation Notes</div>
+      <small className="text-uppercase text-secondary">Session Notes</small>
       <div
         style={{
-          overflow: 'scroll',
+          overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
+          height: '100%',
         }}
       >
-        {notes.map(note => {
-          return <div>{note}</div>
-        })}
+        <ul>
+          {notes.map(note => {
+            return <li>{note}</li>
+          })}
+        </ul>
+
+        <Input
+          onPressEnter={e => {
+            if (e.target.value !== '') {
+              addNote(e.target.value)
+              setInputVal('')
+            }
+          }}
+          onChange={e => setInputVal(e.target.value)}
+          value={inputVal}
+          placeholder="Add a new note"
+        />
       </div>
     </>
   )
