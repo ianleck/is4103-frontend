@@ -10,6 +10,44 @@
   height: 670px;
 }
 
+.chat-list-card {
+  height: 670px;
+}
+
+.message-list-card {
+  height: 640px;
+}
+
+.chat-background {
+  background-image: url('/resources/images/Chatbg.jpg');
+}
+
+.talk-bubble {
+  margin: 5px;
+  padding: 10px;
+  display: inline-block;
+  text-align: center;
+  width: 40%;
+  height: auto;
+  background-color: rgb(78, 223, 131);
+}
+
+.mytalk-bubble {
+  margin: 5px;
+  padding: 10px;
+  display: inline-block;
+  text-align: center;
+  width: 40%;
+  height: auto;
+  background-color: rgb(118, 215, 245);
+}
+
+.round {
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+}
+
 .clickable:hover {
   cursor: pointer;
 }

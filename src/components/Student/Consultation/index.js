@@ -25,7 +25,7 @@ import {
 } from 'services/mentorship/consultation'
 import { isEmpty, isNil, map } from 'lodash'
 import moment from 'moment'
-import { showNotification } from 'components/utils'
+import { getUserFullName, showNotification } from 'components/utils'
 import {
   SUCCESS,
   CONSULTATION_REGISTERED,
@@ -297,10 +297,7 @@ const StudentConsultationComponent = () => {
             )}
             {!isNil(item.studentId) && (
               <div className="truncate-2-overflow text-wrap text-muted">
-                <Badge
-                  status="error"
-                  text={`Booked by ${item.Student.firstName} ${item.Student.lastName}`}
-                />
+                <Badge status="error" text={`Booked by ${getUserFullName(item.Student)}`} />
               </div>
             )}
           </div>
@@ -399,7 +396,7 @@ const StudentConsultationComponent = () => {
             <div className="truncate-2-overflow text-wrap text-muted">
               <Badge
                 status="error"
-                text={`Booked by ${consultationDetails.Student.firstName} ${consultationDetails.Student.lastName}`}
+                text={`Booked by ${getUserFullName(consultationDetails.Student)}`}
               />
             </div>
           )}
