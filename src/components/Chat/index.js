@@ -56,6 +56,7 @@ const ChatComponent = () => {
   const [showNewChatGroup, setShowNewChatGroup] = useState(false)
 
   const [isGroupChatSelected, setIsGroupChatSelected] = useState(false)
+  const [isMyGroup, setIsMyGroup] = useState(false)
 
   const [showMembersManagementModal, setShowMembersManagementModal] = useState(false)
   const [showAddMemberModal, setShowAddMemberModal] = useState(false)
@@ -147,7 +148,16 @@ const ChatComponent = () => {
     refreshChatList()
     setSelectedChat(record)
     setIsGroupChatSelected(record.isChatGroup)
+    checkIfMyGroup(record)
     populateSelectedMsg(record)
+  }
+
+  const checkIfMyGroup = record => {
+    if (record.isChatGroup) {
+      if (record.accountId1 === user.accountId) {
+        setIsMyGroup(true)
+      }
+    }
   }
 
   const populateSelectedMsg = record => {
@@ -484,7 +494,7 @@ const ChatComponent = () => {
                   >
                     Create New Chat Group
                   </Button>
-                  {isGroupChatSelected ? (
+                  {isGroupChatSelected && isMyGroup ? (
                     <Button
                       type="primary"
                       size="large"
@@ -495,7 +505,7 @@ const ChatComponent = () => {
                       Members Management
                     </Button>
                   ) : null}
-                  {isGroupChatSelected ? (
+                  {isGroupChatSelected && isMyGroup ? (
                     <Popconfirm
                       title="Are you sure you wish to delete this group?"
                       icon={<QuestionCircleOutlined className="text-danger" />}
