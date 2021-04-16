@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link, Redirect, useLocation } from 'react-router-dom'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import { onFinishFailed } from 'components/utils'
 
 const Register = () => {
   const user = useSelector(state => state.user)
@@ -43,15 +44,10 @@ const Register = () => {
     values.isStudent = isStudent
     setInputUsername(values.username)
     setInputEmailAddr(values.email)
-    console.log(inputUsername)
     dispatch({
       type: 'user/REGISTER',
       payload: values,
     })
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const StudentSignUpHeader = () => {
@@ -176,6 +172,20 @@ const Register = () => {
           rules={[{ required: true, message: 'Please input your username' }]}
         >
           <Input size="large" placeholder="Username" value={inputUsername} />
+        </Form.Item>
+        <Form.Item
+          name="firstName"
+          preserve
+          rules={[{ required: true, message: 'Please input your first name' }]}
+        >
+          <Input size="large" placeholder="First Name" />
+        </Form.Item>
+        <Form.Item
+          name="lastName"
+          preserve
+          rules={[{ required: true, message: 'Please input your last name' }]}
+        >
+          <Input size="large" placeholder="Last Name" />
         </Form.Item>
         <Form.Item
           name="email"
