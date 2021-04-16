@@ -1,7 +1,5 @@
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Input, Popconfirm } from 'antd'
-import { showNotification } from 'components/utils'
-import { WARNING } from 'constants/notifications'
 import { map } from 'lodash'
 import React, { useState } from 'react'
 
@@ -16,10 +14,6 @@ const TaskBucket = ({
   const [input, setInput] = useState('')
 
   const onAddTaskBucket = () => {
-    if (input === '') {
-      showNotification('warn', WARNING, 'Task bucket name cannot be empty')
-      return
-    }
     addTaskBucket(input)
     setInput('')
   }

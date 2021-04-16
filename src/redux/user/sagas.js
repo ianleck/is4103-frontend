@@ -50,13 +50,14 @@ export function* LOAD_CURRENT_ACCOUNT() {
   })
   let currentUser = resetUser
   const user = yield call(jwt.getLocalUserData)
+  const token = localStorage.getItem('accessToken')
   if (user) {
     if (user.userType === USER_TYPE_ENUM.ADMIN) {
       currentUser = createAdminObj(user, user.authorized, user.loading)
     } else if (!isEmpty(user.accountId)) {
       const userFromAPI = yield call(jwt.getProfile, user.accountId)
       if (userFromAPI) {
-        userFromAPI.accessToken = user.accessToken
+        userFromAPI.accessToken = token
         currentUser = createUserObj(
           userFromAPI,
           user.authorized,
@@ -108,7 +109,10 @@ export function* LOGIN({ payload }) {
       currentUser = createAdminObj(response, true, false)
     } else {
       const userProfile = yield call(jwt.getProfile, response.accountId)
-      currentUser = createUserObj(userProfile, true, false, checkProfileUpdateRqd(userProfile))
+      if (userProfile) {
+        userProfile.accessToken = response.accessToken
+        currentUser = createUserObj(userProfile, true, false, checkProfileUpdateRqd(userProfile))
+      }
     }
     yield putResolve({
       type: 'user/SET_STATE',

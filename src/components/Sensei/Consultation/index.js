@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { CloseOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  CloseOutlined,
+  PhoneOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
 import {
   Avatar,
   Badge,
@@ -13,6 +18,7 @@ import {
   Input,
   List,
   Modal,
+  Popconfirm,
   Select,
   TimePicker,
 } from 'antd'
@@ -26,7 +32,13 @@ import { isEmpty, isNil, map } from 'lodash'
 import { getSenseiMentorshipListings } from 'services/mentorship/listings'
 import moment from 'moment'
 import { showNotification } from 'components/utils'
-import { SUCCESS, CONSULTATION_CREATED, CONSULTATION_DELETED } from 'constants/notifications'
+import {
+  SUCCESS,
+  CONSULTATION_CREATED,
+  CONSULTATION_DELETED,
+  ERROR,
+  CONSULTATION_PAST_DATE,
+} from 'constants/notifications'
 import Paragraph from 'antd/lib/typography/Paragraph'
 
 const { Option } = Select
@@ -48,8 +60,8 @@ const SenseiConsultationComponent = () => {
 
   const retrieveConsultations = async () => {
     const date = new Date()
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
@@ -70,12 +82,21 @@ const SenseiConsultationComponent = () => {
 
   const onDateSelect = values => {
     const date = new Date(values.format())
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
     setSelectedDate(values.toString())
+    refreshConsultations()
+  }
+
+  const refreshConsultations = async () => {
+    const response = await getConsultations(monthStart, monthEnd)
+
+    if (response && !isNil(response.consultationSlots)) {
+      setConsultations(response.consultationSlots)
+    }
   }
 
   const formatDate = record => {
@@ -89,10 +110,6 @@ const SenseiConsultationComponent = () => {
     const date = new Date(record).getTime()
     const time = moment(date).format('HH:mm')
     return time
-  }
-
-  const panelChanged = () => {
-    retrieveConsultations()
   }
 
   const startCall = () => {
@@ -150,23 +167,27 @@ const SenseiConsultationComponent = () => {
     const title = values.name
     const mentorshipListingId = values.id
 
-    const startDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeStart
-      .format('HH:mm:ss')
-      .toString()}`
-    const timeStart = new Date(startDateTime).toString()
+    if (moment(values.date) < moment()) {
+      showNotification('error', ERROR, CONSULTATION_PAST_DATE)
+    } else {
+      const startDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeStart
+        .format('HH:mm:ss')
+        .toString()}`
+      const timeStart = new Date(startDateTime).toString()
 
-    const endDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeEnd
-      .format('HH:mm:ss')
-      .toString()}`
+      const endDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeEnd
+        .format('HH:mm:ss')
+        .toString()}`
 
-    const timeEnd = new Date(endDateTime).toString()
-    const payload = { title, mentorshipListingId, timeStart, timeEnd }
-    const response = await createConsultation(monthStart, monthEnd, payload)
+      const timeEnd = new Date(endDateTime).toString()
+      const payload = { title, mentorshipListingId, timeStart, timeEnd }
+      const response = await createConsultation(monthStart, monthEnd, payload)
 
-    if (response) {
-      retrieveConsultations()
-      setShowAddConsultationModal(false)
-      showNotification('success', SUCCESS, CONSULTATION_CREATED)
+      if (response) {
+        refreshConsultations()
+        setShowAddConsultationModal(false)
+        showNotification('success', SUCCESS, CONSULTATION_CREATED)
+      }
     }
   }
 
@@ -213,7 +234,7 @@ const SenseiConsultationComponent = () => {
     )
 
     if (response) {
-      retrieveConsultations()
+      refreshConsultations()
       setShowConsultationDetails(false)
       showNotification('success', SUCCESS, CONSULTATION_DELETED)
     }
@@ -222,15 +243,15 @@ const SenseiConsultationComponent = () => {
   const consultationDetailFormFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
-        <Button
-          type="default"
-          danger
-          size="large"
-          onClick={() => onCancelConsultation()}
-          icon={<CloseOutlined />}
+        <Popconfirm
+          title="Are you sure you wish to cancel this consultation?"
+          icon={<QuestionCircleOutlined className="text-danger" />}
+          onConfirm={() => onCancelConsultation()}
         >
-          Cancel Consultation
-        </Button>
+          <Button type="default" danger size="large" icon={<CloseOutlined />}>
+            Cancel Consultation
+          </Button>
+        </Popconfirm>
       </div>
       <div className="col-auto">
         <Button type="primary" size="large" icon={<PhoneOutlined />} onClick={() => startCall()}>
@@ -271,7 +292,10 @@ const SenseiConsultationComponent = () => {
             )}
             {!isNil(item.studentId) && (
               <div className="truncate-2-overflow text-wrap text-muted">
-                <Badge status="error" text={`Booked by ${item.studentId}`} />
+                <Badge
+                  status="error"
+                  text={`Booked by ${item.Student.firstName} ${item.Student.lastName}`}
+                />
               </div>
             )}
           </div>
@@ -313,12 +337,18 @@ const SenseiConsultationComponent = () => {
             <div className="row">
               <div className="col-12 col-md-8">
                 <Calendar
+                  defaultValue={moment(new Date(selectedDate).getTime())}
                   onSelect={record => {
                     onDateSelect(record)
                   }}
-                  onPanelChange={() => panelChanged()}
                   dateCellRender={record => dateCellRender(record)}
                 />
+                <p className="row">
+                  <small className="col-12">*Please Select a date to see more details</small>
+                  <small className="col-12">
+                    *Double-click on a day to refresh the data in the calender
+                  </small>
+                </p>
               </div>
 
               <div className="col-12 col-md-4">
@@ -381,7 +411,10 @@ const SenseiConsultationComponent = () => {
           )}
           {!isNil(consultationDetails.studentId) && (
             <div className="truncate-2-overflow text-wrap text-muted">
-              <Badge status="error" text={`Booked by ${consultationDetails.studentId}`} />
+              <Badge
+                status="error"
+                text={`Booked by ${consultationDetails.Student.firstName} ${consultationDetails.Student.lastName}`}
+              />
             </div>
           )}
         </Descriptions>

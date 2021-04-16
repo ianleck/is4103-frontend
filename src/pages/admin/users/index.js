@@ -106,9 +106,9 @@ const UsersManagement = () => {
                 onClick={() => redirectToUserProfile(record)}
               />
               <Button
-                type="primary"
                 size="large"
                 shape="circle"
+                className="btn btn-success"
                 icon={<CheckOutlined />}
                 disabled={record.adminVerified !== ADMIN_VERIFIED_ENUM.PENDING}
                 onClick={() => acceptSenseiProfile(record)}

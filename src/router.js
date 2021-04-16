@@ -181,6 +181,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/admin/mentorship-content-management/view/:id',
+    Component: lazy(() => import('pages/student/mentorships/view')),
+    exact: true,
+  },
+  {
     path: '/admin/course-content-management',
     Component: lazy(() => import('pages/admin/courses')),
     exact: true,

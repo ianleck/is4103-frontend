@@ -1,60 +1,58 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { CloseOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  CloseOutlined,
+  PhoneOutlined,
+  QuestionCircleOutlined,
+  VideoCameraAddOutlined,
+} from '@ant-design/icons'
 import {
   Avatar,
   Badge,
   Button,
   Calendar,
-  DatePicker,
   Descriptions,
   Divider,
-  Form,
-  Input,
   List,
   Modal,
-  Select,
-  TimePicker,
+  Popconfirm,
 } from 'antd'
 import {
   getConsultations,
-  createConsultation,
-  deleteConsultation,
+  unregisterConsultation,
+  registerConsultation,
 } from 'services/mentorship/consultation'
 import { isEmpty, isNil, map } from 'lodash'
-import { getSenseiMentorshipListings } from 'services/mentorship/listings'
 import moment from 'moment'
 import { showNotification } from 'components/utils'
-import { SUCCESS, CONSULTATION_CREATED, CONSULTATION_DELETED } from 'constants/notifications'
+import {
+  SUCCESS,
+  CONSULTATION_REGISTERED,
+  CONSULTATION_UNREGISTERED,
+} from 'constants/notifications'
 import Paragraph from 'antd/lib/typography/Paragraph'
-import { getAllStudentMentorshipApplications } from 'services/mentorship/applications'
-
-const { Option } = Select
 
 const StudentConsultationComponent = () => {
   const user = useSelector(state => state.user)
   const history = useHistory()
-  const [showAddConsultationModal, setShowAddConsultationModal] = useState(false)
 
   const [showConsultationDetails, setShowConsultationDetails] = useState(false)
   const [consultationDetails, setConsultationDetails] = useState([])
+  const [available, setAvailable] = useState(true) // Flag if the slot has been booked by someone
+  const [booked, setBooked] = useState(false) // Flag for booked by you
+  const [isPast, setIsPast] = useState(false) // Flag to check if the slot is in a past date
 
   const [selectedDate, setSelectedDate] = useState(new Date().toString())
   const [monthStart, setMonthStart] = useState(new Date().toString())
   const [monthEnd, setMonthEnd] = useState(new Date().toString())
 
   const [consultations, setConsultations] = useState([])
-  const [listings, setListings] = useState([]) // to Be deleted
-  const [contracts, setContracts] = useState([])
-
-  console.log('consultations', consultations)
-  console.log('contracts', contracts)
 
   const retrieveConsultations = async () => {
     const date = new Date()
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
@@ -66,29 +64,23 @@ const StudentConsultationComponent = () => {
     }
   }
 
-  const retrieveListing = async () => {
-    const response = await getSenseiMentorshipListings(user.accountId)
-    if (response) {
-      setListings(response)
-    }
-  }
-
-  const retrieveContracts = async () => {
-    const response = await getAllStudentMentorshipApplications(user.accountId)
-    if (response) {
-      const cons = response.contracts.filter(c => c.senseiApproval === 'APPROVED')
-      setContracts(cons)
-    }
-  }
-
   const onDateSelect = values => {
     const date = new Date(values.format())
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    const firstDay = new Date(date.getFullYear() - 1, 0, 1)
+    const lastDay = new Date(date.getFullYear() + 1, 12, 0)
 
     setMonthStart(firstDay.toString())
     setMonthEnd(lastDay.toString())
     setSelectedDate(values.toString())
+    refreshConsultations()
+  }
+
+  const refreshConsultations = async () => {
+    const response = await getConsultations(monthStart, monthEnd)
+
+    if (response && !isNil(response.consultationSlots)) {
+      setConsultations(response.consultationSlots)
+    }
   }
 
   const formatDate = record => {
@@ -102,10 +94,6 @@ const StudentConsultationComponent = () => {
     const date = new Date(record).getTime()
     const time = moment(date).format('HH:mm')
     return time
-  }
-
-  const panelChanged = () => {
-    retrieveConsultations()
   }
 
   const dateCellRender = values => {
@@ -136,49 +124,6 @@ const StudentConsultationComponent = () => {
     return null
   }
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
-  }
-
-  const addNewConsultationFormFooter = (
-    <div className="row justify-content-between">
-      <div className="col-auto">
-        <Button type="default" size="large" onClick={() => setShowAddConsultationModal(false)}>
-          Cancel
-        </Button>
-      </div>
-      <div className="col-auto">
-        <Button type="primary" form="createConsultationForm" htmlType="submit" size="large">
-          Add New Consultation
-        </Button>
-      </div>
-    </div>
-  )
-
-  const onAddNewConsultation = async values => {
-    const title = values.name
-    const mentorshipListingId = values.id
-
-    const startDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeStart
-      .format('HH:mm:ss')
-      .toString()}`
-    const timeStart = new Date(startDateTime).toString()
-
-    const endDateTime = `${values.date.format('MM/DD/YYYY')} ${values.timeEnd
-      .format('HH:mm:ss')
-      .toString()}`
-
-    const timeEnd = new Date(endDateTime).toString()
-    const payload = { title, mentorshipListingId, timeStart, timeEnd }
-    const response = await createConsultation(monthStart, monthEnd, payload)
-
-    if (response) {
-      retrieveConsultations()
-      setShowAddConsultationModal(false)
-      showNotification('success', SUCCESS, CONSULTATION_CREATED)
-    }
-  }
-
   const compareItemDateToSelectedDate = item => {
     const consTime = moment(item.timeStart).format('MM/DD/YYYY')
 
@@ -191,7 +136,7 @@ const StudentConsultationComponent = () => {
     return false
   }
 
-  const startCall = () => {
+  const joinCall = () => {
     history.push(`/student/consultation/${consultationDetails.consultationId}`)
   }
 
@@ -214,40 +159,108 @@ const StudentConsultationComponent = () => {
   }
 
   const selectConsultation = record => {
+    checkIfBooked(record)
+    checkIfPast(record)
     setConsultationDetails(record)
     setShowConsultationDetails(true)
   }
 
-  const onCancelConsultation = async () => {
-    const response = await deleteConsultation(
+  const checkIfBooked = record => {
+    if (isNil(record.studentId)) {
+      setAvailable(true)
+    } else {
+      setAvailable(false)
+    }
+
+    if (record.studentId === user.accountId) {
+      setBooked(true)
+    } else {
+      setBooked(false)
+    }
+  }
+
+  const checkIfPast = record => {
+    if (moment(record.timeStart) < moment()) {
+      setIsPast(true)
+    }
+  }
+
+  const onBookConsultation = async () => {
+    const response = await registerConsultation(
       consultationDetails.consultationId,
       monthStart,
       monthEnd,
     )
 
     if (response) {
-      retrieveConsultations()
+      refreshConsultations()
       setShowConsultationDetails(false)
-      showNotification('success', SUCCESS, CONSULTATION_DELETED)
+      showNotification('success', SUCCESS, CONSULTATION_REGISTERED)
     }
   }
 
-  const consultationDetailFormFooter = (
+  const onCancelConsultation = async () => {
+    const response = await unregisterConsultation(
+      consultationDetails.consultationId,
+      monthStart,
+      monthEnd,
+    )
+
+    if (response) {
+      refreshConsultations()
+      setShowConsultationDetails(false)
+      showNotification('success', SUCCESS, CONSULTATION_UNREGISTERED)
+    }
+  }
+
+  const consultationFooter = (
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button
           type="default"
-          danger
           size="large"
-          onClick={() => onCancelConsultation()}
+          onClick={() => setShowConsultationDetails(false)}
           icon={<CloseOutlined />}
         >
-          Cancel Consultation
+          Close
         </Button>
       </div>
       <div className="col-auto">
-        <Button type="primary" size="large" icon={<PhoneOutlined />} onClick={() => startCall()}>
-          Start Call
+        <Popconfirm
+          title="Are you sure you wish to book this consultation?"
+          icon={<QuestionCircleOutlined className="text-danger" />}
+          disabled={!available || isPast}
+          onConfirm={() => onBookConsultation()}
+        >
+          <Button
+            type="primary"
+            size="large"
+            disabled={!available || isPast}
+            icon={<VideoCameraAddOutlined />}
+          >
+            Book Consultation
+          </Button>
+        </Popconfirm>
+      </div>
+    </div>
+  )
+
+  const bookedFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Popconfirm
+          title="Are you sure you wish to cancel this consultation?"
+          icon={<QuestionCircleOutlined className="text-danger" />}
+          onConfirm={() => onCancelConsultation()}
+        >
+          <Button type="default" danger size="large" icon={<CloseOutlined />}>
+            Cancel Consultation
+          </Button>
+        </Popconfirm>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" size="large" icon={<PhoneOutlined />} onClick={() => joinCall()}>
+          Join Call
         </Button>
       </div>
     </div>
@@ -284,7 +297,10 @@ const StudentConsultationComponent = () => {
             )}
             {!isNil(item.studentId) && (
               <div className="truncate-2-overflow text-wrap text-muted">
-                <Badge status="error" text={`Booked by ${item.studentId}`} />
+                <Badge
+                  status="error"
+                  text={`Booked by ${item.Student.firstName} ${item.Student.lastName}`}
+                />
               </div>
             )}
           </div>
@@ -295,8 +311,6 @@ const StudentConsultationComponent = () => {
 
   useEffect(() => {
     retrieveConsultations()
-    retrieveListing()
-    retrieveContracts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -309,17 +323,6 @@ const StudentConsultationComponent = () => {
               <div className="col-12 col-sm-auto text-center text-sm-left">
                 <h5 className="mb-0">Consultations</h5>
               </div>
-              <div className="col-12 col-sm-auto mt-3 mt-sm-0 text-center text-sm-right">
-                <Button
-                  type="primary"
-                  size="large"
-                  shape="round"
-                  onClick={() => setShowAddConsultationModal(true)}
-                  icon={<PlusOutlined />}
-                >
-                  Add New Consultation
-                </Button>
-              </div>
             </div>
           </div>
 
@@ -330,7 +333,6 @@ const StudentConsultationComponent = () => {
                   onSelect={record => {
                     onDateSelect(record)
                   }}
-                  onPanelChange={() => panelChanged()}
                   dateCellRender={record => dateCellRender(record)}
                 />
               </div>
@@ -357,7 +359,7 @@ const StudentConsultationComponent = () => {
         cancelText="Close"
         centered
         onCancel={() => setShowConsultationDetails(false)}
-        footer={consultationDetailFormFooter}
+        footer={booked ? bookedFooter : consultationFooter}
       >
         <Descriptions column={1}>
           <Descriptions.Item label="Mentorship Title">
@@ -395,78 +397,13 @@ const StudentConsultationComponent = () => {
           )}
           {!isNil(consultationDetails.studentId) && (
             <div className="truncate-2-overflow text-wrap text-muted">
-              <Badge status="error" text={`Booked by ${consultationDetails.studentId}`} />
+              <Badge
+                status="error"
+                text={`Booked by ${consultationDetails.Student.firstName} ${consultationDetails.Student.lastName}`}
+              />
             </div>
           )}
         </Descriptions>
-      </Modal>
-
-      <Modal
-        visible={showAddConsultationModal}
-        title="Add new Consultation"
-        cancelText="Close"
-        centered
-        onCancel={() => setShowAddConsultationModal(false)}
-        footer={addNewConsultationFormFooter}
-      >
-        <Form
-          id="createConsultationForm"
-          layout="vertical"
-          hideRequiredMark
-          onSubmit={e => e.preventDefault()}
-          onFinish={onAddNewConsultation}
-          onFinishFailed={onFinishFailed}
-          initialValues={{
-            date: moment(formatDate(selectedDate), 'DD/MM/YYYY'),
-          }}
-        >
-          <Form.Item
-            label="Title of Consultation"
-            name="name"
-            rules={[{ required: true, message: 'Please input a title for your consultation.' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Mentorship Listing"
-            name="id"
-            rules={[
-              {
-                required: true,
-                message: 'Please select the mentorship listing the consultation is tied to.',
-              },
-            ]}
-          >
-            <Select placeholder="Select Mentorship Listing">
-              {map(listings, listing => {
-                return (
-                  <Option value={listing.mentorshipListingId} key={listing.mentorshipListingId}>
-                    {listing.name}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Date of Consultation" name="date">
-            <DatePicker />
-          </Form.Item>
-          <Form.Item
-            label="Start Time of Consultation"
-            name="timeStart"
-            rules={[
-              { required: true, message: 'Please input a start time for your consultation.' },
-            ]}
-          >
-            <TimePicker format="HH:mm" />
-          </Form.Item>
-          <Form.Item
-            label="End Time of Consultation"
-            name="timeEnd"
-            rules={[{ required: true, message: 'Please input a end time for your consultation.' }]}
-          >
-            <TimePicker format="HH:mm" />
-          </Form.Item>
-        </Form>
       </Modal>
     </div>
   )

@@ -110,6 +110,7 @@ const MentorshipContractsTable = () => {
       title: 'Mentorship Description',
       dataIndex: ['MentorshipListing', 'description'],
       key: ['MentorshipListing', 'description'],
+      width: '15%',
       responsive: ['lg'],
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['ascend', 'descend'],
@@ -138,7 +139,7 @@ const MentorshipContractsTable = () => {
       sorter: (a, b) => a.mentorPassCount - b.mentorPassCount,
       sortDirections: ['ascend', 'descend'],
       render: record => {
-        return record || '-'
+        return record || 0
       },
     },
     {
