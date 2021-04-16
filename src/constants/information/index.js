@@ -1,3 +1,18 @@
+export const studentAchievementTitles = [
+  'Courses Purchased',
+  'Courses Completed',
+  'Mentorship Passes Purchased',
+  'Tasks Completed',
+  'Mentorships Completed',
+]
+
+export const senseiAchievementTitles = [
+  'Courses Published',
+  'Mentorship Listings Created',
+  'Students Mentored',
+  'Mentorships Completed',
+]
+
 export const industries = [
   {
     industryId: 1,

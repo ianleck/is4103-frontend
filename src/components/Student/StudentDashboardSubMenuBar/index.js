@@ -9,9 +9,9 @@ import style from './style.module.scss'
 const mapStateToProps = ({ settings, user }) => ({
   menuData: [
     {
-      title: 'Mentor Feed',
-      key: 'mentorFeed',
-      url: '/student/dashboard/mentor-feed',
+      title: 'Feed',
+      key: 'Feed',
+      url: '/social/feed',
     },
     {
       title: 'Messages',

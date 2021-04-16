@@ -1,5 +1,6 @@
-import { Rate } from 'antd'
+import { Rate, Tag } from 'antd'
 import { formatTime } from 'components/utils'
+import { isNil, map } from 'lodash'
 import React from 'react'
 
 const MentorshipInfo = ({ listing }) => {
@@ -16,6 +17,18 @@ const MentorshipInfo = ({ listing }) => {
             <small className="text-muted text-uppercase">
               {`Last Updated On ${formatTime(listing.updatedAt)}`}
             </small>
+          </div>
+          <div className="mt-2">
+            {map(listing.Categories, category => {
+              if (!isNil(category)) {
+                return (
+                  <Tag color="geekblue" key={category?.categoryId}>
+                    {category?.name}
+                  </Tag>
+                )
+              }
+              return <></>
+            })}
           </div>
         </div>
         <div className="col-12 col-lg-auto">

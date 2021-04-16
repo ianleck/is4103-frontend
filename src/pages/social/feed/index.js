@@ -9,6 +9,7 @@ import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
 import SocialPostList from 'components/Common/Social/PostList'
 import { Button, Empty } from 'antd'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
+import AchievementCard from 'components/Common/Social/AchievementCard'
 
 const SocialFeed = () => {
   const history = useHistory()
@@ -99,6 +100,7 @@ const SocialFeed = () => {
               btnSize="medium"
             />
           )}
+          {currentTab === 'achievements' && <AchievementCard user={user} />}
           {currentTab === 'following' && (
             <div className="card">
               <div className="card-header pb-2">

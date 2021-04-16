@@ -1,13 +1,13 @@
 import {
-  CheckOutlined,
   CloseOutlined,
   EyeOutlined,
   QuestionCircleOutlined,
   EditOutlined,
+  CheckOutlined,
 } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { Button, Modal, notification, Popconfirm, Space, Table, Tabs, Tag } from 'antd'
-import { filter, map, size } from 'lodash'
+import { filter, isNil, map, size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
@@ -18,15 +18,23 @@ import {
   rejectMentorshipApplication,
 } from 'services/mentorship/applications'
 import { MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
-import { formatTime } from 'components/utils'
+import { formatTime, showNotification } from 'components/utils'
+import {
+  ERROR,
+  MTS_APP_APPROVE_ERR,
+  MTS_APP_APPROVE_SUCCESS,
+  SUCCESS,
+} from 'constants/notifications'
+import EmailAcceptanceModal from '../EmailAcceptanceModal'
 
 const MentorshipApplicationsTable = () => {
   const user = useSelector(state => state.user)
   const history = useHistory()
   const [mentorshipApplications, setMentorshipApplications] = useState([])
+  const [tabKey, setTabKey] = useState('pending')
+
   const { accountId, userType } = user
   const { TabPane } = Tabs
-  const [tabKey, setTabKey] = useState('pending')
 
   const changeTab = key => {
     setTabKey(key)
@@ -40,16 +48,6 @@ const MentorshipApplicationsTable = () => {
       : await getSenseiMentorshipApplications(accountId)
     const data = map(result.contracts, (c, i) => ({ ...c, key: i }))
     setMentorshipApplications(data)
-  }
-
-  const acceptApplication = mentorshipContractId => {
-    acceptMentorshipApplication(mentorshipContractId).then(res => {
-      if (res) {
-        notification.success({ message: res.message })
-        getApplications()
-        changeTab('approved')
-      }
-    })
   }
 
   const rejectApplication = mentorshipContractId => {
@@ -81,6 +79,53 @@ const MentorshipApplicationsTable = () => {
       pathname: `/student/mentorship/apply/${application.mentorshipListingId}`,
       state: application, // location state
     })
+  }
+
+  const ViewEmailParamsButton = ({ mentorshipContractId }) => {
+    const [showEmailParamsModal, setShowEmailParamsModal] = useState(false)
+    const [activeMentorshipContractId, setActiveMentorshipContractId] = useState('')
+
+    const acceptApplication = async values => {
+      const payload = {
+        mentorshipContractId: activeMentorshipContractId,
+        body: {
+          numSlots: values.numSlots,
+          duration: values.duration,
+          message: values.message,
+        },
+      }
+
+      const response = await acceptMentorshipApplication(payload)
+
+      if (response && !isNil(response.mentorshipContract)) {
+        showNotification('success', SUCCESS, MTS_APP_APPROVE_SUCCESS)
+        getApplications()
+        changeTab('approved')
+      } else {
+        showNotification('error', ERROR, MTS_APP_APPROVE_ERR)
+      }
+    }
+
+    const handleOnClick = () => {
+      setActiveMentorshipContractId(mentorshipContractId)
+      setShowEmailParamsModal(true)
+    }
+    return (
+      <>
+        <Button
+          type="primary"
+          shape="circle"
+          size="large"
+          icon={<CheckOutlined />}
+          onClick={() => handleOnClick()}
+        />
+        <EmailAcceptanceModal
+          isVisible={showEmailParamsModal}
+          onSubmitEmailParams={acceptApplication}
+          setShowEmailParamsModal={setShowEmailParamsModal}
+        />
+      </>
+    )
   }
 
   const senseiTableColumns = [
@@ -125,13 +170,7 @@ const MentorshipApplicationsTable = () => {
             <ViewMentorshipApplicationButton record={record} />
           </div>
           {record.senseiApproval === 'PENDING' && (
-            <Popconfirm
-              title="Are you sure you wish to accept this application？"
-              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-              onConfirm={() => acceptApplication(record.mentorshipContractId)}
-            >
-              <Button type="primary" shape="circle" size="large" icon={<CheckOutlined />} />
-            </Popconfirm>
+            <ViewEmailParamsButton mentorshipContractId={record.mentorshipContractId} />
           )}
           {record.senseiApproval === 'PENDING' && (
             <Popconfirm

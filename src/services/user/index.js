@@ -100,11 +100,21 @@ export async function resetPassword(resetToken, accountId, newPassword) {
     .catch(err => console.log(err))
 }
 
-export async function register(username, email, password, confirmPassword, isStudent) {
+export async function register(
+  username,
+  firstName,
+  lastName,
+  email,
+  password,
+  confirmPassword,
+  isStudent,
+) {
   return apiClient
     .post('/auth/register', {
       newUser: {
         username,
+        firstName,
+        lastName,
         email,
         password,
         confirmPassword,
@@ -306,4 +316,38 @@ export async function removeFile(type) {
       return false
     })
     .catch(err => console.log(err))
+}
+
+export async function getAllAchievements(accountId) {
+  return apiClient
+    .get(`/user/achievements/${accountId}`)
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function getAllAchievementTypes() {
+  return apiClient
+    .get(`/user/all/achievements`)
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
+
+export async function generateAchievementPdf(accountId) {
+  return apiClient.get(`/achievement/generate/${accountId}`, {
+    responseType: 'blob',
+  })
 }

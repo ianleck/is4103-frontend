@@ -27,6 +27,7 @@ import {
   createConsultation,
   deleteConsultation,
 } from 'services/mentorship/consultation'
+import { useHistory } from 'react-router-dom'
 import { isEmpty, isNil, map } from 'lodash'
 import { getSenseiMentorshipListings } from 'services/mentorship/listings'
 import moment from 'moment'
@@ -44,6 +45,7 @@ const { Option } = Select
 
 const SenseiConsultationComponent = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
   const [showAddConsultationModal, setShowAddConsultationModal] = useState(false)
 
   const [showConsultationDetails, setShowConsultationDetails] = useState(false)
@@ -108,6 +110,10 @@ const SenseiConsultationComponent = () => {
     const date = new Date(record).getTime()
     const time = moment(date).format('HH:mm')
     return time
+  }
+
+  const startCall = () => {
+    history.push(`/sensei/consultation/${consultationDetails.consultationId}`)
   }
 
   const dateCellRender = values => {
@@ -248,7 +254,7 @@ const SenseiConsultationComponent = () => {
         </Popconfirm>
       </div>
       <div className="col-auto">
-        <Button type="primary" size="large" icon={<PhoneOutlined />}>
+        <Button type="primary" size="large" icon={<PhoneOutlined />} onClick={() => startCall()}>
           Start Call
         </Button>
       </div>

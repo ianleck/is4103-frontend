@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useHistory, withRouter } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import classNames from 'classnames'
 import store from 'store'
@@ -36,6 +36,7 @@ const MenuLeft = ({
 }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
   const [openedKeys, setOpenedKeys] = useState(store.get('app.menu.openedKeys') || [])
+  const history = useHistory()
 
   useEffect(() => {
     applySelectedKeys()
@@ -189,9 +190,15 @@ const MenuLeft = ({
         }}
       >
         <div className={style.logoContainer}>
-          <div className={style.logo}>
-            <img src="/resources/images/logo.svg" width="32" className="mr-2" alt={DIGI_DOJO} />
-            <div className={style.name}>{logo}</div>
+          <div
+            role="button"
+            tabIndex={0}
+            className={`${style.logo} defocus-btn clickable text-left`}
+            onClick={() => history.replace('/')}
+            onKeyDown={e => e.preventDefault()}
+          >
+            <img src="/resources/images/logo.svg" width="22" alt={DIGI_DOJO} />
+            <div className={`${style.name} pl-2`}>{logo}</div>
           </div>
         </div>
         <PerfectScrollbar>

@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
-import { Button, Empty } from 'antd'
+import { Button } from 'antd'
 import CourseListingCard from 'components/Course/CourseListingCard'
 import MentorshipListingCard from 'components/Mentorship/ShoppingListCard'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
-import { isEmpty, isNil, map, random, size } from 'lodash'
+import { isEmpty, isNil, map } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import ScrollMenu from 'react-horizontal-scrolling-menu'
 import { upsellCheckout, upsellOnCourses, upsellOnMentorships } from 'services/cart'
@@ -137,7 +136,8 @@ const UpsellBar = ({ type, id }) => {
   if (type === 'checkout' && isEmpty(mentorships) && isEmpty(courses)) return <></>
   return (
     <div className="w-100">
-      <div className="h4 mb-4 pl-3">Related Items</div>
+      <hr />
+      <div className="h4 pt-4 mb-4 pl-3">Related Items</div>
       <ScrollMenu
         data={mapUpsellItems()}
         alignCenter={false}

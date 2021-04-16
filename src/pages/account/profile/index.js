@@ -64,10 +64,10 @@ const AccountProfile = () => {
       <Helmet title="Profile" />
       {!!user.requiresProfileUpdate && <ProfileUpdateProfileBanner />}
       <div className="row">
-        <div className={isSensei ? 'col-xl-8 col-lg-12 order-12 order-xl-1' : 'col-xl-5 col-lg-12'}>
+        <div className={isSensei ? 'col-xl-7 col-lg-12 order-12 order-xl-1' : 'col-xl-5 col-lg-12'}>
           <PageLeft />
         </div>
-        <div className={isSensei ? 'col-xl-4 col-lg-12 order-1 order-xl-12' : 'col-xl-7 col-lg-12'}>
+        <div className={isSensei ? 'col-xl-5 col-lg-12 order-1 order-xl-12' : 'col-xl-7 col-lg-12'}>
           <PageRight />
         </div>
       </div>
