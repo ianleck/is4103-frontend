@@ -21,7 +21,7 @@ import {
   PlusOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons'
-import { compact, indexOf, isEmpty, map, size } from 'lodash'
+import { compact, indexOf, isEmpty, isNil, map, size } from 'lodash'
 import {
   getSenseiMentorshipListings,
   createMentorshipListing,
@@ -30,6 +30,14 @@ import {
 } from 'services/mentorship/listings'
 import { VISIBILITY_ENUM } from 'constants/constants'
 import { VISIBILITY_ENUM_FILTER } from 'constants/filters'
+import { onFinishFailed, showNotification } from 'components/utils'
+import {
+  ERROR,
+  MTS_LISTING_CREATE_SUCCESS,
+  MTS_LISTING_UPDATE_ERR,
+  MTS_LISTING_UPDATE_SUCCESS,
+  SUCCESS,
+} from 'constants/notifications'
 
 const SenseiMentorshipListings = () => {
   const user = useSelector(state => state.user)
@@ -74,27 +82,23 @@ const SenseiMentorshipListings = () => {
     getListingsEffect()
   }, [accountId])
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
-  }
-
-  const onAddListing = values => {
+  const onAddListing = async values => {
     if (values.visibility) {
       values.visibility = VISIBILITY_ENUM.PUBLISHED
     } else {
       values.visibility = VISIBILITY_ENUM.HIDDEN
     }
-    createMentorshipListing({ ...values }).then(_data => {
-      if (_data) {
-        notification.success({ message: _data.message })
-        getListings()
-        addListingForm.resetFields()
-        setShowAddListingModal(false)
-      }
-    })
+    const response = await createMentorshipListing({ ...values })
+    if (response && !isNil(response.createdListing)) {
+      showNotification('success', SUCCESS, MTS_LISTING_CREATE_SUCCESS)
+      getListings()
+      addListingForm.resetFields()
+      setShowAddListingModal(false)
+    }
+    // the warning notification will be triggered by the backend as it gives an informative error message
   }
 
-  const onEditListing = values => {
+  const onEditListing = async values => {
     values.mentorshipListingId = currentListing.mentorshipListingId
 
     if (values.visibility) {
@@ -102,23 +106,26 @@ const SenseiMentorshipListings = () => {
     } else {
       values.visibility = VISIBILITY_ENUM.HIDDEN
     }
-    updateMentorshipListing({ ...values }).then(_data => {
-      if (_data) {
-        notification.success({ message: _data.message })
-        getListings()
-        setShowEditListingModal(false)
-      }
-    })
+    const response = await updateMentorshipListing({ ...values })
+    if (response && !isNil(response.updatedListing)) {
+      showNotification('success', SUCCESS, MTS_LISTING_UPDATE_SUCCESS)
+      getListings()
+      setShowEditListingModal(false)
+    } else {
+      showNotification('error', ERROR, MTS_LISTING_UPDATE_ERR)
+    }
   }
 
   const handleEditListing = record => {
     setCurrentListing(record)
+    const isChecked = record.visibility === VISIBILITY_ENUM.PUBLISHED
+
     editListingForm.setFieldsValue({
       name: record.name,
       description: record.description,
       categories: record.Categories.map(c => c.categoryId),
       priceAmount: record.priceAmount,
-      visbility: record.visiblity,
+      visibility: isChecked,
     })
     setShowEditListingModal(true)
   }
@@ -157,6 +164,7 @@ const SenseiMentorshipListings = () => {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      width: '15%',
       render: record => {
         return (
           <Paragraph
@@ -253,9 +261,7 @@ const SenseiMentorshipListings = () => {
           <div className="card-header">
             <div className="row justify-content-between align-items-center">
               <div className="col-12 col-sm-auto text-center text-sm-left">
-                <span className="h5 font-weight-bold text-dark text-uppercase">
-                  Mentorship Listings
-                </span>
+                <span className="h5 text-dark">Mentorship Listings</span>
               </div>
               <div className="col-12 col-sm-auto mt-3 mt-sm-0 text-center text-sm-right">
                 <Button
@@ -393,15 +399,6 @@ const SenseiMentorshipListings = () => {
           onSubmit={e => e.preventDefault()}
           onFinish={onEditListing}
           onFinishFailed={onFinishFailed}
-          initialValues={
-            !!currentListing && {
-              name: currentListing.name,
-              description: currentListing.description,
-              categories: currentListing.Categories.map(c => c.categoryId),
-              priceAmount: currentListing.priceAmount,
-              visibility: currentListing.visibility,
-            }
-          }
         >
           <Form.Item
             label="Name"

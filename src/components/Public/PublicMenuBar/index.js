@@ -64,7 +64,7 @@ const PublicMenuBar = ({
   const GetMenu = () => {
     if (isMobileView) {
       return (
-        <div style={{ zIndex: 1051 }}>
+        <div style={{ zIndex: 1050 }}>
           <div
             className={style.handler}
             onClick={toggleMobileMenu}

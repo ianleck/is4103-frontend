@@ -9,7 +9,7 @@ export async function getPublicMenuData() {
     {
       title: 'Courses',
       key: 'courses',
-      icon: 'fa fa-cubes',
+      icon: 'fe fe-book',
       url: '/courses',
     },
   ]
@@ -20,17 +20,20 @@ export async function getStudentMenuData() {
     {
       title: 'Mentors',
       key: 'mentors',
+      icon: 'fa fa-graduation-cap',
       url: '/mentorships',
     },
     {
       title: 'Courses',
       key: 'courses',
+      icon: 'fe fe-book',
       url: '/courses',
     },
     {
       title: 'Dashboard',
       key: 'studentDashboardAccess',
-      url: '/student/dashboard',
+      icon: 'fa fa-pie-chart',
+      url: '/student/dashboard/mentorships',
     },
   ]
 }
@@ -38,7 +41,7 @@ export async function getStudentMenuData() {
 export async function getAdminMenuData() {
   return [
     {
-      title: 'Users Management',
+      title: 'Users',
       key: 'userManagement',
       icon: 'fe fe-users',
       children: [
@@ -55,21 +58,9 @@ export async function getAdminMenuData() {
       ],
     },
     {
-      title: 'Business Management',
-      key: 'businessManagement',
-      icon: 'fe fe-briefcase',
-      children: [
-        {
-          title: 'User Statistics',
-          key: 'userStatistics',
-          url: '/admin/user-statistics',
-        },
-      ],
-    },
-    {
-      title: 'Content Management',
+      title: 'Content',
       key: 'contentManagement',
-      icon: 'fe fe-film',
+      icon: 'fe fe-folder',
       children: [
         {
           title: 'Mentorship',
@@ -89,7 +80,7 @@ export async function getAdminMenuData() {
       ],
     },
     {
-      title: 'Finance Management',
+      title: 'Finance',
       key: 'financeManagement',
       icon: 'fe fe-dollar-sign',
       children: [
@@ -123,7 +114,8 @@ export async function getSenseiMenuData() {
     {
       title: 'Mentorship',
       key: 'mentorship',
-      icon: 'fe fe-user',
+      icon: 'fa fa-graduation-cap',
+      // icon: 'fe fe-user',
       children: [
         {
           title: 'Mentorship Listings',
@@ -146,11 +138,6 @@ export async function getSenseiMenuData() {
           url: '/sensei/mentees',
         },
         {
-          title: 'Tasks',
-          key: 'tasks',
-          url: '/sensei/tasks',
-        },
-        {
           title: 'Consultations',
           key: 'consultation',
           url: '/sensei/consultation',
@@ -165,7 +152,7 @@ export async function getSenseiMenuData() {
     {
       title: 'Courses',
       key: 'courses',
-      icon: 'fe fe-layers',
+      icon: 'fe fe-book',
       children: [
         {
           title: 'Courses',
@@ -177,7 +164,7 @@ export async function getSenseiMenuData() {
     {
       title: 'Social',
       key: 'social',
-      icon: 'fe fe-user',
+      icon: 'fe fe-users',
       children: [
         {
           title: 'Feed',
@@ -201,11 +188,6 @@ export async function getSenseiMenuData() {
       key: 'sales',
       icon: 'fe fe-shopping-cart',
       children: [
-        {
-          title: 'Statistics',
-          key: 'statistics',
-          url: '/sensei/statistics',
-        },
         {
           title: 'My Wallet',
           key: 'myWallet',

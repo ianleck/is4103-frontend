@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { filter, isEmpty, isNil } from 'lodash'
 import { getAnnouncements, getCourseById, getPurchasedCourses } from 'services/courses'
-import { LESSONS, APPROVE_COURSE, REJECT_COURSE, COURSE_DESC } from 'constants/text'
+import { LESSONS, APPROVE_COURSE, REJECT_COURSE } from 'constants/text'
 import BackBtn from 'components/Common/BackBtn'
 import CourseAnnouncementList from 'components/Course/AnnouncementList'
 import CourseLessonsList from 'components/Course/LessonsList'
-import { Button, Modal, Form, Input, Space, Rate } from 'antd'
+import { Button, Modal, Form, Input, Space } from 'antd'
 import {
   ArrowDownOutlined,
   CheckOutlined,
@@ -30,13 +30,7 @@ import {
   COURSE_REJECT_SUCCESS,
   COURSE_REJECT_ERROR,
 } from 'constants/notifications'
-import {
-  formatTime,
-  getUserFirstName,
-  initPageItems,
-  onFinishFailed,
-  showNotification,
-} from 'components/utils'
+import { getUserFirstName, initPageItems, onFinishFailed, showNotification } from 'components/utils'
 import ShareBtn from 'components/Common/Social/ShareBtn'
 import {
   FRONTEND_API,
@@ -50,6 +44,7 @@ import CourseActions from 'components/Common/CourseActionCard'
 import CreatorInfo from 'components/Common/CreatorInfo'
 import Reviews from 'components/Common/Reviews'
 import { acceptCourseRequest, rejectCourseRequest } from 'services/courses/requests'
+import CourseInfo from 'components/Course/CourseInfo'
 
 const StudentCourseDetails = () => {
   const { id } = useParams()
@@ -199,33 +194,6 @@ const StudentCourseDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const CourseInfo = () => {
-    return (
-      <div>
-        <span className="h3 font-weight-bold">{course.title}</span>
-        <div className="mt-2">
-          <span>{course.subTitle}</span>
-        </div>
-
-        <div className="mt-2">
-          <Rate disabled defaultValue={course.rating} />
-        </div>
-
-        <div className="mt-2">
-          <small className="text-muted text-uppercase">
-            {`Last Updated On ${formatTime(course.updatedAt)}`}
-          </small>
-        </div>
-        <hr className="mt-4" />
-
-        <div className="mt-4">
-          <h3>{COURSE_DESC}</h3>
-          <span className="mt-4 description-body">{course.description}</span>
-        </div>
-      </div>
-    )
-  }
-
   const AdminCourseActions = () => {
     return (
       <div className="col-12 col-md-auto col-lg-auto mt-4 mt-md-0 text-center text-md-right">
@@ -256,7 +224,7 @@ const StudentCourseDetails = () => {
   }
 
   return (
-    <div>
+    <div className="ml-3 mr-3 ml-md-0 mr-md-0">
       <div className="row pt-2 justify-content-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />
@@ -309,7 +277,7 @@ const StudentCourseDetails = () => {
       </PageHeader>
       <div className="row mt-4 pl-md-5 pr-md-5 pt-lg-2">
         <div className="col-12 col-lg-7 col-xl-8">
-          {currentTab === 'info' && <CourseInfo />}
+          {currentTab === 'info' && <CourseInfo course={course} />}
           {currentTab === 'reviews' && (
             <Reviews
               reviews={reviews}
