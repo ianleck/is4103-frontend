@@ -19,7 +19,7 @@ const StudentCourseCard = data => {
 
   const getPercentageCompletion = () => {
     if (course.CourseContracts) {
-      if (size(course.CourseContracts) > 0 && !isNil(course.numLessons)) {
+      if (size(course.CourseContracts) > 0 && !isNil(course.numLessons) && course.numLessons > 0) {
         return ((size(course.CourseContracts[0].lessonProgress) / course.numLessons) * 100).toFixed(
           0,
         )
