@@ -166,3 +166,4 @@ export const CHAT_ALR_EXIST = 'You already have an existing chat with the user s
 export const NEW_CHAT_CREATED = 'New chat with selected user created.'
 export const NEW_CHAT_GROUP_CREATED = 'New group chat created.'
 export const CHAT_GROUP_DELETED = 'Chat Group was successfully deleted.'
+export const CHAT_MEMBERS_ADDED = 'New member was successfully added.'

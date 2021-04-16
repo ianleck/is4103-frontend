@@ -78,3 +78,15 @@ export async function deleteChatGroup(chatGroupId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function addChatGroupMember(chatId, userId) {
+  return apiClient
+    .post(`/chat/chat-group/${chatId}/${userId}`, { withCredentials: true })
+    .then(response => {
+      if (response && !isNil(response.data)) {
+        if (response.data.success) return response.data
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}

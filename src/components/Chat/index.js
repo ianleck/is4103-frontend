@@ -15,6 +15,7 @@ import {
   sendGroupMessage,
   createChatGroup,
   deleteChatGroup,
+  addChatGroupMember,
 } from 'services/chat'
 import { useDebounce } from 'use-debounce'
 import searchByFilter from 'services/search'
@@ -28,6 +29,7 @@ import {
   SUCCESS,
   NEW_CHAT_CREATED,
   NEW_CHAT_GROUP_CREATED,
+  CHAT_MEMBERS_ADDED,
 } from 'constants/notifications'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 
@@ -52,6 +54,8 @@ const ChatComponent = () => {
   const [showNewChatGroup, setShowNewChatGroup] = useState(false)
 
   const [isGroupChatSelected, setIsGroupChatSelected] = useState(false)
+
+  const [showMembersManagementModal, setShowMembersManagementModal] = useState(false)
 
   const retrieveChatList = async () => {
     const response = await getChats(user.accountId)
@@ -360,6 +364,36 @@ const ChatComponent = () => {
     }
   }
 
+  const membersManagementFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowMembersManagementModal(false)}>
+          Cancel
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="primary" form="addMemberForm" htmlType="submit" size="large">
+          Add new Member
+        </Button>
+      </div>
+    </div>
+  )
+
+  const onAddMember = async values => {
+    const grpId = selectedChat.chatId
+    const userId = values.id
+
+    const response = await addChatGroupMember(grpId, userId)
+
+    if (response) {
+      refreshChatList()
+      setSearchText('')
+      setInputMsg()
+      setShowMembersManagementModal(false)
+      showNotification('success', SUCCESS, CHAT_MEMBERS_ADDED)
+    }
+  }
+
   useEffect(() => {
     retrieveChatList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -400,7 +434,13 @@ const ChatComponent = () => {
                     Create New Chat Group
                   </Button>
                   {isGroupChatSelected ? (
-                    <Button type="primary" size="large" shape="round" icon={<TeamOutlined />}>
+                    <Button
+                      type="primary"
+                      size="large"
+                      shape="round"
+                      onClick={() => setShowMembersManagementModal(true)}
+                      icon={<TeamOutlined />}
+                    >
                       Members Management
                     </Button>
                   ) : null}
@@ -462,7 +502,7 @@ const ChatComponent = () => {
       >
         <p>
           To chat with a new user, search for the user using their name in the first input box and
-          confirm the user you want to chat with via the dropdown
+          confirm the user that you want to chat with via the dropdown
         </p>
 
         <Search
@@ -509,6 +549,60 @@ const ChatComponent = () => {
             rules={[{ required: true, message: 'Please write a message to the selected user.' }]}
           >
             <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        visible={showMembersManagementModal}
+        title="Members Management"
+        cancelText="Close"
+        centered
+        onCancel={() => setShowMembersManagementModal(false)}
+        footer={membersManagementFooter}
+      >
+        <p>
+          To Add a new user, search for the user using their name in the first input box and confirm
+          the user that you want to add with via the dropdown
+        </p>
+
+        <Search
+          name="message"
+          placeholder="Search for a user..."
+          className="message-input mt-2"
+          onChange={e => handleSearch(e)}
+        />
+
+        <div className="row mt-2">
+          <small className="col-12">{`${size(userResults)} users found`}</small>
+          <small className="col-12">
+            Select the user you want to add with in the dropdown below
+          </small>
+        </div>
+        <Divider />
+
+        <Form
+          id="addMemberForm"
+          layout="vertical"
+          hideRequiredMark
+          onSubmit={e => e.preventDefault()}
+          onFinish={onAddMember}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label="Select User From Search Result"
+            name="id"
+            rules={[{ required: true, message: 'Please search for a user.' }]}
+          >
+            <Select disabled={isLoading} showSearch onSearch={handleSearch}>
+              {map(userResults, u => {
+                return (
+                  <Option value={u.accountId} key={u.accountId}>
+                    {u.firstName} {u.lastName}
+                  </Option>
+                )
+              })}
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
