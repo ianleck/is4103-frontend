@@ -139,7 +139,7 @@ const MentorshipContractsTable = () => {
       sorter: (a, b) => a.mentorPassCount - b.mentorPassCount,
       sortDirections: ['ascend', 'descend'],
       render: record => {
-        return record || '-'
+        return record || 0
       },
     },
     {
