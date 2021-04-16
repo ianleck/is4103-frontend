@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react'
 import { HorizontalBar } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
-import { getCourseSales, getMentorshipSales } from 'services/analytics'
+import { getCourseSales, getListingApplications, getMentorshipSales } from 'services/analytics'
 import { getSenseiCourses } from 'services/courses'
 import { getSenseiMentorshipApplications } from 'services/mentorship/applications'
 import { getMentees } from 'services/mentorship/contracts'
@@ -39,6 +39,7 @@ const SenseiDashboard = () => {
   const [numApprovedApplications, setNumApprovedApplications] = useState(0)
   const [numRejectedApplications, setNumRejectedApplications] = useState(0)
   const [numTotalApplications, setNumTotalApplications] = useState(0)
+  const [contractsByApplications, setNumContractsByApplications] = useState([])
 
   /* Course Data */
   const [numTotalCourses, setNumTotalCourses] = useState(0)
@@ -49,11 +50,15 @@ const SenseiDashboard = () => {
   const user = useSelector(state => state.user)
 
   const getChartOptions = type => {
+    let title
+    if (type === 'mentorship') title = 'Mentorship Listing Sales Per Time Period'
+    if (type === 'course') title = 'Course Sales Per Time Period'
+    if (type === 'contract') title = 'Number of Contracts By Mentorship Listing Per Time Period'
     const chartOptions = {
       title: {
         display: true,
         position: 'bottom',
-        text: type === 'mentorship' ? 'Mentorship Listing Sales by Time' : 'Course Sales by Time',
+        text: title,
       },
       layout: {
         padding: {
@@ -140,7 +145,6 @@ const SenseiDashboard = () => {
 
   const getMenteeStats = async () => {
     const menteeData = await getMentees(user.accountId)
-    console.log(menteeData)
     const data = map(menteeData.students, (s, i) => ({ ...s, key: i }))
     setNumMentees(size(data))
   }
@@ -173,6 +177,38 @@ const SenseiDashboard = () => {
         ],
       }
       setMtsGraphDt(graphData)
+    }
+  }
+
+  const getContractsByListingsData = async (queryDateStart, queryDateEnd) => {
+    const listingApplications = await getListingApplications(queryDateStart, queryDateEnd)
+    if (listingApplications) {
+      const listings = listingApplications.applications
+      const contractGraphVals = []
+      const contractGraphLabels = map(listings, listing => {
+        const count = listing.application.applicationsCount
+        contractGraphVals.push(count)
+        return listing.name
+      })
+      const graphData = {
+        labels: contractGraphLabels,
+        datasets: [
+          {
+            label: 'Num Contracts Per Listing',
+            backgroundColor: '#428bca',
+            borderColor: '#428bca',
+            borderWidth: 1,
+            hoverBackgroundColor: 'rgba(158, 158, 158, 0.7)',
+            hoverBorderColor: 'rgba(158, 158, 158, 0.7)',
+            shadowOffsetX: 4,
+            shadowOffsetY: 4,
+            shadowBlur: 4,
+            shadowColor: 'rgba(0, 0, 0, 0.4)',
+            data: contractGraphVals,
+          },
+        ],
+      }
+      setNumContractsByApplications(graphData)
     }
   }
 
@@ -220,6 +256,7 @@ const SenseiDashboard = () => {
       getMenteeStats()
       getMentorshipSalesData(dftDateStart, dftDateEnd)
       getCourseSalesData(dftDateStart, dftDateEnd)
+      getContractsByListingsData(dftDateStart, dftDateEnd)
     } catch (e) {
       console.log(e)
     }
@@ -334,12 +371,16 @@ const SenseiDashboard = () => {
               <div className="col-12 text-center text-lg-right">
                 <RangePicker
                   size="large"
-                  onChange={values =>
+                  onChange={values => {
                     getMentorshipSalesData(
                       values[0].format('YYYY-MM-DD').toString(),
                       values[1].format('YYYY-MM-DD').toString(),
                     )
-                  }
+                    getContractsByListingsData(
+                      values[0].format('YYYY-MM-DD').toString(),
+                      values[1].format('YYYY-MM-DD').toString(),
+                    )
+                  }}
                 />
               </div>
             </div>
@@ -349,6 +390,14 @@ const SenseiDashboard = () => {
                 width={100}
                 height={300}
                 options={getChartOptions('mentorship')}
+              />
+            </div>
+            <div className="row pl-5 pr-5 mb-4">
+              <HorizontalBar
+                data={contractsByApplications}
+                width={100}
+                height={300}
+                options={getChartOptions('contract')}
               />
             </div>
           </>
