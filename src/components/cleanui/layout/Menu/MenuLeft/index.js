@@ -198,7 +198,7 @@ const MenuLeft = ({
             onKeyDown={e => e.preventDefault()}
           >
             <img src="/resources/images/logo.svg" width="22" alt={DIGI_DOJO} />
-            <div className={style.name}>{logo}</div>
+            <div className={`${style.name} pl-2`}>{logo}</div>
           </div>
         </div>
         <PerfectScrollbar>
