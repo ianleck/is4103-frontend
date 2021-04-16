@@ -219,19 +219,19 @@ const MenuLeft = ({
           >
             {generateMenuItems()}
           </Menu>
-          <div className="row justify-content-center mt-2">
+          <div className="row justify-content-start mt-2">
             <div className="col-6 text-center">
               <UserMenu />
             </div>
           </div>
-          <div className="row justify-content-center mt-2">
+          <div className="row justify-content-start mt-2">
             {user.authorized && user.userType !== USER_TYPE_ENUM.ADMIN && (
               <div className="col-6 text-center">
                 <ChatAction />
               </div>
             )}
           </div>
-          <div className="row justify-content-center mt-2">
+          <div className="row justify-content-start mt-2">
             {checkIfShowCart && (
               <div className="col-6 text-center">
                 <Cart />
