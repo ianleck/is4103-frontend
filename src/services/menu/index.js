@@ -30,7 +30,7 @@ export async function getStudentMenuData() {
     {
       title: 'Dashboard',
       key: 'studentDashboardAccess',
-      url: '/student/dashboard',
+      url: '/student/dashboard/mentorships',
     },
   ]
 }
