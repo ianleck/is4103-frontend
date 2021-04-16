@@ -401,7 +401,7 @@ const ChatComponent = () => {
       </div>
       <div className="col-auto">
         <Button type="primary" size="large" onClick={() => setShowAddMemberModal(true)}>
-          Add new Member
+          Add Member
         </Button>
       </div>
     </div>
@@ -416,7 +416,7 @@ const ChatComponent = () => {
       </div>
       <div className="col-auto">
         <Button type="primary" form="addMemberForm" htmlType="submit" size="large">
-          Add new Member
+          Add Member
         </Button>
       </div>
     </div>
