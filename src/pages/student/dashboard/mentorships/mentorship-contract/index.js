@@ -442,7 +442,7 @@ const MentorshipContractView = () => {
               </Button>
             </Popconfirm>
           </div>
-          {mentorshipContract.mentorPassCount && mentorshipContract.mentorPassCount !== 0 && (
+          {!isNil(mentorshipContract.mentorPassCount) && mentorshipContract.mentorPassCount !== 0 && (
             <div className="col-12 mt-2">
               <Button
                 block
