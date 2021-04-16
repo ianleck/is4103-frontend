@@ -224,7 +224,7 @@ const StudentCourseDetails = () => {
   }
 
   return (
-    <div>
+    <div className="ml-3 mr-3 ml-md-0 mr-md-0">
       <div className="row pt-2 justify-content-between">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
           <BackBtn />

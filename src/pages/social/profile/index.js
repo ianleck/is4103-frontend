@@ -23,6 +23,7 @@ import { getMentorshipListings } from 'services/mentorship/listings'
 import MentorshipListingCard from 'components/Mentorship/ShoppingListCard'
 import { getCourses } from 'services/courses'
 import CourseListingCard from 'components/Course/CourseListingCard'
+import AchievementCard from 'components/Common/Social/AchievementCard'
 
 const SocialProfile = () => {
   const user = useSelector(state => state.user)
@@ -284,6 +285,7 @@ const SocialProfile = () => {
             <PersonalityCard user={viewUser} />
           </div>
         )}
+        {currentTab === 'achievements' && <AchievementCard user={viewUser} />}
         {currentTab === 'following' && (
           <div className="card">
             <div className="card-header pb-2">

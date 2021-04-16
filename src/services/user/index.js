@@ -331,3 +331,17 @@ export async function getAllAchievements(accountId) {
     })
     .catch(err => console.log(err))
 }
+
+export async function getAllAchievementTypes() {
+  return apiClient
+    .get(`/user/all/achievements`)
+    .then(response => {
+      if (!isNil(response.data)) {
+        if (!isNil(response.data.success)) return response.data
+      } else {
+        return false
+      }
+      return false
+    })
+    .catch(err => console.log(err))
+}
