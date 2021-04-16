@@ -45,22 +45,22 @@ export const mentorshipProcessSteps = [
 export const mentorData = [
   {
     name: 'Bill Gates',
-    accountId: '4601895e-0c58-445d-8613-44f568e2f2f0',
+    accountId: '89a3955b-0eff-4961-ba91-74a641fd7c89',
     img: '/resources/images/avatars/sample/billgates.jpg',
   },
   {
     name: 'Mark Zuckerberg',
-    accountId: '8ee5934e-08c8-4afd-919b-dbfba131c851',
+    accountId: '2617eb0e-c277-4030-8fd8-ad2a6d4065aa',
     img: '/resources/images/avatars/sample/markzuckerberg.jpg',
   },
   {
     name: '이지은 (IU)',
-    accountId: '690562e9-5697-4a78-8050-20568802d3d5',
+    accountId: '0ea49e2a-bbce-4435-814b-68a975eb48c9',
     img: '/resources/images/avatars/sample/leejieun.jpg',
   },
   {
     name: 'Sam McDonald',
-    accountId: 'a09b9e6d-5876-4958-bbbc-fd6f209e93d6',
+    accountId: 'f3c331fb-6d7b-498c-ae07-794ed5ff6c92',
     img: '/resources/images/avatars/sample/sammcdonald.jpg',
   },
 ]
