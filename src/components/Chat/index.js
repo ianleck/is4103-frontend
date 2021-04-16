@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   FireOutlined,
@@ -9,6 +9,8 @@ import {
   TeamOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Input, List, Modal, Space, Form, Select, Divider, Popconfirm } from 'antd'
+import io from 'socket.io-client'
+
 import {
   getChats,
   sendMessage,
@@ -32,14 +34,16 @@ import {
   CHAT_MEMBERS_ADDED,
 } from 'constants/notifications'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
+import { SOCKET_API } from '../../constants/constants'
 
 const { Search } = Input
 const { Option } = Select
 
 const ChatComponent = () => {
   const user = useSelector(state => state.user)
+  const socket = useRef()
 
-  const [chatList, setChatList] = useState()
+  const [chatList, setChatList] = useState([])
   const [selectedChat, setSelectedChat] = useState() // Entire Selected Chat
   const [selectedMsgs, setSelectedMsgs] = useState() // Track Sorted Array of Msgs within selected
 
@@ -62,6 +66,8 @@ const ChatComponent = () => {
 
     if (response && !isNil(response.chatList)) {
       const list = response.chatList
+      console.log('retrieveChatList =', list)
+
       setChatList(list)
     }
   }
@@ -70,6 +76,7 @@ const ChatComponent = () => {
     const response = await getChats(user.accountId)
 
     if (response && !isNil(response.chatList)) {
+      console.log('setChatList =', chatList)
       setChatList(response.chatList)
     }
   }
@@ -279,8 +286,12 @@ const ChatComponent = () => {
     } else {
       const payload = { messageBody: body }
       const response = await sendMessage(receiverId, payload)
+      console.log('onNewChat =', response)
 
       if (response) {
+        socket.current.emit('newChat', {
+          sentMessage: response.sentMessage,
+        })
         refreshChatList()
         setSearchText('')
         setInputMsg()
@@ -395,7 +406,21 @@ const ChatComponent = () => {
   }
 
   useEffect(() => {
-    retrieveChatList()
+    retrieveChatList().then(() => {
+      socket.current = io.connect(SOCKET_API)
+      const chatIds = chatList.map(c => c.chatId)
+      socket.current.emit('init', {
+        chatIds,
+        accountId: user.accountId,
+      })
+
+      socket.current.on('incomingNewChat', () => {
+        console.log('incomingNewChat')
+        retrieveChatList()
+      })
+
+      socket.current.on('incomingNewMessage', () => {})
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
