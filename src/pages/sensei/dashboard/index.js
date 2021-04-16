@@ -7,13 +7,13 @@ import {
 import { DatePicker } from 'antd'
 import CountIconWidget from 'components/Common/CountIconWidget'
 import PageHeader from 'components/Common/PageHeader'
-import { ADMIN_VERIFIED_ENUM, MENTORSHIP_CONTRACT_APPROVAL } from 'constants/constants'
+import { ADMIN_VERIFIED_ENUM } from 'constants/constants'
 import { filter, isEmpty, isNil, map, size } from 'lodash'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HorizontalBar } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
-import { getCourseSales, getMentorshipSales } from 'services/analytics'
+import { getCourseSales, getListingApplications, getMentorshipSales } from 'services/analytics'
 import { getSenseiCourses } from 'services/courses'
 import { getSenseiMentorshipApplications } from 'services/mentorship/applications'
 import { getMentees } from 'services/mentorship/contracts'
@@ -39,6 +39,7 @@ const SenseiDashboard = () => {
   const [numApprovedApplications, setNumApprovedApplications] = useState(0)
   const [numRejectedApplications, setNumRejectedApplications] = useState(0)
   const [numTotalApplications, setNumTotalApplications] = useState(0)
+  const [contractsByApplications, setNumContractsByApplications] = useState([])
 
   /* Course Data */
   const [numTotalCourses, setNumTotalCourses] = useState(0)
@@ -49,11 +50,15 @@ const SenseiDashboard = () => {
   const user = useSelector(state => state.user)
 
   const getChartOptions = type => {
+    let title
+    if (type === 'mentorship') title = 'Mentorship Listing Sales Per Time Period'
+    if (type === 'course') title = 'Course Sales Per Time Period'
+    if (type === 'contract') title = 'Number of Contracts By Mentorship Listing Per Time Period'
     const chartOptions = {
       title: {
         display: true,
         position: 'bottom',
-        text: type === 'mentorship' ? 'Mentorship Listing Sales by Time' : 'Course Sales by Time',
+        text: title,
       },
       layout: {
         padding: {
@@ -140,19 +145,8 @@ const SenseiDashboard = () => {
 
   const getMenteeStats = async () => {
     const menteeData = await getMentees(user.accountId)
-    console.log(menteeData)
     const data = map(menteeData.students, (s, i) => ({ ...s, key: i }))
-    let men = []
-    for (let i = 0; i < data.length; i += 1) {
-      for (let j = 0; j < data[i].MentorshipContracts.length; j += 1) {
-        if (
-          data[i].MentorshipContracts[j].senseiApproval === MENTORSHIP_CONTRACT_APPROVAL.APPROVED
-        ) {
-          men = [...men, data[i]]
-        }
-      }
-    }
-    setNumMentees(size(men))
+    setNumMentees(size(data))
   }
 
   const getMentorshipSalesData = async (queryDateStart, queryDateEnd) => {
@@ -183,6 +177,38 @@ const SenseiDashboard = () => {
         ],
       }
       setMtsGraphDt(graphData)
+    }
+  }
+
+  const getContractsByListingsData = async (queryDateStart, queryDateEnd) => {
+    const listingApplications = await getListingApplications(queryDateStart, queryDateEnd)
+    if (listingApplications) {
+      const listings = listingApplications.applications
+      const contractGraphVals = []
+      const contractGraphLabels = map(listings, listing => {
+        const count = listing.application.applicationsCount
+        contractGraphVals.push(count)
+        return listing.name
+      })
+      const graphData = {
+        labels: contractGraphLabels,
+        datasets: [
+          {
+            label: 'Num Contracts Per Listing',
+            backgroundColor: '#428bca',
+            borderColor: '#428bca',
+            borderWidth: 1,
+            hoverBackgroundColor: 'rgba(158, 158, 158, 0.7)',
+            hoverBorderColor: 'rgba(158, 158, 158, 0.7)',
+            shadowOffsetX: 4,
+            shadowOffsetY: 4,
+            shadowBlur: 4,
+            shadowColor: 'rgba(0, 0, 0, 0.4)',
+            data: contractGraphVals,
+          },
+        ],
+      }
+      setNumContractsByApplications(graphData)
     }
   }
 
@@ -230,6 +256,7 @@ const SenseiDashboard = () => {
       getMenteeStats()
       getMentorshipSalesData(dftDateStart, dftDateEnd)
       getCourseSalesData(dftDateStart, dftDateEnd)
+      getContractsByListingsData(dftDateStart, dftDateEnd)
     } catch (e) {
       console.log(e)
     }
@@ -247,36 +274,38 @@ const SenseiDashboard = () => {
           <PageHeader
             type="custom"
             customTitle="Course"
-            customSubtitle="Analytics"
+            customSubtitle="Statistics"
             customImg={<i className="fe fe-book" />}
             customClassName="col-12 mt-4"
             bgColor="bg-light"
             noShadow
           />
         </div>
-        <div className="row pl-5 pr-5 mr-3 mb-4">
-          <div className="col-12 text-center text-lg-right">
-            <RangePicker
-              size="large"
-              onChange={values =>
-                getCourseSalesData(
-                  values[0].format('YYYY-MM-DD').toString(),
-                  values[1].format('YYYY-MM-DD').toString(),
-                )
-              }
-            />
-          </div>
-        </div>
-        <div className="row pl-5 pr-5 mb-4">
-          {!isEmpty(courseGraphDt) && (
-            <HorizontalBar
-              data={courseGraphDt}
-              width={100}
-              height={300}
-              options={getChartOptions('course')}
-            />
-          )}
-        </div>
+        {!isEmpty(courseGraphDt) && (
+          <>
+            <div className="row pl-5 pr-5 mr-3 mb-4">
+              <div className="col-12 text-center text-lg-right">
+                <RangePicker
+                  size="large"
+                  onChange={values =>
+                    getCourseSalesData(
+                      values[0].format('YYYY-MM-DD').toString(),
+                      values[1].format('YYYY-MM-DD').toString(),
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="row pl-5 pr-5 mb-4">
+              <HorizontalBar
+                data={courseGraphDt}
+                width={100}
+                height={300}
+                options={getChartOptions('course')}
+              />
+            </div>
+          </>
+        )}
         <div className="row pl-5 pr-5">
           <div className="col-12 col-lg-3">
             <CountIconWidget
@@ -329,36 +358,50 @@ const SenseiDashboard = () => {
           <PageHeader
             type="custom"
             customTitle="Mentorship"
-            customSubtitle="Analytics"
+            customSubtitle="Statistics"
             customImg={<i className="fa fa-graduation-cap" />}
             customClassName="col-12 mt-4"
             bgColor="bg-light"
             noShadow
           />
         </div>
-        <div className="row pl-5 pr-5 mr-3 mb-4">
-          <div className="col-12 text-center text-lg-right">
-            <RangePicker
-              size="large"
-              onChange={values =>
-                getMentorshipSalesData(
-                  values[0].format('YYYY-MM-DD').toString(),
-                  values[1].format('YYYY-MM-DD').toString(),
-                )
-              }
-            />
-          </div>
-        </div>
-        <div className="row pl-5 pr-5 mb-4">
-          {!isEmpty(mtsGraphDt) && (
-            <HorizontalBar
-              data={mtsGraphDt}
-              width={100}
-              height={300}
-              options={getChartOptions('mentorship')}
-            />
-          )}
-        </div>
+        {!isEmpty(mtsGraphDt) && (
+          <>
+            <div className="row pl-5 pr-5 mr-3 mb-4">
+              <div className="col-12 text-center text-lg-right">
+                <RangePicker
+                  size="large"
+                  onChange={values => {
+                    getMentorshipSalesData(
+                      values[0].format('YYYY-MM-DD').toString(),
+                      values[1].format('YYYY-MM-DD').toString(),
+                    )
+                    getContractsByListingsData(
+                      values[0].format('YYYY-MM-DD').toString(),
+                      values[1].format('YYYY-MM-DD').toString(),
+                    )
+                  }}
+                />
+              </div>
+            </div>
+            <div className="row pl-5 pr-5 mb-4">
+              <HorizontalBar
+                data={mtsGraphDt}
+                width={100}
+                height={300}
+                options={getChartOptions('mentorship')}
+              />
+            </div>
+            <div className="row pl-5 pr-5 mb-4">
+              <HorizontalBar
+                data={contractsByApplications}
+                width={100}
+                height={300}
+                options={getChartOptions('contract')}
+              />
+            </div>
+          </>
+        )}
         <div className="row pl-5 pr-5">
           <div className="col-4">
             <CountIconWidget
