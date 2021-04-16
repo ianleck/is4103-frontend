@@ -1,5 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import UpsellBar from 'components/Common/UpsellBar'
 import CartItemList from '../../components/Cart/CartPageComponent/CartItemList'
 import CheckoutCard from '../../components/Cart/CartPageComponent/CheckoutCard'
 
@@ -14,6 +15,12 @@ const cart = () => {
         </div>
         <div className="col-12 col-xl-5 font-size-18">
           <CheckoutCard />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-12">
+          <UpsellBar type="checkout" />
         </div>
       </div>
     </div>
