@@ -182,11 +182,11 @@ const SenseiDashboard = () => {
 
   const getContractsByListingsData = async (queryDateStart, queryDateEnd) => {
     const listingApplications = await getListingApplications(queryDateStart, queryDateEnd)
-    if (listingApplications) {
+    if (listingApplications && !isNil(listingApplications.applications)) {
       const listings = listingApplications.applications
       const contractGraphVals = []
       const contractGraphLabels = map(listings, listing => {
-        const count = listing.application.applicationsCount
+        const count = listing.applicationsCount
         contractGraphVals.push(count)
         return listing.name
       })
@@ -296,14 +296,16 @@ const SenseiDashboard = () => {
                 />
               </div>
             </div>
-            <div className="row pl-5 pr-5 mb-4">
-              <HorizontalBar
-                data={courseGraphDt}
-                width={100}
-                height={300}
-                options={getChartOptions('course')}
-              />
-            </div>
+            {!isEmpty(courseGraphDt) && (
+              <div className="row pl-5 pr-5 mb-4">
+                <HorizontalBar
+                  data={courseGraphDt}
+                  width={100}
+                  height={300}
+                  options={getChartOptions('course')}
+                />
+              </div>
+            )}
           </>
         )}
         <div className="row pl-5 pr-5">
@@ -392,14 +394,16 @@ const SenseiDashboard = () => {
                 options={getChartOptions('mentorship')}
               />
             </div>
-            <div className="row pl-5 pr-5 mb-4">
-              <HorizontalBar
-                data={contractsByApplications}
-                width={100}
-                height={300}
-                options={getChartOptions('contract')}
-              />
-            </div>
+            {!isEmpty(contractsByApplications) && (
+              <div className="row pl-5 pr-5 mb-4">
+                <HorizontalBar
+                  data={contractsByApplications}
+                  width={100}
+                  height={300}
+                  options={getChartOptions('contract')}
+                />
+              </div>
+            )}
           </>
         )}
         <div className="row pl-5 pr-5">
