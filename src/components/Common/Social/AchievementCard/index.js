@@ -6,38 +6,37 @@ import React, { useEffect, useState } from 'react'
 import { getAllAchievements, getAllAchievementTypes } from 'services/user'
 
 const AchievementCard = ({ user }) => {
-  const [allAchvments, setAllAchvments] = useState([])
-  const [userAchvments, setUserAchvments] = useState([])
+  const [allAchievements, setAllAchievements] = useState([])
+  const [userAchievements, setUserAchievements] = useState([])
 
-  const [selectedAchvment, setSelectedAchvment] = useState('')
-  const [showSelectedAchvment, setShowSelectedAchvment] = useState(false)
+  const [selectedAchievement, setSelectedAchievment] = useState('')
+  const [showSelectedAchievement, setShowSelectedAchievement] = useState(false)
 
   const getAchievementsSvc = async () => {
     const achievementsRsp = await getAllAchievementTypes()
-    console.log(achievementsRsp)
     if (achievementsRsp && !isNil(achievementsRsp.achievements)) {
-      setAllAchvments(achievementsRsp.achievements)
+      setAllAchievements(achievementsRsp.achievements)
     }
 
     if (user && !isNil(user.accountId)) {
       const userAchievementsRsp = await getAllAchievements(user.accountId)
       console.log(userAchievementsRsp)
       if (userAchievementsRsp && !isNil(userAchievementsRsp.achievements)) {
-        setUserAchvments(userAchievementsRsp.achievements)
+        setUserAchievements(userAchievementsRsp.achievements)
       }
     }
   }
 
-  const showAchvmentDtls = achievementId => {
-    setShowSelectedAchvment(true)
-    const getAchievement = filter(allAchvments, ['achievementId', achievementId])
+  const showAchievementDetails = achievementId => {
+    setShowSelectedAchievement(true)
+    const getAchievement = filter(allAchievements, ['achievementId', achievementId])
     if (!isEmpty(getAchievement)) {
       const achievementToView = getAchievement[0]
-      const checkUserAchvment = filter(userAchvments, ['achievementId', achievementId])
-      if (!isEmpty(checkUserAchvment)) {
-        achievementToView.currentCount = checkUserAchvment[0].currentCount
+      const checkUserAchievement = filter(userAchievements, ['achievementId', achievementId])
+      if (!isEmpty(checkUserAchievement)) {
+        achievementToView.currentCount = checkUserAchievement[0].currentCount
       }
-      setSelectedAchvment(achievementToView)
+      setSelectedAchievment(achievementToView)
     }
   }
 
@@ -47,9 +46,9 @@ const AchievementCard = ({ user }) => {
   }, [])
 
   const AchievementItems = () => {
-    if (!isEmpty(allAchvments)) {
-      return map(allAchvments, achievement => {
-        const userMatch = filter(userAchvments, ['achievementId', achievement.achievementId])
+    if (!isEmpty(allAchievements)) {
+      return map(allAchievements, achievement => {
+        const userMatch = filter(userAchievements, ['achievementId', achievement.achievementId])
 
         if (!isEmpty(userMatch)) {
           if (!isNil(userMatch[0].medal)) {
@@ -59,9 +58,9 @@ const AchievementCard = ({ user }) => {
                 tabIndex={0}
                 key={achievement.achievementId}
                 className={`${
-                  showSelectedAchvment ? 'col-6' : 'col-6 col-lg-4 col-xl-3'
+                  showSelectedAchievement ? 'col-6' : 'col-6 col-lg-4 col-xl-3'
                 } p-4 text-center btn border-0`}
-                onClick={() => showAchvmentDtls(achievement.achievementId)}
+                onClick={() => showAchievementDetails(achievement.achievementId)}
                 onKeyDown={e => e.preventDefault()}
               >
                 <img
@@ -83,9 +82,9 @@ const AchievementCard = ({ user }) => {
             tabIndex={0}
             key={achievement.achievementId}
             className={`${
-              showSelectedAchvment ? 'col-6' : 'col-6 col-lg-4 col-xl-3'
+              showSelectedAchievement ? 'col-6' : 'col-6 col-lg-4 col-xl-3'
             } p-4 text-center btn border-0`}
-            onClick={() => showAchvmentDtls(achievement.achievementId)}
+            onClick={() => showAchievementDetails(achievement.achievementId)}
             onKeyDown={e => e.preventDefault()}
           >
             <img src={medalImages.NIL} width={64} className="mb-2" alt="Medal" />
@@ -105,12 +104,12 @@ const AchievementCard = ({ user }) => {
       </div>
       <div className="card-body">
         <div className="row">
-          <div className={`${showSelectedAchvment ? 'col-12 col-md-7' : 'col-12'}`}>
+          <div className={`${showSelectedAchievement ? 'col-12 col-md-7' : 'col-12'}`}>
             <div className="row text-center">
               <AchievementItems />
             </div>
           </div>
-          {showSelectedAchvment && (
+          {showSelectedAchievement && (
             <div className="col-12 col-md-5 align-self-center">
               <div className="row justify-content-end">
                 <div className="col-auto">
@@ -118,20 +117,20 @@ const AchievementCard = ({ user }) => {
                     type="default"
                     className="border-0"
                     icon={<CloseOutlined />}
-                    onClick={() => setShowSelectedAchvment(false)}
+                    onClick={() => setShowSelectedAchievement(false)}
                   />
                 </div>
               </div>
               <div className="row p-3">
                 <div className="col-12">
-                  <h4>{selectedAchvment?.title}</h4>
-                  <span>Bronze: {selectedAchvment.bronze}</span>
+                  <h4>{selectedAchievement?.title}</h4>
+                  <span>Bronze: {selectedAchievement.bronze}</span>
                   <br />
-                  <span>Silver: {selectedAchvment.silver}</span>
+                  <span>Silver: {selectedAchievement.silver}</span>
                   <br />
-                  <span>Gold: {selectedAchvment.gold}</span>
+                  <span>Gold: {selectedAchievement.gold}</span>
                   <hr />
-                  <span>Current count: {selectedAchvment.currentCount || 0}</span>
+                  <span>Current count: {selectedAchievement.currentCount || 0}</span>
                 </div>
               </div>
             </div>
