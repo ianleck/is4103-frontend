@@ -56,6 +56,7 @@ const ChatComponent = () => {
   const [isGroupChatSelected, setIsGroupChatSelected] = useState(false)
 
   const [showMembersManagementModal, setShowMembersManagementModal] = useState(false)
+  const [showAddMemberModal, setShowAddMemberModal] = useState(false)
 
   const retrieveChatList = async () => {
     const response = await getChats(user.accountId)
@@ -368,6 +369,21 @@ const ChatComponent = () => {
     <div className="row justify-content-between">
       <div className="col-auto">
         <Button type="default" size="large" onClick={() => setShowMembersManagementModal(false)}>
+          Remove Member
+        </Button>
+      </div>
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowAddMemberModal(true)}>
+          Add new Member
+        </Button>
+      </div>
+    </div>
+  )
+
+  const addMembersFooter = (
+    <div className="row justify-content-between">
+      <div className="col-auto">
+        <Button type="default" size="large" onClick={() => setShowAddMemberModal(false)}>
           Cancel
         </Button>
       </div>
@@ -390,6 +406,7 @@ const ChatComponent = () => {
       setSearchText('')
       setInputMsg()
       setShowMembersManagementModal(false)
+      setShowAddMemberModal(false)
       showNotification('success', SUCCESS, CHAT_MEMBERS_ADDED)
     }
   }
@@ -500,10 +517,27 @@ const ChatComponent = () => {
         onCancel={() => setShowNewChat(false)}
         footer={addNewChatFooter}
       >
+        <p className="text-dark">
+          <strong>List of Users Found from Search</strong>
+        </p>
         <p>
           To chat with a new user, search for the user using their name in the first input box and
-          confirm the user that you want to chat with via the dropdown
+          confirm the user that you want to chat with on the section.
         </p>
+
+        <div className="card-body complaint-reason-list-card overflow-y-scroll pt-1 mt-2">
+          <div className="row">
+            <div className="col-12">
+              <List
+                itemLayout="horizontal"
+                dataSource={userResults}
+                renderItem={u => (
+                  <List.Item>{`${!isEmpty(u) ? getUserFullName(u) : null}`}</List.Item>
+                )}
+              />
+            </div>
+          </div>
+        </div>
 
         <Search
           name="message"
@@ -515,11 +549,15 @@ const ChatComponent = () => {
         <div className="row mt-2">
           <small className="col-12">{`${size(userResults)} users found`}</small>
           <small className="col-12">
-            Select the user you want to chat with in the dropdown below
+            Select the user you want to chat with in the dropdown below and send a message.
           </small>
         </div>
+
         <Divider />
 
+        <p className="text-dark">
+          <strong>Send a Message to User</strong>
+        </p>
         <Form
           id="newChatForm"
           layout="vertical"
@@ -529,7 +567,7 @@ const ChatComponent = () => {
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            label="Select User From Search Result"
+            label="Select User based on Search Results"
             name="id"
             rules={[{ required: true, message: 'Please search for a user.' }]}
           >
@@ -555,16 +593,44 @@ const ChatComponent = () => {
 
       <Modal
         visible={showMembersManagementModal}
-        title="Members Management"
+        title="Member Management"
         cancelText="Close"
         centered
         onCancel={() => setShowMembersManagementModal(false)}
         footer={membersManagementFooter}
       >
-        <p>
-          To Add a new user, search for the user using their name in the first input box and confirm
-          the user that you want to add with via the dropdown
+        Member Management
+      </Modal>
+
+      <Modal
+        visible={showAddMemberModal}
+        title="Add New User to Chat Group"
+        cancelText="Close"
+        centered
+        onCancel={() => setShowAddMemberModal(false)}
+        footer={addMembersFooter}
+      >
+        <p className="text-dark">
+          <strong>List of Users Found from Search</strong>
         </p>
+        <p>
+          Search for user using the search bar and confirm the user you would like to add using the
+          second section.
+        </p>
+
+        <div className="card-body complaint-reason-list-card overflow-y-scroll pt-1 mt-2">
+          <div className="row">
+            <div className="col-12">
+              <List
+                itemLayout="horizontal"
+                dataSource={userResults}
+                renderItem={u => (
+                  <List.Item>{`${!isEmpty(u) ? getUserFullName(u) : null}`}</List.Item>
+                )}
+              />
+            </div>
+          </div>
+        </div>
 
         <Search
           name="message"
@@ -576,7 +642,7 @@ const ChatComponent = () => {
         <div className="row mt-2">
           <small className="col-12">{`${size(userResults)} users found`}</small>
           <small className="col-12">
-            Select the user you want to add with in the dropdown below
+            Select the user you want to add with in the dropdown below.
           </small>
         </div>
         <Divider />
