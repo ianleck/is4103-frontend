@@ -9,7 +9,7 @@ import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
 import SocialPostList from 'components/Common/Social/PostList'
 import { Button, Empty } from 'antd'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
-import { getAllAchievements } from 'services/user'
+import AchievementCard from 'components/Common/Social/AchievementCard'
 
 const SocialFeed = () => {
   const history = useHistory()
@@ -24,11 +24,10 @@ const SocialFeed = () => {
   const [currentPageIdx, setCurrentPageIdx] = useState(1)
   const [showLoadMore, setShowLoadMore] = useState(false)
 
-  const [currentTab, setCurrentTab] = useState('socialfeed')
+  const [currentTab, setCurrentTab] = useState('achievements')
 
   useEffect(() => {
     getPostsSvc()
-    getAchievementsSvc()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -40,13 +39,6 @@ const SocialFeed = () => {
         setPosts(allPosts)
         initPageItems(setIsLoading, allPosts, setPaginatedPosts, setCurrentPageIdx, setShowLoadMore)
       }
-    }
-  }
-
-  const getAchievementsSvc = async () => {
-    if (user && !isNil(user.accountId)) {
-      const response = await getAllAchievements(user.accountId)
-      console.log(response)
     }
   }
 
@@ -108,6 +100,7 @@ const SocialFeed = () => {
               btnSize="medium"
             />
           )}
+          {currentTab === 'achievements' && <AchievementCard user={user} />}
           {currentTab === 'following' && (
             <div className="card">
               <div className="card-header pb-2">
