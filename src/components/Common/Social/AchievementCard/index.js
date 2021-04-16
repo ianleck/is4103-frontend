@@ -1,7 +1,9 @@
 import { CloseOutlined } from '@ant-design/icons'
 import { Button, Empty } from 'antd'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import medalImages from 'constants/hardcode/achievements'
-import { filter, isEmpty, isNil, map } from 'lodash'
+import { senseiAchievementTitles, studentAchievementTitles } from 'constants/information'
+import { filter, indexOf, isEmpty, isNil, map } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { getAllAchievements, getAllAchievementTypes, generateAchievementPdf } from 'services/user'
 
@@ -13,14 +15,25 @@ const AchievementCard = ({ user }) => {
   const [showSelectedAchievement, setShowSelectedAchievement] = useState(false)
 
   const getAchievementsSvc = async () => {
+    console.log('user is ', user)
     const achievementsRsp = await getAllAchievementTypes()
     if (achievementsRsp && !isNil(achievementsRsp.achievements)) {
-      setAllAchievements(achievementsRsp.achievements)
+      if (user.userType === USER_TYPE_ENUM.STUDENT) {
+        const studentAchievements = filter(achievementsRsp.achievements, a => {
+          return indexOf(studentAchievementTitles, a.title) >= 0
+        })
+        setAllAchievements(studentAchievements)
+      }
+      if (user.userType === USER_TYPE_ENUM.SENSEI) {
+        const senseiAchievements = filter(achievementsRsp.achievements, a => {
+          return indexOf(senseiAchievementTitles, a.title) >= 0
+        })
+        setAllAchievements(senseiAchievements)
+      }
     }
 
     if (user && !isNil(user.accountId)) {
       const userAchievementsRsp = await getAllAchievements(user.accountId)
-      console.log(userAchievementsRsp)
       if (userAchievementsRsp && !isNil(userAchievementsRsp.achievements)) {
         setUserAchievements(userAchievementsRsp.achievements)
       }
