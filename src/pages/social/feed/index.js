@@ -24,7 +24,7 @@ const SocialFeed = () => {
   const [currentPageIdx, setCurrentPageIdx] = useState(1)
   const [showLoadMore, setShowLoadMore] = useState(false)
 
-  const [currentTab, setCurrentTab] = useState('achievements')
+  const [currentTab, setCurrentTab] = useState('socialfeed')
 
   useEffect(() => {
     getPostsSvc()
