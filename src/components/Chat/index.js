@@ -4,11 +4,18 @@ import {
   FireOutlined,
   MessageOutlined,
   PlusOutlined,
+  QuestionCircleOutlined,
   SendOutlined,
   TeamOutlined,
 } from '@ant-design/icons'
-import { Avatar, Button, Input, List, Modal, Space, Form, Select, Divider } from 'antd'
-import { getChats, sendMessage, createChatGroup } from 'services/chat'
+import { Avatar, Button, Input, List, Modal, Space, Form, Select, Divider, Popconfirm } from 'antd'
+import {
+  getChats,
+  sendMessage,
+  sendGroupMessage,
+  createChatGroup,
+  deleteChatGroup,
+} from 'services/chat'
 import { useDebounce } from 'use-debounce'
 import searchByFilter from 'services/search'
 import { isEmpty, isNil, map, size } from 'lodash'
@@ -192,7 +199,29 @@ const ChatComponent = () => {
       showNotification('warn', WARNING, CHAT_EMPTY_MSG)
     } else {
       // Have not considered Group Chat
-      sendPM()
+      if (isGroupChatSelected) {
+        sendGrpMsg()
+      }
+
+      if (!isGroupChatSelected) {
+        sendPM()
+      }
+    }
+  }
+
+  const sendGrpMsg = async () => {
+    const cId = selectedChat.chatId
+
+    const fakeAddition = { senderId: user.accountId, messageBody: inputMsg }
+    const msgList = [...selectedMsgs, fakeAddition]
+
+    const payload = { messageBody: inputMsg }
+    const response = await sendGroupMessage(cId, payload)
+
+    if (response) {
+      refreshChatList()
+      setInputMsg()
+      setSelectedMsgs(msgList)
     }
   }
 
@@ -317,6 +346,20 @@ const ChatComponent = () => {
     }
   }
 
+  const onDeleteGroup = async () => {
+    const grpId = selectedChat.chatId
+
+    const response = await deleteChatGroup(grpId)
+
+    if (response) {
+      setSelectedChat()
+      setSelectedMsgs()
+      setIsGroupChatSelected(false)
+      refreshChatList()
+      showNotification('success', SUCCESS, NEW_CHAT_GROUP_CREATED)
+    }
+  }
+
   useEffect(() => {
     retrieveChatList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -362,9 +405,15 @@ const ChatComponent = () => {
                     </Button>
                   ) : null}
                   {isGroupChatSelected ? (
-                    <Button type="danger" size="large" shape="round" icon={<FireOutlined />}>
-                      Delete Chat Group
-                    </Button>
+                    <Popconfirm
+                      title="Are you sure you wish to delete this group?"
+                      icon={<QuestionCircleOutlined className="text-danger" />}
+                      onConfirm={() => onDeleteGroup()}
+                    >
+                      <Button type="danger" size="large" shape="round" icon={<FireOutlined />}>
+                        Delete Chat Group
+                      </Button>
+                    </Popconfirm>
                   ) : null}
                 </Space>
               </div>
