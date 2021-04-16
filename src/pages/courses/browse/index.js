@@ -149,7 +149,7 @@ const ViewCourseDetailsPublic = () => {
   }
 
   return (
-    <div>
+    <div className="ml-3 mr-3 ml-md-0 mr-md-0">
       <Helmet title="View Course" />
       <div className="row pt-2">
         <div className="col-12 col-md-3 col-lg-2 mt-4 mt-md-0">
