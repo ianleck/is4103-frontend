@@ -330,7 +330,7 @@ const ConsultationNotes = ({ notes, addNote }) => {
       >
         <ul>
           {notes.map(note => {
-            return <li>{note}</li>
+            return <li key={note}>{note}</li>
           })}
         </ul>
 
