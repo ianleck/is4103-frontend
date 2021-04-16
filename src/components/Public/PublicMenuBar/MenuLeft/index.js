@@ -226,7 +226,12 @@ const MenuLeft = ({
           </div>
           <div className="row justify-content-start mt-2">
             {user.authorized && user.userType !== USER_TYPE_ENUM.ADMIN && (
-              <div className="col-6 text-center">
+              <div
+                className="col-6 text-center"
+                style={{
+                  paddingRight: isMobileView ? '30px' : '15px',
+                }}
+              >
                 <ChatAction />
               </div>
             )}
