@@ -3,7 +3,7 @@ import { Button, Empty } from 'antd'
 import medalImages from 'constants/hardcode/achievements'
 import { filter, isEmpty, isNil, map } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { getAllAchievements, getAllAchievementTypes } from 'services/user'
+import { getAllAchievements, getAllAchievementTypes, generateAchievementPdf } from 'services/user'
 
 const AchievementCard = ({ user }) => {
   const [allAchievements, setAllAchievements] = useState([])
@@ -38,6 +38,19 @@ const AchievementCard = ({ user }) => {
       }
       setSelectedAchievment(achievementToView)
     }
+  }
+
+  const viewCert = () => {
+    generateAchievementPdf(user.accountId)
+      .then(response => {
+        const file = new Blob([response.data], { type: 'application/pdf' })
+        // Build a URL from the file
+        const fileURL = URL.createObjectURL(file)
+        // Open the URL on new Window
+        const pdfWindow = window.open()
+        pdfWindow.location.href = fileURL
+      })
+      .catch(err => console.log(err))
   }
 
   useEffect(() => {
@@ -99,8 +112,11 @@ const AchievementCard = ({ user }) => {
 
   return (
     <div className="card">
-      <div className="card-header">
+      <div className="card-header d-flex" style={{ justifyContent: 'space-between' }}>
         <div className="h3 mb-0">Achievements</div>
+        <Button type="primary" onClick={() => viewCert()} disabled={isEmpty(userAchievements)}>
+          View Certificate of Accomplishment
+        </Button>
       </div>
       <div className="card-body">
         <div className="row">
