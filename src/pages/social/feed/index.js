@@ -9,6 +9,7 @@ import { initPageItems, sortDescAndKeyPostId } from 'components/utils'
 import SocialPostList from 'components/Common/Social/PostList'
 import { Button, Empty } from 'antd'
 import SocialFollowingList from 'components/Common/Social/FollowingList'
+import { getAllAchievements } from 'services/user'
 
 const SocialFeed = () => {
   const history = useHistory()
@@ -27,6 +28,7 @@ const SocialFeed = () => {
 
   useEffect(() => {
     getPostsSvc()
+    getAchievementsSvc()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -38,6 +40,13 @@ const SocialFeed = () => {
         setPosts(allPosts)
         initPageItems(setIsLoading, allPosts, setPaginatedPosts, setCurrentPageIdx, setShowLoadMore)
       }
+    }
+  }
+
+  const getAchievementsSvc = async () => {
+    if (user && !isNil(user.accountId)) {
+      const response = await getAllAchievements(user.accountId)
+      console.log(response)
     }
   }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import {
   CloseOutlined,
   PhoneOutlined,
@@ -34,6 +35,7 @@ import Paragraph from 'antd/lib/typography/Paragraph'
 
 const StudentConsultationComponent = () => {
   const user = useSelector(state => state.user)
+  const history = useHistory()
 
   const [showConsultationDetails, setShowConsultationDetails] = useState(false)
   const [consultationDetails, setConsultationDetails] = useState([])
@@ -132,6 +134,10 @@ const StudentConsultationComponent = () => {
       return true
     }
     return false
+  }
+
+  const joinCall = () => {
+    history.push(`/student/consultation/${consultationDetails.consultationId}`)
   }
 
   const getConsultationListOfDay = () => {
@@ -253,7 +259,7 @@ const StudentConsultationComponent = () => {
         </Popconfirm>
       </div>
       <div className="col-auto">
-        <Button type="primary" size="large" icon={<PhoneOutlined />}>
+        <Button type="primary" size="large" icon={<PhoneOutlined />} onClick={() => joinCall()}>
           Join Call
         </Button>
       </div>

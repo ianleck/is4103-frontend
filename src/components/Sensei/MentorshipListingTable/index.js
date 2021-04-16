@@ -164,6 +164,7 @@ const SenseiMentorshipListings = () => {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      width: '15%',
       render: record => {
         return (
           <Paragraph
