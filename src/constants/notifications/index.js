@@ -144,6 +144,9 @@ export const MTS_APP_UPDATE_SUCCESS = 'Your mentorship application was updated s
 export const MTS_APP_SUB_ERR = 'There was an error submitting your mentorship application.'
 export const MTS_APP_UPDATE_ERR = 'There was an error updating your mentorship application.'
 
+export const MTS_APP_APPROVE_SUCCESS = 'The mentorship application was successfully approved.'
+export const MTS_APP_APPROVE_ERR = 'There was an error approving the mentorship application.'
+
 export const CONTRACT_CANCEL_SUCCESS = 'Your mentorship contract was successfully cancelled.'
 export const CONTRACT_CANCEL_ERR = 'There was an error cancelling your mentorship contract.'
 export const CONTRACT_COMPLETE_SUCCESS = 'Your mentorship contract was successfully completed.'

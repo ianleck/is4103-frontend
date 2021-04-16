@@ -1,10 +1,11 @@
 import { isNil } from 'lodash'
 import apiClient from 'services/axios'
 
-export async function acceptMentorshipApplication(mentorshipContractId) {
+export async function acceptMentorshipApplication(payload) {
+  const { mentorshipContractId, body } = payload
   const url = `/mentorship/accept/application/${mentorshipContractId}`
   return apiClient
-    .put(url)
+    .put(url, { emailParams: { ...body } })
     .then(response => {
       if (response && !isNil(response.data)) {
         return response.data
