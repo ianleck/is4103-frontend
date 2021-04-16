@@ -345,3 +345,9 @@ export async function getAllAchievementTypes() {
     })
     .catch(err => console.log(err))
 }
+
+export async function generateAchievementPdf(accountId) {
+  return apiClient.get(`/achievement/generate/${accountId}`, {
+    responseType: 'blob',
+  })
+}
