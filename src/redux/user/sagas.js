@@ -32,10 +32,10 @@ function checkProfileUpdateRqd(user) {
     isNil(user.headline) ||
     user.bio === '' ||
     isNil(user.bio) ||
-    user.firstName === '' ||
-    isNil(user.firstName) ||
-    user.lastName === '' ||
-    isNil(user.lastName) ||
+    // user.firstName === '' ||
+    // isNil(user.firstName) ||
+    // user.lastName === '' ||
+    // isNil(user.lastName) ||
     isEmpty(user.Interests)
 
   return user.requiresProfileUpdate
@@ -175,14 +175,23 @@ export function* LOGIN({ payload }) {
 }
 
 export function* REGISTER({ payload }) {
-  const { username, email, password, confirmPassword, isStudent } = payload
+  const { username, firstName, lastName, email, password, confirmPassword, isStudent } = payload
   yield put({
     type: 'user/SET_STATE',
     payload: {
       loading: true,
     },
   })
-  const response = yield call(jwt.register, username, email, password, confirmPassword, isStudent)
+  const response = yield call(
+    jwt.register,
+    username,
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+    isStudent,
+  )
   if (response) {
     const currentUser = createUserObj(response, true, false, true)
     yield putResolve({

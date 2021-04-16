@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Input, Button, Form } from 'antd'
 import { Link, Redirect, useLocation } from 'react-router-dom'
 import { USER_TYPE_ENUM } from 'constants/constants'
+import { onFinishFailed } from 'components/utils'
 
 const Register = () => {
   const user = useSelector(state => state.user)
@@ -10,6 +11,8 @@ const Register = () => {
   const { pathname } = useLocation()
   const [inputUsername, setInputUsername] = useState('')
   const [inputEmailAddr, setInputEmailAddr] = useState('')
+  const [inputFirstName, setInputFirstName] = useState('')
+  const [inputLastName, setInputLastName] = useState('')
 
   let isStudent = true
 
@@ -43,15 +46,12 @@ const Register = () => {
     values.isStudent = isStudent
     setInputUsername(values.username)
     setInputEmailAddr(values.email)
-    console.log(inputUsername)
+    setInputFirstName(values.firstName)
+    setInputLastName(values.lastName)
     dispatch({
       type: 'user/REGISTER',
       payload: values,
     })
-  }
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
   }
 
   const StudentSignUpHeader = () => {
@@ -167,7 +167,12 @@ const Register = () => {
         hideRequiredMark
         onFinish={onSubmitRegister}
         onFinishFailed={onFinishFailed}
-        initialValues={{ username: inputUsername, email: inputEmailAddr }}
+        initialValues={{
+          username: inputUsername,
+          email: inputEmailAddr,
+          firstName: inputFirstName,
+          lastName: inputLastName,
+        }}
         className="mb-4"
       >
         <Form.Item
@@ -176,6 +181,20 @@ const Register = () => {
           rules={[{ required: true, message: 'Please input your username' }]}
         >
           <Input size="large" placeholder="Username" value={inputUsername} />
+        </Form.Item>
+        <Form.Item
+          name="firstName"
+          preserve
+          rules={[{ required: true, message: 'Please input your first name' }]}
+        >
+          <Input size="large" placeholder="First Name" value={inputFirstName} />
+        </Form.Item>
+        <Form.Item
+          name="lastName"
+          preserve
+          rules={[{ required: true, message: 'Please input your last name' }]}
+        >
+          <Input size="large" placeholder="Last Name" value={inputLastName} />
         </Form.Item>
         <Form.Item
           name="email"
