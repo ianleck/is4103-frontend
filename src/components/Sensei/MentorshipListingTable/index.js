@@ -261,7 +261,7 @@ const SenseiMentorshipListings = () => {
           <div className="card-header">
             <div className="row justify-content-between align-items-center">
               <div className="col-12 col-sm-auto text-center text-sm-left">
-                <span className="h5 mb-0">Mentorship Listings</span>
+                <span className="h5 text-dark">Mentorship Listings</span>
               </div>
               <div className="col-12 col-sm-auto mt-3 mt-sm-0 text-center text-sm-right">
                 <Button

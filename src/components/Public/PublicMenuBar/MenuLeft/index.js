@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import classNames from 'classnames'
@@ -8,6 +8,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { find } from 'lodash'
 import UserMenu from 'components/UserActionGroup/UserMenu'
 import { DIGI_DOJO } from 'constants/text'
+import { USER_TYPE_ENUM } from 'constants/constants'
+import ChatAction from 'components/UserActionGroup/Chat'
+import Cart from 'components/Cart/CartDropdown'
 import style from './style.module.scss'
 
 const mapStateToProps = ({ menu, settings, user }) => ({
@@ -38,6 +41,13 @@ const MenuLeft = ({
 }) => {
   const [selectedKeys, setSelectedKeys] = useState(store.get('app.menu.selectedKeys') || [])
   const [openedKeys, setOpenedKeys] = useState(store.get('app.menu.openedKeys') || [])
+
+  const user = useSelector(state => state.user)
+
+  const checkIfShowCart =
+    user.authorized &&
+    user.userType !== USER_TYPE_ENUM.ADMIN &&
+    user.userType !== USER_TYPE_ENUM.SENSEI
 
   useEffect(() => {
     applySelectedKeys()
@@ -213,6 +223,20 @@ const MenuLeft = ({
             <div className="col-6 text-center">
               <UserMenu />
             </div>
+          </div>
+          <div className="row justify-content-center mt-2">
+            {user.authorized && user.userType !== USER_TYPE_ENUM.ADMIN && (
+              <div className="col-6 text-center">
+                <ChatAction />
+              </div>
+            )}
+          </div>
+          <div className="row justify-content-center mt-2">
+            {checkIfShowCart && (
+              <div className="col-6 text-center">
+                <Cart />
+              </div>
+            )}
           </div>
         </PerfectScrollbar>
       </div>
