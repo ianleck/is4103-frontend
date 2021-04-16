@@ -30,8 +30,14 @@ import {
 } from 'services/mentorship/listings'
 import { VISIBILITY_ENUM } from 'constants/constants'
 import { VISIBILITY_ENUM_FILTER } from 'constants/filters'
-import { showNotification } from 'components/utils'
-import { MTS_LISTING_CREATE_SUCCESS, SUCCESS } from 'constants/notifications'
+import { onFinishFailed, showNotification } from 'components/utils'
+import {
+  ERROR,
+  MTS_LISTING_CREATE_SUCCESS,
+  MTS_LISTING_UPDATE_ERR,
+  MTS_LISTING_UPDATE_SUCCESS,
+  SUCCESS,
+} from 'constants/notifications'
 
 const SenseiMentorshipListings = () => {
   const user = useSelector(state => state.user)
@@ -76,10 +82,6 @@ const SenseiMentorshipListings = () => {
     getListingsEffect()
   }, [accountId])
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo)
-  }
-
   const onAddListing = async values => {
     if (values.visibility) {
       values.visibility = VISIBILITY_ENUM.PUBLISHED
@@ -93,9 +95,10 @@ const SenseiMentorshipListings = () => {
       addListingForm.resetFields()
       setShowAddListingModal(false)
     }
+    // the warning notification will be triggered by the backend as it gives an informative error message
   }
 
-  const onEditListing = values => {
+  const onEditListing = async values => {
     values.mentorshipListingId = currentListing.mentorshipListingId
 
     if (values.visibility) {
@@ -103,13 +106,14 @@ const SenseiMentorshipListings = () => {
     } else {
       values.visibility = VISIBILITY_ENUM.HIDDEN
     }
-    updateMentorshipListing({ ...values }).then(_data => {
-      if (_data) {
-        notification.success({ message: _data.message })
-        getListings()
-        setShowEditListingModal(false)
-      }
-    })
+    const response = await updateMentorshipListing({ ...values })
+    if (response && !isNil(response.updatedListing)) {
+      showNotification('success', SUCCESS, MTS_LISTING_UPDATE_SUCCESS)
+      getListings()
+      setShowEditListingModal(false)
+    } else {
+      showNotification('error', ERROR, MTS_LISTING_UPDATE_ERR)
+    }
   }
 
   const handleEditListing = record => {
