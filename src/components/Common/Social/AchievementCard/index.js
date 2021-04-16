@@ -15,7 +15,6 @@ const AchievementCard = ({ user }) => {
   const [showSelectedAchievement, setShowSelectedAchievement] = useState(false)
 
   const getAchievementsSvc = async () => {
-    console.log('user is ', user)
     const achievementsRsp = await getAllAchievementTypes()
     if (achievementsRsp && !isNil(achievementsRsp.achievements)) {
       if (user.userType === USER_TYPE_ENUM.STUDENT) {
