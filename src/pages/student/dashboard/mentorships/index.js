@@ -41,14 +41,13 @@ const StudentMentorships = () => {
     }
     return map(activeMentorships, (activeMentorship, i) => {
       return (
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-6" key={i}>
           <div
             role="button"
             tabIndex={0}
             className="card btn rounded-lg text-left w-100"
             onClick={() => viewMentorshipContract(activeMentorship.mentorshipContractId)}
             onKeyDown={event => event.preventDefault()}
-            key={i}
           >
             <div className="card-body">
               <div className="row align-items-center">
