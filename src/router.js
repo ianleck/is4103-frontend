@@ -351,6 +351,11 @@ const routes = [
     Component: lazy(() => import('pages/support')),
     exact: true,
   },
+  {
+    path: '/sensei/messages',
+    Component: lazy(() => import('pages/chat')),
+    exact: true,
+  },
   // Student Pages
   {
     path: '/student',
@@ -380,6 +385,11 @@ const routes = [
   {
     path: '/student/dashboard/courses/:courseId/view-lesson/:lessonId',
     Component: lazy(() => import('pages/courses/view-lesson')),
+    exact: true,
+  },
+  {
+    path: '/student/dashboard/messages',
+    Component: lazy(() => import('pages/chat')),
     exact: true,
   },
   {

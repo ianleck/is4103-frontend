@@ -189,6 +189,11 @@ export async function getSenseiMenuData() {
           key: 'myProfile',
           url: '/sensei/profile',
         },
+        {
+          title: 'Chat',
+          key: 'chat',
+          url: '/sensei/messages',
+        },
       ],
     },
     {
