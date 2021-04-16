@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Dropdown, Button } from 'antd'
+import { Dropdown, Button, Badge } from 'antd'
 import { map, size } from 'lodash'
 import ProductCard from 'components/Common/ProductCard'
 import styles from './style.module.scss'
@@ -9,7 +9,8 @@ import styles from './style.module.scss'
 const Cart = () => {
   const history = useHistory()
   const cart = useSelector(state => state.cart)
-  const isEmptyCart = size(cart.Courses) === 0 && size(cart.MentorPasses) === 0
+  const totalCartItemCount = size(cart.Courses) + size(cart.MentorPasses)
+  const isEmptyCart = totalCartItemCount === 0
 
   const cartItems = () => {
     return isEmptyCart ? (
@@ -108,7 +109,9 @@ const Cart = () => {
   return (
     <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
       <div className={styles.dropdown}>
-        <i className={`${styles.icon} fe fe-shopping-cart`} />
+        <Badge count={totalCartItemCount} overflowCount={10} size="small">
+          <i className={`${styles.icon} fe fe-shopping-cart`} />
+        </Badge>
       </div>
     </Dropdown>
   )
