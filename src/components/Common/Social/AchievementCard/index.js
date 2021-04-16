@@ -1,9 +1,11 @@
 import { CloseOutlined } from '@ant-design/icons'
 import { Button, Empty } from 'antd'
+import { USER_TYPE_ENUM } from 'constants/constants'
 import medalImages from 'constants/hardcode/achievements'
-import { filter, isEmpty, isNil, map } from 'lodash'
+import { senseiAchievementTitles, studentAchievementTitles } from 'constants/information'
+import { filter, indexOf, isEmpty, isNil, map } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { getAllAchievements, getAllAchievementTypes } from 'services/user'
+import { getAllAchievements, getAllAchievementTypes, generateAchievementPdf } from 'services/user'
 
 const AchievementCard = ({ user }) => {
   const [allAchievements, setAllAchievements] = useState([])
@@ -13,14 +15,25 @@ const AchievementCard = ({ user }) => {
   const [showSelectedAchievement, setShowSelectedAchievement] = useState(false)
 
   const getAchievementsSvc = async () => {
+    console.log('user is ', user)
     const achievementsRsp = await getAllAchievementTypes()
     if (achievementsRsp && !isNil(achievementsRsp.achievements)) {
-      setAllAchievements(achievementsRsp.achievements)
+      if (user.userType === USER_TYPE_ENUM.STUDENT) {
+        const studentAchievements = filter(achievementsRsp.achievements, a => {
+          return indexOf(studentAchievementTitles, a.title) >= 0
+        })
+        setAllAchievements(studentAchievements)
+      }
+      if (user.userType === USER_TYPE_ENUM.SENSEI) {
+        const senseiAchievements = filter(achievementsRsp.achievements, a => {
+          return indexOf(senseiAchievementTitles, a.title) >= 0
+        })
+        setAllAchievements(senseiAchievements)
+      }
     }
 
     if (user && !isNil(user.accountId)) {
       const userAchievementsRsp = await getAllAchievements(user.accountId)
-      console.log(userAchievementsRsp)
       if (userAchievementsRsp && !isNil(userAchievementsRsp.achievements)) {
         setUserAchievements(userAchievementsRsp.achievements)
       }
@@ -38,6 +51,19 @@ const AchievementCard = ({ user }) => {
       }
       setSelectedAchievment(achievementToView)
     }
+  }
+
+  const viewCert = () => {
+    generateAchievementPdf(user.accountId)
+      .then(response => {
+        const file = new Blob([response.data], { type: 'application/pdf' })
+        // Build a URL from the file
+        const fileURL = URL.createObjectURL(file)
+        // Open the URL on new Window
+        const pdfWindow = window.open()
+        pdfWindow.location.href = fileURL
+      })
+      .catch(err => console.log(err))
   }
 
   useEffect(() => {
@@ -99,8 +125,16 @@ const AchievementCard = ({ user }) => {
 
   return (
     <div className="card">
-      <div className="card-header">
+      <div className="card-header row justify-content-between m-0">
         <div className="h3 mb-0">Achievements</div>
+        <Button
+          className="text-center text-md-middle button col-12 col-md-5 col-lg-3"
+          type="primary"
+          onClick={() => viewCert()}
+          disabled={isEmpty(userAchievements)}
+        >
+          View Certificate of Accomplishment
+        </Button>
       </div>
       <div className="card-body">
         <div className="row">
