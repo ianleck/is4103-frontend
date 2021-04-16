@@ -196,11 +196,6 @@ export async function getSenseiMenuData() {
       icon: 'fe fe-shopping-cart',
       children: [
         {
-          title: 'Statistics',
-          key: 'statistics',
-          url: '/sensei/statistics',
-        },
-        {
           title: 'My Wallet',
           key: 'myWallet',
           url: '/sensei/wallet',
