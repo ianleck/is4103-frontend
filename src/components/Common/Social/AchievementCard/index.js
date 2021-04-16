@@ -125,9 +125,14 @@ const AchievementCard = ({ user }) => {
 
   return (
     <div className="card">
-      <div className="card-header d-flex" style={{ justifyContent: 'space-between' }}>
+      <div className="card-header row justify-content-between m-0">
         <div className="h3 mb-0">Achievements</div>
-        <Button type="primary" onClick={() => viewCert()} disabled={isEmpty(userAchievements)}>
+        <Button
+          className="text-center text-md-middle button col-12 col-md-5 col-lg-3"
+          type="primary"
+          onClick={() => viewCert()}
+          disabled={isEmpty(userAchievements)}
+        >
           View Certificate of Accomplishment
         </Button>
       </div>
