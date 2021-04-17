@@ -48,7 +48,8 @@ const SocialFeed = () => {
         <div className="card-body">
           <Button
             block
-            className={`${currentTab === 'socialfeed' ? 'btn btn-light' : 'btn'} border-0`}
+            type={currentTab === 'socialfeed' ? 'primary' : 'default'}
+            className="border-0"
             onClick={() => setCurrentTab('socialfeed')}
             size="large"
             ref={button => button && button.blur()}
@@ -57,7 +58,8 @@ const SocialFeed = () => {
           </Button>
           <Button
             block
-            className={`${currentTab === 'achievements' ? 'btn btn-light' : 'btn'} border-0`}
+            type={currentTab === 'achievements' ? 'primary' : 'default'}
+            className="border-0"
             onClick={() => setCurrentTab('achievements')}
             size="large"
             ref={button => button && button.blur()}
