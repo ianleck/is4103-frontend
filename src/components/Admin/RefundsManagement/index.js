@@ -146,9 +146,9 @@ const RefundsManagement = () => {
             okType="danger"
           >
             <Button
-              type="primary"
               shape="circle"
               size="large"
+              className="btn btn-success"
               disabled={record.approvalStatus !== REFUND_STATUS.PENDING}
               icon={<CheckOutlined />}
             />
