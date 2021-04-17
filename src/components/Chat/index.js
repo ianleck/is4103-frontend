@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   FireOutlined,
@@ -9,6 +9,8 @@ import {
   TeamOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Input, List, Modal, Space, Form, Select, Divider, Popconfirm } from 'antd'
+import io from 'socket.io-client'
+
 import {
   getChats,
   sendMessage,
@@ -35,14 +37,16 @@ import {
   CHAT_GROUP_DELETED,
 } from 'constants/notifications'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
+import { SOCKET_API } from '../../constants/constants'
 
 const { Search } = Input
 const { Option } = Select
 
 const ChatComponent = () => {
   const user = useSelector(state => state.user)
+  const socket = useRef()
 
-  const [chatList, setChatList] = useState()
+  const [chatList, setChatList] = useState([])
   const [selectedChat, setSelectedChat] = useState() // Entire Selected Chat
   const [selectedMsgs, setSelectedMsgs] = useState() // Track Sorted Array of Msgs within selected
 
@@ -68,8 +72,11 @@ const ChatComponent = () => {
 
     if (response && !isNil(response.chatList)) {
       const list = response.chatList
+
       setChatList(list)
+      return list
     }
+    return false
   }
 
   const refreshChatList = async () => {
@@ -78,6 +85,22 @@ const ChatComponent = () => {
     if (response && !isNil(response.chatList)) {
       setChatList(response.chatList)
     }
+  }
+  const setupSocket = list => {
+    socket.current = io.connect(SOCKET_API)
+
+    if (list) {
+      const chatIds = list.map(c => c.chatId)
+      socket.current.emit('init', {
+        chatIds,
+        accountId: user.accountId,
+      })
+    }
+
+    socket.current.on('incomingChange', () => {
+      console.log('incomingChange')
+      refreshChatList()
+    })
   }
 
   const populateChatListCard = item => {
@@ -252,6 +275,11 @@ const ChatComponent = () => {
     const response = await sendGroupMessage(cId, payload)
 
     if (response) {
+      const members = selectedChat.Users.map(u => u.accountId)
+      socket.current.emit('newGroupMessage', {
+        sentMessage: response.sentMessage,
+        users: [...members, selectedChat.accountId],
+      })
       refreshChatList()
       setInputMsg()
       setSelectedMsgs(msgList)
@@ -272,6 +300,9 @@ const ChatComponent = () => {
     const response = await sendMessage(receiverId, payload)
 
     if (response) {
+      socket.current.emit('newMessage', {
+        sentMessage: response.sentMessage,
+      })
       refreshChatList()
       setInputMsg()
       setSelectedMsgs(msgList)
@@ -310,6 +341,9 @@ const ChatComponent = () => {
       const response = await sendMessage(receiverId, payload)
 
       if (response) {
+        socket.current.emit('newChat', {
+          sentMessage: response.sentMessage,
+        })
         refreshChatList()
         setSearchText('')
         setInputMsg()
@@ -371,8 +405,10 @@ const ChatComponent = () => {
     const payload = { name: gName }
 
     const response = await createChatGroup(payload)
-
     if (response) {
+      socket.current.emit('newChatGroup', {
+        groupChat: response.groupCreated,
+      })
       refreshChatList()
       setShowNewChatGroup(false)
       showNotification('success', SUCCESS, NEW_CHAT_GROUP_CREATED)
@@ -445,6 +481,9 @@ const ChatComponent = () => {
     const response = await addChatGroupMember(grpId, userId)
 
     if (response) {
+      socket.current.emit('newMember', {
+        userAdded: response.userAdded,
+      })
       refreshChatList()
       setSearchText('')
       setInputMsg()
@@ -471,7 +510,9 @@ const ChatComponent = () => {
   }
 
   useEffect(() => {
-    retrieveChatList()
+    retrieveChatList().then(list => {
+      setupSocket(list)
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
