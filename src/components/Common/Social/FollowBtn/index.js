@@ -17,7 +17,11 @@ const SocialFollowBtn = ({ targetAccountId }) => {
 
   const checkUserBlocked = async () => {
     if (!isNil(targetAccountId)) {
-      if (user.userType === USER_TYPE_ENUM.ADMIN || user.accountId === targetAccountId) {
+      if (
+        !user.authorized ||
+        user.userType === USER_TYPE_ENUM.ADMIN ||
+        user.accountId === targetAccountId
+      ) {
         setIsBlocked(true)
         return true
       }

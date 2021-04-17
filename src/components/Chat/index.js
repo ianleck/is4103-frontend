@@ -32,6 +32,7 @@ import {
   NEW_CHAT_GROUP_CREATED,
   CHAT_MEMBERS_ADDED,
   CHAT_MEMBERS_REMOVED,
+  CHAT_GROUP_DELETED,
 } from 'constants/notifications'
 import { DEFAULT_TIMEOUT } from 'constants/constants'
 
@@ -388,7 +389,7 @@ const ChatComponent = () => {
       setSelectedMsgs()
       setIsGroupChatSelected(false)
       refreshChatList()
-      showNotification('success', SUCCESS, NEW_CHAT_GROUP_CREATED)
+      showNotification('success', SUCCESS, CHAT_GROUP_DELETED)
     }
   }
 

@@ -15,7 +15,6 @@ const AchievementCard = ({ user }) => {
   const [showSelectedAchievement, setShowSelectedAchievement] = useState(false)
 
   const getAchievementsSvc = async () => {
-    console.log('user is ', user)
     const achievementsRsp = await getAllAchievementTypes()
     if (achievementsRsp && !isNil(achievementsRsp.achievements)) {
       if (user.userType === USER_TYPE_ENUM.STUDENT) {
@@ -125,19 +124,23 @@ const AchievementCard = ({ user }) => {
 
   return (
     <div className="card">
-      <div className="card-header row justify-content-between m-0">
+      <div className="card-header">
         <div className="h3 mb-0">Achievements</div>
-        <Button
-          className="text-center text-md-middle button col-12 col-md-5 col-lg-3"
-          type="primary"
-          onClick={() => viewCert()}
-          disabled={isEmpty(userAchievements)}
-        >
-          View Certificate of Accomplishment
-        </Button>
       </div>
       <div className="card-body">
         <div className="row">
+          <div className="col-12 text-center">
+            <Button
+              type="default"
+              size="large"
+              onClick={() => viewCert()}
+              disabled={isEmpty(userAchievements)}
+            >
+              View Certificate of Accomplishment
+            </Button>
+          </div>
+        </div>
+        <div className="row mt-4">
           <div className={`${showSelectedAchievement ? 'col-12 col-md-7' : 'col-12'}`}>
             <div className="row text-center">
               <AchievementItems />

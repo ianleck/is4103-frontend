@@ -182,6 +182,7 @@ const ViewCourseDetailsPublic = () => {
             key="profile-tab"
             type={currentTab === 'profile' ? 'primary' : 'default'}
             size="large"
+            disabled={!user.authorized}
             onClick={() => changeTab('profile')}
           >
             Sensei Profile
