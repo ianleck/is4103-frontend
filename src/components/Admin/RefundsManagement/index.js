@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Descriptions, Modal, Popconfirm, Space, Table, Tabs } from 'antd'
+import { Button, Descriptions, Modal, Space, Table, Tabs } from 'antd'
 import { Helmet } from 'react-helmet'
 import { getRefunds } from 'services/wallet'
 import { isNil } from 'lodash'
@@ -139,34 +139,23 @@ const RefundsManagement = () => {
             icon={<InfoCircleOutlined />}
             disabled={record.approvalStatus === REFUND_STATUS.REJECTED}
           />
-          <Popconfirm
-            title="Are you sure you want to approve this refund request?"
-            onConfirm={() => onApproveRefund(record)}
-            okText="Refund"
-            okType="danger"
-          >
-            <Button
-              type="primary"
-              shape="circle"
-              size="large"
-              disabled={record.approvalStatus !== REFUND_STATUS.PENDING}
-              icon={<CheckOutlined />}
-            />
-          </Popconfirm>
-          <Popconfirm
-            title="Are you sure you want to reject this refund request?"
-            onConfirm={() => onRejectRefund(record)}
-            okText="Reject"
-            okType="danger"
-          >
-            <Button
-              type="danger"
-              shape="circle"
-              size="large"
-              disabled={record.approvalStatus !== REFUND_STATUS.PENDING}
-              icon={<CloseOutlined />}
-            />
-          </Popconfirm>
+          <Button
+            shape="circle"
+            size="large"
+            className="btn btn-success"
+            onClick={() => onApproveRefund(record)}
+            disabled={record.approvalStatus !== REFUND_STATUS.PENDING}
+            icon={<CheckOutlined />}
+          />
+
+          <Button
+            type="danger"
+            shape="circle"
+            size="large"
+            onClick={() => onRejectRefund(record)}
+            disabled={record.approvalStatus !== REFUND_STATUS.PENDING}
+            icon={<CloseOutlined />}
+          />
         </Space>
       ),
     },
