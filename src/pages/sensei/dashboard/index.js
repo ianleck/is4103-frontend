@@ -186,7 +186,7 @@ const SenseiDashboard = () => {
       const listings = listingApplications.applications
       const contractGraphVals = []
       const contractGraphLabels = map(listings, listing => {
-        const count = listing.applicationsCount
+        const count = listing.application.applicationsCount
         contractGraphVals.push(count)
         return listing.name
       })
@@ -296,16 +296,14 @@ const SenseiDashboard = () => {
                 />
               </div>
             </div>
-            {!isEmpty(courseGraphDt) && (
-              <div className="row pl-5 pr-5 mb-4">
-                <HorizontalBar
-                  data={courseGraphDt}
-                  width={100}
-                  height={300}
-                  options={getChartOptions('course')}
-                />
-              </div>
-            )}
+            <div className="row pl-5 pr-5 mb-4">
+              <HorizontalBar
+                data={courseGraphDt}
+                width={100}
+                height={300}
+                options={getChartOptions('course')}
+              />
+            </div>
           </>
         )}
         <div className="row pl-5 pr-5">
@@ -394,16 +392,14 @@ const SenseiDashboard = () => {
                 options={getChartOptions('mentorship')}
               />
             </div>
-            {!isEmpty(contractsByApplications) && (
-              <div className="row pl-5 pr-5 mb-4">
-                <HorizontalBar
-                  data={contractsByApplications}
-                  width={100}
-                  height={300}
-                  options={getChartOptions('contract')}
-                />
-              </div>
-            )}
+            <div className="row pl-5 pr-5 mb-4">
+              <HorizontalBar
+                data={contractsByApplications}
+                width={100}
+                height={300}
+                options={getChartOptions('contract')}
+              />
+            </div>
           </>
         )}
         <div className="row pl-5 pr-5">
