@@ -71,19 +71,35 @@ const ChatComponent = () => {
 
     if (response && !isNil(response.chatList)) {
       const list = response.chatList
-      console.log('retrieveChatList =', list)
 
       setChatList(list)
+      return list
     }
+    return false
   }
 
   const refreshChatList = async () => {
     const response = await getChats(user.accountId)
 
     if (response && !isNil(response.chatList)) {
-      console.log('setChatList =', chatList)
       setChatList(response.chatList)
     }
+  }
+  const setupSocket = list => {
+    socket.current = io.connect(SOCKET_API)
+
+    if (list) {
+      const chatIds = list.map(c => c.chatId)
+      socket.current.emit('init', {
+        chatIds,
+        accountId: user.accountId,
+      })
+    }
+
+    socket.current.on('incomingChange', () => {
+      console.log('incomingChange')
+      refreshChatList()
+    })
   }
 
   const populateChatListCard = item => {
@@ -258,6 +274,11 @@ const ChatComponent = () => {
     const response = await sendGroupMessage(cId, payload)
 
     if (response) {
+      const members = selectedChat.Users.map(u => u.accountId)
+      socket.current.emit('newGroupMessage', {
+        sentMessage: response.sentMessage,
+        users: [...members, selectedChat.accountId],
+      })
       refreshChatList()
       setInputMsg()
       setSelectedMsgs(msgList)
@@ -278,6 +299,9 @@ const ChatComponent = () => {
     const response = await sendMessage(receiverId, payload)
 
     if (response) {
+      socket.current.emit('newMessage', {
+        sentMessage: response.sentMessage,
+      })
       refreshChatList()
       setInputMsg()
       setSelectedMsgs(msgList)
@@ -314,7 +338,6 @@ const ChatComponent = () => {
     } else {
       const payload = { messageBody: body }
       const response = await sendMessage(receiverId, payload)
-      console.log('onNewChat =', response)
 
       if (response) {
         socket.current.emit('newChat', {
@@ -381,8 +404,10 @@ const ChatComponent = () => {
     const payload = { name: gName }
 
     const response = await createChatGroup(payload)
-
     if (response) {
+      socket.current.emit('newChatGroup', {
+        groupChat: response.groupCreated,
+      })
       refreshChatList()
       setShowNewChatGroup(false)
       showNotification('success', SUCCESS, NEW_CHAT_GROUP_CREATED)
@@ -455,6 +480,9 @@ const ChatComponent = () => {
     const response = await addChatGroupMember(grpId, userId)
 
     if (response) {
+      socket.current.emit('newMember', {
+        userAdded: response.userAdded,
+      })
       refreshChatList()
       setSearchText('')
       setInputMsg()
@@ -481,20 +509,8 @@ const ChatComponent = () => {
   }
 
   useEffect(() => {
-    retrieveChatList().then(() => {
-      socket.current = io.connect(SOCKET_API)
-      const chatIds = chatList.map(c => c.chatId)
-      socket.current.emit('init', {
-        chatIds,
-        accountId: user.accountId,
-      })
-
-      socket.current.on('incomingNewChat', () => {
-        console.log('incomingNewChat')
-        retrieveChatList()
-      })
-
-      socket.current.on('incomingNewMessage', () => {})
+    retrieveChatList().then(list => {
+      setupSocket(list)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
