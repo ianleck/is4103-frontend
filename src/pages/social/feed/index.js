@@ -49,7 +49,7 @@ const SocialFeed = () => {
           <Button
             block
             type={currentTab === 'socialfeed' ? 'primary' : 'default'}
-            className={` border-0`}
+            className="border-0"
             onClick={() => setCurrentTab('socialfeed')}
             size="large"
             ref={button => button && button.blur()}
@@ -59,7 +59,7 @@ const SocialFeed = () => {
           <Button
             block
             type={currentTab === 'achievements' ? 'primary' : 'default'}
-            className={` border-0`}
+            className="border-0"
             onClick={() => setCurrentTab('achievements')}
             size="large"
             ref={button => button && button.blur()}
